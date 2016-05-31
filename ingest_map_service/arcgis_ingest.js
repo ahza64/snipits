@@ -4,12 +4,12 @@
   @fileoverview arcgis ingest command that will ingest transmission trees, lines, and project data
 */
 
-var utils = require('dsp_tool/util');
+var utils = require('dsp_lib/cmd_utils');
 var esri_util = require("dsp_lib/esri/util");
 var http_get = esri_util.http_get;
 var assert = require('assert');
 var _ = require('underscore');
-var migrate_util = require('dsp_migrate/util');
+var migrate_util = require('dsp_lib/migrate');
 var BPromise = require("bluebird");
 var parse = require('csv-parse');
 var fs = require('fs');
@@ -433,7 +433,7 @@ function statusCode(tree){
 }
 
 if (require.main === module) {
-  var baker = require('dsp_tool/baker');
+  var baker = require('dsp_lib/baker');
   utils.bakerGen(run, {default:true});  
   baker.run();  
 }

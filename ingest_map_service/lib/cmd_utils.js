@@ -1,7 +1,10 @@
+/**
+ * @description Tools for db connections in baker command line utilities
+ */
 var _ = require('underscore');
 var co = require('co');
 var timer = require('co-timer');
-var config = require('dsp_config/config');	
+var config = require('dsp_config/config').get();	
 var BPromise = require('bluebird');
 
 var baker = require('./baker');
@@ -10,7 +13,7 @@ require('dsp_model/database')(config.meteor);
 
 function bakerGen(gen, options) {
   if(!baker) {
-    baker = require('dsp_tool/baker');
+    baker = require('dsp_lib/baker');
   }
   options = options || {};
   var db1 = require('dsp_model/database')(config.meteor);  

@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/Dispatchr/services/issues"
   },
-  "homepage": "https://github.com/Dispatchr/services"
+  "homepage": "https://github.com/Dispatchr/services",
+  "dependencies": {
+    "node-geocoder": "^3.10.0",
+    "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
+    "underscore": "^1.8.3"
+  }
 }
