@@ -1,0 +1,40 @@
+{
+    "postgres_db_host": "sts.ccot5ldxxvqx.us-west-2.rds.amazonaws.com",
+    "postgres_db_port": 5432,
+    "postgres_db_user": "dispatchr",
+    "postgres_db_pass": "password",
+    "postgres_db_name": "dev_dispatchr_sts",    
+    "api_port": 3000,
+    "api_host": "localhost",
+    "user_login": true,
+    "logging": {
+        "replaceConsole": true,
+        "appenders": [
+            {
+                "type": "console",
+                "layout": {
+                  "type": "json"
+                }
+            },
+            {
+                "type": "log4js-node-mongodb",
+                "connectionString": "AUTOCONFIG",
+                "category": "client-log"
+            }
+        ]
+    },
+    "corsWhitelist": ["http://dispatchr.com", "http://dispatchr.co", "http://localhost:80"],
+    "dispatchr":{
+                "mongo_db_host": "localhost",
+                "mongo_db_port": 27017,
+                "mongo_db_name":"prod_trans",
+                "name":"dispatchr"
+    },
+     "meteor":{
+                "mongo_db_host": "localhost",
+                "mongo_db_name": "prod_meteor",
+                "mongo_db_port": 27017,
+                "name":"meteor"
+    },
+    "run_as_root": false
+}
