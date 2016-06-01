@@ -356,7 +356,7 @@ function getAddress(x, y){
       if (err) {
         if(err[19] !== "Z"){
           setTimeout(function () {
-              getAddress(location).then(function(result){
+              getAddress(x, y).then(function(result){
                 resolve(result);
               });
           }, 5000);
