@@ -17,8 +17,17 @@
   },
   "homepage": "https://github.com/Dispatchr/services",
   "dependencies": {
+    "bluebird": "^3.4.0",
     "co": "^4.6.0",
+    "co-timer": "0.0.1",
+    "csv-parse": "^1.1.0",
+    "log4js": "^0.6.36",
+    "log4js-json-layout": "https://github.com/gabe0x02/log4js-json-layout.git",
+    "log4js-node-mongodb": "^1.0.0",
+    "minimist": "^1.2.0",
+    "mongoose": "^4.4.19",
     "node-geocoder": "^3.10.0",
+    "restler": "^3.4.0",
     "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
     "underscore": "^1.8.3"
   }
