@@ -1,0 +1,4 @@
+#http://wolfslittlestore.be/2013/10/textmate-2-exclude-files-from-searchfile-chooser/
+#https://gist.github.com/dvessel/1478685
+excludeInFolderSearch = "{$excludeInFolderSearch,node_modules,javascript/lib,data-backup}"
+include = "{$include,.gitignore,.jshintrc}"

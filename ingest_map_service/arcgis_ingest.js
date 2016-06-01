@@ -4,18 +4,18 @@
   @fileoverview arcgis ingest command that will ingest transmission trees, lines, and project data
 */
 
-var utils = require('dsp_lib/cmd_utils');
-var esri_util = require("dsp_lib/esri/util");
+var utils = require('dsp_shared/lib/cmd_utils');
+var esri_util = require("dsp_shared/lib/esri/util");
 var http_get = esri_util.http_get;
 var assert = require('assert');
 var _ = require('underscore');
-var migrate_util = require('dsp_lib/migrate');
+var migrate_util = require('dsp_shared/lib/migrate');
 var BPromise = require("bluebird");
 var parse = require('csv-parse');
 var fs = require('fs');
-var TreeV3 = require("dsp_model/meteor_v3/tree");
-var PMD = require('dsp_model/meteor_v3/pmd');
-var Circuit = require('dsp_model/meteor_v3/circuit');
+var TreeV3 = require("dsp_shared/database/model/tree");
+var PMD = require('dsp_shared/database/model/pmd');
+var Circuit = require('dsp_shared/database/model/circuit');
 var TreeStates = require('tree-status-codes');
 var Bpromise = require('bluebird');  
 
@@ -41,6 +41,7 @@ var detection_priorities = {
  * Entry point of script
  */
 function *run(){
+ console.log("RUNNING arcgis ingest");
  var project = dsp_project.toUpperCase();
  var host = "https://esri.dispatchr.co:6443";
  var service_path = ["/arcgis/rest/services", project, "MapServer"].join("/");
@@ -57,7 +58,7 @@ function *run(){
        console.log("LAYER GROUP", layer_group.name, layer_group.id);
        for(var j = 0; j < layer_group.subLayerIds.length; j++) {
          var layer_id = layer_group.subLayerIds[j];
-	 console.log("LAYERS", layer_id);
+         console.log("LAYERS", layer_id);
          var layer = service.layers[layer_id];
          if(layer.name.endsWith("TreeTops")) {
            yield processLayer(base_url, layer);
@@ -203,11 +204,11 @@ function *processTrees(trees) {
             doc.pge_pmd_num = tree.pge_detection_type;
             doc.span_name = tree.span_name;
             doc.circuit_name = tree.circuit_name;
-	    doc.save();
+            doc.save();
           }
         }
       }catch(e) {
-        console.error("ERROR", e.message)
+        console.error("ERROR", e.message);
         throw(e);
       }
     }
@@ -448,7 +449,7 @@ function statusCode(tree){
 }
 
 if (require.main === module) {
-  var baker = require('dsp_lib/baker');
+  var baker = require('dsp_shared/lib/baker');
   utils.bakerGen(run, {default:true});  
   baker.run();  
 }

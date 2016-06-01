@@ -34,3 +34,10 @@ node_modules/*
 
 #python byte code
 *.pyc
+
+#npm node_modules
+**/node_modules/*
+**/!node_modules/dsp_*
+
+#dispatchr configs
+**/conf.d/*.json

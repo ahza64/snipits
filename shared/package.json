@@ -1,0 +1,28 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "Shared JavaScript libraries and utils.",
+  "main": "\"\"",
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "co": "^4.6.0",
+    "co-timer": "0.0.1",
+    "log4js": "^0.6.36",
+    "log4js-json-layout": "https://github.com/gabe0x02/log4js-json-layout.git",
+    "log4js-node-mongodb": "^1.0.0",
+    "minimist": "^1.2.0",
+    "mongoose": "^4.4.19",
+    "restler": "^3.4.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dispatchr/services/tree/master/shared"
+  },
+  "author": "Gabriel Littman",
+  "license": "ISC"
+}

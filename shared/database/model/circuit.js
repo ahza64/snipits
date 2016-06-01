@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var connection = require('dsp_model/connections')('meteor');
+var connection = require('dsp_database/connections')('meteor');
 
 var geoschema = new mongoose.Schema({
   name:String,

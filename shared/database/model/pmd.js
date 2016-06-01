@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var connection = require('dsp_model/connections')('meteor');
+var connection = require('dsp_database/connections')('meteor');
 
 var projectSchema = new mongoose.Schema({
   //_id

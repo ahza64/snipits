@@ -28,7 +28,7 @@ function command(func, options) {
 }
 
 function run() {  
-  // console.log("SDFSDF", process.argv.slice(2))
+  console.log("SDFSDF", process.argv.slice(2))
   var argv = require('minimist')(process.argv.slice(2));
   var command = null;
   if(argv._.length < 0 || !commands[argv._[0]]) {
@@ -52,6 +52,7 @@ function run() {
     var args = assembleArgument(argv, commands[command]);
     if(args) {
       if(commands[command].func.constructor.name === 'GeneratorFunction') {
+        console.log("GOT GEN");
         co(function*(){
           var result = yield commands[command].func.apply(this, args);
           console.log(result);

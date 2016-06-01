@@ -8,21 +8,22 @@ var config = require('dsp_config/config').get();
 var BPromise = require('bluebird');
 
 var baker = require('./baker');
-require('dsp_model/database')(config.dispatchr);
-require('dsp_model/database')(config.meteor);
+require('dsp_database/database')(config.dispatchr);
+require('dsp_database/database')(config.meteor);
 
 function bakerGen(gen, options) {
   if(!baker) {
     baker = require('dsp_lib/baker');
   }
   options = options || {};
-  var db1 = require('dsp_model/database')(config.meteor);  
-  var db2 = require('dsp_model/database')(config.dispatchr);
+  var db1 = require('dsp_database/database')(config.meteor);  
+  var db2 = require('dsp_database/database')(config.dispatchr);
   
   options.parameters = baker.getParams(gen);
   options.command = gen.name;
   console.log(options);
   baker.command(function*(){
+    console.log("RUNNING");
     var result = yield gen.apply(this, arguments);
     yield timer(3000);
     db1.connection.close();
@@ -34,8 +35,8 @@ function bakerGen(gen, options) {
 
 function generatorWithDb(gen) {
   console.log("configs", config.dispatchr);
-  var db1 = require('dsp_model/database')(config.meteor);  
-  var db2 = require('dsp_model/database')(config.dispatchr);
+  var db1 = require('dsp_database/database')(config.meteor);  
+  var db2 = require('dsp_database/database')(config.dispatchr);
 
   return new BPromise(function(resolve){//, reject)  {
     co(function*(){
@@ -55,7 +56,7 @@ function generatorWithDb(gen) {
 
 function withDb(func, args) {
   console.log("ARGS", args);
-  var db = require('dsp_model/database')(config.dispatchr);
+  var db = require('dsp_database/database')(config.dispatchr);
   var res = func.apply(this, args);
   console.log(res);
   return res.finally(function(){
