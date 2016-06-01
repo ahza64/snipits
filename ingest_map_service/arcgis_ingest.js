@@ -17,7 +17,6 @@ var TreeV3 = require("dsp_model/meteor_v3/tree");
 var PMD = require('dsp_model/meteor_v3/pmd');
 var Circuit = require('dsp_model/meteor_v3/circuit');
 var TreeStates = require('tree-status-codes');
-var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter, extra);
 var Bpromise = require('bluebird');  
 
 
@@ -58,6 +57,7 @@ function *run(){
        console.log("LAYER GROUP", layer_group.name, layer_group.id);
        for(var j = 0; j < layer_group.subLayerIds.length; j++) {
          var layer_id = layer_group.subLayerIds[j];
+	 console.log("LAYERS", layer_id);
          var layer = service.layers[layer_id];
          if(layer.name.endsWith("TreeTops")) {
            yield processLayer(base_url, layer);
@@ -170,6 +170,7 @@ function *processTrees(trees) {
   var qsi_ids = _.map(trees, function(tree){return tree.attributes.TREEID; });
   var tree_docs = yield TreeV3.find({qsi_id: {$in: qsi_ids}});
   console.log("DB Trees found", tree_docs.length);  
+  console.log("Layer Trees", trees.length);
   tree_docs = _.indexBy(tree_docs, "qsi_id");
   for(var i = 0; i < trees.length; i++) {
     var doc = tree_docs[trees[i].attributes.TREEID];
@@ -198,19 +199,19 @@ function *processTrees(trees) {
           
             console.log("Updated Tree", doc.qsi_id);
             //override particular values (don't override user entered values)
-            doc_pri.pge_detection_type = tree.pge_detection_type;
-            doc_pri.pge_pmd_num = tree.pge_detection_type;
-            doc_pri.span_name = tree.span_name;
-            doc_pri.circuit_name = tree.circuit_name;l
+            doc.pge_detection_type = tree.pge_detection_type;
+            doc.pge_pmd_num = tree.pge_detection_type;
+            doc.span_name = tree.span_name;
+            doc.circuit_name = tree.circuit_name;
+	    doc.save();
           }
         }
       }catch(e) {
-        console.error("ERRROR", e)
+        console.error("ERROR", e.message)
         throw(e);
       }
     }
   }
-  // process.exit();
 }
 
 var pmd_projects = {};
@@ -344,6 +345,7 @@ var extra = {
   formatter: null   
 };
 var httpAdapter = 'https';
+var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter, extra);
 
 /**
  * @description reverse geo code coordinates for address
@@ -354,6 +356,7 @@ function getAddress(x, y){
   return new Bpromise(function(resolve,reject){
     geocoder.reverse({lat: y, lon: x}, function (err, res) {
       if (err) {
+        console.log("REVERSE GEO CODE", err.message, res);
         if(err[19] !== "Z"){
           setTimeout(function () {
               getAddress(x, y).then(function(result){
