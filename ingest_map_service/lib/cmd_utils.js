@@ -44,7 +44,7 @@ function generatorWithDb(gen) {
       yield db2.connected;
       var result = yield gen;
       resolve(result);
-    })();
+    });
   }).finally(function(){
     setTimeout(function(){
       db1.connection.close();

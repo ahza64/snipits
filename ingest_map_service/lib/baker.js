@@ -55,7 +55,7 @@ function run() {
         co(function*(){
           var result = yield commands[command].func.apply(this, args);
           console.log(result);
-        })();
+        });
       } else {
         var result = commands[command].func.apply(this, args);        
         if(result){

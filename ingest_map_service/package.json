@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Dispatchr/services",
   "dependencies": {
+    "co": "^4.6.0",
     "node-geocoder": "^3.10.0",
     "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
     "underscore": "^1.8.3"
