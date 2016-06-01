@@ -6,9 +6,9 @@ function *applyMigrationSchema(migration_schema, source_data) {
     if(migration_schema.hasOwnProperty(key)) {
       var value = migration_schema[key];
       if( isGenerator(value) || isPromise(value) ){
-        result[key] = yield value(source_data);
+        value = yield value(source_data);
       } else if (isFunction(value)) {
-        result[key] = value(source_data);
+        value = value(source_data);
       } else {
         value = source_data[value];
       }

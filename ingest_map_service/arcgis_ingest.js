@@ -187,20 +187,26 @@ function *processTrees(trees) {
 
     var tree = yield translateTree(trees[i], address);
     if(shouldIngest(tree)){
-      if(!doc) {
-        doc = yield TreeV3.create(tree);
-        console.log("Created Tree", doc.qsi_id);
-      } else {
-        var doc_pri = detection_priorities[doc.pge_detection_type];
-        var tree_pri = detection_priorities[tree.pge_detection_type];
-        if(tree_pri < doc_pri) {
-          console.log("Updated Tree", doc.qsi_id);
-          //override particular values (don't override user entered values)
-          doc_pri.pge_detection_type = tree.pge_detection_type;
-          doc_pri.pge_pmd_num = tree.pge_detection_type;
-          doc_pri.span_name = tree.span_name;
-          doc_pri.circuit_name = tree.circuit_name;
+      try{
+        if(!doc) {
+          doc = yield TreeV3.create(tree);
+          console.log("Created Tree", doc.qsi_id);
+        } else {
+          var doc_pri = detection_priorities[doc.pge_detection_type];
+          var tree_pri = detection_priorities[tree.pge_detection_type];
+          if(tree_pri < doc_pri) {
+          
+            console.log("Updated Tree", doc.qsi_id);
+            //override particular values (don't override user entered values)
+            doc_pri.pge_detection_type = tree.pge_detection_type;
+            doc_pri.pge_pmd_num = tree.pge_detection_type;
+            doc_pri.span_name = tree.span_name;
+            doc_pri.circuit_name = tree.circuit_name;l
+          }
         }
+      }catch(e) {
+        console.error("ERRROR", e)
+        throw(e);
       }
     }
   }
@@ -227,10 +233,10 @@ function *getPMD(pge_pmd_num) {
 
 /**
  * @description create a PMD object from PMD source csv file
+ * @param {String} pge_pmd_num PMD number  
  */
 function *generatePMD(pge_pmd_num){
-  console.log("LOADING PMD FROM CSV", pge_pmd_num);
-  var pmds = yield readPMDCSV("tool/PMD.csv");
+  var pmds = yield readPMDCSV("PMD.csv");
   var pmd = pmds[pge_pmd_num];
   return yield PMD.create(pmd);
 }
@@ -254,7 +260,7 @@ const regions = {
 
 
 /**
- * @@description read pmd csv file into object array
+ * @description read pmd csv file into object array
  * @param file_path file path to PMD.csv file
  */
 function readPMDCSV(file_path){
@@ -338,6 +344,12 @@ var extra = {
   formatter: null   
 };
 var httpAdapter = 'https';
+
+/**
+ * @description reverse geo code coordinates for address
+ * @param {Float} x coordinate (logitude)
+ * @param {Floay} y coordinate (latitude)
+ */
 function getAddress(x, y){
   return new Bpromise(function(resolve,reject){
     geocoder.reverse({lat: y, lon: x}, function (err, res) {
