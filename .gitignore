@@ -28,7 +28,7 @@ node_modules/*
 
 # Optional npm cache directory
 .npm
-
+G
 # Optional REPL history
 .node_repl_historyi
 
@@ -37,7 +37,7 @@ node_modules/*
 
 #npm node_modules
 **/node_modules/*
-**/!node_modules/dsp_*
+!**/node_modules/dsp_*
 
 #dispatchr configs
 **/conf.d/*.json
