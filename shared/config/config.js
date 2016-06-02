@@ -1,10 +1,11 @@
 /**
     config.js - exports a singleton that contians global configurations     
 */
+require("sugar");
 var fs  = require('fs');
 var _   = require('underscore');
-var path = require('path');
 var dir = "conf.d";
+
 var configs = ( function() {
     // http://addyosmani.com/resources/essentialjsdesignpatterns/book/#singletonpatternjavascript
     
@@ -14,9 +15,10 @@ var configs = ( function() {
         var config = {};
         options = options || {};
         var file_list = fs.readdirSync(dir);
-        for(var idx = 0; idx < file_list.length; idx++) {          
+        for(var idx = 0; idx < file_list.length; idx++) {    
+          if(file_list[idx].endsWith("json")) {
             var file = fs.readFileSync(dir+"/"+file_list[idx], {'encoding': 'utf8'});
-	    file = JSON.parse(file);
+            file = JSON.parse(file);
     
             //Merge this file into configs (could do something more sophisticated here)
             for (var attrname in file) { 
@@ -24,6 +26,7 @@ var configs = ( function() {
                 config[attrname] = file[attrname];
               } 
             }
+          }
         }
         if(options.overrides) {
           _.extend(config, options.overrides);
@@ -37,9 +40,9 @@ var configs = ( function() {
           var appenders = config.logging.appenders;
           for(var i = 0 ; i < appenders.length; i++ ) {
             if(appenders[i].connectionString === "AUTOCONFIG") {
-              appenders[i].connectionString = config.dispatchr.mongo_db_host+":"+
-                                              config.dispatchr.mongo_db_port+"/"+
-                                              config.dispatchr.mongo_db_name;
+              appenders[i].connectionString = config.database.mongo_db_host+":"+
+                                              config.database.mongo_db_port+"/"+
+                                              config.database.mongo_db_name;
             }
           }
           log4js.configure(config.logging);

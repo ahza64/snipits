@@ -1,5 +1,5 @@
 #!/bin/env node
-var config = require('dsp_shared/config/config');
+var config = require('dsp_shared/config/config').get();
 var parse = require('csv-parse');
 require("dsp_lib/starts_with.js");
 

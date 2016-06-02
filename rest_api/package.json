@@ -1,0 +1,29 @@
+{
+  "name": "rest_api",
+  "version": "1.0.0",
+  "description": "RESTful API for dispatchr database resources",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dispatchr/services"
+  },
+  "dependencies": {
+    "co-emitter": "^0.2.3",
+    "fast-json-patch": "^0.5.7",
+    "koa": "^1.2.0",
+    "koa-compress": "^1.0.9",
+    "koa-cors": "0.0.16",
+    "koa-logger": "^1.3.0",
+    "koa-mount": "^1.3.0",
+    "koa-router": "^5.4.0",
+    "log4js": "https://github.com/gabe0x02/log4js-node.git",
+    "sugar": "^1.4.1",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
