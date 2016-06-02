@@ -3,10 +3,9 @@ var _ = require('underscore');
 var log = require('log4js').getLogger('['+__filename+']');
 var assert = require('assert');
 
+const TreeStates = require('tree-status-codes');
+var ROLE_PRIVATE_INSPECTOR = "PI";
 
-var ROLE_PRIVATE_INSPECTOR = "PI";
-var TREES_INC_COMPANY_ID = vmd.inspection_companies["Trees Inc."];
-var ROLE_PRIVATE_INSPECTOR = "PI";
 var ACRT_INSPECT_COMPANY = vmd.inspection_companies.ACRT;
 
 assert(ACRT_INSPECT_COMPANY);
@@ -52,7 +51,6 @@ var tree_row = {
   // ACCOUNT: null,
   // HEALTH: null,
   // TAG_TYPE: null,
-  // DBH: null,
   // SOURCE_DEVICE: null,
   // PROPERTY_OWNER_TYPE_ID: null,
   // SSD_ROUTE: null,
@@ -65,101 +63,101 @@ var tree_row = {
   // TREE_RECORD_STATUS: null,
   
   DISPATCHR_ID: null,
-  UPDATE: false
+  UPDATE: false,
+  DBH: null
 };
 
-var Grid = require('dsp_model/grid');
-var PMD = require('dsp_model/pmd');
-var grids = yield Grid.model.find().exec();
-var pmds = yield PMD.model.find().exec();  
+var Circuit = require('dsp_shared/database/model/circuit');
+var PMD = require('dsp_shared/database/model/pmd');
+
+var circuits;
+var pmds;
+
+function *init(){
+  circuits = yield Circuit.model.find().exec();
+  pmds = yield PMD.model.find().exec();  
+  circuits = _.indexBy(circuits, 'circuit_name');
+  pmds = _.indexBy(pmds, 'pge_pmd_num');  
+}
 
 
-function transform(tree) {
-  
-  var row = _.extend({}, tree_row);
-  var grid = grids[tree.circut_name];
-  
-  
-  row.DISPATCHR_ID = tree._id.toString();
-
-  var division = grid.division;
+function *getDivision(tree) {
+  if( !circuits ) {
+    yield init();
+  }  
+  var circuit = circuits[tree.circut_name];
+  var division = circuit.division;
   var pmd = pmds[tree.pge_pmd_num];
+  
   if(tree.pge_pmd_num && pmds[tree.pge_pmd_num]) {
     division = pmds[tree.pge_pmd_num].division;
   }
 
   if(!vmd.division_codes[division]) {
     if(pmd){
-      log.error("no division for tree/pmd ",tree.status, tree.priority,pmd.name, pmd.pge_pmd_num, division, tree.pge_pmd_num);  
+      log.error("no division for tree/pmd ",
+        tree.status, tree.priority,pmd.name, pmd.pge_pmd_num, division, tree.pge_pmd_num);  
     } else {
-      log.error("no division for tree/grid ", tree.status, tree.priority, grid.name, grid.line_number,division);
+      log.error("no division for tree/circuit ", 
+        tree.status, tree.priority, circuit.name, circuit.line_number,division);
     }
   }
+  return division;
+  
+}
+
+function *transform(tree) {
+  var row = _.extend({}, tree_row);
+  var circuit = circuits[tree.circut_name];
+  row.DISPATCHR_ID = tree._id.toString();
+  
+  var division = yield getDivision(tree);
   row.DIVISION_ID = vmd.division_codes[division];
   row.REGION = vmd.division_codes[division];
 
-  if(!vmd.priority_codes[tree.priority]) {
-    log.error("Bad Tree Priority", tree._id, tree.priority);
+  var statusFlags = TreeStates.fetchStatusFlags(tree.status);
+  if(!vmd.priority_codes[statusFlags.priority]) {
+    log.error("Bad Tree Priority", tree._id, statusFlags.priority);
   }
-  // assert(vmd.priority_codes[tree.priority], "no priority for tree "+tree._id+" "+tree.priority);
-  if(tree.priority === "immediate") {
-    tree.priority = "accelerate";
+  assert(statusFlags.priority !== "immediate", "We have a tree marked immediate: "+ tree._id);
+  if(statusFlags.priority === "immediate") {
+    statusFlags.priority = "accelerate";
   }
-  assert(tree.priority !== "immediate", "We have a tree marked immediate: "+ tree._id);
-  row.PRIORITY = vmd.priority_codes[tree.priority];          
-        
+  
+  row.PRIORITY = vmd.priority_codes[statusFlags.priority];                  
   row.LONGITUDE = tree.location.coordinates[0];
   row.LATITUDE = tree.location.coordinates[1];
   row.X = tree.location.coordinates[0];
   row.Y = tree.location.coordinates[1];
 
-  // assert(tree.complete_time, "no complete time for tree");
-
-  if((tree.status === "ready" || tree.status === "newTree") && !tree.complete_time) {
-    log.warn("Tree has no complete time", grid.name, tree._id);
-    tree.complete_time = tree.updated;
-  }
-
-  if(tree.complete_time) {
-    row.INSPECT_DATE = tree.complete_time;
-  }
+  if(_.contains(["no_trim", "ready", "worked"], statusFlags.status) && !tree.pi_complete_time) {
+    log.warn("Tree has no pi complete time", circuit.name, tree._id);
+    tree.pi_complete_time = tree.updated;
+  }  
   row.INSPECT_DATE = JSON.parse(JSON.stringify(tree.complete_time));
 
   row.TREE_TYPE = vmd.tree_types[tree.species];
-  row.TRIM_CODE = trimCode(tree, grid);
+  row.TRIM_CODE = trimCode(tree, statusFlags, circuit);
   
-  row.INSPECT_WO_NUMBER = tree.inspector_wo;
+  row.INSPECT_WO_NUMBER = tree.pi_workorder;
   row.TRIM_WO_NUMBER = null;
-  if(tree.trimmer_status === "complete") {
-    row.TRIM_WO_NUMBER = tree.trimmer_wo;
+  if(statusFlags.status === "worked") {
+    row.TRIM_WO_NUMBER = tree.tc_workorder;
   }
 
-  row.CUSTOMER_NOTIFICATION_ID = getNotificationType(tree);          
-  row.ALERT_ID = alertStatus(tree);
+  row.CUSTOMER_NOTIFICATION_ID = getNotificationType(tree, statusFlags);          
+  row.ALERT_ID = alertStatus(tree, statusFlags);
 
 
   row.SPAN_NBR = tree.qsi_span_number || null;
-  row.TREEID = tree.qsi_tree_id || tree._id;
-  row.LINE_NAME = grid.name;
-  row.LINE_NBR = grid.line_number;
+  row.TREEID = tree.qsi_id || tree._id;
+  row.LINE_NAME = circuit.name;
+  row.LINE_NBR = circuit.line_number;
 
   return row;
 }
 
-
-
-//properties
-//     "notify_customer": true,
-//     "access_issue": true,
-//     "refused": true,
-//     "ntw_needed": true,
-//     "ntw_signed": fase,
-//     "dog": true,
-//     "environment": true,
-//     "irate_customer": true,
-//     "access_code": true,
-//     "access_code_value": "sdfsdf"
-function getNotificationType(tree) {
+function getNotificationType(tree, statusFlags) {
   // contact          Unsigned NTW
   // hold
   // left_card
@@ -169,17 +167,17 @@ function getNotificationType(tree) {
   // quarantine       Bird's nest, riparian zone, or other environmental review needed
   // refusal          Customer refusal
   
-  if(tree.priority === "allgood") {
+  if(statusFlags.status === "no_trim") {
     notification = "inventory"; 
   } else {
     var notification = "ok";
-    if(tree.refused) {
+    if(statusFlags.refused) {
       notification = "refusal"; //some kind of refusal (override if more specific)
-    } else if(tree.properties.ntw_needed) {
+    } else if(statusFlags.ntw_needed && !tree.ntw_image) {
       notification = "contact";
-    } else if(tree.properties.environment) {
+    } else if(statusFlags.environment) {
       notification = "quarantine";
-    } else if(tree.notify_customer) {
+    } else if(statusFlags.notify_customer) {
       notification = "phone";
     }
   }
@@ -190,21 +188,11 @@ function getNotificationType(tree) {
 /*
   looks through the tree task and find a trimcode
 */
-function trimCode(tree, grid) {
-  var trim_code = null;
-  tree.tasks = tree.tasks || [];
-  
-  
-  for(var k  = 0; k < tree.tasks.length; k++) {
-    var new_trim = tree.tasks[k].trim;
-    if(!(trim_code === new_trim || !trim_code || !new_trim)){
-      log.error("More than one trim code", tree._id, new_trim, trim_code);
-    } 
-    trim_code = trim_code || new_trim;
-    // assert(trim_code === new_trim || !trim_code || !new_trim, "GOT more than one trimcode");
-  }
-  if(!trim_code && tree.priority !== "allgood" && tree.status && !tree.refused) {
-    log.error("No Trim Code", grid.name, tree._id, tree.status, tree.priority, trim_code);
+function trimCode(tree, statusFlags, circuit) {
+  var trim_code = tree.trim_code;
+
+  if(!trim_code && _.contains(["ready", "worked"], statusFlags.status)) {
+    log.error("No Trim Code", circuit.name, tree._id, tree.status, tree.priority, trim_code);
   }
   if(trim_code) {
     assert(vmd.trim_codes[trim_code], "Could not lookup Trimcode: "+ trim_code+" "+tree._id);
@@ -214,10 +202,30 @@ function trimCode(tree, grid) {
 }
 
 
+function envAlert(environment) {
+  var alert_type;
+  switch(environment){
+    case 'riparian':
+      alert_type = 'riparian';
+      break;
+    case 'velb':
+      alert_type = "velb site";
+      break;
+    case 'raptor nest':
+      alert_type = "endangered species";
+      break;
+    case 'other':        
+      alert_type = "other hazard";
+      break;
+    default:
+      alert_type = "other hazard";
+      break;        
+  }
+  return alert_type;
+}
 
 
-
-function alertStatus(tree) {
+function alertStatus(tree, statusFlags) {
   // "concerned customer" //threat  
   // "riparian" //repairian zone
   // "access" //access issues
@@ -225,14 +233,16 @@ function alertStatus(tree) {
   var alert_type = null;
 
 
-  if(tree.properties.irate_customer) {
+  if(statusFlags.irate_customer) {
     alert_type = "concerned customer";
-  } else if(tree.properties.environment) {
-    alert_type = "riparian";
-  } else if(tree.properties.access_issue) {
+  } else if(statusFlags.dog){
+    alert_type = "dog";
+  } else if(statusFlags.environment) {
+    alert_type = envAlert(statusFlags.environment);
+  } else if(statusFlags.access_issue) {
     alert_type = "access";
-  } else if(_.contains(tree.warnings, "hazard")){
-    alert_type = "other hazard";
+  } else if(statusFlags.notify_customer) {
+    alert_type = "notify first";
   }
 
   if(alert_type) {

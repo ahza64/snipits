@@ -1,5 +1,5 @@
 #!/bin/env node
-var config = require('dsp_config/config');
+var config = require('dsp_shared/config/config');
 var parse = require('csv-parse');
 require("dsp_lib/starts_with.js");
 
@@ -8,12 +8,14 @@ if(config.mongo_db_user) {
   config.mongo_db_pass = 'dsp';
 }
 
-var utils = require('dsp_lib/cmd_utils');
-var Cache = require('dsp_model/cache');
-var Tree = require('dsp_model/tree');
-var Grid = require('dsp_model/grid');
-var PMD = require('dsp_model/pmd');
-var WorkOrder = require('dsp_model/work_order');
+var utils = require('dsp_shared/lib/cmd_utils');
+
+var Tree = require('dsp_shared/database/model/tree');
+var PMD = require('dsp_shared/database/model/pmd');
+var Grid = require('dsp_shared/database/model/circuit');
+
+var Cache = require('dsp_shared/database/model/cache');
+var WorkOrder = require('dsp_shared/database/model/work_order');
 var User = require('dsp_model/user');
 var Asset = require('dsp_model/asset');
 
@@ -23,8 +25,9 @@ var assert = require('assert');
 var log = require('log4js').getLogger('['+__filename+']');
 var BPromise = require('bluebird');
 
-
-
+var vmd = require('./pge_vmd_codes');
+var TREES_INC_COMPANY_ID = vmd.inspection_companies["Trees Inc."];
+var ACRT_INSPECT_COMPANY = vmd.inspection_companies.ACRT;
 var transform_tree = require('./transform/tree');
 require('sugar');
 

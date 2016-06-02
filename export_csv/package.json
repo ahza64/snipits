@@ -1,0 +1,15 @@
+{
+  "name": "export_csv",
+  "version": "1.0.0",
+  "description": "Export tree data to a csv export",
+  "main": "export.js",
+  "dependencies": {
+    "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabriel Littman",
+  "license": "ISC"
+}
