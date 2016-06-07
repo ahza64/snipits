@@ -4,7 +4,8 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+CWD = process.cwd();
+var app = require(CWD + '/app');
 var debug = require('debug')('pdf_generation_service:server');
 var http = require('http');
 

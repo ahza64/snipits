@@ -34,7 +34,6 @@ G
 
 #python byte code
 *.pyc
-<<<<<<< 2dedbaff1b6edf6c1dde17ee07b6c52dd56901eb
 
 #npm node_modules
 **/node_modules/*
