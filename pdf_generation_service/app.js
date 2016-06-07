@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -57,6 +58,13 @@ app.use(function(err, req, res, next) {
 });
 app.listen(8888, function () {
   console.log('Listening on port 8888');
+  mongoose.connect(process.env.MONGO_URL);
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function() {
+    console.log("Connected to db");
+  });
 });
 
 module.exports = app;
+

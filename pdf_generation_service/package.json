@@ -12,6 +12,12 @@
     "express": "~4.13.1",
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "html-pdf": "~2.0.1",
+    "mongoose": "~4.4.19",
+    "bluebird": "~3.4.0",
+    "mongoose-timestamp": "~0.5.0",
+    "chai": "~3.5.0",
+    "lodash" : "4.13.1"
   }
 }
