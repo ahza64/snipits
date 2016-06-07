@@ -28,9 +28,9 @@ node_modules/*
 
 # Optional npm cache directory
 .npm
-G
+
 # Optional REPL history
-.node_repl_historyi
+.node_repl_history
 
 #python byte code
 *.pyc
@@ -43,3 +43,4 @@ G
 **/conf.d/*.json
 
 data
+pdf_generation_service/public/pdf/*
