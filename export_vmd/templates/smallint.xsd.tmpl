@@ -1,0 +1,7 @@
+<!-- {% autoescape false %}{{line}}{% endautoescape %} -->
+<xs:simpleType name="{{name}}">
+    <xs:restriction base="xs:integer">
+        <xs:maxInclusive value="32767" />
+        <xs:minInclusive value="-32768" />
+    </xs:restriction>
+</xs:simpleType>

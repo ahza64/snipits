@@ -1,0 +1,116 @@
+*******************************************************************************
+This document describes the Vegetation Management Data Exchange Format (VMDEF)
+file format, which can be used to work complete data from external sources.
+
+09-03-2015	Initial Specification 
+10-14-2015	Added section for pictures of tree after work is completed
+11-16-2015	Added ExternalTreeID, ExternalWRID
+02-01-2016	Missing / in closing tags, dropped <ExternalLocID>, some 
+			clarifications in descriptions, and object nesting
+			Added <ExternalWRParams> section to create adhoc work requests
+*******************************************************************************
+File Structure and naming convention:
+The VMDEF file will be a text file containing standard XML tag data in a format
+described below.  The file should have the extension (.WC) and use a unique
+naming convention as it will be placed onto a file-share queue for automated
+import.
+
+A work complete record refers to a specific line item on a work request
+that was issued to a tree crew.  The work complete record indicates what work
+if any was done for the tree.
+
+To link to the source data from other systems, a field
+was added at the tree level to link back to source data: <ExternalTreeID>
+
+<TreeWorkComp>
+	<TreeWorkCompFile>
+
+Object Definitions:
+-------------------
+* indicates required values
+** indicates at least one of these values is required
+[] indicates default values for LiDAR inspection data
+
+<TreeWorkComp>
+	<iWRTreeRecsID>			int		**Required for internally created work, not required for external system
+	<sWorkReq>				varchar(11)	**Work request number - Required for internally created work, not required for external system
+	<sWorkBy>				varchar(15)	Crew/Foreman info
+	<dtWorkDate>			datetime	*Date and time that the tree was worked
+	<nQty>					numeric(5,2)	*Number of units trimmed (>0 and <1000)
+	<nManHours>				numeric(5,2)	Optional - Number of work hours (for time and material billing only)
+	<sTreeCode>				varchar(4)	Type of tree
+	<sTrimCode>				varchar(3)	Trim type
+	<sCrewType>				varchar(2)	Type of crew dispatched to tree (climb/lift truck)
+	<nDistance>				numeric(2,0)	Clearance obtained in ft
+	<mCost>					money		Optional - Fixed price for work
+	<sWrkRptNum>			varchar(7)	Optional - Used by contractors to tag batch of work submitted.  Usually a date is entered here.
+	<iWrkRptSeq>			tinyint		Optional - If multiple batches are submitted during a day, value can be incrimented.  Default [0]
+	<sBillingCode>			varchar(2)	*Billing code determines price for unit of work
+	<iBillingRate>			tinyint		Billing method (0=std, 1=overtime, 2=double, 7=time/material, 8=Non-Billable)
+	<bCompleted>			bit		*[1] Indicates work was completed.  Contractors can submit work as not completed [0]
+	<sReason>				varchar(3)	Not used
+	<sComments>				varchar(255)	Optional - billing notes to document unusual situations
+	<sBatchCode>			varchar(20)	Optional - Field used by contractors to find batches of work submitted to PG&E
+	<ExternalTreeID>		varchar(50)	**Required for external system, not required for internally created work
+	<ExternalWRID>			varchar(50)	Optional - Work Request/Work Order used by external system
+	<ExternalWRParam-sDivCode>			varchar(2)	**Required for external system, not required for internally created work
+	<ExternalWRParam-sLocalOffice>		varchar(2)	**Required for external system, not required for internally created work
+	<ExternalWRParam-sAcctType>			varchar(1)	**Required for external system, not required for internally created work
+	<ExternalWRParam-sDT>				varchar(1)	**Required for external system, not required for internally created work
+	<ExternalWRParam-sContCode>			varchar(3)	**Required for external system, not required for internally created work
+	<ExternalWRParam-sWorkCat>			varchar(2)	**Required for external system, not required for internally created work
+	<ExternalWRParam-sOrderNum>			varchar(10)	Optional for routine work, but should be populated for non-routine
+	<ExternalWRParam-iProjNum>			int		Optional, but should be populated for reporting
+</TreeWorkComp>
+
+<TreeWorkCompFile>				Note that section can be repeated for multiple files
+	<iWRTreeRecsID>				int		*File will be associated with this tree record
+	<sFileName> 				varchar(100)	*Should conform to windows file naming standards - no special chars such as ? , etc...
+	<sFile> 					BLOB data stream	*No data limit
+</TreeWorkCompFile>
+
+    
+Note - Added trees will be added to the work request by inserting into WRTreeRecs table during import.   
+	If tree is successfully added, a value for iWRTreeRecsID will be generated and then the record will 
+	be added to the TreeWorkComp table.
+
+	** There must be a value for either <iWRTreeRecsID> or <ExternalTreeID> so that we can lookup the original inspection record
+
+-------------------------------------------------------------------------------
+								APPENDIX:
+-------------------------------------------------------------------------------
+
+BillingCode	description
+--------	----------------------------
+A1	Facility Protect R1 (Class A) - No Treat
+A2	Facility Protect R2 (Class A) - No Treat
+A3	Facility Protect R3 (Class A) - No Treat
+A4	Facility Protect R4 (Class A) - No Treat
+AA	Facility Protect Minor (Class A)
+AB	Facility Protect Major (Class A)
+AO	Facility Protect Overhang (Class A)
+B1	Facility Protect R1 (Class B) - No Treat
+B2	Facility Protect R2 (Class B) - No Treat
+B3	Facility Protect R3 (Class B) - No Treat
+B4	Facility Protect R4 (Class B) - No Treat
+BA	Facility Protect Minor (Class B)
+BB	Facility Protect Major (Class B)
+BO	Facility Protect Overhang (Class B)
+BR	BRUSH REMOVAL (No Treat)
+BT	Brush Trim
+BX	Brush Removal & Treat
+C1	Facility Protect R1 (Class A) - Treat
+C2	Facility Protect R2 (Class A) - Treat
+C3	Facility Protect R3 (Class A) - Treat
+C4	Facility Protect R4 (Class A) - Treat
+D1	Facility Protect R1 (Class B) - Treat
+D2	Facility Protect R2 (Class B) - Treat
+D3	Facility Protect R3 (Class B) - Treat
+D4	Facility Protect R4 (Class B) - Treat
+R1	TREE REMOVAL CATEGORY 1                           
+R2	TREE REMOVAL CATEGORY 2                           
+R3	TREE REMOVAL CATERGORY 3                          
+TR	TREE TRIM                                         
+WC	Side Wrap Climb
+WL	Side Wrap Lift
+XX	Not Worked / Non-Billable

@@ -1,0 +1,220 @@
+*******************************************************************************
+This document describes the Work Request Data Exchange Format
+file format, which is used to send work request data to tree contractors 
+
+09-22-2014	mdmk	Initial Specification 
+*******************************************************************************
+File Structure and naming convention:
+The work request file will be a text file containing standard XML tag data in a 
+format described below.  The file will have the extension (.WR) and use a unique
+naming convention (WR#_Date)as it will be placed onto a file-share queue for 
+automated export.
+
+Object Hiearchy:
+----------------
+<WRTrees>							Work Request info
+	<WRTreeLoc>						Inspected Locations(s)
+		<WRTreeLocAlerts>				Alerts for location
+		<WRTreeLocContacts>			Customer Contact Records
+		<WRTreeRecs>				Inspected Tree(s)
+			<WRTreeRecsAlerts>		Alerts for specfic tree
+			
+A work request is a bundle of locations with trees that need trimming. Note
+that all trees at the location are listed for reference purposes, and that
+not all trees necessarily need trimming.  WRTreeRecs with iWorkReqSeq = 0
+are for reference only and do not need to be trimmed. Tree GPS coordinates are 
+only required under certain circumstances, so the location GPS should be used
+to find the work location.
+
+Object Definitions:
+-------------------
+
+<WRTrees>
+	<sWorkReq>		char(11)		Work Request Number
+	<sDivCode>		char(2)			Division
+	<sLocalID>		char(2)			Local Office code
+	<sSOrderNum>	char(10)
+	<dtDateIssued> 	datetime		Issued to contractor
+	<sContractor> 	char(30)		Contractor comments when recindend
+	<sCompltBy> 	char(15)
+	<dtCompltDate> 	datetime
+	<bTagOnly>		bit
+	<bVoid>			bit
+	<sVoidBy>		char(4)
+	<dtVoidDate>	datetime
+	<sSortOrder>	char(1)
+	<sSortValue>	char(10)		Indicates how the WR was sorted (ssd/rt or other)
+	<sComment>		varchar(255)	Notes to contractor
+	<iSiteCount>	int
+	<nTreeCount> 	numeric(7, 2)
+	<nTreeHours> 	numeric(7, 1)
+	<iPageCount> 	smallint
+	<sContRep>		char(20)
+	<iIssued>		tinyint			Indicates status of WR.  Issued to contractor, or recinded
+	<sContCode>		char(3)			Contractor Code
+	<iSort>			tinyint
+	<sDT>			char(1)			Distribution or Transmission
+	<sWorkCat>		char(2)			Work Type
+	<iProjNum>		int
+	<sProximity>	char(1)
+	<sAcctType>		char(1)
+</WRTrees>
+
+<WRTreeLoc>
+	<iWRTreeLocID> int 				Unique ID of WR location
+	<iTreeLocID> int				Unique ID of Inspection record
+	<iSSDRoute> int
+	<iRouteNum> int	
+	<sDivCode> char(2)				Division
+	<sDivCodeDescrip> varchar(16)	Description of division (joined)
+	<sCountyCode> char(2)			County Code
+	<sCountyDescrip> char(25)		County Name (joined)
+	<sInspComp> char(3)				Inspection Company Code
+	<sInsp> char(4)					Inspector
+	<sArea> char(10)
+	<sCircuit> char(10)				Circuit Number
+	<sCircuitDescrip> char(27)		Circuit Name (joined)
+	<sQuadMap> char(11)
+	<sMapType> char(1)	
+	<sMapTypeNum> char(8)	
+	<sTagType> char(1)	
+	<sTagTypeDescrip> char(15)		Description for Tag Type (joined)
+	<sTagNum> char(10)
+	<sStreetNum> char(11)
+	<sStreet> char(26)				Street Name
+	<sDirections> varchar(70)
+	<sCity> char(11)
+	<sSourceDev> char(8)
+	<sPriVolt> char(3)
+	<sSConst> char(1)
+	<bSRA> bit						0=LRA, 1=SRA/FRA
+	<sComments> varchar(255)
+	<bCommAlert> bit				Flag indicating that there are important comments present that must be read
+	<sPCC> char(6)	
+	<sMisc> char(5)	
+	<bCustAtLoc> bit
+	<sLocalID> char(2)
+	<sPoleNum> char(9)				Tower number1 for transmission
+	<sLineID> char(6)
+	<dtInspDate> datetime			Inspection Date and Time
+	<sWorkReq> char(11)				Work Request number
+	<sRemNum> char(8)
+	<sAcctType> char(1)
+	<bUnderBuild> bit
+	<iParentLocID> int				Root inspection record
+	<iPIRoute> int					Route as-inspected
+	<sXStreet> varchar(255)
+	<sAPN> varchar(50)
+	<sPoleNum2> char(9)				Tower 2
+	<iEasement> int
+	<iSpanLength> int
+	<iBioUnitsTrim> int				Elderberry units
+	<iBioUnitsRemoval> int			Elderberry units
+	<bVELBArea> bit					1=VELB area, 0=Not in VELB area
+	<sTWADocNum> varchar(15)		Tree Work Auth number
+	<sTWASignedBy> varchar(50)
+	<gTWASignature> bit				0=No signature on file, 1=signature on file
+	<dtTWASignedDate> datetime
+	<iCityID> int
+	<sCityDescrip> varchar(50)		Long description of city (joined)
+	<sTreeLocStatus> varchar(10)	Location status
+	<sTreeLocStatusDescrip> varchar(65) Description of Status (joined)
+	<nLatitude> numeric(12, 9)		format:   39.736025000	(joined)
+	<nLongitude> numeric(12, 9)		format: -121.859128000	(joined)
+	<dtMobileCapture> datetime		Date/Time of flyover	(joined)
+</WRTreeLoc>
+
+<WRTreeLocAlerts>
+	<iTreeLocID> int				LocationID
+	<sRACode> char(2)				Alert code
+	<sDescrip> char(25)				Description of alert code	(joined)
+</WRTreeLocAlerts>
+
+<WRTreeLocContacts>
+	<sContactType> char(1)			Code indicating contact type	(joined)
+	<sContactTypeDescrip> varchar(50)	Description of contact type	(joined)
+	<bPrimary>	bit					Flag indicating if this is the primary contact for the location	(joined)
+	<sComments>	varchar(255)		Customer comments (joined)
+	<sLastName> varchar(50)		
+	<sFirstName> varchar(50)		
+	<sBusinessName> varchar(50)	
+	<sStreetNum> varchar(11)		Mailing address info
+	<sStreet> varchar(50)		
+	<sCity> varchar(30)	
+	<sState> char(2)	
+	<sZipcode> varchar(50)	
+	<sPhone> varchar(14)		
+	<sAltPhone> varchar(14)	
+	<sFax> varchar(14) 			
+	<sEmail> varchar(255)	
+</WRTreeLocContacts>
+
+<WRTreeRecs>
+	<iWRTreeRecsID> int 			Unique ID of tree on WR
+	<iWRTreeLocID> int				Unique ID of location on WR
+	<sTreeCode> char(4)				Tree Type
+	<sTreeCodeDescrip> char(20)		Full tree description (joined)
+	<sNotification> char(1)			Permission Code
+	<sNotificationDescrip> char(20)	Permission Description	
+	<nDBH> numeric(2, 0)	
+	<nHeight> numeric(3, 0)	
+	<nClearance> numeric(2, 0)	
+	<nQty> numeric(5, 2)	
+	<sTrimCode> char(3)	
+	<sTrimCodeDescrip> char(10)		Description of Trim Code (joined)
+	<nManHours> numeric(5, 2)
+	<sPCode> char(1)				Priority Code
+	<sPCodeDescrip> char(15)		Priority Description (joined)
+	<sNextTrim> char(1)
+	<sCrewType> char(2)				Crew Code
+	<sCrewTypeDescrip> char(50)		Crew Description (joined)
+	<sWorkType> char(1)				Work Type Code
+	<sWorkTypeDescrip> char(25)		Work Type (joined)
+	<sPoleOwner> char(1)
+	<sComment> varchar(45)
+	<sOwnedBy> char(2)				Land Owner Code
+	<sOwnedByDescrip> char(11)		Land Owner (joined)
+	<bUnderBuild> bit				1=Underbuild
+	<bTreeConn> bit	
+	<bTreeWire> bit	
+	<bInsfClear> bit	
+	<sReason> char(2)	
+	<sAcctType> char(1)	
+	<bNotifyPhon> bit				How customer was notified
+	<bNotifyPers> bit	
+	<bNotifyDoor> bit	
+	<bNotifyPerm> bit	
+	<iWRSort> smallint				Line number on WR
+	<sWorkReq> char(11)				WR Number
+	<iWorkReqSeq> smallint			0=Reference tree (no work reqd)
+	<dtNextTrimDate> smalldatetime	
+	<sWrkRptNum> char(7)	
+	<sPerformCont> char(7)	
+	<dtInspDate> datetime	
+	<sInspComp> char(3)				Inspection Company
+	<sInsp> char(4)					Inspector
+	<dTGR> smalldatetime
+	<sMWSDocNum> char(6)			Major Woody Stem Document Number
+	<sMWS> char(1)					Exempt MWS
+	<iTreeRecsID> int				Tree Inspection ID
+	<nProximity> tinyint	
+	<dtTGRPriorLast> datetime	
+	<dtTrimPriorLast> datetime	
+	<nWireType> tinyint	
+	<iParentTreeID> int	
+	<dtVisitedDate> datetime	
+	<sLineID2> char(6)	
+	<sMWSUserID> varchar(50)
+	<dtMWSSignedDate> datetime
+	<sRxComments> varchar(255)		Prescription Comments from Inspector
+	<bVELBArea> bit
+	<nLatitude> numeric(12, 9)		format:   39.736025000	(joined)
+	<nLongitude> numeric(12, 9)		format: -121.859128000	(joined)
+	<dtMobileCapture> datetime		Date/Time of flyover	(joined)
+</TreeRecs>
+			
+<WRTreeRecsAlerts>
+	<iTreeRecsID> int				TreeID
+	<sRACode> char(2)				Alert code
+	<sDescrip> char(25)				Description of alert code	(joined)
+</WRTreeRecsAlerts>

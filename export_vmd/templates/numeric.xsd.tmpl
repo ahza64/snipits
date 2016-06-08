@@ -1,0 +1,7 @@
+<!-- {% autoescape false %}{{line}}{% endautoescape %} -->
+<xs:simpleType name="{{name}}">
+    <xs:restriction base="xs:decimal">
+        <xs:fractionDigits value="{{fraction}}" />
+        <xs:totalDigits value="{{total}}" />                    
+    </xs:restriction>
+</xs:simpleType>
