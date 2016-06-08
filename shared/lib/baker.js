@@ -28,7 +28,6 @@ function command(func, options) {
 }
 
 function run() {  
-  console.log("SDFSDF", process.argv.slice(2))
   var argv = require('minimist')(process.argv.slice(2));
   var command = null;
   if(argv._.length < 0 || !commands[argv._[0]]) {
@@ -56,6 +55,11 @@ function run() {
         co(function*(){
           var result = yield commands[command].func.apply(this, args);
           console.log(result);
+        }).catch(function(e){
+          console.log("ERROR", e.message, e.stack);
+          throw e;
+          console.log("ERROR", e.message, e.stack);          
+          return Promise.reject(e);
         });
       } else {
         var result = commands[command].func.apply(this, args);        

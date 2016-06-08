@@ -8,26 +8,58 @@ var config = require('dsp_config/config').get();
 var BPromise = require('bluebird');
 
 var baker = require('./baker');
-require('dsp_database/database')(config.dispatchr);
-require('dsp_database/database')(config.meteor);
+
+var connections = null;
+
+function *waitForConnections(){
+  for(var name in connections) {
+    if(connections.hasOwnProperty(name)) {
+      yield connections[name].connected;
+    }
+  }
+}
+
+function connect(connection_names) {
+  if(!connections) {
+    if(!connection_names) {
+      connection_names = ['dispatchr', 'meteor'];
+    }      
+    connections = {};
+    for(var i = 0; i < connection_names.length; i++) {
+      var name = connection_names[i];
+      if(!connections[name]) {
+          connections[name] = require('dsp_database/database')(config[name]);
+      }
+      return connections[name];
+    }
+  }
+} 
+
+
+function closeConnections() {
+  for(var name in connections) {
+    if(connections.hasOwnProperty(name)) {
+      console.log("CLOSING", name);
+      connections[name].connection.close();
+    }
+  }
+}
 
 function bakerGen(gen, options) {
   if(!baker) {
     baker = require('dsp_lib/baker');
   }
-  options = options || {};
-  var db1 = require('dsp_database/database')(config.meteor);  
-  var db2 = require('dsp_database/database')(config.dispatchr);
-  
+  options = options || {};    
+  connect(options.dbs);
   options.parameters = baker.getParams(gen);
   options.command = gen.name;
   console.log(options);
   baker.command(function*(){
-    console.log("RUNNING");
+    yield waitForConnections();    
+    console.log("RUNNING");    
     var result = yield gen.apply(this, arguments);
     yield timer(3000);
-    db1.connection.close();
-    db2.connection.close();
+    closeConnections();
     return result;
   }, options);    
   return baker;
@@ -35,32 +67,29 @@ function bakerGen(gen, options) {
 
 function generatorWithDb(gen) {
   console.log("configs", config.dispatchr);
-  var db1 = require('dsp_database/database')(config.meteor);  
-  var db2 = require('dsp_database/database')(config.dispatchr);
+  connect();
 
   return new BPromise(function(resolve){//, reject)  {
     co(function*(){
       console.log("RUNNING Generator", gen);  
-      yield db1.connected;
-      yield db2.connected;
+      yield waitForConnections();
       var result = yield gen;
       resolve(result);
     });
   }).finally(function(){
     setTimeout(function(){
-      db1.connection.close();
-      db2.connection.close();
+      closeConnections();
     }, 3000);
   });
 }
 
 function withDb(func, args) {
   console.log("ARGS", args);
-  var db = require('dsp_database/database')(config.dispatchr);
+  connect();
   var res = func.apply(this, args);
   console.log(res);
   return res.finally(function(){
-    db.connection.close();
+    closeConnections();
   });
 }
 
@@ -85,8 +114,13 @@ function dumpAsCSV(row_data, tabs) {
 }
 
 module.exports = {
+  connect: connect,
 	dumpAsCSV: dumpAsCSV,
 	withDb: withDb,
 	generatorWithDb: generatorWithDb,
-  bakerGen: bakerGen
+  bakerGen: bakerGen,
+  bakerRun: function() {
+    baker.run();
+  }
+  
 };

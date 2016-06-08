@@ -1,4 +1,4 @@
-var vmd = require('./pge_vmd_codes');
+var vmd = require('../pge_vmd_codes');
 var _ = require('underscore');
 var log = require('log4js').getLogger('['+__filename+']');
 var assert = require('assert');
@@ -74,9 +74,9 @@ var circuits;
 var pmds;
 
 function *init(){
-  circuits = yield Circuit.model.find().exec();
-  pmds = yield PMD.model.find().exec();  
-  circuits = _.indexBy(circuits, 'circuit_name');
+  circuits = yield Circuit.find();
+  pmds = yield PMD.find();  
+  circuits = _.indexBy(circuits, 'name');
   pmds = _.indexBy(pmds, 'pge_pmd_num');  
 }
 
@@ -85,7 +85,7 @@ function *getDivision(tree) {
   if( !circuits ) {
     yield init();
   }  
-  var circuit = circuits[tree.circut_name];
+  var circuit = circuits[tree.circuit_name];
   var division = circuit.division;
   var pmd = pmds[tree.pge_pmd_num];
   
@@ -107,8 +107,12 @@ function *getDivision(tree) {
 }
 
 function *transform(tree) {
+  if( !circuits ) {
+    yield init();
+  }  
+  
   var row = _.extend({}, tree_row);
-  var circuit = circuits[tree.circut_name];
+  var circuit = circuits[tree.circuit_name];
   row.DISPATCHR_ID = tree._id.toString();
   
   var division = yield getDivision(tree);
@@ -134,7 +138,8 @@ function *transform(tree) {
     log.warn("Tree has no pi complete time", circuit.name, tree._id);
     tree.pi_complete_time = tree.updated;
   }  
-  row.INSPECT_DATE = JSON.parse(JSON.stringify(tree.complete_time));
+  
+  row.INSPECT_DATE = JSON.parse(JSON.stringify(tree.pi_complete_time));
 
   row.TREE_TYPE = vmd.tree_types[tree.species];
   row.TRIM_CODE = trimCode(tree, statusFlags, circuit);
@@ -145,15 +150,27 @@ function *transform(tree) {
     row.TRIM_WO_NUMBER = tree.tc_workorder;
   }
 
-  row.CUSTOMER_NOTIFICATION_ID = getNotificationType(tree, statusFlags);          
+  row.CUSTOMER_NOTIFICATION_ID = getNotificationType(tree, statusFlags);
   row.ALERT_ID = alertStatus(tree, statusFlags);
-
 
   row.SPAN_NBR = tree.qsi_span_number || null;
   row.TREEID = tree.qsi_id || tree._id;
   row.LINE_NAME = circuit.name;
-  row.LINE_NBR = circuit.line_number;
+  row.LINE_NBR = circuit.line_number || null;
 
+  row.STREET_NUM = tree.streetNumber || null;
+  row.STREET = tree.streetName || null;  
+  console.log("tree", tree.city);
+  row.CITY_ID = vmd.city_codes[tree.city.toUpperCase()];
+  if(tree.county) {
+    row.COUNTY_ID = vmd.county_codes[tree.county.toUpperCase()];
+  } else {
+    row.COUNTY_ID = null;
+  }
+  
+  assert(row.CITY_ID);
+  assert(row.COUNTY_ID);  
+  
   return row;
 }
 

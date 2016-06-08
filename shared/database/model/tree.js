@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var connection = require('dsp_database/connections')('meteor');
 
-
+var TreeStates = require('tree-status-codes');
 var treeSchema = new mongoose.Schema({
   project: String,
   status: String,
@@ -11,6 +11,7 @@ var treeSchema = new mongoose.Schema({
   streetName: String,
   city: String,
   state: String,
+  county: String,
   zipcode: String,
   pge_pmd_num: String,
   pge_detection_type: String,
@@ -55,4 +56,29 @@ var treeSchema = new mongoose.Schema({
   updated: { type: Date, default: Date.now, index: true }, 
 });
 
-module.exports = connection.model('Tree', treeSchema);
+var Tree = connection.model('Tree', treeSchema);
+
+
+Tree.queryStatus = function(statuses, not) {
+  if(!Array.isArray(statuses)) {
+    statuses = [statuses];
+  }
+  not = not || false;
+  if(not) {
+    not = "^";
+  } else {
+    not = "";
+  }
+  
+  var statustoString = new TreeStates.StatusFlagsToString();
+  for(var i = 0; i < statuses.length; i++) {
+      statuses[i] = statustoString.getStatus(statuses[i]).statusCode[0];  
+  }
+
+  var status_char = statuses.join('');
+  var regEx = "^["+not+status_char+"]";
+  // regEx = new RegExp(regEx);
+  return {status: {$regex: regEx}};
+};
+
+module.exports = Tree;

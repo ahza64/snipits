@@ -5,6 +5,7 @@
 */
 
 var utils = require('dsp_shared/lib/cmd_utils');
+utils.connect(['meteor']);
 var esri_util = require("dsp_shared/lib/esri/util");
 var http_get = esri_util.http_get;
 var assert = require('assert');
@@ -19,6 +20,8 @@ var Circuit = require('dsp_shared/database/model/circuit');
 var TreeStates = require('tree-status-codes');
 var Bpromise = require('bluebird');  
 
+
+var Ingest = require('dsp_shared/database/model/ingest');
 
 var dsp_project = "transmission_2015";
 
@@ -41,33 +44,70 @@ var detection_priorities = {
  * Entry point of script
  */
 function *run(){
- console.log("RUNNING arcgis ingest");
- var project = dsp_project.toUpperCase();
- var host = "https://esri.dispatchr.co:6443";
- var service_path = ["/arcgis/rest/services", project, "MapServer"].join("/");
- var base_url = [host, service_path].join('/');
- var base_params = {
+  console.log("RUNNING arcgis ingest");
+  var project = dsp_project.toUpperCase();
+  var host = "https://esri.dispatchr.co:6443";
+  var service_path = ["/arcgis/rest/services", project, "MapServer"].join("/");
+  var base_url = [host, service_path].join('/');
+  var base_params = {
    f: "pjson"
- };
- var service = yield http_get(base_url, base_params);
+  };
 
-   // var layer_by_id = _.indexBy(service.layers, 'id')
-   for(var i = 0 ; i < service.layers.length; i++) {
-     var layer_group = service.layers[i];
-     if(layer_group.subLayerIds && layer_group.parentLayerId === -1) {
-       console.log("LAYER GROUP", layer_group.name, layer_group.id);
-       for(var j = 0; j < layer_group.subLayerIds.length; j++) {
-         var layer_id = layer_group.subLayerIds[j];
-         console.log("LAYERS", layer_id);
-         var layer = service.layers[layer_id];
-         if(layer.name.endsWith("TreeTops")) {
-           yield processLayer(base_url, layer);
-         }else if(layer.name.endsWith("Spans")) {
-           yield processSpansLayer(base_url, layer);
-         } 
-       }
-     }
-   }
+  var latest = yield Ingest.findOne({latest: true});
+  if(!latest) {
+   latest = yield Ingest.create({latest: true});
+   console.log("latest", latest);
+  }
+  latest.date = new Date();
+  latest.script = "arcgis_ingest";
+  latest.name = null;
+  latest.status = "running";
+  latest.details = [];
+  yield latest.save();
+ 
+  var service = yield http_get(base_url, base_params);
+  for(var i = 0 ; i < service.layers.length; i++) {
+    var layer_group = service.layers[i];
+    if(layer_group.subLayerIds && layer_group.parentLayerId === -1) {
+      var ingest = yield ingestGroup(layer_group, service, base_url);
+      latest.details.push(ingest);
+    }
+  }
+  
+  latest.status = "complete";
+  yield latest.save();
+}
+
+
+function *ingestGroup(layer_group, service, base_url){
+  
+  var ingest = yield Ingest.findOne({name: layer_group.name, script: "arcgis_ingest"}).sort({date: -1});
+  if(ingest) {
+    console.log("Layer group previously ingested", layer_group.name);
+  } else {
+    ingest = yield Ingest.create({
+      name: layer_group.name,
+      status: "running",
+      script: "arcgis_ingest", 
+      date: new Date()
+    });
+
+    console.log("LAYER GROUP", layer_group.name, layer_group.id);
+    for(var j = 0; j < layer_group.subLayerIds.length; j++) {
+      var layer_id = layer_group.subLayerIds[j];
+      console.log("LAYERS", layer_id);
+      var layer = service.layers[layer_id];
+      if(layer.name.endsWith("TreeTops")) {
+        yield processLayer(base_url, layer);
+      }else if(layer.name.endsWith("Spans")) {
+        yield processSpansLayer(base_url, layer);
+      } 
+    }
+  
+    ingest.status = "complete";
+    yield ingest.save();
+  }
+  return ingest;
 }
 
 /**
@@ -181,6 +221,7 @@ function *processTrees(trees) {
         streetNumber: doc.streetNumber,
         streetName: doc.streetName,
         city: doc.city,
+        county: doc.county,
         state: doc.state,
         zipcode: doc.postal,
       };
@@ -333,7 +374,7 @@ function shouldIngest(tree) {
  */
 function *translateTree(tree, address) {
   if(!address) {
-    address = yield getAddress(tree.geometry.x, tree.geometry.y);
+    address = yield getAddress(tree.geometry.x, tree.geometry.y);        
   }
   tree = _.extend({}, tree.attributes, {geometry: tree.geometry}, address);
   return yield migrate_util.applyMigrationSchema(migrate_schema, tree);
@@ -368,7 +409,16 @@ function getAddress(x, y){
           reject(err);
         }
       }else {
-        resolve(res[0]);
+        var address = res[0];
+        address.county = address.administrativeLevels.level2long;
+        if(address.county) {
+          if(address.county.endsWith("County")) {
+            address.county = address.county.substring(0, address.county.length - " County".length);
+          }
+        } else {
+          console.error("Could not find county", [x, y]);
+        }
+        resolve(address);
       }
     });
   });
@@ -402,6 +452,7 @@ var migrate_schema = {
   streetNumber: "streetNumber",
   streetName: "streetName",
   city: "city",
+  county: "county",
   state: "state",
   zipcode: "postal",
   
@@ -448,8 +499,17 @@ function statusCode(tree){
   return TreeStates.fetchStatusCode(treeFlags);
 }
 
+
+
+
+
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');
   utils.bakerGen(run, {default:true});  
+  utils.bakerGen(function *treeAddress(tree_id){
+    var tree = yield TreeV3.findOne({_id: tree_id});
+    var address = yield getAddress(tree.location.coordinates[0], tree.location.coordinates[1]);
+    return address;
+  });
   baker.run();  
 }
