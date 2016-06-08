@@ -2,6 +2,7 @@
   "name": "export_csv",
   "version": "1.0.0",
   "description": "Export tree data to a csv export",
+  "private": true,
   "main": "export.js",
   "dependencies": {
     "bluebird": "^3.4.0",
@@ -18,5 +19,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Gabriel Littman",
-  "license": "ISC"
+  "license": "PRIVATE"
 }

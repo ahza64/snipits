@@ -2,7 +2,8 @@
   "name": "shared",
   "version": "1.0.0",
   "description": "Shared JavaScript libraries and utils.",
-  "main": "\"\"",
+  "private": true,
+  "main": "",
   "dependencies": {
     "bluebird": "^3.4.0",
     "co": "^4.6.0",
@@ -26,5 +27,5 @@
     "url": "https://github.com/Dispatchr/services/tree/master/shared"
   },
   "author": "Gabriel Littman",
-  "license": "ISC"
+  "license": "PRIVATE"
 }

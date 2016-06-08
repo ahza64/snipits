@@ -1,0 +1,22 @@
+{
+  "name": "export_vmd",
+  "version": "1.0.0",
+  "description": "\"Creates xml exports to pge vmd system'",
+  "private": true,
+  "main": "export.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dispatchr/services/tree/master/export_vmd"
+  },
+  "keywords": [
+    "xml",
+    "exprot",
+    "vmd",
+    "pge"
+  ],
+  "author": "Gabriel Littman",
+  "license": "PRIVATE"
+}
