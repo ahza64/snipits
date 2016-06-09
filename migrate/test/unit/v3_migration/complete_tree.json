@@ -1,0 +1,75 @@
+{
+  "_id": "56819518d9bfa5c61e02a6cc",
+  "inc_id": 38464,
+  "grid": "56846620d9bfa5c61e03d069",
+  "grid_segment_id": 38,
+  "qsi_span_number": 38,
+  "qsi_priority": "VC3c_UH",
+  "priority": "routine",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -121.53963685883285,
+      39.51649615881558
+    ]
+  },
+  "tree_id": "10385_3",
+  "qsi_tree_id": "E121539636N39516496",
+  "__v": 3,
+  "checksum": "593d4a9afeedbe1386d4d24270eb009be64b5aab",
+  "schemaVersion": "2",
+  "status": "ready",
+  "estimated_time": 300,
+  "min_mgcc": null,
+  "pge_pmd_num": "136472",
+  "type": "tree",
+  "zone": null,
+  "trimmer_status": "complete",
+  "span_name": "004/038-005/040",
+  "exported": "2016-04-18T10:08:04.000Z",
+  "updated": "2016-04-15T00:00:41.373Z",
+  "created": "2015-12-28T20:01:28.109Z",
+  "complete_time": "2016-03-23T18:42:40.820Z",
+  "start_time": "2016-03-23T18:42:38.255Z",
+  "grouping": null,
+  "work_order": "56e08637cac1326e17c5edbf",
+  "trimmer_complete_time": "2016-04-05T21:21:13.855Z",
+  "trimmer_start_time": "2016-04-05T21:19:49.064Z",
+  "trimmer_wo": "56e08637cac1326e17c5edbf",
+  "trimmer_veh": "56cdd1ba7202c34b557425c3",
+  "trimmer_user": "56cdd1b97202c34b557425c2",
+  "inspector_wo": "56819518d9bfa5c61e02a6d2",
+  "inspector_veh": "5683955bd9bfa5c61e03316a",
+  "inspector_user": "56846116d9bfa5c61e038d96",
+  "properties": {
+    "access_code_value": "Cut into fire wood",
+    "notify_customer": true,
+    "access_issue": false,
+    "access_code": true,
+    "statusCode": "ready",
+    "refused": false,
+    "environment": false
+  },
+  "refused": false,
+  "map_annotations": [],
+  "dbh": 36,
+  "height": 70.91999816894531,
+  "distance_from_line": 146,
+  "height_above_line": null,
+  "tasks": [
+    {
+      "trimmed": true,
+      "image_after": "57042c467a74da6f769b87fa",
+      "id": 1,
+      "image": "568571c9d2f69e2b954cf836",
+      "clearance": 0,
+      "trim": "R4D"
+    }
+  ],
+  "warnings": [
+    "climb"
+  ],
+  "species": "Gray Pine",
+  "health": 50,
+  "count": null
+}

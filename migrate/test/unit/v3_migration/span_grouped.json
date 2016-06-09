@@ -1,0 +1,61 @@
+{
+    "_id" : "56a6f4be59a1b9a1733e20a1",
+    "inc_id" : 76357,
+    "pge_pmd_num" : "136472",
+    "estimated_time" : 300,
+    "grid" : "56846620d9bfa5c61e03d069",
+    "qsi_span_number" : 136,
+    "qsi_priority" : "VC1c_MO",
+    "zone" : null,
+    "min_mgcc" : null,
+    "priority" : "allgood",
+    "location" : {
+        "coordinates" : [ 
+            -120.909447497996, 
+            37.7938458491176
+        ],
+        "type" : "Point"
+    },
+    "tree_id" : "10282_20",
+    "type" : "tree",
+    "qsi_tree_id" : "E120909447N37793845",
+    "updated" : "2016-03-22T22:27:57.407Z",
+    "created" : "2016-01-26T04:23:26.411Z",
+    "complete_time" : "2016-02-02T18:41:07.621Z",
+    "start_time" : "2016-02-02T18:41:03.751Z",
+    "grouping" : null,
+    "work_order" : null,
+    "trimmer_complete_time" : null,
+    "trimmer_start_time" : null,
+    "trimmer_wo" : null,
+    "trimmer_veh" : null,
+    "trimmer_user" : null,
+    "inspector_wo" : null,
+    "inspector_veh" : "5683955bd9bfa5c61e03316a",
+    "inspector_user" : "56846116d9bfa5c61e038d96",
+    "properties" : {},
+    "refused" : false,
+    "map_annotations" : [],
+    "dbh" : null,
+    "height" : 24.2600002288818,
+    "distance_from_line" : null,
+    "height_above_line" : null,
+    "tasks" : [ 
+        {
+            "trim" : null,
+            "clearance" : 0,
+            "image" : null,
+            "id" : 1
+        }
+    ],
+    "warnings" : [],
+    "species" : "unknown",
+    "health" : null,
+    "count" : null,
+    "__v" : 1,
+    "checksum" : "1489bf513d376bc641eec6d196d9be60dc2c1887",
+    "schemaVersion" : "2",
+    "status" : "span_grouped",
+    "exported" : "2016-02-04T20:41:11.000Z",
+    "span_name" : "004/012-005/001"
+}

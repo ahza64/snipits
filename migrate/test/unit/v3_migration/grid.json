@@ -1,0 +1,27 @@
+{
+  "_id": "56846620d9bfa5c61e03d069",
+  "feature_layers": {
+    "grid": {
+      "url": "http://esri.dispatchr.co:6080/arcgis/rest/services/MENDOCINO_REDBUD/MapServer/0",
+      "id": "grid",
+      "name": "Circuit"
+    }
+  },
+  "group": "CORTINA_MENDOCINO",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -122.91959469240871,
+      39.15202943893653
+    ]
+  },
+  "tenant": "564ade1278b391d26af397bf",
+  "name": "MENDOCINO_REDBUD",
+  "__v": 0,
+  "division": "North Coast",
+  "line_number": "10167",
+  "updated": "2016-02-25T09:09:35.152Z",
+  "created": "2015-12-30T23:17:52.897Z",
+  "towers": [],
+  "conductors": []
+}

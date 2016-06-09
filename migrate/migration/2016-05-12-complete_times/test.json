@@ -1,0 +1,89 @@
+{
+	"_id": "83Z3J4GuPwDqDjAAA",
+    "parents" : [],
+    "type": "root",
+    "sort_by": "order",
+    "max_expand": 2
+}
+
+{
+	"_id": "83Z3J4GuPwDqDjBBB",
+    "parents" : ["83Z3J4GuPwDqDjAAA"],
+    "order": 1,
+	"expandable": false,
+	"drillable": true,    
+	"header": [
+		{"title": "",          "key": "display",},
+		{"title": "Total",     "key": "total",  "calc": "sum children"},
+		{"title": "Left",      "key": "detected_count",  "calc": "sum children"},
+		{"title": "Not Ready", "key": "notready_count",  "calc": "sum children"},
+		{"title": "Ready",     "key": "ready_count",     "calc": "sum children"},
+		{"title": "Worked",    "key": "worked_count",    "calc": "sum children"},
+		{"title": "No Trim",   "key": "allgood_count",   "calc": "sum children"},
+	],
+	"display": "City",
+    "type": "category",
+	"filter": {"type": ["region", "division", "project"]},
+}
+{
+	"_id": "83Z3J4GuPwDqDjCCC",
+    "parents" : ["83Z3J4GuPwDqDjAAA"],
+    "order": 2,    
+	"header": [
+		{"title": "",          "key": "display",},
+		{"title": "Total",     "key": "total",  "calc": "sum children"},
+		{"title": "Left",      "key": "detected_count",  "calc": "sum children"},
+		{"title": "Not Ready", "key": "notready_count",  "calc": "sum children"},
+		{"title": "Ready",     "key": "ready_count",     "calc": "sum children"},
+		{"title": "Worked",    "key": "worked_count",    "calc": "sum children"},
+		{"title": "No Trim",   "key": "allgood_count",   "calc": "sum children"},
+	],
+	"display": "Project",
+    "type": "category",    
+	"filter": {"type": ["region", "division", "project"]},    
+}
+{
+	"_id": "83Z3J4GuPwDqDjDDD",
+    "parents" : ["83Z3J4GuPwDqDjAAA"],
+    "order": 3,
+	"header": [
+		{"title": "",          "key": "display",},
+		{"title": "Total",     "key": "total",  "calc": "sum children"},
+		{"title": "Left",      "key": "detected_count",  "calc": "sum children"},
+		{"title": "Not Ready", "key": "notready_count",  "calc": "sum children"},
+		{"title": "Ready",     "key": "ready_count",     "calc": "sum children"},
+		{"title": "Worked",    "key": "worked_count",    "calc": "sum children"},
+		{"title": "No Trim",   "key": "allgood_count",   "calc": "sum children"},
+	],
+	"display": "Line",
+    "type": "category",    
+	"filter": {"type": ["region", "division", "line"]},    
+}
+
+{
+    "_id": "83Z3J4GuPwDqDjEEE",
+	"type": "region",
+    "display": "North",
+    "parents" : ["83Z3J4GuPwDqDjBBB", "83Z3J4GuPwDqDjCCC", "83Z3J4GuPwDqDjDDD"]
+}
+{
+    "_id": "83Z3J4GuPwDqDjgKC",
+    "parents" : ["83Z3J4GuPwDqDjEEE"],
+    "type": "division",
+    "sort_by": "name"
+}
+{
+	"_id" : "KjwuYkuxoRd7FpvwQ",
+	"is_leaf" : true,
+	"expandable": false,
+	"drillable": false,
+	"display" : "Morgan Hill",          
+	"type" : "city",                 
+	"tag" : "city",                                        
+	"detected_count" : 29,
+	"notready_count" : 2,
+	"ready_count" : 64,
+	"worked_count" : 14,
+	"allgood_count" : 709,
+	"parents" : ["83Z3J4GuPwDqDjgKC"]
+}

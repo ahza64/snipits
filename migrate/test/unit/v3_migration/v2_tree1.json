@@ -1,0 +1,68 @@
+{
+  "_id": "5690241fd9bfa5c61e06c7b7",
+  "inc_id": 49475,
+  "tree_id": "1",
+  "location": {
+    "coordinates": [
+      -123.067036681,
+      39.20980322
+    ],
+    "type": "Point"
+  },
+  "status": "newTree",
+  "priority": "routine",
+  "schemaVersion": "2",
+  "__v": 3,
+  "checksum": "f90ea89ab19b70ea064f71d57927f25f7c5f0455",
+  "grid": "56846620d9bfa5c61e03d069",
+  "group_id": 2,
+  "address": "9599 Highway 20",
+  "pge_pmd_num": "136472",
+  "trimmer_status": "complete",
+  "span_name": "053/259-053/258",
+  "exported": "2016-04-18T10:08:04.000Z",
+  "updated": "2016-03-23T13:28:24.326Z",
+  "created": "2016-01-08T21:03:27.989Z",
+  "complete_time": "2016-01-20T21:41:31.154Z",
+  "start_time": "2016-01-20T21:41:12.847Z",
+  "grouping": null,
+  "work_order": "56d8b4a7dcaf35bb1b004215",
+  "trimmer_complete_time": "2016-03-22T21:04:49.662Z",
+  "trimmer_start_time": "2016-03-22T21:04:42.731Z",
+  "trimmer_wo": "56d8b4a7dcaf35bb1b004215",
+  "trimmer_veh": "56cdd1ba7202c34b557425c3",
+  "trimmer_user": "56cdd1b97202c34b557425c2",
+  "inspector_wo": "56846425d9bfa5c61e0390de",
+  "inspector_veh": "5683955bd9bfa5c61e03316a",
+  "inspector_user": "56846116d9bfa5c61e038d96",
+  "properties": {
+    "notify_customer_value": "Tuck 707-332-5932",
+    "notify_customer": true,
+    "ntw_needed": false,
+    "access_code_value": "Pgekey",
+    "access_code": true,
+    "access_issue": true
+  },
+  "refused": false,
+  "map_annotations": [],
+  "dbh": 7,
+  "height": 29,
+  "distance_from_line": null,
+  "height_above_line": null,
+  "tasks": [
+    {
+      "ntw_image": "569fff0503bb61c13b63377b",
+      "completed": true,
+      "id": 1,
+      "image": null,
+      "clearance": 99,
+      "trim": "R1D"
+    }
+  ],
+  "warnings": [
+    "climb"
+  ],
+  "species": "Coastal live oak",
+  "health": null,
+  "count": null
+}

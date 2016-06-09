@@ -1,0 +1,38 @@
+{
+    "_id" : "565426512895a53d2841013d",
+    "inc_id" : 2113,
+    "grid" : "56846620d9bfa5c61e03d069",
+    "grid_segment_id" : 22,
+    "qsi_span_number" : 22,
+    "qsi_priority" : "VC1c_MO",
+    "priority" : "routine",
+    "location" : {
+        "coordinates" : [ 
+            -121.408897346954, 
+            38.5123443250647
+        ],
+        "type" : "Point"
+    },
+    "tree_id" : "10023_27",
+    "qsi_tree_id" : "E121408897N38512344",
+    "updated" : "2016-03-23T07:15:48.485Z",
+    "inspector_wo" : "56a6f7e759a1b9a1733e565d",
+    "distance_from_line" : 22,
+    "height_above_line" : 24,
+    "species" : "unknown",
+    "health" : null,
+    "__v" : 2,
+    "checksum" : "dba6a225e4d1bd484ad6ea2bd049d4b1ca2c325c",
+    "created" : "2015-12-03T12:22:10.817Z",
+    "map_annotations" : [],
+    "tasks" : [],
+    "warnings" : [],
+    "properties" : {},
+    "estimated_time" : 300,
+    "height" : 24.9599990844727,
+    "min_mgcc" : null,
+    "pge_pmd_num" : "136472",
+    "type" : "tree",
+    "zone" : null,
+    "span_name" : "002/021-002/022"
+}
