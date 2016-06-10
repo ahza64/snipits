@@ -3,1228 +3,1372 @@
 	<!-- <WRTrees> -->
 	<xs:element name="WRTrees">
 		<xs:complexType>
-			<!-- <sWorkReq>		char(11)		Work Request Number -->
-			<xs:simpleType name="sWorkReq">
-				<xs:restriction base="xs:string">
-					<xs:length value="11"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <sDivCode>		char(2)			Division -->
-			<xs:simpleType name="sDivCode">
-				<xs:restriction base="xs:string">
-					<xs:length value="2"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <sLocalID>		char(2)			Local Office code -->
-			<xs:simpleType name="sLocalID">
-				<xs:restriction base="xs:string">
-					<xs:length value="2"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <sSOrderNum>	char(10) -->
-			<xs:simpleType name="sSOrderNum">
-				<xs:restriction base="xs:string">
-					<xs:length value="10"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <dtDateIssued> 	datetime		Issued to contractor -->
-			<xs:element name="dtDateIssued" type="xs:date"/>
-
-			<!-- <sContractor> 	char(30)		Contractor comments when recindend -->
-			<xs:simpleType name="sContractor">
-				<xs:restriction base="xs:string">
-					<xs:length value="30"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <sCompltBy> 	char(15) -->
-			<xs:simpleType name="sCompltBy">
-				<xs:restriction base="xs:string">
-					<xs:length value="15"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <dtCompltDate> 	datetime -->
-			<xs:element name="dtCompltDate" type="xs:date"/>
-
-			<!-- <bTagOnly>		bit -->
-			<xs:element name="">
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:pattern value="[0-1]"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<!-- <bVoid>			bit -->
-			<xs:element name="">
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:pattern value="[0-1]"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<!-- <sVoidBy>		char(4) -->
-			<xs:simpleType name="sVoidBy">
-				<xs:restriction base="xs:string">
-					<xs:length value="4"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <dtVoidDate>	datetime -->
-			<xs:element name="dtVoidDate" type="xs:date"/>
-
-			<!-- <sSortOrder>	char(1) -->
-			<xs:simpleType name="sSortOrder">
-				<xs:restriction base="xs:string">
-					<xs:length value="1"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <sSortValue>	char(10)		Indicates how the WR was sorted (ssd/rt or other) -->
-			<xs:simpleType name="sSortValue">
-				<xs:restriction base="xs:string">
-					<xs:length value="10"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <sComment>		varchar(255)	Notes to contractor -->
-			<xs:simpleType name="sComment">
-				<xs:restriction base="xs:string">
-					<xs:length value="255"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <iSiteCount>	int -->
-			<xs:simpleType name="iSiteCount">
-				<xs:restriction base="xs:integer">
-					<xs:maxInclusive value="2147483647" />
-					<xs:minInclusive value="-2147483648" />
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <nTreeCount> 	numeric(7, 2) -->
-			<xs:simpleType name="nTreeCount">
-				<xs:restriction base="xs:decimal">
-					<xs:fractionDigits value="2" />
-					<xs:totalDigits value="7" />                    
-				</xs:restriction>
-			</xs:simpleType>
-			<!-- <nTreeHours> 	numeric(7, 1) -->
-			<xs:simpleType name="nTreeHours">
-				<xs:restriction base="xs:decimal">
-					<xs:fractionDigits value="1" />
-					<xs:totalDigits value="7" />                    
-				</xs:restriction>
-			</xs:simpleType>
-			<!-- <iPageCount> 	smallint -->
-			<xs:simpleType name="iPageCount">
-				<xs:restriction base="xs:integer">
-					<xs:maxInclusive value="32767" />
-					<xs:minInclusive value="-32768" />
-				</xs:restriction>
-			</xs:simpleType>
-			<!-- <sContRep>		char(20) -->
-			<xs:simpleType name="sContRep">
-				<xs:restriction base="xs:string">
-					<xs:length value="20"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <iIssued>		tinyint			Indicates status of WR.  Issued to contractor, or recinded -->
-			<xs:element name="iIssued">
-				<xs:restriction base="xs:integer">
-					<xs:minInclusive value="0"/>
-					<xs:maxInclusive value="255"/>
-				</xs:restriction>
-			</xs:element>
-
-			<!-- <sContCode>		char(3)			Contractor Code -->
-			<xs:simpleType name="sContCode">
-				<xs:restriction base="xs:string">
-					<xs:length value="3"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <iSort>			tinyint -->
-			<xs:element name="iSort">
-				<xs:restriction base="xs:integer">
-					<xs:minInclusive value="0"/>
-					<xs:maxInclusive value="255"/>
-				</xs:restriction>
-			</xs:element>
-
-			<!-- <sDT>			char(1)			Distribution or Transmission -->
-			<xs:simpleType name="sDT">
-				<xs:restriction base="xs:string">
-					<xs:length value="1"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <sWorkCat>		char(2)			Work Type -->
-			<xs:simpleType name="sWorkCat">
-				<xs:restriction base="xs:string">
-					<xs:length value="2"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <iProjNum>		int -->
-			<xs:simpleType name="iProjNum">
-				<xs:restriction base="xs:integer">
-					<xs:maxInclusive value="2147483647" />
-					<xs:minInclusive value="-2147483648" />
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <sProximity>	char(1) -->
-			<xs:simpleType name="sProximity">
-				<xs:restriction base="xs:string">
-					<xs:length value="1"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <sAcctType>		char(1) -->
-			<xs:simpleType name="sAcctType">
-				<xs:restriction base="xs:string">
-					<xs:length value="1"/>
-				</xs:restriction>
-			</xs:simpleType>
-
-			<!-- <WRTreeLoc> -->
-			<xs:element name="WRTreeLoc">
-				<xs:complexType>
-					<!-- <iWRTreeLocID> int 				Unique ID of WR location -->
-					<xs:simpleType name="iWRTreeLocID">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
+			<xs:all>
+				<!-- <sWorkReq>		char(11)		Work Request Number -->
+				<xs:element name="sWorkReq">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="11"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <iTreeLocID> int				Unique ID of Inspection record -->
-					<xs:simpleType name="iTreeLocID">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <iSSDRoute> int -->
-					<xs:simpleType name="iSSDRoute">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <iRouteNum> int -->
-					<xs:simpleType name="iRouteNum">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sDivCode> char(2)				Division -->
-					<xs:simpleType name="sDivCode">
+				</xs:element>
+				<!-- <sDivCode>		char(2)			Division -->
+				<xs:element name="sDivCode">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:length value="2"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sDivCodeDescrip> varchar(16)	Description of division (joined) -->
-					<xs:simpleType name="sDivCodeDescrip">
-						<xs:restriction base="xs:string">
-							<xs:length value="16"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sCountyCode> char(2)			County Code -->
-					<xs:simpleType name="sCountyCode">
+				</xs:element>
+				<!-- <sLocalID>		char(2)			Local Office code -->
+				<xs:element name="sLocalID">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:length value="2"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sCountyDescrip> char(25)		County Name (joined) -->
-					<xs:simpleType name="sCountyDescrip">
+				</xs:element>
+				<!-- <sSOrderNum>	char(10) -->
+				<xs:element name="sSOrderNum">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
-							<xs:length value="25"/>
+							<xs:length value="10"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sInspComp> char(3)				Inspection Company Code -->
-					<xs:simpleType name="sInspComp">
+				</xs:element>
+				<!-- <dtDateIssued> 	datetime		Issued to contractor -->
+				<xs:element name="dtDateIssued" type="xs:date"/>
+				<!-- <sContractor> 	char(30)		Contractor comments when recindend -->
+				<xs:element name="sContractor">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
-							<xs:length value="3"/>
+							<xs:length value="30"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sInsp> char(4)					Inspector -->
-					<xs:simpleType name="sInsp">
+				</xs:element>
+				<!-- <sCompltBy> 	char(15) -->
+				<xs:element name="sCompltBy">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="15"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <dtCompltDate> 	datetime -->
+				<xs:element name="dtCompltDate" type="xs:date"/>
+				<!-- <bTagOnly>		bit -->
+				<xs:element name="bTagOnly">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:pattern value="[0-1]"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <bVoid>			bit -->
+				<xs:element name="bVoid">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:pattern value="[0-1]"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sVoidBy>		char(4) -->
+				<xs:element name="sVoidBy">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:length value="4"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sArea> char(10) -->
-					<xs:simpleType name="sArea">
-						<xs:restriction base="xs:string">
-							<xs:length value="10"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sCircuit> char(10)				Circuit Number -->
-					<xs:simpleType name="sCircuit">
-						<xs:restriction base="xs:string">
-							<xs:length value="10"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sCircuitDescrip> char(27)		Circuit Name (joined) -->
-					<xs:simpleType name="sCircuitDescrip">
-						<xs:restriction base="xs:string">
-							<xs:length value="27"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sQuadMap> char(11) -->
-					<xs:simpleType name="sQuadMap">
-						<xs:restriction base="xs:string">
-							<xs:length value="11"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sMapType> char(1) -->
-					<xs:simpleType name="sMapType">
+				</xs:element>
+				<!-- <dtVoidDate>	datetime -->
+				<xs:element name="dtVoidDate" type="xs:date"/>
+				<!-- <sSortOrder>	char(1) -->
+				<xs:element name="sSortOrder">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:length value="1"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sMapTypeNum> char(8) -->
-					<xs:simpleType name="sMapTypeNum">
-						<xs:restriction base="xs:string">
-							<xs:length value="8"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sTagType> char(1) -->
-					<xs:simpleType name="sTagType">
-						<xs:restriction base="xs:string">
-							<xs:length value="1"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sTagTypeDescrip> char(15)		Description for Tag Type (joined) -->
-					<xs:simpleType name="sTagTypeDescrip">
-						<xs:restriction base="xs:string">
-							<xs:length value="15"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sTagNum> char(10) -->
-					<xs:simpleType name="sTagNum">
+				</xs:element>
+				<!-- <sSortValue>	char(10)		Indicates how the WR was sorted (ssd/rt or other) -->
+				<xs:element name="sSortValue">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:length value="10"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sStreetNum> char(11) -->
-					<xs:simpleType name="sStreetNum">
+				</xs:element>
+				<!-- <sComment>		varchar(255)	Notes to contractor -->
+				<xs:element name="sComment">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
-							<xs:length value="11"/>
+							<xs:length value="255"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sStreet> char(26)				Street Name -->
-					<xs:simpleType name="sStreet">
-						<xs:restriction base="xs:string">
-							<xs:length value="26"/>
+				</xs:element>
+				<!-- <iSiteCount>	int -->
+				<xs:element name="iSiteCount">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sDirections> varchar(70) -->
-					<xs:simpleType name="sDirections">
-						<xs:restriction base="xs:string">
-							<xs:length value="70"/>
+				</xs:element>
+				<!-- <nTreeCount> 	numeric(7, 2) -->
+				<xs:element name="nTreeCount">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:fractionDigits value="2"/>
+							<xs:totalDigits value="7"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sCity> char(11) -->
-					<xs:simpleType name="sCity">
-						<xs:restriction base="xs:string">
-							<xs:length value="11"/>
+				</xs:element>
+				<!-- <nTreeHours> 	numeric(7, 1) -->
+				<xs:element name="nTreeHours">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:fractionDigits value="1"/>
+							<xs:totalDigits value="7"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sSourceDev> char(8) -->
-					<xs:simpleType name="sSourceDev">
-						<xs:restriction base="xs:string">
-							<xs:length value="8"/>
+				</xs:element>
+				<!-- <iPageCount> 	smallint -->
+				<xs:element name="iPageCount">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="32767"/>
+							<xs:minInclusive value="-32768"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sPriVolt> char(3) -->
-					<xs:simpleType name="sPriVolt">
+				</xs:element>
+				<!-- <sContRep>		char(20) -->
+				<xs:element name="sContRep">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="20"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <iIssued>		tinyint			Indicates status of WR.  Issued to contractor, or recinded -->
+				<xs:element name="iIssued">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="255"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sContCode>		char(3)			Contractor Code -->
+				<xs:element name="sContCode">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:length value="3"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sSConst> char(1) -->
-					<xs:simpleType name="sSConst">
+				</xs:element>
+				<!-- <iSort>			tinyint -->
+				<xs:element name="iSort">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="255"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sDT>			char(1)			Distribution or Transmission -->
+				<xs:element name="sDT">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:length value="1"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <bSRA> bit						0=LRA, 1=SRA/FRA -->
-					<xs:element name="">
-						<xs:simpleType>
-							<xs:restriction base="xs:integer">
-								<xs:pattern value="[0-1]"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-					<!-- <sComments> varchar(255) -->
-					<xs:simpleType name="sComments">
-						<xs:restriction base="xs:string">
-							<xs:length value="255"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <bCommAlert> bit				Flag indicating that there are important comments present that must be read -->
-					<xs:element name="">
-						<xs:simpleType>
-							<xs:restriction base="xs:integer">
-								<xs:pattern value="[0-1]"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-					<!-- <sPCC> char(6) -->
-					<xs:simpleType name="sPCC">
-						<xs:restriction base="xs:string">
-							<xs:length value="6"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sMisc> char(5) -->
-					<xs:simpleType name="sMisc">
-						<xs:restriction base="xs:string">
-							<xs:length value="5"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <bCustAtLoc> bit -->
-					<xs:element name="">
-						<xs:simpleType>
-							<xs:restriction base="xs:integer">
-								<xs:pattern value="[0-1]"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-					<!-- <sLocalID> char(2) -->
-					<xs:simpleType name="sLocalID">
+				</xs:element>
+				<!-- <sWorkCat>		char(2)			Work Type -->
+				<xs:element name="sWorkCat">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:length value="2"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sPoleNum> char(9)				Tower number1 for transmission -->
-					<xs:simpleType name="sPoleNum">
-						<xs:restriction base="xs:string">
-							<xs:length value="9"/>
+				</xs:element>
+				<!-- <iProjNum>		int -->
+				<xs:element name="iProjNum">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sLineID> char(6) -->
-					<xs:simpleType name="sLineID">
-						<xs:restriction base="xs:string">
-							<xs:length value="6"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <dtInspDate> datetime			Inspection Date and Time -->
-					<xs:element name="dtInspDate" type="xs:date"/>
-	
-					<!-- <sWorkReq> char(11)				Work Request number -->
-					<xs:simpleType name="sWorkReq">
-						<xs:restriction base="xs:string">
-							<xs:length value="11"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sRemNum> char(8) -->
-					<xs:simpleType name="sRemNum">
-						<xs:restriction base="xs:string">
-							<xs:length value="8"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sAcctType> char(1) -->
-					<xs:simpleType name="sAcctType">
+				</xs:element>
+				<!-- <sProximity>	char(1) -->
+				<xs:element name="sProximity">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
 							<xs:length value="1"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <bUnderBuild> bit -->
-					<xs:element name="">
-						<xs:simpleType>
-							<xs:restriction base="xs:integer">
-								<xs:pattern value="[0-1]"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-					<!-- <iParentLocID> int				Root inspection record -->
-					<xs:simpleType name="iParentLocID">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <iPIRoute> int					Route as-inspected -->
-					<xs:simpleType name="iPIRoute">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sXStreet> varchar(255) -->
-					<xs:simpleType name="sXStreet">
+				</xs:element>
+				<!-- <sAcctType>		char(1) -->
+				<xs:element name="sAcctType">
+					<xs:simpleType>
 						<xs:restriction base="xs:string">
-							<xs:length value="255"/>
+							<xs:length value="1"/>
 						</xs:restriction>
 					</xs:simpleType>
-	
-					<!-- <sAPN> varchar(50) -->
-					<xs:simpleType name="sAPN">
-						<xs:restriction base="xs:string">
-							<xs:length value="50"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sPoleNum2> char(9)				Tower 2 -->
-					<xs:simpleType name="sPoleNum2">
-						<xs:restriction base="xs:string">
-							<xs:length value="9"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <iEasement> int -->
-					<xs:simpleType name="iEasement">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <iSpanLength> int -->
-					<xs:simpleType name="iSpanLength">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <iBioUnitsTrim> int				Elderberry units -->
-					<xs:simpleType name="iBioUnitsTrim">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <iBioUnitsRemoval> int			Elderberry units -->
-					<xs:simpleType name="iBioUnitsRemoval">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <bVELBArea> bit					1=VELB area, 0=Not in VELB area -->
-					<xs:element name="">
-						<xs:simpleType>
-							<xs:restriction base="xs:integer">
-								<xs:pattern value="[0-1]"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-					<!-- <sTWADocNum> varchar(15)		Tree Work Auth number -->
-					<xs:simpleType name="sTWADocNum">
-						<xs:restriction base="xs:string">
-							<xs:length value="15"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sTWASignedBy> varchar(50) -->
-					<xs:simpleType name="sTWASignedBy">
-						<xs:restriction base="xs:string">
-							<xs:length value="50"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <gTWASignature> bit				0=No signature on file, 1=signature on file -->
-					<xs:element name="">
-						<xs:simpleType>
-							<xs:restriction base="xs:integer">
-								<xs:pattern value="[0-1]"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
-					<!-- <dtTWASignedDate> datetime -->
-					<xs:element name="dtTWASignedDate" type="xs:date"/>
-	
-					<!-- <iCityID> int -->
-					<xs:simpleType name="iCityID">
-						<xs:restriction base="xs:integer">
-							<xs:maxInclusive value="2147483647" />
-							<xs:minInclusive value="-2147483648" />
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sCityDescrip> varchar(50)		Long description of city (joined) -->
-					<xs:simpleType name="sCityDescrip">
-						<xs:restriction base="xs:string">
-							<xs:length value="50"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sTreeLocStatus> varchar(10)	Location status -->
-					<xs:simpleType name="sTreeLocStatus">
-						<xs:restriction base="xs:string">
-							<xs:length value="10"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <sTreeLocStatusDescrip> varchar(65) Description of Status (joined) -->
-					<xs:simpleType name="sTreeLocStatusDescrip">
-						<xs:restriction base="xs:string">
-							<xs:length value="65"/>
-						</xs:restriction>
-					</xs:simpleType>
-	
-					<!-- <nLatitude> numeric(12, 9)		format:   39.736025000	(joined) -->
-					<xs:simpleType name="nLatitude">
-						<xs:restriction base="xs:decimal">
-							<xs:fractionDigits value="9" />
-							<xs:totalDigits value="12" />                    
-						</xs:restriction>
-					</xs:simpleType>
-					<!-- <nLongitude> numeric(12, 9)		format: -121.859128000	(joined) -->
-					<xs:simpleType name="nLongitude">
-						<xs:restriction base="xs:decimal">
-							<xs:fractionDigits value="9" />
-							<xs:totalDigits value="12" />                    
-						</xs:restriction>
-					</xs:simpleType>
-					<!-- <dtMobileCapture> datetime		Date/Time of flyover	(joined) -->
-					<xs:element name="dtMobileCapture" type="xs:date"/>
-	
-					<!-- <WRTreeLocAlerts> -->
-					<xs:element name="WRTreeLocAlerts">
-						<xs:complexType>
-							<!-- <iTreeLocID> int				LocationID -->
-							<xs:simpleType name="iTreeLocID">
-								<xs:restriction base="xs:integer">
-									<xs:maxInclusive value="2147483647" />
-									<xs:minInclusive value="-2147483648" />
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sRACode> char(2)				Alert code -->
-							<xs:simpleType name="sRACode">
-								<xs:restriction base="xs:string">
-									<xs:length value="2"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sDescrip> char(25)				Description of alert code	(joined) -->
-							<xs:simpleType name="sDescrip">
-								<xs:restriction base="xs:string">
-									<xs:length value="25"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-			
-						</xs:complexType>        
-					</xs:element>
-					<!-- <WRTreeLocContacts> -->
-					<xs:element name="WRTreeLocContacts">
-						<xs:complexType>
-							<!-- <sContactType> char(1)			Code indicating contact type	(joined) -->
-							<xs:simpleType name="sContactType">
-								<xs:restriction base="xs:string">
-									<xs:length value="1"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sContactTypeDescrip> varchar(50)	Description of contact type	(joined) -->
-							<xs:simpleType name="sContactTypeDescrip">
-								<xs:restriction base="xs:string">
-									<xs:length value="50"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <bPrimary>	bit					Flag indicating if this is the primary contact for the location	(joined) -->
-							<xs:element name="">
+				</xs:element>
+				<!-- <WRTreeLoc> -->
+				<xs:element name="WRTreeLoc">
+					<xs:complexType>
+						<xs:all>
+							<!-- <iWRTreeLocID> int 				Unique ID of WR location -->
+							<xs:element name="iWRTreeLocID">
 								<xs:simpleType>
 									<xs:restriction base="xs:integer">
-										<xs:pattern value="[0-1]"/>
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<!-- <sComments>	varchar(255)		Customer comments (joined) -->
-							<xs:simpleType name="sComments">
-								<xs:restriction base="xs:string">
-									<xs:length value="255"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sLastName> varchar(50) -->
-							<xs:simpleType name="sLastName">
-								<xs:restriction base="xs:string">
-									<xs:length value="50"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sFirstName> varchar(50) -->
-							<xs:simpleType name="sFirstName">
-								<xs:restriction base="xs:string">
-									<xs:length value="50"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sBusinessName> varchar(50) -->
-							<xs:simpleType name="sBusinessName">
-								<xs:restriction base="xs:string">
-									<xs:length value="50"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sStreetNum> varchar(11)		Mailing address info -->
-							<xs:simpleType name="sStreetNum">
-								<xs:restriction base="xs:string">
-									<xs:length value="11"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sStreet> varchar(50) -->
-							<xs:simpleType name="sStreet">
-								<xs:restriction base="xs:string">
-									<xs:length value="50"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sCity> varchar(30) -->
-							<xs:simpleType name="sCity">
-								<xs:restriction base="xs:string">
-									<xs:length value="30"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sState> char(2) -->
-							<xs:simpleType name="sState">
-								<xs:restriction base="xs:string">
-									<xs:length value="2"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sZipcode> varchar(50) -->
-							<xs:simpleType name="sZipcode">
-								<xs:restriction base="xs:string">
-									<xs:length value="50"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sPhone> varchar(14) -->
-							<xs:simpleType name="sPhone">
-								<xs:restriction base="xs:string">
-									<xs:length value="14"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sAltPhone> varchar(14) -->
-							<xs:simpleType name="sAltPhone">
-								<xs:restriction base="xs:string">
-									<xs:length value="14"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sFax> varchar(14) -->
-							<xs:simpleType name="sFax">
-								<xs:restriction base="xs:string">
-									<xs:length value="14"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sEmail> varchar(255) -->
-							<xs:simpleType name="sEmail">
-								<xs:restriction base="xs:string">
-									<xs:length value="255"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-			
-						</xs:complexType>        
-					</xs:element>
-					<!-- <WRTreeRecs> -->
-					<xs:element name="WRTreeRecs">
-						<xs:complexType>
-							<!-- <iWRTreeRecsID> int 			Unique ID of tree on WR -->
-							<xs:simpleType name="iWRTreeRecsID">
-								<xs:restriction base="xs:integer">
-									<xs:maxInclusive value="2147483647" />
-									<xs:minInclusive value="-2147483648" />
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <iWRTreeLocID> int				Unique ID of location on WR -->
-							<xs:simpleType name="iWRTreeLocID">
-								<xs:restriction base="xs:integer">
-									<xs:maxInclusive value="2147483647" />
-									<xs:minInclusive value="-2147483648" />
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sTreeCode> char(4)				Tree Type -->
-							<xs:simpleType name="sTreeCode">
-								<xs:restriction base="xs:string">
-									<xs:length value="4"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sTreeCodeDescrip> char(20)		Full tree description (joined) -->
-							<xs:simpleType name="sTreeCodeDescrip">
-								<xs:restriction base="xs:string">
-									<xs:length value="20"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sNotification> char(1)			Permission Code -->
-							<xs:simpleType name="sNotification">
-								<xs:restriction base="xs:string">
-									<xs:length value="1"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sNotificationDescrip> char(20)	Permission Description -->
-							<xs:simpleType name="sNotificationDescrip">
-								<xs:restriction base="xs:string">
-									<xs:length value="20"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <nDBH> numeric(2, 0) -->
-							<xs:simpleType name="nDBH">
-								<xs:restriction base="xs:decimal">
-									<xs:fractionDigits value="0" />
-									<xs:totalDigits value="2" />                    
-								</xs:restriction>
-							</xs:simpleType>
-							<!-- <nHeight> numeric(3, 0) -->
-							<xs:simpleType name="nHeight">
-								<xs:restriction base="xs:decimal">
-									<xs:fractionDigits value="0" />
-									<xs:totalDigits value="3" />                    
-								</xs:restriction>
-							</xs:simpleType>
-							<!-- <nClearance> numeric(2, 0) -->
-							<xs:simpleType name="nClearance">
-								<xs:restriction base="xs:decimal">
-									<xs:fractionDigits value="0" />
-									<xs:totalDigits value="2" />                    
-								</xs:restriction>
-							</xs:simpleType>
-							<!-- <nQty> numeric(5, 2) -->
-							<xs:simpleType name="nQty">
-								<xs:restriction base="xs:decimal">
-									<xs:fractionDigits value="2" />
-									<xs:totalDigits value="5" />                    
-								</xs:restriction>
-							</xs:simpleType>
-							<!-- <sTrimCode> char(3) -->
-							<xs:simpleType name="sTrimCode">
-								<xs:restriction base="xs:string">
-									<xs:length value="3"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sTrimCodeDescrip> char(10)		Description of Trim Code (joined) -->
-							<xs:simpleType name="sTrimCodeDescrip">
-								<xs:restriction base="xs:string">
-									<xs:length value="10"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <nManHours> numeric(5, 2) -->
-							<xs:simpleType name="nManHours">
-								<xs:restriction base="xs:decimal">
-									<xs:fractionDigits value="2" />
-									<xs:totalDigits value="5" />                    
-								</xs:restriction>
-							</xs:simpleType>
-							<!-- <sPCode> char(1)				Priority Code -->
-							<xs:simpleType name="sPCode">
-								<xs:restriction base="xs:string">
-									<xs:length value="1"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sPCodeDescrip> char(15)		Priority Description (joined) -->
-							<xs:simpleType name="sPCodeDescrip">
-								<xs:restriction base="xs:string">
-									<xs:length value="15"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sNextTrim> char(1) -->
-							<xs:simpleType name="sNextTrim">
-								<xs:restriction base="xs:string">
-									<xs:length value="1"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sCrewType> char(2)				Crew Code -->
-							<xs:simpleType name="sCrewType">
-								<xs:restriction base="xs:string">
-									<xs:length value="2"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sCrewTypeDescrip> char(50)		Crew Description (joined) -->
-							<xs:simpleType name="sCrewTypeDescrip">
-								<xs:restriction base="xs:string">
-									<xs:length value="50"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sWorkType> char(1)				Work Type Code -->
-							<xs:simpleType name="sWorkType">
-								<xs:restriction base="xs:string">
-									<xs:length value="1"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sWorkTypeDescrip> char(25)		Work Type (joined) -->
-							<xs:simpleType name="sWorkTypeDescrip">
-								<xs:restriction base="xs:string">
-									<xs:length value="25"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sPoleOwner> char(1) -->
-							<xs:simpleType name="sPoleOwner">
-								<xs:restriction base="xs:string">
-									<xs:length value="1"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sComment> varchar(45) -->
-							<xs:simpleType name="sComment">
-								<xs:restriction base="xs:string">
-									<xs:length value="45"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sOwnedBy> char(2)				Land Owner Code -->
-							<xs:simpleType name="sOwnedBy">
-								<xs:restriction base="xs:string">
-									<xs:length value="2"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sOwnedByDescrip> char(11)		Land Owner (joined) -->
-							<xs:simpleType name="sOwnedByDescrip">
-								<xs:restriction base="xs:string">
-									<xs:length value="11"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <bUnderBuild> bit				1=Underbuild -->
-							<xs:element name="">
+							<!-- <iTreeLocID> int				Unique ID of Inspection record -->
+							<xs:element name="iTreeLocID">
 								<xs:simpleType>
 									<xs:restriction base="xs:integer">
-										<xs:pattern value="[0-1]"/>
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<!-- <bTreeConn> bit -->
-							<xs:element name="">
+							<!-- <iSSDRoute> int -->
+							<xs:element name="iSSDRoute">
 								<xs:simpleType>
 									<xs:restriction base="xs:integer">
-										<xs:pattern value="[0-1]"/>
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<!-- <bTreeWire> bit -->
-							<xs:element name="">
+							<!-- <iRouteNum> int -->
+							<xs:element name="iRouteNum">
 								<xs:simpleType>
 									<xs:restriction base="xs:integer">
-										<xs:pattern value="[0-1]"/>
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<!-- <bInsfClear> bit -->
-							<xs:element name="">
+							<!-- <sDivCode> char(2)				Division -->
+							<xs:element name="sDivCode">
 								<xs:simpleType>
-									<xs:restriction base="xs:integer">
-										<xs:pattern value="[0-1]"/>
+									<xs:restriction base="xs:string">
+										<xs:length value="2"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<!-- <sReason> char(2) -->
-							<xs:simpleType name="sReason">
-								<xs:restriction base="xs:string">
-									<xs:length value="2"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sAcctType> char(1) -->
-							<xs:simpleType name="sAcctType">
-								<xs:restriction base="xs:string">
-									<xs:length value="1"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <bNotifyPhon> bit				How customer was notified -->
-							<xs:element name="">
+							<!-- <sDivCodeDescrip> varchar(16)	Description of division (joined) -->
+							<xs:element name="sDivCodeDescrip">
 								<xs:simpleType>
-									<xs:restriction base="xs:integer">
-										<xs:pattern value="[0-1]"/>
+									<xs:restriction base="xs:string">
+										<xs:length value="16"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<!-- <bNotifyPers> bit -->
-							<xs:element name="">
+							<!-- <sCountyCode> char(2)			County Code -->
+							<xs:element name="sCountyCode">
 								<xs:simpleType>
-									<xs:restriction base="xs:integer">
-										<xs:pattern value="[0-1]"/>
+									<xs:restriction base="xs:string">
+										<xs:length value="2"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<!-- <bNotifyDoor> bit -->
-							<xs:element name="">
+							<!-- <sCountyDescrip> char(25)		County Name (joined) -->
+							<xs:element name="sCountyDescrip">
 								<xs:simpleType>
-									<xs:restriction base="xs:integer">
-										<xs:pattern value="[0-1]"/>
+									<xs:restriction base="xs:string">
+										<xs:length value="25"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<!-- <bNotifyPerm> bit -->
-							<xs:element name="">
+							<!-- <sInspComp> char(3)				Inspection Company Code -->
+							<xs:element name="sInspComp">
 								<xs:simpleType>
-									<xs:restriction base="xs:integer">
-										<xs:pattern value="[0-1]"/>
+									<xs:restriction base="xs:string">
+										<xs:length value="3"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
-							<!-- <iWRSort> smallint				Line number on WR -->
-							<xs:simpleType name="iWRSort">
-								<xs:restriction base="xs:integer">
-									<xs:maxInclusive value="32767" />
-									<xs:minInclusive value="-32768" />
-								</xs:restriction>
-							</xs:simpleType>
-							<!-- <sWorkReq> char(11)				WR Number -->
-							<xs:simpleType name="sWorkReq">
-								<xs:restriction base="xs:string">
-									<xs:length value="11"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <iWorkReqSeq> smallint			0=Reference tree (no work reqd) -->
-							<xs:simpleType name="iWorkReqSeq">
-								<xs:restriction base="xs:integer">
-									<xs:maxInclusive value="32767" />
-									<xs:minInclusive value="-32768" />
-								</xs:restriction>
-							</xs:simpleType>
-							<!-- <dtNextTrimDate> smalldatetime -->
-							<xs:element name="dtNextTrimDate" type="xs:date"/>
-		
-							<!-- <sWrkRptNum> char(7) -->
-							<xs:simpleType name="sWrkRptNum">
-								<xs:restriction base="xs:string">
-									<xs:length value="7"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sPerformCont> char(7) -->
-							<xs:simpleType name="sPerformCont">
-								<xs:restriction base="xs:string">
-									<xs:length value="7"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <dtInspDate> datetime -->
-							<xs:element name="dtInspDate" type="xs:date"/>
-		
-							<!-- <sInspComp> char(3)				Inspection Company -->
-							<xs:simpleType name="sInspComp">
-								<xs:restriction base="xs:string">
-									<xs:length value="3"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
 							<!-- <sInsp> char(4)					Inspector -->
-							<xs:simpleType name="sInsp">
-								<xs:restriction base="xs:string">
-									<xs:length value="4"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <dTGR> smalldatetime -->
-							<xs:element name="dTGR" type="xs:date"/>
-		
-							<!-- <sMWSDocNum> char(6)			Major Woody Stem Document Number -->
-							<xs:simpleType name="sMWSDocNum">
-								<xs:restriction base="xs:string">
-									<xs:length value="6"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sMWS> char(1)					Exempt MWS -->
-							<xs:simpleType name="sMWS">
-								<xs:restriction base="xs:string">
-									<xs:length value="1"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <iTreeRecsID> int				Tree Inspection ID -->
-							<xs:simpleType name="iTreeRecsID">
-								<xs:restriction base="xs:integer">
-									<xs:maxInclusive value="2147483647" />
-									<xs:minInclusive value="-2147483648" />
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <nProximity> tinyint -->
-							<xs:element name="nProximity">
-								<xs:restriction base="xs:integer">
-									<xs:minInclusive value="0"/>
-									<xs:maxInclusive value="255"/>
-								</xs:restriction>
+							<xs:element name="sInsp">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="4"/>
+									</xs:restriction>
+								</xs:simpleType>
 							</xs:element>
-		
-							<!-- <dtTGRPriorLast> datetime -->
-							<xs:element name="dtTGRPriorLast" type="xs:date"/>
-		
-							<!-- <dtTrimPriorLast> datetime -->
-							<xs:element name="dtTrimPriorLast" type="xs:date"/>
-		
-							<!-- <nWireType> tinyint -->
-							<xs:element name="nWireType">
-								<xs:restriction base="xs:integer">
-									<xs:minInclusive value="0"/>
-									<xs:maxInclusive value="255"/>
-								</xs:restriction>
+							<!-- <sArea> char(10) -->
+							<xs:element name="sArea">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="10"/>
+									</xs:restriction>
+								</xs:simpleType>
 							</xs:element>
-		
-							<!-- <iParentTreeID> int -->
-							<xs:simpleType name="iParentTreeID">
-								<xs:restriction base="xs:integer">
-									<xs:maxInclusive value="2147483647" />
-									<xs:minInclusive value="-2147483648" />
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <dtVisitedDate> datetime -->
-							<xs:element name="dtVisitedDate" type="xs:date"/>
-		
-							<!-- <sLineID2> char(6) -->
-							<xs:simpleType name="sLineID2">
-								<xs:restriction base="xs:string">
-									<xs:length value="6"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <sMWSUserID> varchar(50) -->
-							<xs:simpleType name="sMWSUserID">
-								<xs:restriction base="xs:string">
-									<xs:length value="50"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <dtMWSSignedDate> datetime -->
-							<xs:element name="dtMWSSignedDate" type="xs:date"/>
-		
-							<!-- <sRxComments> varchar(255)		Prescription Comments from Inspector -->
-							<xs:simpleType name="sRxComments">
-								<xs:restriction base="xs:string">
-									<xs:length value="255"/>
-								</xs:restriction>
-							</xs:simpleType>
-		
-							<!-- <bVELBArea> bit -->
-							<xs:element name="">
+							<!-- <sCircuit> char(10)				Circuit Number -->
+							<xs:element name="sCircuit">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="10"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sCircuitDescrip> char(27)		Circuit Name (joined) -->
+							<xs:element name="sCircuitDescrip">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="27"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sQuadMap> char(11) -->
+							<xs:element name="sQuadMap">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="11"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sMapType> char(1) -->
+							<xs:element name="sMapType">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sMapTypeNum> char(8) -->
+							<xs:element name="sMapTypeNum">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="8"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sTagType> char(1) -->
+							<xs:element name="sTagType">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sTagTypeDescrip> char(15)		Description for Tag Type (joined) -->
+							<xs:element name="sTagTypeDescrip">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="15"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sTagNum> char(10) -->
+							<xs:element name="sTagNum">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="10"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sStreetNum> char(11) -->
+							<xs:element name="sStreetNum">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="11"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sStreet> char(26)				Street Name -->
+							<xs:element name="sStreet">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="26"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sDirections> varchar(70) -->
+							<xs:element name="sDirections">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="70"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sCity> char(11) -->
+							<xs:element name="sCity">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="11"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sSourceDev> char(8) -->
+							<xs:element name="sSourceDev">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="8"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sPriVolt> char(3) -->
+							<xs:element name="sPriVolt">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="3"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sSConst> char(1) -->
+							<xs:element name="sSConst">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <bSRA> bit						0=LRA, 1=SRA/FRA -->
+							<xs:element name="bSRA">
 								<xs:simpleType>
 									<xs:restriction base="xs:integer">
 										<xs:pattern value="[0-1]"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sComments> varchar(255) -->
+							<xs:element name="sComments">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="255"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <bCommAlert> bit				Flag indicating that there are important comments present that must be read -->
+							<xs:element name="bCommAlert">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:pattern value="[0-1]"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sPCC> char(6) -->
+							<xs:element name="sPCC">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="6"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sMisc> char(5) -->
+							<xs:element name="sMisc">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="5"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <bCustAtLoc> bit -->
+							<xs:element name="bCustAtLoc">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:pattern value="[0-1]"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sLocalID> char(2) -->
+							<xs:element name="sLocalID">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="2"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sPoleNum> char(9)				Tower number1 for transmission -->
+							<xs:element name="sPoleNum">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="9"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sLineID> char(6) -->
+							<xs:element name="sLineID">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="6"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <dtInspDate> datetime			Inspection Date and Time -->
+							<xs:element name="dtInspDate" type="xs:date"/>
+							<!-- <sWorkReq> char(11)				Work Request number -->
+							<xs:element name="sWorkReq">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="11"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sRemNum> char(8) -->
+							<xs:element name="sRemNum">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="8"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sAcctType> char(1) -->
+							<xs:element name="sAcctType">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <bUnderBuild> bit -->
+							<xs:element name="bUnderBuild">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:pattern value="[0-1]"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <iParentLocID> int				Root inspection record -->
+							<xs:element name="iParentLocID">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <iPIRoute> int					Route as-inspected -->
+							<xs:element name="iPIRoute">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sXStreet> varchar(255) -->
+							<xs:element name="sXStreet">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="255"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sAPN> varchar(50) -->
+							<xs:element name="sAPN">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sPoleNum2> char(9)				Tower 2 -->
+							<xs:element name="sPoleNum2">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="9"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <iEasement> int -->
+							<xs:element name="iEasement">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <iSpanLength> int -->
+							<xs:element name="iSpanLength">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <iBioUnitsTrim> int				Elderberry units -->
+							<xs:element name="iBioUnitsTrim">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <iBioUnitsRemoval> int			Elderberry units -->
+							<xs:element name="iBioUnitsRemoval">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <bVELBArea> bit					1=VELB area, 0=Not in VELB area -->
+							<xs:element name="bVELBArea">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:pattern value="[0-1]"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sTWADocNum> varchar(15)		Tree Work Auth number -->
+							<xs:element name="sTWADocNum">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="15"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sTWASignedBy> varchar(50) -->
+							<xs:element name="sTWASignedBy">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <gTWASignature> bit				0=No signature on file, 1=signature on file -->
+							<xs:element name="gTWASignature">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:pattern value="[0-1]"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <dtTWASignedDate> datetime -->
+							<xs:element name="dtTWASignedDate" type="xs:date"/>
+							<!-- <iCityID> int -->
+							<xs:element name="iCityID">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sCityDescrip> varchar(50)		Long description of city (joined) -->
+							<xs:element name="sCityDescrip">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sTreeLocStatus> varchar(10)	Location status -->
+							<xs:element name="sTreeLocStatus">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="10"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sTreeLocStatusDescrip> varchar(65) Description of Status (joined) -->
+							<xs:element name="sTreeLocStatusDescrip">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="65"/>
 									</xs:restriction>
 								</xs:simpleType>
 							</xs:element>
 							<!-- <nLatitude> numeric(12, 9)		format:   39.736025000	(joined) -->
-							<xs:simpleType name="nLatitude">
-								<xs:restriction base="xs:decimal">
-									<xs:fractionDigits value="9" />
-									<xs:totalDigits value="12" />                    
-								</xs:restriction>
-							</xs:simpleType>
+							<xs:element name="nLatitude">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:fractionDigits value="9"/>
+										<xs:totalDigits value="12"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
 							<!-- <nLongitude> numeric(12, 9)		format: -121.859128000	(joined) -->
-							<xs:simpleType name="nLongitude">
-								<xs:restriction base="xs:decimal">
-									<xs:fractionDigits value="9" />
-									<xs:totalDigits value="12" />                    
-								</xs:restriction>
-							</xs:simpleType>
+							<xs:element name="nLongitude">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:fractionDigits value="9"/>
+										<xs:totalDigits value="12"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
 							<!-- <dtMobileCapture> datetime		Date/Time of flyover	(joined) -->
 							<xs:element name="dtMobileCapture" type="xs:date"/>
-		
-							<!-- <WRTreeRecsAlerts> -->
-							<xs:element name="WRTreeRecsAlerts">
+							<!-- <WRTreeLocAlerts> -->
+							<xs:element name="WRTreeLocAlerts">
 								<xs:complexType>
-									<!-- <iTreeRecsID> int				TreeID -->
-									<xs:simpleType name="iTreeRecsID">
-										<xs:restriction base="xs:integer">
-											<xs:maxInclusive value="2147483647" />
-											<xs:minInclusive value="-2147483648" />
-										</xs:restriction>
-									</xs:simpleType>
-			
-									<!-- <sRACode> char(2)				Alert code -->
-									<xs:simpleType name="sRACode">
-										<xs:restriction base="xs:string">
-											<xs:length value="2"/>
-										</xs:restriction>
-									</xs:simpleType>
-			
-									<!-- <sDescrip> char(25)				Description of alert code	(joined) -->
-									<xs:simpleType name="sDescrip">
-										<xs:restriction base="xs:string">
-											<xs:length value="25"/>
-										</xs:restriction>
-									</xs:simpleType>
-			
-				
-								</xs:complexType>        
+									<xs:all>
+										<!-- <iTreeLocID> int				LocationID -->
+										<xs:element name="iTreeLocID">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:maxInclusive value="2147483647"/>
+													<xs:minInclusive value="-2147483648"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sRACode> char(2)				Alert code -->
+										<xs:element name="sRACode">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="2"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sDescrip> char(25)				Description of alert code	(joined) -->
+										<xs:element name="sDescrip">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="25"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
 							</xs:element>
-			
-						</xs:complexType>        
-					</xs:element>
-		
-				</xs:complexType>        
-			</xs:element>
-	
-		</xs:complexType>        
+							<!-- <WRTreeLocContacts> -->
+							<xs:element name="WRTreeLocContacts">
+								<xs:complexType>
+									<xs:all>
+										<!-- <sContactType> char(1)			Code indicating contact type	(joined) -->
+										<xs:element name="sContactType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sContactTypeDescrip> varchar(50)	Description of contact type	(joined) -->
+										<xs:element name="sContactTypeDescrip">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bPrimary>	bit					Flag indicating if this is the primary contact for the location	(joined) -->
+										<xs:element name="bPrimary">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sComments>	varchar(255)		Customer comments (joined) -->
+										<xs:element name="sComments">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="255"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sLastName> varchar(50) -->
+										<xs:element name="sLastName">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sFirstName> varchar(50) -->
+										<xs:element name="sFirstName">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sBusinessName> varchar(50) -->
+										<xs:element name="sBusinessName">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sStreetNum> varchar(11)		Mailing address info -->
+										<xs:element name="sStreetNum">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="11"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sStreet> varchar(50) -->
+										<xs:element name="sStreet">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sCity> varchar(30) -->
+										<xs:element name="sCity">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="30"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sState> char(2) -->
+										<xs:element name="sState">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="2"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sZipcode> varchar(50) -->
+										<xs:element name="sZipcode">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sPhone> varchar(14) -->
+										<xs:element name="sPhone">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="14"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sAltPhone> varchar(14) -->
+										<xs:element name="sAltPhone">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="14"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sFax> varchar(14) -->
+										<xs:element name="sFax">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="14"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sEmail> varchar(255) -->
+										<xs:element name="sEmail">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="255"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+							<!-- <WRTreeRecs> -->
+							<xs:element name="WRTreeRecs">
+								<xs:complexType>
+									<xs:all>
+										<!-- <iWRTreeRecsID> int 			Unique ID of tree on WR -->
+										<xs:element name="iWRTreeRecsID">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:maxInclusive value="2147483647"/>
+													<xs:minInclusive value="-2147483648"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <iWRTreeLocID> int				Unique ID of location on WR -->
+										<xs:element name="iWRTreeLocID">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:maxInclusive value="2147483647"/>
+													<xs:minInclusive value="-2147483648"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sTreeCode> char(4)				Tree Type -->
+										<xs:element name="sTreeCode">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="4"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sTreeCodeDescrip> char(20)		Full tree description (joined) -->
+										<xs:element name="sTreeCodeDescrip">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="20"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sNotification> char(1)			Permission Code -->
+										<xs:element name="sNotification">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sNotificationDescrip> char(20)	Permission Description -->
+										<xs:element name="sNotificationDescrip">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="20"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <nDBH> numeric(2, 0) -->
+										<xs:element name="nDBH">
+											<xs:simpleType>
+												<xs:restriction base="xs:decimal">
+													<xs:fractionDigits value="0"/>
+													<xs:totalDigits value="2"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <nHeight> numeric(3, 0) -->
+										<xs:element name="nHeight">
+											<xs:simpleType>
+												<xs:restriction base="xs:decimal">
+													<xs:fractionDigits value="0"/>
+													<xs:totalDigits value="3"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <nClearance> numeric(2, 0) -->
+										<xs:element name="nClearance">
+											<xs:simpleType>
+												<xs:restriction base="xs:decimal">
+													<xs:fractionDigits value="0"/>
+													<xs:totalDigits value="2"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <nQty> numeric(5, 2) -->
+										<xs:element name="nQty">
+											<xs:simpleType>
+												<xs:restriction base="xs:decimal">
+													<xs:fractionDigits value="2"/>
+													<xs:totalDigits value="5"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sTrimCode> char(3) -->
+										<xs:element name="sTrimCode">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="3"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sTrimCodeDescrip> char(10)		Description of Trim Code (joined) -->
+										<xs:element name="sTrimCodeDescrip">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="10"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <nManHours> numeric(5, 2) -->
+										<xs:element name="nManHours">
+											<xs:simpleType>
+												<xs:restriction base="xs:decimal">
+													<xs:fractionDigits value="2"/>
+													<xs:totalDigits value="5"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sPCode> char(1)				Priority Code -->
+										<xs:element name="sPCode">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sPCodeDescrip> char(15)		Priority Description (joined) -->
+										<xs:element name="sPCodeDescrip">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="15"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sNextTrim> char(1) -->
+										<xs:element name="sNextTrim">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sCrewType> char(2)				Crew Code -->
+										<xs:element name="sCrewType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="2"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sCrewTypeDescrip> char(50)		Crew Description (joined) -->
+										<xs:element name="sCrewTypeDescrip">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sWorkType> char(1)				Work Type Code -->
+										<xs:element name="sWorkType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sWorkTypeDescrip> char(25)		Work Type (joined) -->
+										<xs:element name="sWorkTypeDescrip">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="25"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sPoleOwner> char(1) -->
+										<xs:element name="sPoleOwner">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sComment> varchar(45) -->
+										<xs:element name="sComment">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="45"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sOwnedBy> char(2)				Land Owner Code -->
+										<xs:element name="sOwnedBy">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="2"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sOwnedByDescrip> char(11)		Land Owner (joined) -->
+										<xs:element name="sOwnedByDescrip">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="11"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bUnderBuild> bit				1=Underbuild -->
+										<xs:element name="bUnderBuild">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bTreeConn> bit -->
+										<xs:element name="bTreeConn">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bTreeWire> bit -->
+										<xs:element name="bTreeWire">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bInsfClear> bit -->
+										<xs:element name="bInsfClear">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sReason> char(2) -->
+										<xs:element name="sReason">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="2"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sAcctType> char(1) -->
+										<xs:element name="sAcctType">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bNotifyPhon> bit				How customer was notified -->
+										<xs:element name="bNotifyPhon">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bNotifyPers> bit -->
+										<xs:element name="bNotifyPers">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bNotifyDoor> bit -->
+										<xs:element name="bNotifyDoor">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bNotifyPerm> bit -->
+										<xs:element name="bNotifyPerm">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <iWRSort> smallint				Line number on WR -->
+										<xs:element name="iWRSort">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:maxInclusive value="32767"/>
+													<xs:minInclusive value="-32768"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sWorkReq> char(11)				WR Number -->
+										<xs:element name="sWorkReq">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="11"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <iWorkReqSeq> smallint			0=Reference tree (no work reqd) -->
+										<xs:element name="iWorkReqSeq">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:maxInclusive value="32767"/>
+													<xs:minInclusive value="-32768"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <dtNextTrimDate> smalldatetime -->
+										<xs:element name="dtNextTrimDate" type="xs:date"/>
+										<!-- <sWrkRptNum> char(7) -->
+										<xs:element name="sWrkRptNum">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="7"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sPerformCont> char(7) -->
+										<xs:element name="sPerformCont">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="7"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <dtInspDate> datetime -->
+										<xs:element name="dtInspDate" type="xs:date"/>
+										<!-- <sInspComp> char(3)				Inspection Company -->
+										<xs:element name="sInspComp">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="3"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sInsp> char(4)					Inspector -->
+										<xs:element name="sInsp">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="4"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <dTGR> smalldatetime -->
+										<xs:element name="dTGR" type="xs:date"/>
+										<!-- <sMWSDocNum> char(6)			Major Woody Stem Document Number -->
+										<xs:element name="sMWSDocNum">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="6"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sMWS> char(1)					Exempt MWS -->
+										<xs:element name="sMWS">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="1"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <iTreeRecsID> int				Tree Inspection ID -->
+										<xs:element name="iTreeRecsID">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:maxInclusive value="2147483647"/>
+													<xs:minInclusive value="-2147483648"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <nProximity> tinyint -->
+										<xs:element name="nProximity">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:minInclusive value="0"/>
+													<xs:maxInclusive value="255"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <dtTGRPriorLast> datetime -->
+										<xs:element name="dtTGRPriorLast" type="xs:date"/>
+										<!-- <dtTrimPriorLast> datetime -->
+										<xs:element name="dtTrimPriorLast" type="xs:date"/>
+										<!-- <nWireType> tinyint -->
+										<xs:element name="nWireType">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:minInclusive value="0"/>
+													<xs:maxInclusive value="255"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <iParentTreeID> int -->
+										<xs:element name="iParentTreeID">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:maxInclusive value="2147483647"/>
+													<xs:minInclusive value="-2147483648"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <dtVisitedDate> datetime -->
+										<xs:element name="dtVisitedDate" type="xs:date"/>
+										<!-- <sLineID2> char(6) -->
+										<xs:element name="sLineID2">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="6"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <sMWSUserID> varchar(50) -->
+										<xs:element name="sMWSUserID">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <dtMWSSignedDate> datetime -->
+										<xs:element name="dtMWSSignedDate" type="xs:date"/>
+										<!-- <sRxComments> varchar(255)		Prescription Comments from Inspector -->
+										<xs:element name="sRxComments">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="255"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <bVELBArea> bit -->
+										<xs:element name="bVELBArea">
+											<xs:simpleType>
+												<xs:restriction base="xs:integer">
+													<xs:pattern value="[0-1]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <nLatitude> numeric(12, 9)		format:   39.736025000	(joined) -->
+										<xs:element name="nLatitude">
+											<xs:simpleType>
+												<xs:restriction base="xs:decimal">
+													<xs:fractionDigits value="9"/>
+													<xs:totalDigits value="12"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <nLongitude> numeric(12, 9)		format: -121.859128000	(joined) -->
+										<xs:element name="nLongitude">
+											<xs:simpleType>
+												<xs:restriction base="xs:decimal">
+													<xs:fractionDigits value="9"/>
+													<xs:totalDigits value="12"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<!-- <dtMobileCapture> datetime		Date/Time of flyover	(joined) -->
+										<xs:element name="dtMobileCapture" type="xs:date"/>
+										<!-- <WRTreeRecsAlerts> -->
+										<xs:element name="WRTreeRecsAlerts">
+											<xs:complexType>
+												<xs:all>
+													<!-- <iTreeRecsID> int				TreeID -->
+													<xs:element name="iTreeRecsID">
+														<xs:simpleType>
+															<xs:restriction base="xs:integer">
+																<xs:maxInclusive value="2147483647"/>
+																<xs:minInclusive value="-2147483648"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													<!-- <sRACode> char(2)				Alert code -->
+													<xs:element name="sRACode">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:length value="2"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													<!-- <sDescrip> char(25)				Description of alert code	(joined) -->
+													<xs:element name="sDescrip">
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:length value="25"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:all>
+								</xs:complexType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
 	</xs:element>
-
 </xs:schema>
-

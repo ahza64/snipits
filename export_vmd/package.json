@@ -18,5 +18,15 @@
     "pge"
   ],
   "author": "Gabriel Littman",
-  "license": "PRIVATE"
+  "license": "PRIVATE",
+  "dependencies": {
+    "assert": "^1.4.1",
+    "bluebird": "^3.4.0",
+    "js2xmlparser": "^1.0.0",
+    "libxml-xsd": "^0.5.2",
+    "should": "^9.0.1",
+    "swig": "^1.4.2",
+    "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
+    "underscore": "^1.8.3"
+  }
 }

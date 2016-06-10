@@ -11,7 +11,7 @@ var fs = require("fs");
 var readFile = BPromise.promisify(fs.readFile);
 var writeFile = BPromise.promisify(fs.writeFile);
 
-require("../lib/starts_with");
+require("sugar");
 var swig  = require('swig');
 var assert = require("assert");
 var _ = require("underscore");
@@ -31,7 +31,7 @@ function *run(input, output) {
   console.log("Found Definitions", _.keys(definitions));
   
   var xsd = generate(hiearchy, definitions);
-  xsd = swig.renderFile('vmd_export/templates/xmlschema.xsd.tmpl', {subdoc: xsd})+"\n";
+  xsd = swig.renderFile('templates/xmlschema.xsd.tmpl', {subdoc: xsd})+"\n";
   if(!output.endsWith('.xsd')) {
     var base = path.basename(input);
     if(base.endsWith('.txt')) {
@@ -70,7 +70,7 @@ function generate(hiearchy, definitions, tabs) {
     console.log("Generating: ", hiearchy.name);
     doc = definitions[hiearchy.name];
     doc.subdoc+=subdocs;
-    doc = swig.renderFile('vmd_export/templates/complex.xsd.tmpl', doc)+"\n";
+    doc = swig.renderFile('templates/complex.xsd.tmpl', doc)+"\n";
   } else {
     doc = subdocs;
   } 
@@ -185,14 +185,14 @@ function addToDefinition(line) {
     type =  results[1];
     doc.length = Number(results[2]);
   }
-  doc = swig.renderFile('vmd_export/templates/'+type+'.xsd.tmpl', doc)+"\n";
+  doc = swig.renderFile('templates/'+type+'.xsd.tmpl', doc)+"\n";
   return doc;
 }
 
 
 
 if (require.main === module) {
-  var baker = require('../tool/baker.js');
+  var baker = require('dsp_shared/lib/baker.js');
   baker.command(run, {default: true});
   baker.run();  
 }

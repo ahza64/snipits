@@ -1,0 +1,21 @@
+{
+    "trees": ["tree1"],
+    "results": {
+        "sDivCode": "SA",
+        "sInspComp": "ACR",
+        "sInsp": "SDSJ@pge.com : Sterling Smith",
+        "sCircuit": "TR00607001",
+        "sLineID": "10021",
+        "sStreetNum": "3925",
+        "sStreet" : "Power Inn Road",
+        "sCity": "West Sacram",
+        "iCityID": 2901,
+        "sCountyCode": "SA",
+        "sComments": null,
+        "sSourceDev": "000/005",
+        "sPoleNum": "000/005",
+        "sPoleNum2": "000/006",
+        "sPriVolt": "70",
+        "dtInspDate": "2016-01-19T21:30:53.394Z"
+    }
+}
