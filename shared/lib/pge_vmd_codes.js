@@ -20,9 +20,163 @@ var division_codes = {
   "Stockton":      "ST"
 };
 	   
+var account_types = {
+  "Routine": "R",
+  "GO165": "A",
+  "Capital": "C",
+  "Maintenance": "M",
+  "TROW": "W",
+  "Reliability": "Y",
+  "Orchard": "Z"  
+};
+
+
+var tag_types = {
+	"Cycle Buster":  "B",
+	"Cntr Asst":     "C",
+	"Project":       "D",
+	"Non-Essential": "E",
+	"No Work":       "N",
+	"Poor Clear":    "P",
+	"QA Location":   "Q",
+	"Refusal":       "R",
+	"Storm":         "S",
+	"Unforeseen":    "U",
+	"Missed Tree":   "X",
+	"Reliability":   "Y",
+	"Orchard":       "Z"  
+};
+
+var transmison_circuit_codes = {
+  CC: {
+    60:  "TR00806001",
+    70:  "TR00807001",
+    115: "TR00811501",
+    230: "TR00823001",
+    500: "TR00850001"
+  },
+  DA: {
+    	60:  "TR00806002",
+    	70:  "TR00807002",
+    	115: "TR00811502",
+    	230: "TR00823002",
+    	500: "TR00850002"
+  },
+  EB: {
+    	60:  "TR00106002",
+    	70:  "TR00107002",
+    	115: "TR00111502",
+    	230: "TR00123002",
+    	500: "TR00150002"
+  },
+  FR: {
+    	60:  "TR02506001",
+    	70:  "TR02507001",
+    	115: "TR02511501",
+    	230: "TR02523001",
+    	500: "TR02550001"
+  },
+  KE: {
+    	60:  "TR02506002",
+    	70:  "TR02507002",
+    	115: "TR02511502",
+    	230: "TR02523002",
+    	500: "TR02550002"
+
+  },
+  LP: {
+    	60:  "TR01806001",
+    	70:  "TR01807001",
+    	115: "TR01811501",
+    	230: "TR01823001",
+    	500: "TR01850001"
+  },
+  MI: {
+    	60:  "TR00106003",
+    	70:  "TR00107003",
+    	115: "TR00111503",
+    	230: "TR00123003",
+    	500: "TR00150003"
+  },
+  NB: {
+    	60:  "TR00406002",
+    	70:  "TR00407002",
+    	115: "TR00411502",
+    	230: "TR00423002",
+    	500: "TR00450002"
+  },
+  NC: {
+    	60:  "TR00406001",
+    	70:  "TR00407001",
+    	115: "TR00411501",
+    	230: "TR00423001",
+    	500: "TR00450001"
+  },
+  NV: {
+    	60:  "TR01006001",
+    	70:  "TR01007001",
+    	115: "TR01011501",
+    	230: "TR01023001",
+    	500: "TR01050001"
+  },
+  PE: {
+    	60:  "TR00206001",
+    	115: "TR00211501",
+    	230: "TR00223001",
+  },
+  SA: {
+    	60:  "TR00606001",
+    	70:  "TR00607001",
+    	115: "TR00611501",
+    	230: "TR00623001",
+    	500: "TR00650001"
+  },
+  SI: {
+    	60:  "TR01506001",
+    	70:  "TR01507001",
+    	115: "TR01511501",
+    	230: "TR01523001",
+    	500: "TR01550001"
+  },
+  SJ: {
+    	60:  "TR00806003",
+    	70:  "TR00807003",
+    	115: "TR00811503",
+    	230: "TR00823003",
+    	500: "TR00850003"
+  },
+  ST: {
+    	60:  "TR01606001",
+    	70:  "TR01607001",
+    	115: "TR01611501",
+    	230: "TR01623001",
+    	500: "TR01650001"
+  },
+  YO: {
+    	60:  "TR02506003",
+    	70:  "TR02507003",
+    	115: "TR02511503",
+    	230: "TR02523003",
+    	500: "TR02550003"
+  }
+};
+
+
+var location_status = {
+  no_work_no_restrict:  "CMP_NW_NR",  // No Tree Work, No Restrictions
+  no_work_restrict:     "CMP_NW_RE", 	// Complete Status, No Tree Work, Restriction(s) exist
+  work_no_restrict:     "CMP_WK_NR",  // Complete Status, Tree Work Prescribed, No Restrictions
+  work_with_restrict:   "CMP_WK_RE",  // Tree Work Prescribed, Restriction(s) exist
+  no_work:              "CONTACT_NW", // No Tree Work
+  work_needed:          "CONTACT_WK", // Tree Work Prescribed
+  assgined:             "OPEN",       // Open Status (Assigned)
+  work_complete:        "WK_CMP"      // Tree Work Completed  
+};
+     
 var priority_codes = {
   "routine": "R",
   "allgood": "N", //no trim
+  "no_trim": "N",
   "HN-Imd": "H",
   "HN-Urg": "U",
   "accelerate": "X",
@@ -123,8 +277,8 @@ var trim_codes =  {
   "Srvc Drop":"SRV",
   "S-Wrap Clb":"SWC",
   "S-Wrap Lft":"SWL",
-  "TopDirecti":"TD",
-  "topdirect":"td",
+  "TopDirect":"TD",
+  "topdirect":"TD",
   "Top":"TO",
   "top":"TO",
   "ReTreat":"TRT",
@@ -3459,4 +3613,8 @@ module.exports = {
   tree_types: tree_types,
   city_codes: city_codes,
   county_codes: county_codes,
+  account_types: account_types,
+  tag_types: tag_types,
+  location_status: location_status,
+  transmison_circuit_codes: transmison_circuit_codes
 };
