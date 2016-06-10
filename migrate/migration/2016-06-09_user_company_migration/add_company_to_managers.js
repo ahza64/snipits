@@ -3,17 +3,23 @@ var csv = require('csv');
 var fs = require('fs');
 var pathlib = require('path');
 
-
+// connect to database and schema
 util.connect(["meteor"])
 var USERS = require('dsp_shared/database/model/users');
 
 
-function addCompanyToManagers() {
+/**
+ * addCompanyToManagers - add company field to Web App Users
+ *
+ * @param  {String} csvFile - name of csv file
+ * @return {void}
+ */
+function addCompanyToManagers(csvFile) {
   path = pathlib.dirname(__filename);
-  csv().from.stream(fs.createReadStream(path+'/Company_CSV.csv')).to.array(function(data){
+  csv().from.stream(fs.createReadStream(path+'/' + csvFile)).to.array(function(data){
     var users =[]
     for(var i=0; i<data.length;i++){
-      if(data[i][5].indexOf('ManagR') > -1){
+      if(data[i][5].indexOf('ManagR') > -1 || data[i][5].indexOf('PlanR') > -1){
         var obj = {};
         obj.name = data[i][0];
         obj.email = data[i][1];
@@ -38,6 +44,7 @@ function addCompanyToManagers() {
   });
 }
 
+//baker module
 if (require.main === module) {
   var baker = require("dsp_shared/lib/baker");
   baker.command(addCompanyToManagers);

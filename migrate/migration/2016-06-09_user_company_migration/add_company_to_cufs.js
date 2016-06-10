@@ -3,17 +3,23 @@ var csv = require('csv');
 var fs = require('fs');
 var pathlib = require('path');
 
-
+// connect to database and schema
 util.connect(["meteor"])
 var CUF = require('dsp_shared/database/model/cufs');
 var USERS = require('dsp_shared/database/model/users');
 
-function addCompanyToCufs() {
+/**
+ * addCompanyToCufs - add company field to cufs
+ *
+ * @param  {String} csvFile - csv file
+ * @return {void}
+ */
+function addCompanyToCufs(csvFile) {
   path = pathlib.dirname(__filename);
-  csv().from.stream(fs.createReadStream(path+'/Company_CSV.csv')).to.array(function(data){
+  csv().from.stream(fs.createReadStream(path+'/' + csvFile)).to.array(function(data){
     var users =[]
     for(var i=0; i<data.length;i++){
-      if(data[i][5].indexOf('ManagR') > -1){
+      if(data[i][5].indexOf('ManagR') > -1 || data[i][5].indexOf('PlanR') > -1){
         var obj = {};
         obj.name = data[i][0];
         obj.email = data[i][1];
@@ -45,6 +51,11 @@ function addCompanyToCufs() {
   });
 }
 
+/**
+ * cufsWithNoCompany - find all cufs with no company attribute
+ *
+ * @return {void}
+ */
 function cufsWithNoCompany(){
   CUF.find({company:null}, 'name scuf',function(err, cufs){
     if(err) throw err;
@@ -54,6 +65,7 @@ function cufsWithNoCompany(){
   })
 }
 
+//baker module
 if (require.main === module) {
   var baker = require("dsp_shared/lib/baker");
   baker.command(addCompanyToCufs);
