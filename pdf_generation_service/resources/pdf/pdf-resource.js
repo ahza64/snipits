@@ -3,8 +3,16 @@ const Promise = require('bluebird');
 
 
 
-const pdfSchema = require('./pdf-schema');
-const PdfModel = mongoose.model('Pdf', pdfSchema);
+const PdfSchema = require('./pdf-schema');
+const PdfModel = mongoose.model('Pdf', PdfSchema);
+
+PdfModel.STATUS = {
+  SUCCESS: 1,
+  IN_PROGRESS: 2,
+  ERROR: 3
+}
+
+
 Promise.promisifyAll(PdfModel);
 Promise.promisifyAll(PdfModel.prototype);
 

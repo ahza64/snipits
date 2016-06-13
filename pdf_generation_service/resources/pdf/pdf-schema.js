@@ -8,7 +8,9 @@ const Schema = mongoose.Schema;
  * The PDF Schema.
  * @type {Schema}
  */
-const pdfSchema = new Schema({
+const PdfSchema = new Schema({
+  status: {type: Number, default: 2},
+  errorDetails: {type: String}
 });
 
 
@@ -16,12 +18,12 @@ const pdfSchema = new Schema({
  *
  */
 
-pdfSchema.plugin(mongooseTimestamps);
+PdfSchema.plugin(mongooseTimestamps);
 
 
 
 /**
  *
  */
-module.exports = pdfSchema;
+module.exports = PdfSchema;
 
