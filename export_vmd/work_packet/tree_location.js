@@ -5,7 +5,7 @@ var _ = require("underscore");
 
 var js2xmlparser = require("js2xmlparser");
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
-
+var GPS = require("./gps");
 
 /**
 * 
@@ -19,18 +19,13 @@ var vmd = require("dsp_shared/lib/pge_vmd_codes");
 *     TODO: More then one tree per location
 *     TODO: Throw errors if trees are have different locations
 *     TODO: Throw errors if inspected by diffrent people
-*     TODO: ExternalLocID - static workorder
+*     TODO: ExternalLocID - static workorder, is it okay to have have the same ExternalLocID in locations from different packets?
 * 
 *     NEED WORKORDER ID
 * 
 *   Sent Email:
 *     sTagType: Defualted to D not sure how to decide on these
 *     sTreeLocStatus: Not sure how to translate each of these
-*     still unclear about these optional fields is this
-*         sPCC
-*         sMisc
-*         sLocalID
-*         sRemNum
 */
 
 
@@ -45,7 +40,8 @@ var TREE_LOCATION = { //<TreeLoc>
   sInsp: null,          // <sInsp>             char(4)       [SYSA] or userid of inspector
   sCircuit: null,       // <sCircuit>          char(10)      *Circuit from list below
   sLineID: null,        // <sLineID>           char(6)       Highest voltage Transmission Line on span
-  sTagType: "D",        // <sTagType>          char(1)       *[D] or select from list below  
+  sTagType: "D",        // <sTagType>          char(1)       *[D] or select from list below  //Mike Morely Email: (probably should not be the default.  Josh is researching if 
+                                                                                             //                   we want to add a new default tag type (with a blank value).
   sStreetNum: null,     // <sStreetNum>        char(11)      *Use APN street number or [0]
   sStreet: null,        // <sStreet>           char(26)      *Use APN street name or [NO ROAD]
   sCity: null,          // <sCity>             char(11)      *First 11 char of city, or nearest city if in unicorporated county territory
@@ -67,8 +63,6 @@ var TREE_LOCATION = { //<TreeLoc>
 
   sTreeLocStatus: null,  // <sTreeLocStatus>    char(10)      [CMP_WK_NR], or value from list below
   ExternalLocID: null,   // <ExternalLocID>     varchar(50)   Unique identifier of location from external source system
-  TreeRecs: null,
-  
   
   bSRA: null,           // <bSRA>              bit           *SRA = 1 if state/federal fire responsibility area, else 0 for LRA
   //omiting thes optional values
@@ -81,11 +75,14 @@ var TREE_LOCATION = { //<TreeLoc>
   // sRACode1: null,        // <sRACode1>                        [NULL] or select from list below
   // sRACode2: null,        // <sRACode2>          char(2)       [NULL] or select from list below
   // sSConst: null,         // <sSConst>           char(1)       [NULL]
-  // sPCC: null,            // <sPCC>              char(6)       [NULL]
-  // sMisc: null,           // <sMisc>             char(5)       [NULL]
-  // sLocalID: null,        // <sLocalID>          char(2)       [NULL]
+  // sPCC: null,            // <sPCC>              char(6)       [NULL]       //Mike Morely Email: Not used
+  // sMisc: null,           // <sMisc>             char(5)       [NULL]       //Mike Morely Email: Used by back-end reporting to 
+                                                                              //                   flag certain records (!R indicates tree crews were refused entry)
+  // sLocalID: null,        // <sLocalID>          char(2)       [NULL]       //Mike Morely Email: ?.  Most values are null, but there are some “P” values.  
+                                                                              //                   Not sure if it’s being used.
   // sPoleNum: null,        // <sPoleNum>          char(9)       Tower Number or [NULL]
-  // sRemNum: null,         // <sRemNum>           char(8)       [NULL]
+  // sRemNum: null,         // <sRemNum>           char(8)       [NULL]       //Mike Morely Email: ?.   Most values are null, but there are values like “3934583”.  
+                                                                              //                        I have no idea what it’s for…  Josh
   // sCustName2: null,      // <sCustName2>        char(15)      [NULL] or user entered
   // sCustPhone2: null,     // <sCustPhone2>       char(12)      [NULL] or user entered
   // sRACode3: null,        // <sRACode3>          char(2)       [NULL] or select from list below (alert code)
@@ -170,12 +167,56 @@ TreeLocation.prototype.addTree = function(tree){
   this.set("sPoleNum", towers[0]);
   this.set("sPoleNum2", towers[1]);
   
+  this.set("ExternalLocID", tree.get("workorder_id"));
+  this.set("sTreeLocStatus", this.getLocationStatus(tree));
   
+  var gps_location = tree.getLocation();
+  if(gps_location) {
+    var gps = new GPS("TreeLoc", gps_location.coordinates[1], gps_location.coordinates[0]);
+    this.location[gps.root_node] = gps.getData();
+  }
+  
+  
+
   this.trees.push(tree);
+  
+  this.location.TreeRecs = this.location.TreeRecs || [];  
   this.location.TreeRecs.push(tree.getData());
+
   tree.set("iTreeSort", this.location.TreeRecs.length);
   
 };
+
+TreeLocation.prototype.getLocationStatus = function(tree){  
+  var codes = {
+    restrictions: {
+      no_trim: "no_work_with_restrict",
+      ready: "work_with_restrict" 
+    },
+    no_restrictions: {
+      no_trim: "no_work_no_restrict",
+      ready: "work_no_restrict"       
+    }
+  };
+
+  var restrict;
+  var status = tree.getStatus();
+  if(tree.hasRestrictions()){
+    restrict = "restrictions";
+  } else {
+    restrict = "no_restrictions";
+  }
+  var code = codes[restrict][status];
+  if(!code) {
+    if(status === "worked") {
+      code = "work_complete";
+    } else {
+      code = "open";
+    }      
+  }
+  return vmd.location_status[code];  
+};
+
 
 TreeLocation.prototype.get = function(key) {
   return this.location[key];
@@ -186,9 +227,10 @@ TreeLocation.prototype.set = function(key, value) {
 
 TreeLocation.prototype.getPMDNum = function() {
   return this.pmd_num;
-}
+};
 
 TreeLocation.prototype.getData = function() {
   return this.location;
-}
+};
+
 module.exports = TreeLocation;

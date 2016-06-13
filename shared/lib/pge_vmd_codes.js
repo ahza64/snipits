@@ -29,22 +29,21 @@ var account_types = {
   "Reliability": "Y",
   "Orchard": "Z"  
 };
-
-
+  
 var tag_types = {
-	"Cycle Buster":  "B",
-	"Cntr Asst":     "C",
-	"Project":       "D",
-	"Non-Essential": "E",
-	"No Work":       "N",
-	"Poor Clear":    "P",
-	"QA Location":   "Q",
-	"Refusal":       "R",
-	"Storm":         "S",
-	"Unforeseen":    "U",
-	"Missed Tree":   "X",
-	"Reliability":   "Y",
-	"Orchard":       "Z"  
+	"Cycle Buster":  "B",  //?
+	"Cntr Asst":     "C",  //?
+	"Project":       "D",  //Used to pick out locations that were in a special project (probably should not be the default.  Josh is researching if we want to add a new default tag type (with a blank value).
+	"Non-Essential": "E",  //?
+	"No Work":       "N",  //?
+	"Poor Clear":    "P",  //?
+	"QA Location":   "Q",  //Used by QA team to identify tree was part of a QC audit
+	"Refusal":       "R",  //Tree needs trimming/removal, but customer will not allow crews to do the work
+	"Storm":         "S",  //Indicates tree needed trimming/removal during a storm.  User entered inspection record after the fact.
+	"Unforeseen":    "U",  //?
+	"Missed Tree":   "X",  //?
+	"Reliability":   "Y",  //Used for PS&R program (account type = Y)
+	"Orchard":       "Z"   //Used for orchard work (account type = O)
 };
 
 var transmison_circuit_codes = {
@@ -164,12 +163,14 @@ var transmison_circuit_codes = {
 
 var location_status = {
   no_work_no_restrict:  "CMP_NW_NR",  // No Tree Work, No Restrictions
-  no_work_restrict:     "CMP_NW_RE", 	// Complete Status, No Tree Work, Restriction(s) exist
+  no_work_with_restrict:     "CMP_NW_RE", 	// Complete Status, No Tree Work, Restriction(s) exist
   work_no_restrict:     "CMP_WK_NR",  // Complete Status, Tree Work Prescribed, No Restrictions
   work_with_restrict:   "CMP_WK_RE",  // Tree Work Prescribed, Restriction(s) exist
+
   no_work:              "CONTACT_NW", // No Tree Work
   work_needed:          "CONTACT_WK", // Tree Work Prescribed
-  assgined:             "OPEN",       // Open Status (Assigned)
+
+  open:                 "OPEN",       // Open Status (Assigned)
   work_complete:        "WK_CMP"      // Tree Work Completed  
 };
      

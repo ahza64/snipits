@@ -9,7 +9,7 @@ var _ = require("underscore");
 var js2xmlparser = require("js2xmlparser");
 var vmd_codes = require("dsp_shared/lib/pge_vmd_codes");
 
-var root_node = "TreeWorkket";
+var root_node = "TreeWorkPacket";
 var WORK_PACKET = {                            // <TreeWorkPacket>
     "@": {
       "xmlns":"http://www.dispatchr.co/vmd",
@@ -26,21 +26,23 @@ var WORK_PACKET = {                            // <TreeWorkPacket>
     sInspComp: null,                           //    <sInspComp>         varchar(3)    [NULL] or user supplied value from list below
     sAssignedUser: null,                       //    <sAssignedUser>     varchar(50)   [NULL] or user supplied value
     bObsolete: 0, // not obsolete              //    <bObsolete>	       bit*          [0], 1
-    TreeLoc: null                              //   <TreeLoc>                          Inspected Locations(s)
-                                               
-    //ommiting these non required fields
-    // sWorkPacketStatus: "NEW",               //    <sWorkPacketStatus> char(3)       [NEW], INP, CMP
-    // sTransmitStatus: "CI",                  //    <sTransmitStatus>   char(2)       [CI], CO
-    // sComments: null                         //    <sComments>         varchar(1024) [NULL]  or user supplied value - **Recommend using import batch ID from external system
-    // bAdHoc: 1,                              //    <bAdHoc>            bit           0, [1]
-    // sGenType: "T0"                          //    <sGenType>          char(2)       [T0],TS,TR,C0,CS,CR
-    // iPacketParent: null                     //    <iPacketParent>     int           [NULL]
-};                                             // </TreeWorkPacket>
+
+    sWorkPacketStatus: "CMP",                  //    <sWorkPacketStatus> char(3)       [NEW], INP, CMP
+
+    //defaulting these non required fields
+    sTransmitStatus: "CI",                  //    <sTransmitStatus>   char(2)       [CI], CO
+    sComments: null,                        //    <sComments>         varchar(1024) [NULL]  or user supplied value - **Recommend using import batch ID from external system
+    bAdHoc: 1,                              //    <bAdHoc>            bit           0, [1]
+    sGenType: "T0",                         //    <sGenType>          char(2)       [T0],TS,TR,C0,CS,CR
+    iPacketParent: null,                    //    <iPacketParent>     int           [NULL]
+
+    TreeLoc: null                           //   <TreeLoc>                          Inspected Locations(s)
+};                                          // </TreeWorkPacket>
 
 
 function WorkPacket(){
   this.packet = _.extend({}, WORK_PACKET); 
-  this.packet.TreeLoc = [] 
+  this.packet.TreeLoc = [];
 }
 
 

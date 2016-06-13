@@ -6,6 +6,7 @@ var assert = require('assert');
 var js2xmlparser = require("js2xmlparser");
 
 var TreeStates = require('tree-status-codes');
+var GPS = require("./gps");
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
 require("sugar");
 
@@ -20,12 +21,14 @@ require("sugar");
 *     All lines map to a line in vmd 
 *     Lines need voltage, division, and type(dist/trans)
 *     All trees need counties, city, etc
+*     
 * 
 *   NOTES:
 *     iTreeSort: Needs to be added when this record is added to a location
 *     sInspComp: need to get all the companies for users
 *     dtNextTrimDate: I could use PMD planned complete dates
-*
+*     Need to ingest gps flight/aquisition date
+* 
 *   Email Sent:
 *     sCrewType: What are the values
 *     sWorkType: What are the values
@@ -60,7 +63,7 @@ var TREE_RECORD = {     // <TreeRecs>
   bTreeConn: 0,           // <bTreeConn>          bit             *[0]
   bTreeWire: 0,           // <bTreeWire>          bit             *[0]
   bInsfClear: 0,          // <bInsfClear>         bit             *[0]
-  sAcctType: "R",         // <sAcctType>          char(1)         [W], R, Y, Z or from list below
+  sAcctType: null,         // <sAcctType>          char(1)         [W], M, Y, Z or from list below
   bNotifyPhon: 0,         // <bNotifyPhon>        bit             *[0] or user entered
   bNotifyPers: 0,         // <bNotifyPers>        bit             *[0] or user entered
   bNotifyDoor: 1,         // <bNotifyDoor>        bit             *[1] or user entered
@@ -145,7 +148,60 @@ var TreeRecord = function(tree, inspector, line, pmd){
   this.record.sInspComp = vmd.inspection_companies[tree.inspector_company];  
   this.record.bVELBArea = this.statusFlags.environment === "velb" ? 1 : 0;  
   this.record.ExternalTreeID = tree.qsi_id || tree._id;
+  this.record.sTreeRecsStatus = this.getTreeRecordStatus();
   
+  
+  if(pmd.type.startsWith("Orchard")) {
+    this.record.sAcctType = vmd.accout_types.Orchard;
+  } else {
+    this.record.sAcctType = vmd.accout_types.Maintenance;
+  }
+
+  if(tree.location) {
+    var gps = new GPS("TreeRec", tree.location.coordinates[1], tree.location.coordinates[0]);
+    this.record[gps.root_node] = gps.getData();
+  }
+  
+
+};
+
+TreeRecord.prototype.getLocation = function() {
+  return this.tree.location;
+};
+
+TreeRecord.prototype.getStatus = function() {
+  return this.statusFlags.status;
+};
+
+TreeRecord.prototype.hasRestrictions = function(){
+  if(this.statusFlags.refused) {
+    return true;
+  }
+  if(this.statusFlags.ntw_needed && !this.tree.ntw_image) {
+    return true;
+  }
+  if(this.statusFlags.environment) {
+    return true;
+  }
+  
+  return false;
+};
+
+TreeRecord.prototype.getTreeRecordStatus = function() {
+  var status = this.statusFlags.status;
+  
+  // NOTE: don't know when to use complete_with_issues
+  var record_status = {
+    "no_trim": "tree_ok",
+    "ready": "contact_no_issues",
+    "not_ready": "contact_with_issues",
+    "worked": "complete_no_issues"
+  }[status];
+  
+  if(!record_status) {
+    record_status = "open";
+  }
+  return vmd.tree_record_status[record_status];
 };
 
 TreeRecord.prototype.getNotificationType = function() {
