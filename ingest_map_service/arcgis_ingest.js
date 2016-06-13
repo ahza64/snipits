@@ -46,12 +46,11 @@ function *run(){
   console.log("RUNNING arcgis ingest");
   var project = dsp_project.toUpperCase();
   var host = "https://esri.dispatchr.co:6443";
-  var service_path = ["/arcgis/rest/services", project, "MapServer"].join("/");
-  var base_url = [host, service_path].join('/');
+  var folder_path = ["/arcgis/rest/services", project].join("/");
   var base_params = {
    f: "pjson"
   };
-
+  
   var latest = yield Ingest.findOne({latest: true});
   if(!latest) {
    latest = yield Ingest.create({latest: true});
@@ -63,16 +62,29 @@ function *run(){
   latest.status = "running";
   latest.details = [];
   yield latest.save();
+  
+  console.log("folder", folder_path)
+  var base_url = [host, folder_path].join('/');  
+  console.log("FOLDER", base_url);  
+  var folder = yield http_get(base_url, base_params);  
+  console.log("FOLDER", folder);
+  for(var s = 0; s < folder.services.length; s++){
+    var service = folder.services[s];
+    console.log("service", folder.services[s])
+    var service_path = ["/arcgis/rest/services", service.name, "MapServer"].join("/");
+
+    base_url = [host, service_path].join('/');
+    console.log("service url PATH", base_url);
  
-  var service = yield http_get(base_url, base_params);
-  for(var i = 0 ; i < service.layers.length; i++) {
-    var layer_group = service.layers[i];
-    if(layer_group.subLayerIds && layer_group.parentLayerId === -1) {
-      var ingest = yield ingestGroup(layer_group, service, base_url);
-      latest.details.push(ingest);
+    service = yield http_get(base_url, base_params);
+    for(var i = 0 ; i < service.layers.length; i++) {
+      var layer_group = service.layers[i];
+      if(layer_group.subLayerIds && layer_group.parentLayerId === -1) {
+        var ingest = yield ingestGroup(layer_group, service, base_url);
+        latest.details.push(ingest);
+      }
     }
   }
-  
   latest.status = "complete";
   yield latest.save();
 }
