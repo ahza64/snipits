@@ -1,6 +1,13 @@
 # PDF Generation Service
 This server on node js and express js will receive html and convert it to pdf. A user will send a post request with the html and will receive an id which the user can retrieve it by the given ID.
 
+#### How to start the server
+
+```javascript
+MONGO_URL="mongodb://localhost:27017/stage_meteor" npm start
+```
+
+
 ##### Request to start PDF generation
 **Request Method**: POST
 
