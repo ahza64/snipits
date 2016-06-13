@@ -56,13 +56,23 @@ function addCompanyToCufs(csvFile) {
  *
  * @return {void}
  */
-function cufsWithNoCompany(){
+function cufsWithNoCompany(callback){
   CUF.find({company:null}, 'name scuf',function(err, cufs){
-    if(err) throw err;
-    for(var i=0;i<cufs.length;i++){
-      console.log(cufs[i].name, cufs[i].scuf, cufs[i]._id);
+    if(err){
+      if(callback !== undefined){
+        callback(err);
+      }else{
+        throw err;
+      }
+    }else{
+      for(var i=0;i<cufs.length;i++){
+        console.log('--->',cufs[i].name, cufs[i].scuf, cufs[i]._id);
+      }
+      if(callback !== undefined){
+        callback(cufs.length);
+      }
     }
-  })
+  });
 }
 
 //baker module
@@ -72,3 +82,5 @@ if (require.main === module) {
   baker.command(cufsWithNoCompany);
   baker.run();
 }
+
+module.exports = {cufsWithNoCompany};
