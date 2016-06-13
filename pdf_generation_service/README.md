@@ -5,12 +5,13 @@ This server on node js and express js will receive html and convert it to pdf. A
 **Request Method**: POST
 **Request URI**: http://localhost:8888/pdf
 **Content Type**: application/json
-**RAW Body**: 
+**RAW Body**:
 ```javascript
 {“data”: “<h1>Data</h1>”}
 ```
 **Success Response**:
 **Status Code**: 201
+
 **Response**
 ```javascript
 {“message”: “1234566665”}
@@ -22,22 +23,26 @@ This server on node js and express js will receive html and convert it to pdf. A
 **Content Type**: application/json
 **Success Response**:
 **Status Code**: 200
+
 **Response**
 ```javascript
 {“message”: “http://localhost:8888/pdf/1234566.pdf”}
 ```
 **Other Responses**:
 **Status Code**: 202
+
 **Response**
 ```javascript
 {“message”: “Pdf file creation in process”}
 ```
 **Status Code**: 404
+
 **Response**
 ```javascript
 {“message”: “Pdf not found”}
 ```
 **Status Code**: 422
+
 **Response**
 ```javascript
 {“message”: “Some error message regarding pdf creation error”}
