@@ -3,13 +3,17 @@ This server on node js and express js will receive html and convert it to pdf. A
 
 ##### Request to start PDF generation
 **Request Method**: POST
+
 **Request URI**: http://localhost:8888/pdf
+
 **Content Type**: application/json
+
 **RAW Body**:
 ```javascript
 {“data”: “<h1>Data</h1>”}
 ```
 **Success Response**:
+
 **Status Code**: 201
 
 **Response**
@@ -19,9 +23,13 @@ This server on node js and express js will receive html and convert it to pdf. A
 ```
 ##### Request to get PDF
 **Request Method**: GET
+
 **Request URI**: http://localhost:8888/pdf/:id
+
 **Content Type**: application/json
+
 **Success Response**:
+
 **Status Code**: 200
 
 **Response**
@@ -29,6 +37,7 @@ This server on node js and express js will receive html and convert it to pdf. A
 {“message”: “http://localhost:8888/pdf/1234566.pdf”}
 ```
 **Other Responses**:
+
 **Status Code**: 202
 
 **Response**
