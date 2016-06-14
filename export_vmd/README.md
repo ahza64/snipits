@@ -24,7 +24,7 @@
 		<WRTreeLocContacts>			Customer Contact Records
 		<WRTreeRecs>				Inspected Tree(s)
 			<WRTreeRecsAlerts>		Alerts for specfic tree
-			
+
 
 <TreeWorkComp>						Work Compelete 
 	<TreeWorkCompFile>				File of completed work (JPG, etc)
@@ -49,3 +49,29 @@
 │	└─data				# test data
 ├─xsdgen.js				# generates XSD docuamets from src-doc documents
 └─xsd					# auto generated XSD documents 
+
+### TODO
+
+
+* Finish: TreeLocAlerts & TreeRecsAlerts
+* Finish: TreeLocFile & TreeRecsFile
+* Test:   TreeLocRestrictions & TreeRecsRestrictions
+* Testing with more than one tree in a location
+* Checks to makesure all required values exist in exports
+* Extract layer 
+ * pull trees from the database 
+ * trees that have been inspected
+ * trees that have not been exproted before 
+* Migrations
+
+
+## Data migratons
+* Export Field
+* Address 
+* Division
+* SpanNames
+* LineNumbers
+* User Companyies
+* Project (pmd_num) should be integers
+* Lines need voltage, division, and type(dist/trans)
+

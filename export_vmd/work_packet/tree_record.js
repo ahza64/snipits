@@ -17,7 +17,7 @@ require("sugar");
 /**
 *   SYSTEM TESTS:
 *     Missing trimcodes
-*     All trimcodes will map to a vmd trimcode
+*     All trimcodes will map to a vmd trimcode (currently i just didn't export these)
 *     All active Users have companies that map to vmd codes 
 *     Warnings when states are inconsistant
 *       i.e. READY BUT MISSING NTW 
@@ -227,10 +227,6 @@ TreeRecord.prototype.getTreeRecordStatus = function() {
         "no_trim":   "no_work_with_issues",
         "not_ready":  "contact_with_issues"
     }[status];
-    
-    
-
-    
   } else {
     record_status = {
         "left":       "open",
