@@ -29,7 +29,7 @@ app.use(compress());
 
 
 console.log("Mounting API V3");
-var resources = ["tree"];
+var resources = ["tree", "circuit", "pmd"];
 for(var i = 0; i < resources.length; i++) {
   app.use(mount('/api/v3',require('./crud_route')(resources[i], {read_only: true})));
 }
