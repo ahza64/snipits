@@ -80,8 +80,7 @@
 - [ ] Project (pmd_num) should be integers (tejas)
 - [ ] SpanNames (rahul)
 - [ ] Division (rahul)
-- [ ] LineNumbers (rahul)
-- [ ] Lines need voltage, division, and type(dist/trans)
+- [ ] Lines need LineNumbers, voltage, division, and type(dist/trans)
 - [ ] GPS aquasition date. (from GIS data)
 
 ## Other issues and things to check
@@ -100,7 +99,8 @@
 ## Questions
 - [x] Can I use the P (phone) notification for our "notify customer" flag
  - NO, we'll use a "notify first" alert
-
+- [ ] What is the "Nest BMP" alert
+- [ ] What is the "Environmental BMP" alert (other env alert?)
 
 ## Moving forward
 - [ ] Are all trees being correctly added to workorders.

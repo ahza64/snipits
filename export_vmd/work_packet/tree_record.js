@@ -9,6 +9,7 @@ var moment = require('moment-timezone');
 // tzwhere.init();
 
 var Restriction = require('./restriction');
+var Alert = require('./alert');
 var TreeStates = require('tree-status-codes');
 var GPS = require("./gps");
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
@@ -180,6 +181,8 @@ var TreeRecord = function(tree, inspector, line, pmd){
   
   Restriction.createTreeRestricitons(this);
   Restriction.checkNotifications(this);
+  
+  Alert.createTreeAlerts(this);
 };
 
 TreeRecord.prototype.addRestriction = function(restrict) {
