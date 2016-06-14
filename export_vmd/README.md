@@ -58,43 +58,43 @@
 
 
 
-- [] Finish: TreeLocAlerts & TreeRecsAlerts
-- [] Finish: TreeLocFile & TreeRecsFile
-- [] Test:   TreeLocRestrictions & TreeRecsRestrictions
-- [] Testing with more than one tree in a location
- - [] Throw errors if inspected by diffrent people
- - [] Throw errors if trees are have different locations
- - [] ExternalLocID - static workorder, is it okay to have have the same ExternalLocID in locations from different packets?
-- [] Checks to makesure all required values exist in exports
-- [] Extract layer 
-- [] pull trees from the database 
-- [] trees that have been inspected
-- [] trees that have not been exproted before  
-- [] Migrations
-- [] Need to get data from public fire soruces SRA
+- [ ] Finish: TreeLocAlerts & TreeRecsAlerts
+- [ ] Finish: TreeLocFile & TreeRecsFile
+- [ ] Test:   TreeLocRestrictions & TreeRecsRestrictions
+- [ ] Testing with more than one tree in a location
+ - [ ] Throw errors if inspected by diffrent people
+ - [ ] Throw errors if trees are have different locations
+ - [ ] ExternalLocID - static workorder, is it okay to have have the same ExternalLocID in locations from different packets?
+- [ ] Checks to makesure all required values exist in exports
+- [ ] Extract layer 
+- [ ] pull trees from the database 
+- [ ] trees that have been inspected
+- [ ] trees that have not been exproted before  
+- [ ] Migrations
+- [ ] Need to get data from public fire soruces SRA
 
 ## Data migratons
-- [] Export Field (sarvar)
+- [ ] Export Field (sarvar)
 - [x] Address (tejas)
 - [x] User Companies (tejas)
-- [] Project (pmd_num) should be integers (tejas)
-- [] SpanNames (rahul)
-- [] Division (rahul)
-- [] LineNumbers (rahul)
-- [] Lines need voltage, division, and type(dist/trans)
-- [] GPS aquasition date. (from GIS data)
+- [ ] Project (pmd_num) should be integers (tejas)
+- [ ] SpanNames (rahul)
+- [ ] Division (rahul)
+- [ ] LineNumbers (rahul)
+- [ ] Lines need voltage, division, and type(dist/trans)
+- [ ] GPS aquasition date. (from GIS data)
 
 ## Other issues and things to check
-- [] Missing trimcodes on inspected trees
-- [] All database trim codes in database will map to a trimcode in pge_vmd_codes.js
-- [] Warnings when states are inconsistant (i.e. READY BUT MISSING NTW )
-- [] All projects are integers
-- [] All lines map to a line in pge_vmd_codes.js
-- [] GPS date needs date GPS was captured f (minor)
+- [ ] Missing trimcodes on inspected trees
+- [ ] All database trim codes in database will map to a trimcode in pge_vmd_codes.js
+- [ ] Warnings when states are inconsistant (i.e. READY BUT MISSING NTW )
+- [ ] All projects are integers
+- [ ] All lines map to a line in pge_vmd_codes.js
+- [ ] GPS date needs date GPS was captured f (minor)
 
 ## Final Steps
-- [] Make sure all data is migrated in production.
-- [] Generate Workorders in production.
+- [ ] Make sure all data is migrated in production.
+- [ ] Generate Workorders in production.
 
 
 ## Questions
@@ -103,7 +103,7 @@
 
 
 ## Moving forward
-- [] Are all trees being correctly added to workorders.
+- [ ] Are all trees being correctly added to workorders.
 
 
 
