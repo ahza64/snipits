@@ -31,6 +31,7 @@
 
 
 ### FileSturcture
+```
 .
 ├─src-doc 	            # VMD Spec
 ├─templates  			# XSD Templates 
@@ -49,6 +50,7 @@
 │	└─data				# test data
 ├─xsdgen.js				# generates XSD docuamets from src-doc documents
 └─xsd					# auto generated XSD documents 
+```
 
 ### TODO
 
