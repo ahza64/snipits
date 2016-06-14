@@ -6,11 +6,17 @@ var util = require('dsp_shared/lib/cmd_utils');
 util.connect(["meteor"])
 var TREE = require('dsp_shared/database/model/tree');
 
+
+/**
+ * addCounty - add county field to the tree collection
+ *
+ * @return {void}
+ */
 function addCounty(){
   console.log("ADD COUNTY");
   var trees = TREE.find().stream();
   trees.on('data', function(doc){
-    if(!doc.county){
+    if(!doc.county && doc.project === 'transmission_2015'){
       this.pause();
       var coord = doc.location.coordinates;
       var lat = coord[0];
@@ -45,53 +51,8 @@ function addCounty(){
   trees.on('close', function () {
   // all done
   console.log("ALL DONE");
-});
-
+  });
 }
-  // for(var i=0; i<trees.length; i++){
-  //   var tree = trees[i];
-  //   var coordinates = tree.location.coordinates;
-  //   var lat = coordinates[0];
-  //   var long = coordinates[1];
-  //   geocode.getAddress(lat, long).then(function(res){
-  //     console.log(res.county);
-  //     TREE.update({_id: tree._id}, {county: res.county}, function(err, tree){
-  //       if(err){
-  //         throw err;
-  //       }
-  //       else{
-  //         console.log('County Added for Tree', tree._id);
-  //       }
-  //     })
-  //   });
-  // }
-
-  // for(var i=0; i<trees.length; i++){
-  //   var tree = trees[i];
-  //
-  // }
-
-
-
-  // for(var i=0; i<trees.length; i++){
-  //   var tree = trees[i];
-  // }
-
-  // TREE.findOne('565426212895a53d2840f606', function(err, tree){
-  //   if(err){
-  //     throw err;
-  //   }
-  //   else{
-  //     console.log(tree.location.coordinates);
-  //     var lat = tree.location.coordinates[0];
-  //     var long = tree.location.coordinates[1];
-  //     geocode.getAddress(lat, long).then(function(res){
-  //       console.log(res);
-  //     });
-  //   }
-  // });
-
-
 
 //baker module
 if (require.main === module) {
