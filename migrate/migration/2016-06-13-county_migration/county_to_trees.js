@@ -3,7 +3,7 @@ var geocode = require('dsp_shared/lib/gis/google_geocode');
 var util = require('dsp_shared/lib/cmd_utils');
 
 // connect to database and schema
-util.connect(["meteor"])
+util.connect(["meteor"]);
 var TREE = require('dsp_shared/database/model/tree');
 
 
@@ -14,7 +14,12 @@ var TREE = require('dsp_shared/database/model/tree');
  */
 function addCounty(){
   console.log("ADD COUNTY");
-  var trees = TREE.find().stream();
+  TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', county: {$exists: false}}).count().then(function(count){
+    console.log("Tree Count", count);
+  });
+
+  var trees = TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', county: {$exists: false}}).stream();
+
   trees.on('data', function(doc){
     if(!doc.county && doc.project === 'transmission_2015'){
       this.pause();
@@ -24,7 +29,7 @@ function addCounty(){
       var self = this;
       geocode.getAddress(lat, long).then(function(res){
         if(res.county !== undefined){
-          TREE.update({_id: doc._id}, {county: res.county, state: res.administrativeLevels.level1short}, function(err, tree){
+          TREE.update({_id: doc._id}, {county: res.county, state: res.administrativeLevels.level1short}, function(err){
             if(err){
               throw err;
             }
