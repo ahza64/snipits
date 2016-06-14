@@ -24,9 +24,12 @@
     "bluebird": "^3.4.0",
     "js2xmlparser": "^1.0.0",
     "libxml-xsd": "^0.5.2",
+    "moment": "^2.13.0",
+    "moment-timezone": "^0.5.4",
     "should": "^9.0.1",
     "swig": "^1.4.2",
     "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
+    "tzwhere": "^1.0.0",
     "underscore": "^1.8.3"
   }
 }

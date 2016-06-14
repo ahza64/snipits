@@ -6,6 +6,8 @@ var _ = require("underscore");
 var js2xmlparser = require("js2xmlparser");
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
 var GPS = require("./gps");
+var Restriction = require('./restriction');
+
 
 /**
 * 
@@ -20,6 +22,7 @@ var GPS = require("./gps");
 *     TODO: Throw errors if trees are have different locations
 *     TODO: Throw errors if inspected by diffrent people
 *     TODO: ExternalLocID - static workorder, is it okay to have have the same ExternalLocID in locations from different packets?
+*     TODO: Final decision on sTagType (still defautled)
 * 
 *     NEED WORKORDER ID
 * 
@@ -49,7 +52,7 @@ var TREE_LOCATION = { //<TreeLoc>
   sComments: null,      // <sComments>         char(255)     [NULL]
   bCommAlert: 0,        // <bCommAlert>        bit           *[0]
   dtInspDate: null,     // <dtInspDate>        datetime      Inspection Date (flyover date)
-  sAcctType: "R",       // <sAcctType>         char(1)       [W], R, Y, Z or from list below
+  sAcctType: null,       // <sAcctType>         char(1)       [W], R, Y, Z or from list below
 
 
   sSourceDev: null,     // <sSourceDev>        char(8)       *Use Tower ID xxx/xxx
@@ -118,6 +121,7 @@ var TreeLocation = function(){
   this.location = _.extend({}, TREE_LOCATION);
   this.location.TreeRecs = [];
   this.trees = [];
+  this.restrictions = [];
   // console.log("CREATING LOCATION", this.location);
 };
 
@@ -169,13 +173,13 @@ TreeLocation.prototype.addTree = function(tree){
   
   this.set("ExternalLocID", tree.get("workorder_id"));
   this.set("sTreeLocStatus", this.getLocationStatus(tree));
+  this.set("sAcctType", tree.get("sAcctType"));
   
   var gps_location = tree.getLocation();
   if(gps_location) {
     var gps = new GPS("TreeLoc", gps_location.coordinates[1], gps_location.coordinates[0]);
     this.location[gps.root_node] = gps.getData();
   }
-  
   
 
   this.trees.push(tree);
@@ -184,7 +188,8 @@ TreeLocation.prototype.addTree = function(tree){
   this.location.TreeRecs.push(tree.getData());
 
   tree.set("iTreeSort", this.location.TreeRecs.length);
-  
+
+  Restriction.createLocRestrictions(this);  
 };
 
 TreeLocation.prototype.getLocationStatus = function(tree){  
@@ -217,6 +222,17 @@ TreeLocation.prototype.getLocationStatus = function(tree){
   return vmd.location_status[code];  
 };
 
+TreeLocation.prototype.clearRestrictions = function() {
+  delete this.restrictions;
+  delete this.location.TreeLocRestrictions;
+};
+
+TreeLocation.prototype.addRestriction = function(restrict) {
+  this.restrictions = this.restrictions || [];
+  this.restrictions.push(restrict);
+  this.location.TreeRecsRestrictions = this.location.TreeRecsRestrictions || [];
+  this.location.TreeRecsRestrictions.push(restrict.getData());
+};
 
 TreeLocation.prototype.get = function(key) {
   return this.location[key];

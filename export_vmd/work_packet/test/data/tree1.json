@@ -81,7 +81,25 @@
         "listed_count" : 94,
         "worked_count" : 0,
         "allgood_count" : 631
-    } 
+    }, 
+    "pmd": {
+        "_id" : "56aa0ff8398cf249f959c8c1",
+        "pge_pmd_num" : "134775",
+        "project" : "transmission_2015",
+        "division" : "Sacramento",
+        "name" : "CR-Brighton 115kv-NON-NERC",
+        "detected_count" : 188,
+        "allgood_count" : 136,
+        "inspected_count" : 9,
+        "listed_count" : 40,
+        "worked_count" : 0,
+        "total_count" : 373,
+        "plan_pi_complete" : "2015-12-10T00:00:00.000Z",
+        "type" : "System Maintenance",
+        "cufs" : [],
+        "nerc" : false,
+        "__v" : 1
+    }
   }, 
   "results": {
     "sTreeCode": "PEAR",
@@ -92,11 +110,14 @@
     "sTrimCode": "TD",
     "sPCode": "R",
     "sComment": null,
-    "dtInspDate": "2016-01-19T21:30:53.394Z",
-    "dtNextTrimDate": "2017-01-19T21:30:53.394Z",
+    "dtInspDate": "01/19/2016 13:30",
+    "dtNextTrimDate": "01/19/2017 13:30",
     "sInspComp": "ACR",
     "sInsp": "SDSJ@pge.com : Sterling Smith",
     "bVELBArea": 0,
-    "ExternalTreeID": "E121408691N38538654"
+    "ExternalTreeID": "E121408691N38538654",
+    "sAcctType": "M",
+    "sCrewType": "CA",
+    "sTreeRecsStatus": "OK"
   }
 }

@@ -2,13 +2,26 @@
   "data": {
     "_id": "565426262895a53d2840f739",
     "status": "3020000000002",
+    "location" : {
+        "type" : "Point",
+        "coordinates" : [ 
+            -121.495974842221, 
+            38.6073309363329
+        ]
+    },
     "pi_user": {
       "uniq_id": "NOEMAIL",
       "first": "NO",
       "last": "ONE"
-    }
+    },
+    "pmd": {
+        "_id" : "56aa0ff8398cf249f959c8c1",
+        "pge_pmd_num" : "135399",
+        "type" : "System Maintenance"
+    }        
   },
   "results": {
+      "sTreeRecsStatus": "CONTACT_WI",      
       "sNotification": "Q",
       "sPCode": "X",
       "bVELBArea": 1,

@@ -4,7 +4,11 @@
 var _ = require("underscore");
 var assert = require('assert');
 var js2xmlparser = require("js2xmlparser");
+var moment = require('moment-timezone');
+// var tzwhere = require('tzwhere');
+// tzwhere.init();
 
+var Restriction = require('./restriction');
 var TreeStates = require('tree-status-codes');
 var GPS = require("./gps");
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
@@ -29,10 +33,17 @@ require("sugar");
 *     dtNextTrimDate: I could use PMD planned complete dates
 *     Need to ingest gps flight/aquisition date
 * 
-*   Email Sent:
-*     sCrewType: What are the values
-*     sWorkType: What are the values
-*     sTreeRecsStatus: Need to confirm logic for this one
+*
+* 
+* 
+*   Questions: 
+*     Can I use the P (phone) notification for our "notify customer flag"
+* 
+* 
+*   Email Sent to Mike Morely:
+*     sCrewType: What are the values : LA AND CA are the most common
+*     sWorkType: What are the values : Not used for a long time
+*     sTreeRecsStatus: Need to confirm logic for this one : notes in vmd codes
 *     dtInspDate: date format?
 * 
 *     dont' know what these are:
@@ -132,7 +143,7 @@ var TreeRecord = function(tree, inspector, line, pmd){
   
   this.record = _.extend({}, TREE_RECORD);
   
-
+  
   this.record.sTreeCode = vmd.tree_types[tree.species];
   this.record.sNotification = this.getNotificationType();
   this.record.nDBH = tree.dbh;
@@ -141,9 +152,11 @@ var TreeRecord = function(tree, inspector, line, pmd){
   this.record.sTrimCode = vmd.trim_codes[tree.trim_code];
   this.record.sPCode = this.getPriorityCode();
   this.record.sComment = tree.comment || null;
-  this.record.dtInspDate = tree.pi_complete_time; 
-  this.record.dtNextTrimDate = Date.create(tree.pi_complete_time).addYears(1);
-  this.record.dtNextTrimDate = JSON.parse(JSON.stringify(this.record.dtNextTrimDate));  
+  this.record.dtInspDate = this.formatDate(tree.pi_complete_time); 
+  if(tree.pi_complete_time) {
+    this.record.dtNextTrimDate = this.formatDate(Date.create(tree.pi_complete_time).addYears(1));
+    this.record.dtNextTrimDate = JSON.parse(JSON.stringify(this.record.dtNextTrimDate));        
+  } 
   this.record.sInsp = tree.inspector;
   this.record.sInspComp = vmd.inspection_companies[tree.inspector_company];  
   this.record.bVELBArea = this.statusFlags.environment === "velb" ? 1 : 0;  
@@ -152,9 +165,9 @@ var TreeRecord = function(tree, inspector, line, pmd){
   
   
   if(pmd.type.startsWith("Orchard")) {
-    this.record.sAcctType = vmd.accout_types.Orchard;
+    this.record.sAcctType = vmd.account_types.Orchard;
   } else {
-    this.record.sAcctType = vmd.accout_types.Maintenance;
+    this.record.sAcctType = vmd.account_types.Maintenance;
   }
 
   if(tree.location) {
@@ -162,8 +175,20 @@ var TreeRecord = function(tree, inspector, line, pmd){
     this.record[gps.root_node] = gps.getData();
   }
   
-
+  this.record.sCrewType = vmd.crew_type[this.statusFlags.vehicle_type||"climb"];  
+  
+  
+  Restriction.createTreeRestricitons(this);
+  Restriction.checkNotifications(this);
 };
+
+TreeRecord.prototype.addRestriction = function(restrict) {
+  this.restrictions = this.restrictions || [];
+  this.restrictions.push(restrict);
+  this.record.TreeLocRestrictions = this.record.TreeLocRestrictions || [];
+  this.record.TreeLocRestrictions.push(restrict.getData());
+};
+
 
 TreeRecord.prototype.getLocation = function() {
   return this.tree.location;
@@ -190,18 +215,56 @@ TreeRecord.prototype.hasRestrictions = function(){
 TreeRecord.prototype.getTreeRecordStatus = function() {
   var status = this.statusFlags.status;
   
-  // NOTE: don't know when to use complete_with_issues
-  var record_status = {
-    "no_trim": "tree_ok",
-    "ready": "contact_no_issues",
-    "not_ready": "contact_with_issues",
-    "worked": "complete_no_issues"
-  }[status];
+  var has_issues = this.getNotificationIssue() !== null;
   
-  if(!record_status) {
-    record_status = "open";
+  console.log("getTreeRecordStatus", has_issues, status);
+  var record_status;
+  if(has_issues) {
+    record_status = {
+        "left":       "open",
+        "ready":      "tree_ok",
+        "worked":     "tree_ok",      
+        "no_trim":   "no_work_with_issues",
+        "not_ready":  "contact_with_issues"
+    }[status];
+    
+    
+
+    
+  } else {
+    record_status = {
+        "left":       "open",
+        "ready":      "tree_ok",
+        "worked":     "tree_ok",
+        "no_trim":   "no_work_no_issues",
+        "not_ready":  "contact_no_issues"
+    }[status];    
   }
+
+  if(record_status === "tree_ok") {
+    assert(this.record.sNotification === "O");
+  } else if(record_status === "contact_no_issues" || record_status === "contact_with_issues") {
+    assert(_.contains(["C", "Q", "R"], this.record.sNotification));
+  } else if(record_status === "no_work_no_issues" || record_status === "no_work_with_issues") {
+    assert(this.record.sNotification === "N");
+  }
+    
   return vmd.tree_record_status[record_status];
+};
+
+TreeRecord.prototype.getNotificationIssue = function() {
+  var statusFlags = this.statusFlags;
+  var tree = this.tree;
+  
+  var notification = null;
+  if(statusFlags.refused) {
+    notification = "refusal"; //some kind of refusal (override if more specific)
+  } else if(statusFlags.ntw_needed && !tree.ntw_image) {
+    notification = "contact";
+  } else if(statusFlags.environment) {
+    notification = "quarantine";
+  }
+  return notification;
 };
 
 TreeRecord.prototype.getNotificationType = function() {
@@ -220,21 +283,17 @@ TreeRecord.prototype.getNotificationType = function() {
     notification = "inventory"; 
   } else {
     var notification = null;
-    if(statusFlags.status === "ready"){
+    if(statusFlags.status === "ready" || statusFlags.status === "worked"){
       notification = "ok";
     }
-    
-    if(statusFlags.refused) {
-      notification = "refusal"; //some kind of refusal (override if more specific)
-    } else if(statusFlags.ntw_needed && !tree.ntw_image) {
+    var issue = this.getNotificationIssue();
+    if(issue) {
+      notification = issue;
+    } else if(statusFlags.status === "not_ready") {
       notification = "contact";
-    } else if(statusFlags.environment) {
-      notification = "quarantine";
-    } else if(statusFlags.notify_customer) {
-      notification = "phone";
     }
   }
-  assert(vmd.notification_codes[notification], "missing notification code", tree._id);
+  assert(vmd.notification_codes[notification], "missing notification code: "+ tree._id);
   return vmd.notification_codes[notification];
 };
 
@@ -267,9 +326,33 @@ TreeRecord.prototype.getData = function(){
 
 
 TreeRecord.prototype.get = function(key) {
-  return this.tree[key];
+  return this.record[key] || this.tree[key];
 };
 
+
+TreeRecord.prototype.formatDate = function(date) {
+  // From Mike Morely:
+  // The time needs to represent the local time that the inspector was at the location.   P
+  // lease use this format mm/dd/yyyy hh:ss              in 24 hr format for PST/PDT time zone.    For example, 06/10/2016 14:23
+  // My understanding is that you are capturing time in ZULU time, which means you will have to shift either -7 or -8 hrs depending on local daylight savings time.
+  if(date) {
+    if(_.isString(date)) {
+      date = moment(new Date.create(date));
+    } else {
+      date = moment(date);
+    }
+  
+
+
+    var tree = this.tree;
+    var loc = tree.location;
+    // var tz_name = tzwhere.tzNameAt(loc.coordinates[1], loc.coordinates[0]);
+    var tz_name = "America/Los_Angeles";
+    console.log("GOT DATE", tz_name);  
+    return date.tz(tz_name).format('MM/DD/YYYY HH:mm');
+  } 
+  return null;
+};
 
 
 module.exports = TreeRecord;

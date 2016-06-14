@@ -33,7 +33,7 @@
             ]
         },
         "circuit_name" : "WEST_SACRAMENTO_BRIGHTON",
-        "status" : "5110100000000",
+        "status" : "5110100000010",
         "project" : "transmission_2015",
         "__v" : 0,
         "assigned_user_id" : null,
@@ -69,23 +69,30 @@
             ],
             "trees_assigned" : 0.0,
             "company": "ACRT"
-        }
+        },
+        "pmd": {
+            "_id" : "56aa0ff8398cf249f959c8c1",
+            "pge_pmd_num" : "135399",
+            "type" : "System Maintenance"
+        }        
     },
     "results": {
-        "sTreeCode": "UNKN",
-        "sNotification": null,
+        "sTreeCode": "ELDE",
+        "sNotification": "O",
         "nDBH": 6,
         "nHeight": 37,
-        "nClearance": null,
+        "nClearance": 99,
         "sTrimCode": "R1B",
         "sPCode": "R",
         "sComment": null,
-        "dtInspDate": "2016-05-10T22:56:32.645Z",
-        "dtNextTrimDate": "2017-05-10T22:56:32.645Z",
+        "dtInspDate": "05/10/2016 15:56",
+        "dtNextTrimDate": "05/10/2017 15:56",
         "sInspComp": "ACR",
         "sInsp": "SDSJ@pge.com : Sterling Smith",
         "bVELBArea": 0,
-        "ExternalTreeID": "E121408691N38538654"
+        "ExternalTreeID": "E121495974N38607330",
+        "sCrewType": "LA",
+        "sTreeRecsStatus": "OK"        
     }
 }
     

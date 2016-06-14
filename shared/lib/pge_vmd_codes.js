@@ -21,19 +21,21 @@ var division_codes = {
 };
 	   
 var account_types = {
-  "Routine": "R",
-  "GO165": "A",
-  "Capital": "C",
-  "Maintenance": "M",
-  "TROW": "W",
-  "Reliability": "Y",
-  "Orchard": "Z"  
-};
+  "GO165":        "A",                            
+  "Capital":      "C",                            
+  "CEMA":         "E",                            
+  "Maintenance":  "M",                            
+  "Other":        "O",                            
+  "TROW":         "W",                            
+  "Reliability":  "Y",                            
+  "Orchard":      "Z"
+};                           
   
 var tag_types = {
 	"Cycle Buster":  "B",  //?
 	"Cntr Asst":     "C",  //?
-	"Project":       "D",  //Used to pick out locations that were in a special project (probably should not be the default.  Josh is researching if we want to add a new default tag type (with a blank value).
+	"Project":       "D",  //Used to pick out locations that were in a special project (probably should not be the default.  
+                         //        Josh is researching if we want to add a new default tag type (with a blank value).
 	"Non-Essential": "E",  //?
 	"No Work":       "N",  //?
 	"Poor Clear":    "P",  //?
@@ -44,6 +46,31 @@ var tag_types = {
 	"Missed Tree":   "X",  //?
 	"Reliability":   "Y",  //Used for PS&R program (account type = Y)
 	"Orchard":       "Z"   //Used for orchard work (account type = O)
+};
+
+
+// Mike Morely Email: The most common values selected are CA and LA:
+var crew_type = {
+  climb:              "CA", // CA: Climb Crew D/Truck w/Tools, T/Chipper        
+  climb_chiper2:      "CB", // CB: Climb Crew Truck-Mtd Chipper-Dump/Body w/Tools
+  pickup_4wd:         "CC", // CC: 4 wd Pickup And Tools                        
+  dump_4wd_chipper:   "CD", // CD: 4 wd Dump Truck, Trailer Chipper, Tools      
+  pickup_4wd_bikes:   "CT", // CT: 4 wd Pickup, Trail Bikes, Tools              
+  field_ispector:     "FI", // FI: Field Inspector P/U                          
+  field_supervisor:   "FS", // FS: Field Supervisor P/U                         
+  gr_crew_spray:      "GB", // GB: Gr Crew P/U Bp/Spray-Equip                   
+  gr_crew_inject:     "GI", // GI: Gr Crew P/U Inject w/Tools                    
+  gr_crew_lift_spray: "GS", // GS: Gr Crew Lift Spray-Tank                      
+  lift:               "LA", // LA: Lift Crew D/Body w/Tools, T/Chipper          
+  lift_dump:          "LB", // LB: Lift Crew D/Trk w/Tools, Lift w/Tolls, T/Chppr
+  super_crew:         "LD", // LD: Super Crew 2 Air Lifts, Trail-Chip D/Trk w/Tls
+  lift_crew_t:        "LC", // LC: Lift Crew T-Mtd Chip-D/Body w/Tls, Lift W/Tls
+  lift_rear:          "LR", // LR: Lift Crew/Rear Esmnt Lift/D Body-Tls-Trail-Chp
+  pre_inspect_pickup: "PI", // PI: Pre-Inspector Pickup                         
+  patrolman_pickup:   "PT", // PT: Patrolman Pickup                             
+  rc_4wd_pickup:      "RC", // RC: 4 wd/Hd Pickup and Tools                     
+  r_of_w_crew:        "RW", // RW: R-of-W Crew P/U (1-Ton Hd 4wd) w/Tls, T/Chppr
+  veg_crew:           "VC", // VC: Veg Crew P/U w/Spray-Tank w/Tools 
 };
 
 var transmison_circuit_codes = {
@@ -161,6 +188,8 @@ var transmison_circuit_codes = {
 };
 
 
+
+
 var location_status = {
   no_work_no_restrict:  "CMP_NW_NR",  // No Tree Work, No Restrictions
   no_work_with_restrict:     "CMP_NW_RE", 	// Complete Status, No Tree Work, Restriction(s) exist
@@ -172,6 +201,20 @@ var location_status = {
 
   open:                 "OPEN",       // Open Status (Assigned)
   work_complete:        "WK_CMP"      // Tree Work Completed  
+};
+
+var restriction_codes = {
+  "debris_management":             "DM",   // Debris Management            
+  "eagle":                         "EG",   // Eagle                        
+  "hazard_notify":                 "HN",   // Hazard Notification          
+  "new_planting":                  "NP",   // New Planting                 
+  "nest_review":                   "NR",   // Nest Review                  
+  "private_line":                  "PL",   // Private Line                  
+  "quarantine":                    "QT",   // Quarantine                   
+  "refusal_r":                     "RF",   // Refusal R                    
+  "r_review":                      "RP",   // R-Review                     
+  "transmission_mitigation":       "TM",   // Transmission Mitigation Plan 
+  "velb_removal":                  "VR",   // VELB Removal                 
 };
      
 var priority_codes = {
@@ -293,26 +336,43 @@ for(var i = 0; i < values.length; i++) {
   trim_codes[value] = value;
 }
 
+
 var tree_record_status = 
 {
-  "complete_no_issues":   "CMP_NI", 
-  "complete_with_issues": "CMP_WI",  
-  "contact_no_issues":    "CONTACT_NI",
-  "contact_with_issues":  "CONTACT_WI",
-  "tree_ok":              "OK",	        
-  "open":                 "OPEN"
+  "no_work_no_issues":   "CMP_NI",     // Complete - No Issues     Tree was inspected and no work was needed, 
+                                       //                          and there were no restrictions (sNotification=N)
+  "no_work_with_issues": "CMP_WI",     // Complete - With Issues   Tree was inspected and no work was needed, but there 
+                                       //                          are restrictions if someone later decides to trim it (sNotification=N)
+  "contact_no_issues":    "CONTACT_NI", // No Issues               Inspector is waiting for customer to call them back, 
+                                        //                         and tree has NO restrictions (sNotification = C, Q, R)
+  "contact_with_issues":  "CONTACT_WI", // With Issues             Inspector is waiting for customer to call them back, 
+                                        //                         and tree has restrictions (sNotification = C, Q, R)
+  "tree_ok":              "OK",	        // OK                      Tree needs to be trimmed (sNotification = O)
+  "open":                 "OPEN"        // Open                    Tree has not been inspected yet
 };
 
 var notification_codes = {
-"contact":    "C",	
-"hold":       "H",	
-"left_card":  "L",	
-"inventory":  "N",	
-"ok":         "O",	
-"phone":      "P",	
-"quarantine": "Q",	
-"refusal":	  "R"
+  "contact":    "C",	
+  "hold":       "H",	
+  "left_card":  "L",	
+  "inventory":  "N",	
+  "ok":         "O",	
+  "phone":      "P",	
+  "quarantine": "Q",	
+  "refusal":	  "R"
 };
+
+
+//Mike Morley Email:  This column has not been used in a very long time.  It used to indicate what kind of billing to use 
+//                    for the tree, but now the work complete file indicates how work will be billed.   Here are the values 
+//                    just for reference:
+var work_type = {
+  "lump_sum":       "L", //         Lump Sum                
+  "time_materials": "M", //         T&M (Time & Material)   
+  "other":          "O", //         Other                   
+  "unit":           "U"  //         Unit     
+};
+
 
 var alert_codes = {
   "other hazard":             "OH", //DISPATCHR ADDED
@@ -430,6 +490,7 @@ var tree_types = {
   "Cypress":             "CYPR",	
   "Deodara Cedar":       "DEOD",	
   "Box-Elder":           "ELDE",	
+  "Box":                 "ELDE",  
   "Elderberry":          "ELDR",	
   "Elm":                 "ELM ",	
   "Elm, American":       "ELMA",	
@@ -3617,5 +3678,8 @@ module.exports = {
   account_types: account_types,
   tag_types: tag_types,
   location_status: location_status,
-  transmison_circuit_codes: transmison_circuit_codes
+  transmison_circuit_codes: transmison_circuit_codes,
+  crew_type: crew_type,
+  work_type: work_type,
+  restriction_codes: restriction_codes
 };

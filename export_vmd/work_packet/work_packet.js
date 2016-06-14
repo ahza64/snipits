@@ -16,7 +16,7 @@ var WORK_PACKET = {                            // <TreeWorkPacket>
       "xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance",
       "xsi:schemaLocation":"export_vmd/sxd/work-request.xsd"
     },
-    sAcctType: vmd_codes.account_types.Routine, //    <sAcctType>         varchar(1)*   [W], R, Y, Z (see list below)
+    sAcctType: null, //    <sAcctType>         varchar(1)*   [W], R, Y, Z (see list below)
     sRoleType: "PI",                           //    <sRoleType>         varchar(2)*   [PI], TT - TT is no valid as work packets are never created for trimmers
     sDT: "T",                                  //    <sDT>               varchar(1)*   D, [T]//T for transmission, D for distribution
     sDivCode: null,                            //    <sDivCode>          varchar(2)*   User selected value (listed in appendix)
@@ -43,6 +43,7 @@ var WORK_PACKET = {                            // <TreeWorkPacket>
 function WorkPacket(){
   this.packet = _.extend({}, WORK_PACKET); 
   this.packet.TreeLoc = [];
+
 }
 
 
@@ -63,6 +64,11 @@ WorkPacket.prototype.addLocation = function(location){
   packet.sInspComp = location.get("sInspComp");
   packet.TreeLoc.push(location.getData());
   
+  packet.sAcctType = location.get("sAcctType");
+  
+  
+  location.set("iSSDRoute", 10);
+  location.set("iRouteNum", this.packet.TreeLoc.length*10);
 };
 
 

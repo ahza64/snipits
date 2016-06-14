@@ -18,6 +18,7 @@
         "sPriVolt": "70",
         "dtInspDate": "2016-01-19T21:30:53.394Z",
         "sTreeLocStatus": "CMP_WK_NR",
-        "ExternalLocID":"565426262895a53d2840f739"
+        "ExternalLocID":"565426262895a53d2840f739",
+        "sAcctType": "M"
     }
 }

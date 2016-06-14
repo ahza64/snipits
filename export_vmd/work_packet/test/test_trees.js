@@ -7,6 +7,7 @@ var _ = require('underscore');
 
 var trees = {
   tree1: require("./data/tree1.json"),
+  tree2: require("./data/tree2.json"),  
   velb: require("./data/velb.json"),
   refused: require("./data/refused.json"),
   ntw_tree: require("./data/ntw_needed.json"),
