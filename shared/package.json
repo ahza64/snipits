@@ -13,9 +13,10 @@
     "log4js-node-mongodb": "^1.0.0",
     "minimist": "^1.2.0",
     "mongoose": "^4.4.19",
+    "node-geocoder": "^3.11.0",
     "restler": "^3.4.0",
     "sugar": "^1.4.1",
-    "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",    
+    "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
     "underscore": "^1.8.3"
   },
   "devDependencies": {},

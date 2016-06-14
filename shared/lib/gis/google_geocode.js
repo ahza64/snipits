@@ -1,15 +1,15 @@
-var Bpromise = require('bluebird');  
+var Bpromise = require('bluebird');
 var geocoderProvider = 'google';
 var extra = {
   apiKey: 'AIzaSyBUIRSmyeNNxy323BxyefxD2vnRV85Rfik', // for Mapquest, OpenCage, Google Premier
-  formatter: null   
+  formatter: null
 };
 var httpAdapter = 'https';
 var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter, extra);
 
 /**
  * @description reverse geo code coordinates for address
- * @param {Float} x coordinate (logitude)
+ * @param {Float} x coordinate (longitude)
  * @param {Floay} y coordinate (latitude)
  */
 function getAddress(x, y){
@@ -42,4 +42,4 @@ function getAddress(x, y){
   });
 }
 
-module.exports = getAddress;
+module.exports = {getAddress};
