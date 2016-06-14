@@ -65,7 +65,7 @@
 * Extract layer 
  * pull trees from the database 
  * trees that have been inspected
- * trees that have not been exproted before 
+ * trees that have not been exported before 
 * Migrations
 
 
@@ -75,7 +75,7 @@
 * Division
 * SpanNames
 * LineNumbers
-* User Companyies
+* User Companies
 * Project (pmd_num) should be integers
 * Lines need voltage, division, and type(dist/trans)
 
