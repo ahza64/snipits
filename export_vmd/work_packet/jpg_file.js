@@ -1,5 +1,5 @@
 /**
- * @description JPGFile: This creates a FILE subdocument for JPG files
+ * @fileoverview JPGFile: This creates a FILE subdocument for JPG files
  */
 var _ = require("underscore");
 

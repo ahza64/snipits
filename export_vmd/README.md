@@ -87,7 +87,7 @@
 - [x] Finish: TreeLocAlerts & TreeRecsAlerts
 - [x] Finish: TreeLocFile & TreeRecsFile
 - [x] Test:   TreeLocRestrictions & TreeRecsRestrictions
-- [ ] Document workpacket transform Classes
+- [x] Document workpacket transform Classes
 - [ ] Testing with more than one tree in a location
  - [ ] Throw errors if inspected by diffrent people
  - [ ] Throw errors if trees are have different locations
@@ -102,8 +102,8 @@
 - [ ] Need to get data from public fire soruces SRA
 
 ## Data migratons
-- [ ] Publish all deliveries on ArcServer
-- [ ] Put new backup of trans database onto prod meteor
+- [x] Publish all deliveries on ArcServer
+- [x] Put new backup of trans database onto prod meteor
 - [x] Export Field (sarvar)
 - [x] Address (tejas)
 - [x] User Companies (tejas)
@@ -135,7 +135,7 @@
 - [ ] If a tree is ready can it still have restrictions on it?  I.e. it is in a riparian zone but has been okayed to work?
 - [ ] bTreeRecsRestriction: null,   //   <bTreeRecsRestriction> [bit]    IF related sLT value is L, then 0, else 1   (Or should it be 1 for a tree and 0 for location)
 - [ ] if a two trees were at the same adderess but inspected by different people should mulitple Locations and WorkPackets get created
-
+- [ ] Does the work packet Assigned user have to be the same as the inspect users of threes and locations?
 
 ## Moving forward
 - [ ] Are all trees being correctly added to workorders.

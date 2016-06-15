@@ -14,9 +14,11 @@
         ]
     },    
     "pi_user": {
-      "uniq_id": "NOEMAIL",
-      "first": "NO",
-      "last": "ONE"
+      "uniq_id" : "SDSJ@pge.com",
+      "first" : "Sterling",
+      "last" : "Smith",
+      "user" : "5654db452895a53d28412019",
+      "uniq_id" : "SDSJ@pge.com"
     },
     "pmd": {
         "_id" : "56aa0ff8398cf249f959c8c1",

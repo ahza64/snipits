@@ -5,9 +5,9 @@
 
 /* jshint maxlen: 180 */
 var _ = require("underscore");
-
+var vmd = require('dsp_shared/lib/pge_vmd_codes');
 var js2xmlparser = require("js2xmlparser");
-
+var assert = require('assert');
 var root_node = "TreeWorkPacket";
 var WORK_PACKET = {                            // <TreeWorkPacket>
     // "@": {
@@ -57,27 +57,40 @@ function WorkPacket(test_email){
 WorkPacket.prototype.addLocation = function(location){
   var packet = this.packet;
   
-  if(!packet.sDivCode) {
-    packet.sDivCode = location.get("sDivCode");
-  } else if(packet.sDivCode !== location.get("sDivCode")) {
-    throw new Error('Can not add location from different division');
-  }
-  if(!packet.iProjID) {
-    packet.iProjID = location.getPMDNum();
-  } else if(packet.iProjID !== location.getPMDNum()) {
-    throw new Error('Can not add location from different project');
-  }
-  packet.sAssignedUser = location.get("sInsp");
-  packet.sInspComp = location.get("sInspComp");
+  this.setFromLocation("sDivCode", location.get("sDivCode"));
+  this.setFromLocation("iProjID", location.getPMDNum());
+  
+  this.setFromLocation("sAssignedUser", location.get("sInsp"));
+  this.setFromLocation("sInspComp", location.get("sInspComp"));
+  this.setFromLocation("sAcctType", location.get("sAcctType"));
+
   packet.TreeLoc.push(location.getData());
-  
-  packet.sAcctType = location.get("sAcctType");
-  
-  
-  
+    
   location.set("iSSDRoute", 10);
   location.set("iRouteNum", this.packet.TreeLoc.length*10);
 };
+
+
+WorkPacket.prototype.setFromLocation = function(key, value) {
+  var packet = this.packet;
+  
+  if(!packet[key]) {
+    packet[key] = value;
+  } else if(packet[key] !== value) {
+    throw new Error('Can not add location with different '+key+" : "+packet[key]+" >> "+value);
+  }  
+};
+
+WorkPacket.prototype.validateRequired = function() {
+  this._testValue("sAcctType", _.values(vmd.account_types));
+  this._testValue("sDivCode", _.values(vmd.division_codes));
+};
+
+WorkPacket.prototype._testValue = function(key, acceptible) {
+  assert(_.contains(acceptible, this.packet[key]), "Bad "+key+": "+this.packet[key]);
+};
+
+
 
 /**
  * @description toXML 

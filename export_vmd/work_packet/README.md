@@ -1,11 +1,3 @@
-## Members
-
-<dl>
-<dt><a href="#_">_</a></dt>
-<dd><p>JPGFile: This creates a FILE subdocument for JPG files</p>
-</dd>
-</dl>
-
 ## Functions
 
 <dl>
@@ -29,12 +21,6 @@
 </dd>
 </dl>
 
-<a name="_"></a>
-
-## _
-JPGFile: This creates a FILE subdocument for JPG files
-
-**Kind**: global variable  
 <a name="Alert"></a>
 
 ## Alert(type, alert_code, user, date)

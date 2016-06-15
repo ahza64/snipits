@@ -40,6 +40,7 @@ function createTest(packet_name, packet) {
       workPacket.addLocation(treeLocation);
     }
     
+    workPacket.validateRequired();
     
     //TODO: Fix this ... schema check is not working (never errors)
     test_util.testResults(packet.results, "work_packet", packet_name, workPacket.packet);
