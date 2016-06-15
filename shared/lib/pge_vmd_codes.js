@@ -3664,6 +3664,1496 @@ var county_codes = {
 };
 
 
+// sLineID  sDescrip                sVoltage  bNERC
+var line_ids = {
+"Rio Bravo Kern Oil":                      	"0724",  	// 115	0
+"Wilson Dairland 115kv":                   	"0742",  	// 115	0
+"AMES-STELLING":                           	"10001", 	// 115	0
+"AMES-WHISMAN":                            	"10002", 	// 115	0
+"ATWATER-EL CAPITAN":                      	"10003", 	// 115	0
+"Castle 115kv Tap":                        	"10003A",	// 115	0
+"ATWATER-MERCED":                          	"10004", 	// 115	0
+"LIVINGSTON 115KV TAP":                    	"10004A",	// 115	0
+"GALLO 115KV TAP":                         	"10004B",	// 115	0
+"CRESSEY 115kv TAP":                       	"10004C",	// 115	0
+"JR Wood 115kv Tap":                       	"10004D",	// 115	0
+"A H W-1 CABLE":                           	"10005U",	// 115	0
+"A H W-2 CABLE":                           	"10006U",	// 115	0
+"AX-1 CABLE":                              	"10007U",	// 115	0
+"AY-1 CABLE":                              	"10008U",	// 115	0
+"AY-2 CABLE":                              	"10009U",	// 115	0
+"Bair-Belmont":                            	"10010", 	// 115	0
+"Balch-Sanger":                            	"10011", 	// 115	0
+"BARTON-SANGER":                           	"10012", 	// 115	0
+"BELLOTA-RIVERBANK-MELONES":               	"10013", 	// 115	0
+"Tullock 115kv Tap":                       	"10013A",	// 115	0
+"Big Bend-Clayton #1":                     	"10015", 	// 115	0
+"Big Bend-Clayton #2":                     	"10016", 	// 115	0
+"BOGUE-RIO OSO":                           	"10017", 	// 115	0
+"Greenleaf 115kv Tap":                     	"10017A",	// 115	0
+"BRIDGEVILLE-COTTONWOOD":                  	"10018", 	// 115	0
+"Brighton-Clayton #1":                     	"10019", 	// 115	0
+"Brighton-Clayton #2":                     	"10020", 	// 115	0
+"Brighton-Davis":                          	"10021", 	// 115	0
+"Barker Slough 115kv Tap":                 	"10021A",	// 115	0
+"UC DAVIS #2 TAP":                         	"10021B",	// 115	0
+"BRIGHTON-GRAND ISLAND #1":                	"10022", 	// 115	0
+"BRIGHTON-GRAND ISLAND #2":                	"10023", 	// 115	0
+"BRITTON-MONTA VISTA":                     	"10024", 	// 115	0
+"Butt Valley-Caribou":                     	"10025", 	// 115	0
+"BUTTE-SYCAMORE CREEK":                    	"10026", 	// 115	0
+"C-L CABLE":                               	"10027U",	// 115	0
+"Cabrillo-Santa Ynez Sw. Sta.":            	"10028", 	// 115	0
+"Buellton 115kv Tap":                      	"10028A",	// 115	0
+"CALLENDAR SW STA-MESA":                   	"10029", 	// 115	0
+"Camp Evers-Paul Sweet":                   	"10030", 	// 115	0
+"Caribou-Sycamore Creek":                  	"10031", 	// 115	0
+"Grizzly 115kv Tap":                       	"10031A",	// 115	0
+"CASCADE-COTTONWOOD":                      	"10032", 	// 115	0
+"CHOWCHILLA-KERCKHOFF":                    	"10033", 	// 115	0
+"SHARON PRISON 115KV TAP":                 	"10033A",	// 115	0
+"Oakhurst 115kv Tap":                      	"10033B",	// 115	0
+"CHRISTIE-SOBRANTE":                       	"10034", 	// 115	0
+"Clayton-Meadow Lane":                     	"10037", 	// 115	0
+"CONTRA COSTA #1":                         	"10038", 	// 115	0
+"CONTRA COSTA #2":                         	"10039", 	// 115	0
+"Fibreboard 115kv Tap":                    	"10039A",	// 115	0
+"Cooley Landing-Palo Alto":                	"10040", 	// 115	0
+"CORCORAN-SMYRNA":                         	"10041", 	// 115	0
+"Quebec 115kv Tap":                        	"10041A",	// 115	0
+"Corn Prod -Stkton Cogen Jct":             	"10042", 	// 115	0
+"Cortina-Mendocino #1":                    	"10043", 	// 115	0
+"Lucerne #1":                              	"10043a",	// 115	0
+"Cottonwood-Panorama":                     	"10044", 	// 115	0
+"CRAG VIEW-CASCADE":                       	"10045", 	// 115	1
+"CX #1 115kv Cable":                       	"10046U",	// 115	0
+"CX #2 115kv Cable":                       	"10047U",	// 115	0
+"D-L #1 115kv Cable":                      	"10048U",	// 115	0
+"Dairyland-Mendota":                       	"10049", 	// 115	0
+"Gill Ranch 115kv":                        	"10049B",	// 115	0
+"Divide-Cabrillo #2":                      	"10050", 	// 115	0
+"City #2 115kv Tap":                       	"10050A",	// 115	0
+"Manville 115kv Tap":                      	"10050B",	// 115	0
+"Divide-Cabrillo #1":                      	"10051", 	// 115	0
+"Surf 115kv Tap":                          	"10051A",	// 115	0
+"City #1 115kv Tap":                       	"10051B",	// 115	0
+"DIXON LANDING-MCKEE":                     	"10052", 	// 115	0
+"Donnells-Curtis":                         	"10053", 	// 115	0
+"Beardsley 115kv Tap":                     	"10053A",	// 115	0
+"Spring Gap 115kv Tap":                    	"10053B",	// 115	0
+"Sand Bar 115kv Tap":                      	"10053C",	// 115	0
+"DRUM-PLACER":                             	"10054", 	// 115	0
+"Bell #1 115kv Tap":                       	"10054B",	// 115	0
+"Bell #2 115kv Tap":                       	"10054C",	// 115	0
+"Drum-Rio Oso #1":                         	"10055", 	// 115	0
+"Dutch Flat #2 115kv Tap":                 	"10055A",	// 115	0
+"Brunswick #1 115kv Tap":                  	"10055B",	// 115	0
+"Drum-Rio Oso #2":                         	"10056", 	// 115	0
+"Brunswick #2 115kv Tap":                  	"10056A",	// 115	0
+"Drum-Summit #1(NERC)":                    	"10057", 	// 115	1
+"Drum-Summit #2(NERC)":                    	"10058", 	// 115	1
+"DUMBARTON-NEWARK":                        	"10059", 	// 115	0
+"EAGLE ROCK-CORTINA":                      	"10061", 	// 115	0
+"EAGLE ROCK-REDBUD":                       	"10062", 	// 115	0
+"Lower Lake-Homestake":                    	"10062A",	// 115	0
+"EAST GRAND-SAN MATEO":                    	"10063", 	// 115	0
+"EASTSHORE-MT. EDEN":                      	"10064", 	// 115	0
+"EL CAPITAN-WILSON":                       	"10065", 	// 115	0
+"EL PATIO-SAN JOSE A":                     	"10066", 	// 115	0
+"ELDORADO-MISSOURI FLAT #1":               	"10067", 	// 115	0
+"Apple Hill #1 115kv Tap":                 	"10067A",	// 115	0
+"ELDORADO-MISSOURI FLAT #2":               	"10068", 	// 115	0
+"Apple Hill #2 115kv Tap":                 	"10068A",	// 115	0
+"Evergreen-San Jose B":                    	"10069", 	// 115	0
+"Markham #1 115kv Tap":                    	"10069A",	// 115	0
+"Exchequer-Le Grande":                     	"10070", 	// 115	0
+"FELLOWS-MIDSUN":                          	"10071", 	// 115	0
+"Victory 115kv Tap":                       	"10071A",	// 115	0
+"Midsun Tap":                              	"10071B",	// 115	0
+"FELLOWS-TAFT":                            	"10072", 	// 115	0
+"Midset 115kv Tap":                        	"10072A",	// 115	0
+"FULTON JCT-VACA":                         	"10073", 	// 115	0
+"Amerigas 115kv Tap":                      	"10073A",	// 115	0
+"FULTON-PUEBLO":                           	"10074", 	// 115	0
+"Rincon #1 115kv Tap":                     	"10074A",	// 115	0
+"Monticello PH 115kv Tap":                 	"10074B",	// 115	0
+"Fulton Jct.-Fulton #2":                   	"10075", 	// 115	0
+"Rincon #2 115kv Tap":                     	"10075A",	// 115	0
+"Fulton-Santa Rosa #1":                    	"10076", 	// 115	0
+"Fulton-Santa Rosa #2":                    	"10077", 	// 115	0
+"Geysers #15-Geysers #3":                  	"10080", 	// 115	0
+"GEYSERS #3-CLOVERDALE":                   	"10081", 	// 115	0
+"Mission Power 115kv Tap":                 	"10081A",	// 115	0
+"Geysers #3-Eagle Rock":                   	"10082", 	// 115	0
+"Geysers #5-Geysers #3":                   	"10083", 	// 115	0
+"Geysers #7-Eagle Rock":                   	"10084", 	// 115	0
+"GOLD HILL-BELLOTA-LOCKEFORD":             	"10085", 	// 115	0
+"Camanche 115kv Tap":                      	"10085A",	// 115	0
+"GRANT-EASTSHORE":                         	"10086", 	// 115	0
+"Coles Levee Tap":                         	"10086C",	// 115	0
+"Green Valley-Camp Evers":                 	"10087", 	// 115	0
+"GREEN VALLEY-LLAGAS":                     	"10088", 	// 115	0
+"Green Valley-Paul Sweet":                 	"10089", 	// 115	0
+"H-P #1 CABLE":                            	"10090U",	// 115	0
+"H-P #3 CABLE":                            	"10091U",	// 115	0
+"H-Y #1 CABLE":                            	"10094U",	// 115	0
+"Henrietta-Kingsburg":                     	"10095", 	// 115	0
+"HERNDON-BARTON":                          	"10096", 	// 115	0
+"Herndon-Bullard #1":                      	"10097", 	// 115	0
+"Herndon-Bullard #2":                      	"10098", 	// 115	0
+"HERNDON-MANCHESTER":                      	"10099", 	// 115	0
+"Herndon-Woodward":                        	"10100", 	// 115	0
+"Valley Children's Hospital 115kv Tap":    	"10100A",	// 115	0
+"River Rock Tap":                          	"10100B",	// 115	0
+"HP-2 CABLE":                              	"10101U",	// 115	0
+"Humboldt Bay-Humboldt #1 115kv":          	"10102", 	// 115	0
+"HUMBOLDT-BRIDGEVILLE":                    	"10103", 	// 115	0
+"HUMBOLDT-TRINITY":                        	"10104", 	// 115	0
+"IGNACIO-MARE ISLAND #1":                  	"10107", 	// 115	0
+"Carquinez #1 115kv Tap":                  	"10107A",	// 115	0
+"Skaggs Island #1":                        	"10107B",	// 115	0
+"Jameson Canyon Pumping Plant Tap":        	"10107C",	// 115	0
+"Meyers Tap":                              	"10107D",	// 115	0
+"IGNACIO-MARE ISLAND #2":                  	"10108", 	// 115	0
+"Carquinez #2 115kv Tap":                  	"10108A",	// 115	0
+"Skaggs Island #2":                        	"10108B",	// 115	0
+"Ignacio-San Rafael #1":                   	"10109", 	// 115	0
+"Ignacio-San Rafael #3":                   	"10110", 	// 115	0
+"Jarvis-Cryogenics":                       	"10111", 	// 115	0
+"K-D #1 115kv Cable":                      	"10112U",	// 115	0
+"K-D #2 115kv Cable":                      	"10113U",	// 115	0
+"Kerckhoff 1-Kerckhoff 2":                 	"10114", 	// 115	0
+"KERCKHOFF-CLOVIS-SANGER #1":              	"10115", 	// 115	0
+"KERCKHOFF-CLOVIS-SANGER #2":              	"10116", 	// 115	0
+"Kern Oil-Dexzel":                         	"10117", 	// 115	0
+"KERN OIL-WITCO":                          	"10118", 	// 115	0
+"Discovery 115kv Tap":                     	"10118A",	// 115	0
+"Kern-Kern Front":                         	"10119", 	// 115	0
+"Double C (PSE) 115kv Tap":                	"10119A",	// 115	0
+"Badger Crk (PSE) 115kv Tap":              	"10119B",	// 115	0
+"Sierra (PSE) 115kv Tap":                  	"10119C",	// 115	0
+"Kern-Lamont":                             	"10120", 	// 115	0
+"Tevis #1 115kv Tap":                      	"10120A",	// 115	0
+"Kern-Lerdo-Kern Oil":                     	"10121", 	// 115	0
+"KERN-LIVE OAK":                           	"10122", 	// 115	0
+"KERN-MAGUNDEN-WITCO":                     	"10123", 	// 115	0
+"Kernwater 115kv Tap":                     	"10123A",	// 115	0
+"Witco (COGEN) 115kv Tap":                 	"10123B",	// 115	0
+"Kern-Rosedale":                           	"10124", 	// 115	0
+"KERN-STOCKDALE":                          	"10125", 	// 115	0
+"Tevis #2 115kv Tap":                      	"10125A",	// 115	0
+"Kern-Westpark #1":                        	"10126", 	// 115	0
+"Kern-Westpark #2":                        	"10127", 	// 115	0
+"Kifer-San Jose B":                        	"10128", 	// 115	0
+"FMC 115kv Tap":                           	"10128A",	// 115	0
+"KINGS RIVER-SANGER-REEDLEY":              	"10129", 	// 115	0
+"Rainbow 115kv Tap":                       	"10129A",	// 115	0
+"KINGSBURG-CORCORAN #1":                   	"10130", 	// 115	0
+"KINGSBURG-CORCORAN #2":                   	"10131", 	// 115	0
+"Penngrove Sub 115kv Tap":                 	"10132A",	// 115	0
+"Stony Point Sub 115kv Tap":               	"10132B",	// 115	0
+"Lakeville-Sonoma":                        	"10133", 	// 115	0
+"LAKEWOOD-MEADOW LN-CLAYTON":              	"10134", 	// 115	0
+"EBMUD 115kv Tap":                         	"10134A",	// 115	0
+"LAWRENCE-MONTA VISTA":                    	"10135", 	// 115	0
+"Phillips 115kv Tap":                      	"10135A",	// 115	0
+"Le Grand-Dairyland":                      	"10136", 	// 115	0
+"LE GRANDE-CHOWCHILLA":                    	"10137", 	// 115	0
+"Certainteed 115kv Tap":                   	"10137A",	// 115	0
+"CHOWCHILLA #1 115KV TAP":                 	"10137B",	// 115	0
+"Lerdo-Famoso":                            	"10138", 	// 115	0
+"Ultra Power (Ogle) 115k Tap":             	"10138A",	// 115	0
+"Cawelo C 115kv Tap":                      	"10138B",	// 115	0
+"Live Oak Sw Stn-Grainte Rd":              	"10139", 	// 115	0
+"LIVE OAK-KERN OIL":                       	"10140", 	// 115	0
+"VEDDER 115KV TAP":                        	"10140A",	// 115	0
+"Llagas-Gilroy Foods":                     	"10141", 	// 115	0
+"Gilroy Energy 115kv Tap":                 	"10141A",	// 115	0
+"MADISON-VACA":                            	"10143", 	// 115	0
+"MANCHESTER-SANGER":                       	"10144", 	// 115	0
+"Las Palmas 115kv Tap":                    	"10144A",	// 115	0
+"MANTECA-VIERRA":                          	"10145", 	// 115	0
+"HOWLAND ROAD 115KV TAP":                  	"10145A",	// 115	0
+"Heinz 115kv Tap":                         	"10145C",	// 115	0
+"Martin-Daly City #1":                     	"10146", 	// 115	0
+"Martin-Daly City #2":                     	"10147", 	// 115	0
+"Serramonte 115kv Tap":                    	"10147A",	// 115	0
+"MARTIN-EAST GRAND":                       	"10148", 	// 115	0
+"MARTIN-MILLBRAE #1":                      	"10149", 	// 115	0
+"MARTIN-SF AIRPORT":                       	"10150", 	// 115	0
+"United Co-Gen Inc 115kv Tap":             	"10150A",	// 115	0
+"Martinez-Shell Oil #1":                   	"10151", 	// 115	0
+"Martinez-Shell Oil #2":                   	"10152", 	// 115	0
+"Martinez-Sobrante":                       	"10153", 	// 115	0
+"Mc Call-Corcoran":                        	"10154", 	// 115	0
+"MC CALL-KINGSBURG #1":                    	"10155", 	// 115	0
+"Kingsburg Cogen 115kv Tap":               	"10155A",	// 115	0
+"Guardian #2 115kv Tap":                   	"10155B",	// 115	0
+"MC CALL-KINGSBURG #2":                    	"10156", 	// 115	0
+"Guardian #1 115kv Tap":                   	"10156A",	// 115	0
+"Mc Call-Malaga":                          	"10157", 	// 115	0
+"Ranchers Cotton 115kv Tap":               	"10157A",	// 115	0
+"Rio Bravo Tap":                           	"10157B",	// 115	0
+"Air Products Tap":                        	"10157C",	// 115	0
+"Johnson Wax Tap":                         	"10157D",	// 115	0
+"Mc Call-Reedley":                         	"10158", 	// 115	0
+"Mc Call-Sanger #1":                       	"10159", 	// 115	0
+"Mc Call-Sanger #2":                       	"10160", 	// 115	0
+"Mc Call-Sanger #3":                       	"10161", 	// 115	0
+"Mc Call-West Fresno #1":                  	"10162", 	// 115	0
+"California Ave 115kv Tap":                	"10162A",	// 115	0
+"Danish Creamery Tap B":                   	"10162B",	// 115	0
+"Mc Call-West Fresno #2":                  	"10163", 	// 115	0
+"MCKEE-METCALF":                           	"10164", 	// 115	0
+"Melones-Curtis":                          	"10165", 	// 115	0
+"Peoria 115kv Tap":                        	"10165A",	// 115	0
+"Chinese Camp (Ultra Power) 115k tap":     	"10165B",	// 115	0
+"Racetrack 115kv Tap":                     	"10165C",	// 115	0
+"Melones-Racetrack":                       	"10166", 	// 115	0
+"MENDOCINO-REDBUD":                        	"10167", 	// 115	0
+"Lucerne #2":                              	"10167a",	// 115	0
+"Mendocino-Ukiah":                         	"10168", 	// 115	0
+"Meridian Minerals":                       	"10169", 	// 115	0
+"Mesa-Divide #1":                          	"10170", 	// 115	0
+"Mesa-Divide #2":                          	"10171", 	// 115	0
+"Mesa-Santa Maria":                        	"10172", 	// 115	0
+"Fairway #1 115kv Tap":                    	"10172A",	// 115	0
+"Mesa-Sisquoc":                            	"10173", 	// 115	0
+"SANTA MARIA COGEN 115KV TAP":             	"10173A",	// 115	0
+"Metcalf-Coyote Pumping Plant":            	"10174", 	// 115	0
+"Metcalf-Edenvale #1":                     	"10175", 	// 115	0
+"IBM Harry RD #2 115kv Tap":               	"10175A",	// 115	0
+"Metcalf-Edenvale #2":                     	"10176", 	// 115	0
+"IBM Bailey 115kv Tap":                    	"10176A",	// 115	0
+"Metcalf-El Patio #1":                     	"10177", 	// 115	0
+"IBM Harry RD #1 115kv Tap":               	"10177A",	// 115	0
+"Metcalf-El Patio #2":                     	"10178", 	// 115	0
+"Metcalf-Evergreen #1":                    	"10179", 	// 115	0
+"Metcalf-Evergreen #2":                    	"10180", 	// 115	0
+"Markham #2 115kv Tap":                    	"10180A",	// 115	0
+"Stone 115kv Tap":                         	"10180B",	// 115	0
+"METCALF-GREEN VALLEY":                    	"10181", 	// 115	0
+"Metcalf-Hicks #1":                        	"10182", 	// 115	0
+"Metcalf-Hicks #2":                        	"10183", 	// 115	0
+"Metcalf-Morgan Hill":                     	"10184", 	// 115	0
+"MIDSUN-MIDWAY":                           	"10185", 	// 115	0
+"North Midway 115kv Tap":                  	"10185A",	// 115	0
+"Cymric 115kv Tap":                        	"10185B",	// 115	0
+"MIDWAY-RENFRO":                           	"10186", 	// 115	0
+"Tupman #1 115kv Tap":                     	"10186A",	// 115	0
+"TUPMAN-NORCO 115KV TAP":                  	"10186B",	// 115	0
+"MIDWAY-RIO BRAVO-RENFRO":                 	"10188", 	// 115	0
+"Tupman #2 115kv Tap":                     	"10188A",	// 115	0
+"Frito Lay 115kv Tap":                     	"10188B",	// 115	0
+"Golden Valley Tap 70kv":                  	"10188C",	// 70 	0
+"MIDWAY-SHAFTER":                          	"10189", 	// 115	0
+"Midway-Taft":                             	"10190", 	// 115	0
+"Midway-Temblor":                          	"10191", 	// 115	0
+"Belridge 115kv Tap":                      	"10191A",	// 115	0
+"MILLBRAE-SAN MATEO #1":                   	"10192", 	// 115	0
+"MILPITAS-SWIFT":                          	"10193", 	// 115	0
+"Mabury 115kv Tap":                        	"10193A",	// 115	0
+"MISSOURI FLAT-GOLD HILL #1":              	"10194", 	// 115	0
+"MISSOURI FLAT-GOLD HILL #2":              	"10195", 	// 115	0
+"MONTA VISTA-WOLFE":                       	"10196", 	// 115	0
+"Moraga-Claremont #1":                     	"10198", 	// 115	0
+"Moraga-Claremont #2":                     	"10199", 	// 115	0
+"Moraga-Oakland #1":                       	"10200", 	// 115	0
+"Moraga-Oakland #2":                       	"10201", 	// 115	0
+"Moraga-Oakland #3":                       	"10202", 	// 115	0
+"Moraga-Oakland #4":                       	"10203", 	// 115	0
+"MORAGA-OAKLAND J":                        	"10204", 	// 115	0
+"Moraga-San Leandro #1":                   	"10205", 	// 115	0
+"Moraga-San Leandro #2":                   	"10206", 	// 115	0
+"Moraga-San Leandro #3":                   	"10207", 	// 115	0
+"Morgan Hill-Llagas":                      	"10208", 	// 115	0
+"Morro Bay-San Luis Obispo #1":            	"10209", 	// 115	0
+"Morro Bay-San Luis Obispo #2":            	"10210", 	// 115	0
+"Goldtree 115kv Tap":                      	"10210A",	// 115	0
+"Moss Landing-Del Monte #1":               	"10211", 	// 115	0
+"Moss Landing-Del Monte #2":               	"10212", 	// 115	0
+"Moss Landing-Green Vly #1":               	"10213", 	// 115	0
+"Moss Landing-Green Vly #2":               	"10214", 	// 115	0
+"MOSS LANDING-HOLLISTER":                  	"10215", 	// 115	0
+"Moss Landing-Salinas #1":                 	"10216", 	// 115	0
+"Dolan RD #1 115kv Tap":                   	"10216A",	// 115	0
+"Moss Landing-Salinas #2":                 	"10217", 	// 115	0
+"Dolan RD #2 115kv Tap":                   	"10217A",	// 115	0
+"MOSS LANDING-SALINAS-SOLEDAD #1":         	"10218", 	// 115	0
+"Hollister #1 Tap 115 KV":                 	"10218A",	// 115	0
+"MOSS LANDING-SALINAS-SOLEDAD #2":         	"10219", 	// 115	0
+"HOLLISTER #2 115 KV":                     	"10219A",	// 115	0
+"San Francisco #2":                        	"10219Z",	// 115	0
+"MOUNTAIN VIEW-MONTA VISTA":               	"10220", 	// 115	0
+"MT. EDEN-DUMBARTON":                      	"10221", 	// 115	0
+"NEWARK-AMES #1":                          	"10222", 	// 115	0
+"NEWARK-AMES #2":                          	"10223", 	// 115	0
+"NEWARK-AMES #3":                          	"10224", 	// 115	0
+"NEWARK-APPLIED MATERIALS":                	"10226", 	// 115	0
+"Lockheed #2 115kv Tap":                   	"10226A",	// 115	0
+"A.M.D. 115kv Tap":                        	"10226B",	// 115	0
+"NEWARK-DIXON LANDING":                    	"10227", 	// 115	0
+"Newark-Fremont #1":                       	"10228", 	// 115	0
+"Newark-Fremont #2":                       	"10229", 	// 115	0
+"Newark-Jarvis #1":                        	"10230", 	// 115	0
+"Newark-Jarvis #2":                        	"10231", 	// 115	0
+"Newark-Kifer":                            	"10232", 	// 115	0
+"Zanker 115kv #2 Tap":                     	"10232A",	// 115	0
+"NEWARK-LAWRENCE":                         	"10233", 	// 115	0
+"Lockheed #1 115kv Tap":                   	"10233A",	// 115	0
+"Moffett Field 115kv Tap":                 	"10233B",	// 115	0
+"Newark-Lawrence Lab":                     	"10234", 	// 115	0
+"NEWARK-MILPITAS #1":                      	"10235", 	// 115	0
+"NEWARK-NUMMI":                            	"10237", 	// 115	0
+"Newark-Scott #1":                         	"10238", 	// 115	0
+"Newark-Scott #2":                         	"10239", 	// 115	0
+"NEWARK-TRIMBLE":                          	"10240", 	// 115	0
+"Zanker 115kv #1 Tap":                     	"10240A",	// 115	0
+"Agnew 115kv Tap":                         	"10240B",	// 115	0
+"North Tower-Martinez Jct #1":             	"10241", 	// 115	0
+"Oakland C- Maritime (USN)":               	"10242", 	// 115	0
+"Oakland C-Turbines":                      	"10243", 	// 115	0
+"OAKLAND J-GRANT":                         	"10244", 	// 115	0
+"Owens Brockway 115Kv Tap":                	"10244A",	// 115	0
+"Oleum-G #1":                              	"10245", 	// 115	0
+"Valley View #1 115kv Tap":                	"10245A",	// 115	0
+"Oleum-G #2":                              	"10246", 	// 115	0
+"Valley View #2 115kv Tap":                	"10246A",	// 115	0
+"OLEUM-MARTINEZ":                          	"10247", 	// 115	0
+"OLEUM-NORTH TOWER-CHRISTIE":              	"10248", 	// 115	0
+"P-X #1 CABLE":                            	"10249U",	// 115	0
+"P-X #2 CABLE":                            	"10250U",	// 115	0
+"Palermo-Big Bend #2":                     	"10251", 	// 115	0
+"PALERMO-BOGUE":                           	"10252", 	// 115	0
+"Honcut 115kv Tap":                        	"10252A",	// 115	0
+"Palermo-Nicolaus":                        	"10253", 	// 115	0
+"PALERMO-PEASE":                           	"10254", 	// 115	0
+"Panoche-Mendota":                         	"10255", 	// 115	0
+"Cheney #1 115kv Tap":                     	"10255A",	// 115	0
+"Panoche-Oro Loma":                        	"10256", 	// 115	0
+"Kamm Tap":                                	"10256A",	// 115	0
+"Westlands #1 RAPP 115k vTap":             	"10256B",	// 115	0
+"San Luis #5 115kv Tap":                   	"10256C",	// 115	0
+"SAN LUIS #3 115KV TAP":                   	"10256D",	// 115	0
+"De Francesco Tap":                        	"10256E",	// 115	0
+"Panoche-Schindler #1":                    	"10257", 	// 115	0
+"Cantua 115kv Tap":                        	"10257A",	// 115	0
+"Westlands #18 RA 115kv Tap":              	"10257B",	// 115	0
+"Oxford Tab 115kv":                        	"10257C",	// 115	0
+"Panoche-Schindler #2":                    	"10258", 	// 115	0
+"Cheney #2 115kv Tap":                     	"10258A",	// 115	0
+"PEASE-RIO OSO":                           	"10259", 	// 115	0
+"PITTSBURG-CLAYTON #1":                    	"10260", 	// 115	0
+"Pittsburg-Clayton #3":                    	"10262", 	// 115	0
+"PITTSBURG-COLUMBIA STEEL":                	"10263", 	// 115	0
+"GWF #2 115kv Tap":                        	"10263A",	// 115	0
+"Linde 115kv Tap":                         	"10263B",	// 115	0
+"Dow Chemical 115kv Tap":                  	"10263C",	// 115	0
+"Pittsburg-Kirker-Columbia Steel":         	"10264", 	// 115	0
+"Pittsburg-Martinez #1":                   	"10265", 	// 115	0
+"Bollman #1 115kv Tap":                    	"10265A",	// 115	0
+"Imhoff 115kv Tap":                        	"10265B",	// 115	0
+"Pittsburg-Martinez #2":                   	"10266", 	// 115	0
+"Bollman #2 115kv Tap":                    	"10266A",	// 115	0
+"PLACER-GOLD HILL #1":                     	"10267", 	// 115	0
+"Flint 115kv Tap":                         	"10267A",	// 115	0
+"POSCO-COLUMBIA STEEL":                    	"10268", 	// 115	0
+"RAVENSWOOD-AMES #1":                      	"10270", 	// 115	0
+"RAVENSWOOD-AMES #2":                      	"10271", 	// 115	0
+"Ravenswood-Bair #1":                      	"10272", 	// 115	0
+"Shredder 115kv Tap":                      	"10272A",	// 115	0
+"Ravenswood-Cooley Lndg #1":               	"10273", 	// 115	0
+"Ravenswood-Cooley Lndng #2":              	"10274", 	// 115	0
+"Ravenswood-Palo Alto #1":                 	"10275", 	// 115	0
+"Ravenswood-Palo Alto #2":                 	"10276", 	// 115	0
+"Ravenswood-San Mateo 115kv":              	"10277", 	// 115	0
+"Rio Oso-Nicolaus":                        	"10278", 	// 115	0
+"RIO OSO-WEST SACRAMENTO":                 	"10279", 	// 115	0
+"RIO OSO-WOODLAND #1":                     	"10280", 	// 115	0
+"Woodland Poly Tap 115KV":                 	"10280A",	// 115	0
+"RIO OSO-WOODLAND #2":                     	"10281", 	// 115	0
+"Zamora 115kv Tap":                        	"10281A",	// 115	0
+"BELLOTA-RIVERBANK":                       	"10282", 	// 115	0
+"Hershey 115kv Tap":                       	"10282A",	// 115	0
+"Salado Jct-Sargent Sws":                  	"10283", 	// 115	0
+"Salt Springs-Tiger Creek":                	"10284", 	// 115	0
+"San Jose A-San Jose B":                   	"10285", 	// 115	0
+"SAN LEANDRO-OAKLAND J #1":                	"10286", 	// 115	0
+"SAN LUIS OBISPO-CALLENDAR SW STA":        	"10287", 	// 115	0
+"San Luis Obispo-Santa Maria - 115kv":     	"10288", 	// 115	0
+"San Mateo-Bay Meadows #1":                	"10289", 	// 115	0
+"San Mateo-Bay Meadows #2":                	"10290", 	// 115	0
+"San Mateo-Bellmont":                      	"10291", 	// 115	0
+"San Mateo-Martin #3":                     	"10292", 	// 115	0
+"San Mateo-Martin #6":                     	"10293", 	// 115	0
+"Sanger-Malaga":                           	"10294", 	// 115	0
+"Santa Maria-Sisquoc":                     	"10295", 	// 115	0
+"Fairway #2 115kv Tap":                    	"10295A",	// 115	0
+"Semitropic-Famoso - 115kv":               	"10296", 	// 115	0
+"Wasco Prison Tap":                        	"10296A",	// 115	0
+"SEMITROPIC-MIDWAY #1":                    	"10297", 	// 115	0
+"SEMITROPIC-MIDWAY #2":                    	"10298", 	// 115	0
+"SF AIRPORT-SAN MATEO":                    	"10299", 	// 115	0
+"SHAFTER-RIO BRAVO":                       	"10300", 	// 115	0
+"Sierra #1":                               	"10301", 	// 115	0
+"Sierra #2":                               	"10302", 	// 115	0
+"Sisquoc-Garey":                           	"10303", 	// 115	0
+"Sisquoc-Santa Ynez Sw Sta":               	"10304", 	// 115	0
+"Santa Ynez 115kv Tap":                    	"10304A",	// 115	0
+"SMYRNA-SEMITROPIC-MIDWAY":                	"10305", 	// 115	0
+"Sobrante-G #1":                           	"10306", 	// 115	0
+"Sobrante-G #2":                           	"10307", 	// 115	0
+"SOBRANTE-GRIZZLY-CLARMNT #1":             	"10308", 	// 115	0
+"SOBRANTE-GRIZZLY-CLARMNT #2":             	"10309", 	// 115	0
+"SOBRANTE-R #1":                           	"10311", 	// 115	0
+"SOBRANTE-R #2":                           	"10312", 	// 115	0
+"Sobrante-Std Oil Swg Sta #1":             	"10313", 	// 115	0
+"San Pablo #2 115kv Tap":                  	"10313A",	// 115	0
+"Point Pinole 115kv Tap":                  	"10313B",	// 115	0
+"Sobrante-Std Oil Swg Sta #2":             	"10314", 	// 115	0
+"San Pablo #1 115kv Tap":                  	"10314A",	// 115	0
+"Sonoma-Pueblo":                           	"10315", 	// 115	0
+"Stanislaus-Manteca #2":                   	"10316", 	// 115	0
+"STANISLAUS-MELONES SW STA-MANTECA #1":    	"10317", 	// 115	0
+"Frogtown #1 115kv tap":                   	"10317A",	// 115	0
+"STANISLAUS-MELONES SW STA-MANTECA #3":    	"10318", 	// 115	0
+"Cataract 115kv Tap":                      	"10318A",	// 115	0
+"Ripon 115kv Tap":                         	"10318B",	// 115	0
+"Stanislaus-Newark #1":                    	"10319", 	// 115	0
+"Stanislaus-Newark #2":                    	"10320", 	// 115	0
+"STELLING-WOLFE":                          	"10321", 	// 115	0
+"STOCKTON A-LCKFRD-BELLOTA #1":            	"10322", 	// 115	0
+"STOCKTON A-LCKFRD-BELLOTA #2":            	"10323", 	// 115	0
+"Kyoho 115kv tap":                         	"10323A",	// 115	0
+"SWIFT-METCALF":                           	"10326", 	// 115	0
+"Table Mountain-Butte #1":                 	"10327", 	// 115	0
+"TAFT-CHALK CLIFF":                        	"10330", 	// 115	0
+"Temblor-Kernridge":                       	"10331", 	// 115	0
+"TEMBLOR-SAN LUIS OBISPO":                 	"10332", 	// 115	0
+"Carrizo Plains 115kv Tap":                	"10332A",	// 115	0
+"Tesla-Kasson":                            	"10333", 	// 115	0
+"Owens Illinois 115kv Tap":                	"10333A",	// 115	0
+"Tesla-Manteca":                           	"10334", 	// 115	0
+"Lawrence Livermore Lab2 Tap":             	"10334A",	// 115	0
+"AEC SITE #1 115KV TAP":                   	"10334B",	// 115	0
+"AEC Site #2 115kv Tap":                   	"10334C",	// 115	0
+"Safeway 115kv Tap":                       	"10334D",	// 115	0
+"Tesla-Salado #1":                         	"10335", 	// 115	0
+"Modesto Energy 115kv Tap":                	"10335A",	// 115	0
+"Miller #1 115kv Tap":                     	"10335B",	// 115	0
+"Teichert 115 Tap":                        	"10335C",	// 115	0
+"TESLA-SALADO-MANTECA":                    	"10336", 	// 115	0
+"Ingram Creek 115kv Tap":                  	"10336A",	// 115	0
+"Miller #2 115kv Tap":                     	"10336B",	// 115	0
+"TESLA-STOCKTON COGEN JCT":                	"10337", 	// 115	0
+"Thermal Energy 115kv Tap":                	"10337A",	// 115	0
+"San Joaquin Cogen 115kv tap":             	"10337B",	// 115	0
+"Tesla-Tracy - 115kv":                     	"10338", 	// 115	0
+"Ellis 115kv Tap":                         	"10338A",	// 115	0
+"Leprino Foods (Tracy) 115kv Tap":         	"10338C",	// 115	0
+"TRIMBLE-SAN JOSE B":                      	"10339", 	// 115	0
+"Gish 115kv Tap":                          	"10339A",	// 115	0
+"TRINITY-COTTONWOOD":                      	"10340", 	// 115	0
+"Jessup 115kv Tap":                        	"10340A",	// 115	0
+"UKIAH-HOPLAND-CLOVERDALE":                	"10341", 	// 115	0
+"VACA-JAMESON-MARE ISLAND":                	"10342", 	// 115	0
+"VACA-SUISUN":                             	"10345", 	// 115	0
+"VACA-SUISUN-JAMESON":                     	"10346", 	// 115	0
+"VACA-VACAVILLE-CORDELIA":                 	"10347", 	// 115	0
+"VACA-VACAVILLE-JAMESON-NORTH TOWER":      	"10348", 	// 115	0
+"WEST SACRAMENTO-BRIGHTON":                	"10349", 	// 115	0
+"Deepwater #2 115kv Tap":                  	"10349A",	// 115	0
+"West Sacramento-Davis":                   	"10350", 	// 115	0
+"Deepwater #1 115kv Tap":                  	"10350A",	// 115	0
+"Post Office 115kv Tap":                   	"10350B",	// 115	0
+"UC DAVIS #1 TAP":                         	"10350C",	// 115	0
+"Westpark-Magunden":                       	"10351", 	// 115	0
+"Bear Mtn 115kv Tap":                      	"10351A",	// 115	0
+"Bolthouse 115kv Tap":                     	"10351B",	// 115	0
+"Cal Water Tap 115 kv":                    	"10351C",	// 115	0
+"Wheeler Ridge-Lamont":                    	"10352", 	// 115	0
+"Arvin Edison 115kv Tap":                  	"10352A",	// 115	0
+"WHISMAN-MOUNTAIN VIEW":                   	"10353", 	// 115	0
+"Wilson-Atwater #2":                       	"10354", 	// 115	0
+"Wilson-Le Grand":                         	"10355", 	// 115	0
+"Wilson-Merced #1":                        	"10356", 	// 115	0
+"Wilson-Merced #2":                        	"10357", 	// 115	0
+"Wilson-Oro Loma":                         	"10358", 	// 115	0
+"Woodland-Davis":                          	"10359", 	// 115	0
+"Woodland-Biomass 115kv Tap":              	"10359A",	// 115	0
+"Hunt Wesson Tap 115Kv":                   	"10359B",	// 115	0
+"Woodleaf-Palermo":                        	"10360", 	// 115	0
+"Sly Creek 115kv Tap":                     	"10360A",	// 115	0
+"Forbestown 115kv Tap":                    	"10360B",	// 115	0
+"Kanaka 115 kv Tap":                       	"10360C",	// 115	0
+"X-Y #1 CABLE":                            	"10362U",	// 115	0
+"Drum #1 PH 115kv Tap":                    	"10363", 	// 115	0
+"Drum #2 PH 115kv Tap":                    	"10364", 	// 115	0
+"Lawrence Livermore Lab1 Tap":             	"10365", 	// 115	0
+"OLEUM-UNOCAL #1":                         	"10366", 	// 115	0
+"OLEUM-UNOCAL #2":                         	"10367", 	// 115	0
+"Union Oil 115kv Tap":                     	"10368", 	// 115	0
+"PLACER-GOLD HILL #2":                     	"10369", 	// 115	0
+"APPLIED MATERIALS-BRITTON":               	"10372", 	// 115	0
+"VIERRA-TRACY-KASSON":                     	"10373", 	// 115	0
+"SANTA ROSA-CORONA":                       	"10380", 	// 115	0
+"CORONA-LAKEVILLE":                        	"10381", 	// 115	0
+"AMES DISTRIBUTION-AMES":                  	"10382", 	// 115	0
+"NEWARK-AMES DISTRIBUTION":                	"10383", 	// 115	0
+"TABLE MTN-SYCAMORE CREEK":                	"10384", 	// 115	0
+"PALERMO-WYANDOTTE":                       	"10385", 	// 115	0
+"Table Mountain-Butte #2":                 	"10388", 	// 115	0
+"McKee-Piercy 115kv":                      	"10389", 	// 115	0
+"Piercy-Metcalf 115kv":                    	"10390", 	// 115	0
+"Caribou-Palermo":                         	"10391", 	// 115	0
+"GEYSERS #11-EAGLE ROCK":                  	"10392", 	// 115	0
+"EAGLE ROCK-FULTON":                       	"10393", 	// 115	0
+"Gold Hill-Clarksville 115kv":             	"10394", 	// 115	0
+"Drum-Bell":                               	"10397", 	// 115	0
+"Bell-Placer":                             	"10398", 	// 115	0
+"Paradise-Butte":                          	"10399", 	// 115	0
+"Paradise-Table Mtn. 115kV":               	"10400", 	// 115	0
+"Stelling-Monta Vista":                    	"10403", 	// 115	0
+"Whisman-Monta Vista":                     	"10404", 	// 115	0
+"Cal Peak-Vac 115KV":                      	"10405", 	// 115	0
+"Pittsburg - Los Medanos #1":              	"10406", 	// 115	0
+"Pittsburg - Los Medanos #2":              	"10407", 	// 115	0
+"Ravenswood-Bair #2":                      	"10412", 	// 115	0
+"Los Esteros-Nortech":                     	"10413", 	// 115	0
+"LECEF Tap 115KV":                         	"10413A",	// 1  	0
+"Los Esteros-Trimble":                     	"10414", 	// 115	0
+"Los Esteros-Montague":                    	"10415", 	// 115	0
+"Los Esteros-Agnew":                       	"10416", 	// 115	0
+"Montague-Trimble":                        	"10417", 	// 115	0
+"NEWARK-MILPITAS #2":                      	"10418", 	// 115	0
+"Santa Paula-Millbrae":                    	"10419", 	// 115	0
+"Moraga - Lakewood 115":                   	"10420", 	// 115	0
+"Moraga - Sobrante 115":                   	"10421", 	// 115	0
+"Newark-NRS #1":                           	"10424", 	// 115	0
+"Newark-NRS #2":                           	"10425", 	// 115	0
+"Northern Receiving Sta-Scott #1":         	"10426", 	// 115	0
+"Northern Receiving Sta-Scott #2":         	"10427", 	// 115	0
+"Frec-Bogue 115kv":                        	"10430", 	// 115	0
+"Tesla Schulte SW STA 115kv":              	"10433", 	// 115	0
+"GWF Tracy Schulte SW STA 115kv":          	"10434", 	// 115	0
+"San Mateo-Martin #4":                     	"10435", 	// 115	0
+"NORTECH-NORTHEN RECEIVING STATION":       	"10436", 	// 115	0
+"California Ave-McCall":                   	"10437", 	// 115	0
+"Danish Creamery Tap A":                   	"10437A",	// 115	0
+"West Fresno - California Ave":            	"10438", 	// 115	0
+"Smartville-Camp Far West 60kv":           	"10439", 	// 60 	0
+"Kifer-FMC 115KV":                         	"10440", 	// 115	0
+"Notre Dame-Butte":                        	"10442", 	// 115	0
+"Sycamore Creek-Notre Dame-Table Mtn":     	"10443", 	// 115	0
+"Silverado - Fulton Jct":                  	"10446", 	// 115	0
+"Riverbank JCT SW STA Manteca":            	"10447", 	// 115	0
+"Stanislaus Melones SW STA Riverbank JCT": 	"10448", 	// 115	0
+"Frogtown #2 115kv tap":                   	"10448A",	// 115	0
+"Lammers Kasson 115kv":                    	"10451", 	// 115	0
+"Schulte SW STA-Lammers 115kv":            	"10452", 	// 115	0
+"Lincoln-Pleasant Grove 115kv":            	"10453", 	// 115	0
+"Rio Oso-Lincoln 115kv":                   	"10454", 	// 115	0
+"Atlantic-Pleasant Grove #1 115 kv":       	"10455", 	// 115	0
+"Higgins - Bell 115kv":                    	"10458", 	// 115	0
+"Drum Higgins":                            	"10459", 	// 115	0
+"Atwater Cressey 115kv Tap":               	"10460", 	// 115	0
+"Charca Famoso 115 kv":                    	"10462", 	// 115	0
+"Semitropic Charca 115 kv":                	"10463", 	// 115	0
+"San Jose B-Stone-Evergreen":              	"10472", 	// 115	0
+"Stone-Evergreen-Metcalf":                 	"10473", 	// 115	0
+"Arco-Midway":                             	"20001", 	// 230	1
+"ATLANTIC-GOLD HILL":                      	"20002", 	// 230	1
+"BAHIA-MORAGA":                            	"20003", 	// 230	1
+"Balch-McCall":                            	"20004", 	// 230	1
+"BELLOTA-MELONES":                         	"20005", 	// 230	1
+"Bellota-Tesla #2":                        	"20006", 	// 230	1
+"BELLOTA-WARNERVILLE":                     	"20007", 	// 230	1
+"BELLOTA-WEBER":                           	"20008", 	// 230	1
+"BORDEN-GREGG":                            	"20009", 	// 230	1
+"BRENTWOOD-KELSO":                         	"20010", 	// 230	1
+"BRIGHTON-BELLOTA":                        	"20011", 	// 230	1
+"BUCKS CREEK-ROCK CREEK-CRESTA":           	"20012", 	// 230	1
+"Caribou-Table Mountain":                  	"20013", 	// 230	1
+"Belden 230kv Tap":                        	"20013A",	// 230	1
+"CASTRO VALLEY-NEWARK":                    	"20014", 	// 230	1
+"COBURN-PANOCHE":                          	"20015", 	// 230	1
+"Contra Costa PP/ Sub":                    	"20016", 	// 230	1
+"CONTRA COSTA-BRENTWOOD":                  	"20017", 	// 230	1
+"CONTRA COSTA-DELTA SW YARD":              	"20018", 	// 230	1
+"Windmaster 230kv Tap":                    	"20018A",	// 230	1
+"Contra Costa -Moraga #2 230":             	"20019", 	// 230	1
+"CONTRA COSTA-LAS POSITAS":                	"20020", 	// 230	1
+"US Windpower #3 230kv Tap":               	"20021A",	// 230	1
+"Contra Costa -Moraga #1 230":             	"20022", 	// 230	1
+"TES 230Kv Tap":                           	"20022A",	// 230	1
+"CORTINA-VACA":                            	"20023", 	// 230	1
+"COTTONWOOD-CORTINA":                      	"20024", 	// 230	1
+"Cottonwood-Delevan #2 230KV":             	"20024K",	// 230	1
+"COTTONWOOD-GLENN":                        	"20025", 	// 230	1
+"COTTONWOOD-LOGAN CREEK":                  	"20026", 	// 230	1
+"COTTONWOOD-VACA":                         	"20027", 	// 230	1
+"CRESTA-RIO OSO":                          	"20028", 	// 230	1
+"DELTA SWITCHING YARD-TESLA":              	"20029", 	// 230	1
+"Diablo PP Standby Supply":                	"20030", 	// 230	1
+"Diablo-Mesa":                             	"20031", 	// 230	1
+"DOS AMIGOS-PANOCHE":                      	"20032", 	// 230	1
+"NEWARK E-F BUS TIE":                      	"20033", 	// 230	1
+"EASTSHORE-SAN MATEO":                     	"20034", 	// 230	1
+"EIGHT MILE ROAD-TESLA":                   	"20035", 	// 230	1
+"ELECTRA-BELLOTA":                         	"20036", 	// 230	1
+"Fulton-Ignacio #1":                       	"20037", 	// 230	1
+"GATES-ARCO":                              	"20038", 	// 230	1
+"Gates-Gregg":                             	"20039", 	// 230	1
+"Gates-McCall":                            	"20040", 	// 230	1
+"Gates-Panoche #1":                        	"20041", 	// 230	1
+"Gates-Panoche #2":                        	"20042", 	// 230	1
+"CCPA #1 230KV Tap":                       	"20043A",	// 230	1
+"GEYSERS #12-FULTON":                      	"20044", 	// 230	1
+"Geysers #16 230kv Tap":                   	"20045", 	// 230	1
+"GEYSERS #17-FULTON":                      	"20046", 	// 230	1
+"Bottle Rock 230kv Tap D.W.R.":            	"20046A",	// 230	1
+"CCPA #2 230KV Tap":                       	"20046B",	// 230	1
+"GEYSERS #9-LAKEVILLE":                    	"20047", 	// 230	1
+"Geysers #13 230kv Tap":                   	"20047A",	// 230	1
+"Santa Fe Geothermal 230kv Tap":           	"20047B",	// 230	1
+"Geysers #20 230kv Tap":                   	"20047C",	// 230	1
+"Geysers #18 230kv Tap":                   	"20047D",	// 230	1
+"GLENN-VACA":                              	"20048", 	// 230	1
+"GOLD HILL-EIGHT MILE ROAD":               	"20049", 	// 230	1
+"GOLD HILL-LODI STIG":                     	"20050", 	// 230	1
+"Gregg-Ashlan":                            	"20051", 	// 230	1
+"Figarden #2 230kv Tap (UG)":              	"20051A",	// 230	1
+"Gregg-Herndon #1":                        	"20052", 	// 230	1
+"Gregg-Herndon #2":                        	"20053", 	// 230	1
+"H-Z #1 CABLE":                            	"20054U",	// 230	1
+"H-Z #2 CABLE":                            	"20055U",	// 230	1
+"Haas-McCall":                             	"20056", 	// 230	1
+"HELM-MC CALL":                            	"20057", 	// 230	1
+"Helms-Gregg #1":                          	"20058", 	// 230	1
+"Helms-Gregg #2":                          	"20059", 	// 230	1
+"Piedra Tap #1":                           	"20059A",	// 230	1
+"Piedra Tap #2":                           	"20059B",	// 230	1
+"Herndon-Ashlan":                          	"20060", 	// 230	1
+"Figarden #1 230kv Tap (UG)":              	"20060A",	// 230	1
+"Herndon-Kearney":                         	"20061", 	// 230	1
+"HICKS-METCALF":                           	"20062", 	// 230	1
+"IGNACIO-SOBRANTE":                        	"20063", 	// 230	1
+"KELSO-TESLA":                             	"20064", 	// 230	1
+"Ralph 230kv Tap":                         	"20064A",	// 230	1
+"LAKEVILLE-IGNACIO #1":                    	"20065", 	// 230	1
+"LAKEVILLE-IGNACIO #2":                    	"20066", 	// 230	1
+"Lakeville-Sobrante #2":                   	"20067", 	// 230	1
+"LAKEVILLE-TULUCAY":                       	"20068", 	// 230	1
+"LAS POSITAS-NEWARK":                      	"20069", 	// 230	1
+"LOCKEFORD-BELLOTA":                       	"20070", 	// 230	1
+"LODI STIG-STAGG":                         	"20071", 	// 230	1
+"LOGAN CREEK-VACA":                        	"20072", 	// 230	1
+"LOS BANOS-DOS AMIGOS":                    	"20073", 	// 230	1
+"LOS BANOS-PANOCHE #1":                    	"20074", 	// 230	1
+"LOS BANOS-PANOCHE #2":                    	"20075", 	// 230	1
+"Los Banos-San Luis PGP #1":               	"20076", 	// 230	1
+"Los Banos-San Luis PGP #2":               	"20077", 	// 230	1
+"Los Banos-Westley":                       	"20078", 	// 230	1
+"MELONES-WILSON":                          	"20079", 	// 230	1
+"Metcalf-Monta Vista #4":                  	"20080", 	// 230	1
+"Metcalf-Moss Landing #1":                 	"20081", 	// 230	1
+"Metcalf-Moss Landing #2":                 	"20082", 	// 230	1
+"Metcalf-Newark #1":                       	"20083", 	// 230	1
+"Metcalf-Newark #2":                       	"20084", 	// 230	1
+"Middle Fork-Gold Hill":                   	"20085", 	// 230	1
+"MIDWAY-KERN #1":                          	"20086", 	// 230	1
+"BAKERSFIELD #1 230KV TAP":                	"20086A",	// 230	1
+"STOCKDALE #1 230KV TAP":                  	"20086B",	// 230	1
+"Midway-Kern #3":                          	"20088", 	// 230	1
+"STOCKDALE #2 230KV TAP":                  	"20088A",	// 230	1
+"Midway-Kern #4":                          	"20089", 	// 230	1
+"BAKERSFIELD #2 230KV TAP":                	"20089A",	// 230	1
+"Midway-Sunset":                           	"20090", 	// 230	1
+"Midway-Wheeler Ridge #1":                 	"20091", 	// 230	1
+"Buena Vista PP #1 230kv Tap":             	"20091A",	// 230	1
+"Wheeler Ridge PP1 230kv Tap":             	"20091B",	// 230	1
+"Wind Gap PP #1 230kv Tap":                	"20091C",	// 230	1
+"Midway-Wheeler Ridge #2":                 	"20092", 	// 230	1
+"Buena Vista PP #2 230kv Tap":             	"20092A",	// 230	1
+"Wheeler Ridge PP2 230kv Tap":             	"20092B",	// 230	1
+"Wind Gap PP #2 230kv Tap":                	"20092C",	// 230	1
+"MONTA VISTA-HICKS":                       	"20093", 	// 230	1
+"Monta Vista-Jefferson #1":                	"20094", 	// 230	1
+"Monta Vista-Jefferson #2":                	"20095", 	// 230	1
+"MONTA VISTA-SARATOGA":                    	"20096", 	// 230	1
+"MORAGA-CASTRO VALLEY":                    	"20097", 	// 230	1
+"Morro Bay-Diablo":                        	"20098", 	// 230	1
+"Morro Bay-Gates #1":                      	"20099", 	// 230	1
+"Morro Bay-Gates #2":                      	"20100", 	// 230	1
+"Morro Bay-Mesa":                          	"20101", 	// 230	1
+"Morro Bay-Midway #1":                     	"20102", 	// 230	1
+"Morro Bay-Midway #2":                     	"20103", 	// 230	1
+"Moss Landing Interplant 230":             	"20104", 	// 230	1
+"MOSS LANDING-COBURN":                     	"20105", 	// 230	1
+"Moss Landing-Panoche #2":                 	"20106", 	// 230	1
+"Newark-San Mateo #1":                     	"20107", 	// 230	1
+"PALERMO-COLGATE":                         	"20108", 	// 230	1
+"PANOCHE-HELM":                            	"20109", 	// 230	1
+"Panoche-Kearney":                         	"20110", 	// 230	1
+"PIT #1-COTTONWOOD":                       	"20111", 	// 230	1
+"Burney Forest Products 230kv Tap":        	"20111A",	// 230	1
+"PIT #3-PIT #1":                           	"20112", 	// 230	1
+"SPI (Burney) Tap":                        	"20112A",	// 230	1
+"PIT #3-ROUND MTN":                        	"20113", 	// 230	1
+"Pit #5-Round Mtn #1":                     	"20114", 	// 230	1
+"Cove Road 230kv Tap":                     	"20114A",	// 230	1
+"Pit #5-Round Mtn #2":                     	"20115", 	// 230	1
+"BLACK 230KV TAP":                         	"20115A",	// 230	1
+"PIT #4 230KV TAP":                        	"20115B",	// 230	1
+"PIT #6 JCT-ROUND MTN":                    	"20116", 	// 230	1
+"PIT #6 230KV TAP":                        	"20116A",	// 230	1
+"PIT #7 230KV TAP":                        	"20116B",	// 230	1
+"Pittsburg - San Mateo 230":               	"20117", 	// 230	1
+"Rossmoor #1 230kv Tap":                   	"20117A",	// 230	1
+"Pittsburg - Eastshore 230":               	"20118", 	// 230	1
+"Rossmoor #2 230kv Tap":                   	"20118A",	// 230	1
+"PITTSBURG-TASSAJARA":                     	"20119", 	// 230	1
+"Pittsburg-Panoche (idle)":                	"20120", 	// 230	1
+"PITTSBURG-SAN RAMON":                     	"20121", 	// 230	1
+"Pittsburg-Sobrante #2":                   	"20122", 	// 230	1
+"Pittsburg-Tesla #1":                      	"20123", 	// 230	1
+"Pittsburg-Tesla #2":                      	"20124", 	// 230	1
+"PITTSBURG-TIDEWATER":                     	"20125", 	// 230	1
+"POE-RIO OSO":                             	"20126", 	// 230	1
+"Rancho Seco-Bellota #1":                  	"20127", 	// 230	1
+"Rancho Seco-Bellota #2":                  	"20128", 	// 230	1
+"Camanche Pumping Plant Tap":              	"20128A",	// 230	0
+"Rancho Seco-Stagg-Tesla":                 	"20129", 	// 230	1
+"Ravenswood-San Mateo 230kv":              	"20130", 	// 230	1
+"RIO OSO-ATLANTIC":                        	"20131", 	// 230	1
+"RIO OSO-BRIGHTON":                        	"20132", 	// 230	1
+"RIO OSO-GOLD HILL":                       	"20133", 	// 230	1
+"RIO OSO-LOCKEFORD":                       	"20134", 	// 230	1
+"ROCK CREEK-POE":                          	"20135", 	// 230	1
+"Round Mountain-Cottonwood #2":            	"20136", 	// 230	1
+"ROUND MTN-COTTONWOOD #3":                 	"20137", 	// 230	1
+"San Mateo-Martin Cable":                  	"20138U",	// 230	1
+"SAN RAMON-MORAGA":                        	"20139", 	// 230	1
+"STAGG-TESLA":                             	"20141", 	// 230	1
+"TABLE MTN-PALERMO":                       	"20142", 	// 230	1
+"Table Mtn-Rio Oso #2":                    	"20143", 	// 230	1
+"TESLA-ADCC":                              	"20144", 	// 230	1
+"Tesla-Newark #1":                         	"20145", 	// 230	1
+"TESLA-RAVENSWOOD":                        	"20146", 	// 230	1
+"TESLA-TRACY #1":                          	"20147", 	// 230	1
+"TESLA-TRACY #2":                          	"20148", 	// 230	1
+"Tesla-Westley":                           	"20149", 	// 230	1
+"TIDEWATER-SOBRANTE":                      	"20150", 	// 230	1
+"TIGER CREEK-ELECTRA":                     	"20151", 	// 230	1
+"TIGER CREEK-VALLEY SPRINGS":              	"20152", 	// 230	1
+"TULUCAY-VACA":                            	"20153", 	// 230	1
+"VACA-BAHIA":                              	"20154", 	// 230	1
+"Vaca-Contra Costa #1":                    	"20155", 	// 230	1
+"Peabody #1 230kv Tap":                    	"20155A",	// 230	1
+"Vaca-Contra Costa #2":                    	"20156", 	// 230	1
+"Peabody #2 230kv Tap":                    	"20156A",	// 230	1
+"Vaca-Lakeville #1":                       	"20157", 	// 230	1
+"VACA-PARKWAY":                            	"20158", 	// 230	1
+"VALLEY SPRINGS-BELLOTA":                  	"20159", 	// 230	1
+"WARNERVILLE-BORDEN":                      	"20160", 	// 230	1
+"WEBER-TESLA":                             	"20161", 	// 230	1
+"WILSON-GREGG":                            	"20162", 	// 230	1
+"COLGATE-RIO OSO":                         	"20163", 	// 230	1
+"MALACHA 230KV TAP":                       	"20164", 	// 230	1
+"TASSAJARA-NEWARK":                        	"20165", 	// 230	1
+"San Ramon Reseach Center Tap":            	"20165A",	// 230	1
+"PARKWAY-MORAGA":                          	"20166", 	// 230	1
+"SARATOGA-VASONA":                         	"20170", 	// 230	1
+"VASONA-METCALF":                          	"20171", 	// 230	1
+"MORRO BAY-TEMPLETON":                     	"20172", 	// 230	1
+"Templeton-Gates":                         	"20173", 	// 230	1
+"Metcalf-Monta Vista #3":                  	"20174", 	// 230	1
+"Vaca Dixon - Moraga 230Kv (idle section)":	"20175", 	// 230	1
+"Ravnwood - San Mateo #2":                 	"20176", 	// 230	1
+"Newark-Ravenswood":                       	"20177", 	// 230	1
+"Tesla-Newark #2":                         	"20179", 	// 230	1
+"Lodi Stig Eight Mile Rd 230kv":           	"20180", 	// 230	1
+"Eight Mile Rd Stagg 230kv":               	"20181", 	// 230	1
+"Newark-Los Esteros 230 kv":               	"20186", 	// 230	1
+"Los Esteros-Metcalf":                     	"20187", 	// 230	1
+"Vaca Lambie Sw Sta":                      	"20188", 	// 230	1
+"Lambie Sw Sta - Contra Costa 230":        	"20189", 	// 230	1
+"Peabody - Contra Costa 230":              	"20190", 	// 230	1
+"Vaca Peabody":                            	"20191", 	// 230	1
+"Coyote SW ST-Metcalf 230":                	"20192", 	// 230	1
+"Monta Vista-Coyote SW ST 230":            	"20193", 	// 230	1
+"Vineyard - Newark 230":                   	"20196", 	// 230	1
+"North Dublin-Vineyard":                   	"20197", 	// 230	1
+"North Dublin - Cayetano":                 	"20198", 	// 230	1
+"Contra Costa -Cayetano 230":              	"20199", 	// 230	1
+"Gates-Midway 230kv":                      	"20200", 	// 230	1
+"Warnerville-Wilson":                      	"20202", 	// 230	1
+"Wilson Borden 230kv":                     	"20203", 	// 230	1
+"Birds Landing Sw Sta-Contra Costa PP":    	"20204", 	// 230	1
+"Peabody-Birds Landing Sw Sta":            	"20205", 	// 230	1
+"High Winds-Birds Landing Sw Sta":         	"20206", 	// 230	1
+"Birds Landing Sw Sta-Shiloh":             	"20207", 	// 230	1
+"Pittsburg-Tesoro":                        	"20208", 	// 230	1
+"Tesoro-Sobrante":                         	"20209", 	// 230	1
+"FULTON-LAKEVILLE-IGNACIO":                	"20210", 	// 230	0
+"Birds Landing Sw Sta Contra Costa Sub":   	"20212", 	// 230	1
+"Lambie Sw Sta-Birds Landing Sw Sta":      	"20213", 	// 230	1
+"Moss Lndg TX BK 1-230 SWYD":              	"20214", 	// 230	1
+"Moss Lndg TX BK 2-230 SWYD":              	"20215", 	// 230	1
+"Birds Landing Sw Sta - Russell":          	"20216", 	// 230	1
+"Shiloh II Birds Landing Sw Sta":          	"20217", 	// 230	1
+"Contra Costa-Lone Tree":                  	"20218", 	// 230	1
+"Lone Tree-Cayetano":                      	"20219", 	// 230	1
+"Cottonwood-Delevan #1 230KV":             	"20220", 	// 230	1
+"Delevan-Cortina 230KV":                   	"20221", 	// 230	1
+"Logan Creek-Delevan 230KV":               	"20222", 	// 230	1
+"Delevan-Vaca #1 230KV":                   	"20223", 	// 230	1
+"Delevan-Vaca #2 230KV":                   	"20225", 	// 230	1
+"Glenn-Delevan 230KV":                     	"20226", 	// 230	1
+"Delevan-Vaca #3 230KV":                   	"20227", 	// 230	1
+"Carberry Sw Sta-Rnd Mtn 230 kv":          	"20228", 	// 230	1
+"Pit#3 - Carberry Sw Sta 230 kv":          	"20229", 	// 230	1
+"Russell City Energy Center-Eastshore #1": 	"20231", 	// 230	1
+"Russell City Energy Center- Eastshore #2":	"20232", 	// 230	1
+"Diablo Unit #1 Tie":                      	"50001", 	// 500	1
+"Diablo Unit #2 Tie":                      	"50002", 	// 500	1
+"Diablo-Gates #1":                         	"50003", 	// 500	1
+"Diablo-Midway #2":                        	"50004", 	// 500	1
+"Diablo-Midway #3":                        	"50005", 	// 500	1
+"GATES-MIDWAY 500kv":                      	"50006", 	// 500	1
+"LOS BANOS-GATES":                         	"50007", 	// 500	1
+"Los Banos-Midway #2":                     	"50008", 	// 500	1
+"Malin-RndMt2[Malin-IndSpr]":              	"50009A",	// 500	1
+"Malin-RndMt2[IndSpr-RndMt]":              	"50009B",	// 500	1
+"Midway-Whirlwind 500kV":                  	"50010", 	// 500	1
+"Moss Landing-Los Banos":                  	"50011", 	// 500	1
+"Moss Landing-Metcalf":                    	"50012", 	// 500	1
+"Round Mt.-Table Mt. #1":                  	"50013", 	// 500	1
+"Round Mt.-Table Mt. #2":                  	"50014", 	// 500	1
+"Table Mountain-Tesla":                    	"50015", 	// 500	1
+"Table Mountain-Vaca":                     	"50016", 	// 500	1
+"Tesla-Los Banos #1":                      	"50017", 	// 500	1
+"Tesla-Metcalf":                           	"50018", 	// 500	1
+"Tesla-Tracy - 500kv":                     	"50019", 	// 500	1
+"Tracy-Los Banos":                         	"50020", 	// 500	1
+"Vaca-Tesla":                              	"50021", 	// 500	1
+"ALMENDA JCT-NICOLAUS":                    	"60001", 	// 60 	0
+"Harrington 60kv Tap":                     	"60002A",	// 60 	0
+"ATLANTIC-DEL MAR":                        	"60003", 	// 60 	0
+"Atlantic-NCPA":                           	"60004", 	// 60 	0
+"Atlantic-Pleasant Grove":                 	"60005", 	// 60 	0
+"Atlantic-Roseville":                      	"60006", 	// 60 	0
+"Bair-Cooley Landing #1":                  	"60007", 	// 60 	0
+"Bellhaven #1 60kv Tap":                   	"60007A",	// 60 	0
+"Bair-Cooley Landing #2":                  	"60008", 	// 60 	0
+"Bellhaven #2 60kv Tap":                   	"60008A",	// 60 	0
+"Bridgeville-Garberville":                 	"60010", 	// 60 	0
+"Fruitland 60kv Tap":                      	"60010A",	// 60 	0
+"Fort Seward 60kv Tap":                    	"60010B",	// 60 	0
+"Burns-Lone Star #1":                      	"60011", 	// 60 	0
+"Lone Star Tap 60 KV":                     	"60011A",	// 60 	0
+"Burns-Lone Star #2":                      	"60012", 	// 60 	0
+"Crusher 60kv Tap":                        	"60012A",	// 60 	0
+"Butte-Chico #1":                          	"60013", 	// 60 	0
+"Butte-Chico #2":                          	"60014", 	// 60 	0
+"BUTTE-ESQUON":                            	"60015", 	// 60 	0
+"Esquon 60kv Tap":                         	"60015A",	// 60 	0
+"CARIBOU #2":                              	"60016", 	// 60 	0
+"Caribou-Plumas Jct":                      	"60017", 	// 60 	0
+"Plumas Sierra 60kv Tap":                  	"60017A",	// 60 	0
+"Caribou-Westwood":                        	"60018", 	// 60 	0
+"CASCADE-BENTON-DESCHUTES":                	"60019", 	// 60 	0
+"Wintu 60kv Tap":                          	"60019A",	// 60 	0
+"CENTERVILLE-TABLE MTN":                   	"60021", 	// 60 	0
+"Paradise #2 60kv Tap":                    	"60021A",	// 60 	0
+"CENTERVILLE-TABLE MTN-OROVILLE":          	"60022", 	// 60 	0
+"Paradise #1 60kv Tap":                    	"60022A",	// 60 	0
+"Chester-Collins Pine":                    	"60023", 	// 60 	0
+"Chico A-Dayton Road":                     	"60024", 	// 60 	0
+"CHRISTIE-FRANKLIN #1":                    	"60025", 	// 60 	0
+"Union Chemical 60kv Tap":                 	"60025A",	// 60 	0
+"CHRISTIE-FRANKLIN #2":                    	"60026", 	// 60 	0
+"SEQUOIA 60KV TAP":                        	"60026A",	// 60 	0
+"CHRISTIE-WILLOW PASS":                    	"60027", 	// 60 	0
+"Port Costa Brick 60kv Tap":               	"60027A",	// 60 	0
+"Stauffer 60kv Tap":                       	"60027B",	// 60 	0
+"Urich 60kv Tap":                          	"60027C",	// 60 	0
+"CLEAR LAKE-EAGLE ROCK":                   	"60029", 	// 60 	0
+"CLEAR LAKE-HOPLAND":                      	"60030", 	// 60 	0
+"Coburn-Basic Energy":                     	"60031", 	// 60 	0
+"Basic Vegetable 60kv Tap":                	"60031A",	// 60 	0
+"Coburn-Oil Fields #1":                    	"60032", 	// 60 	0
+"Texaco 60kv Tap":                         	"60032A",	// 60 	0
+"Coburn-Oil Fields #2":                    	"60033", 	// 60 	0
+"San Ardo 60kv Tap":                       	"60033A",	// 60 	0
+"Coleman-Cottonwood":                      	"60034", 	// 60 	0
+"COLEMAN-RED BLUFF":                       	"60035", 	// 60 	0
+"COLEMAN-SOUTH":                           	"60036", 	// 60 	0
+"Colgate PH-Colgate SW Sta":               	"60037", 	// 60 	0
+"Colgate-Alleghany":                       	"60038", 	// 60 	0
+"Colgate-Challenge":                       	"60039", 	// 60 	0
+"Colgate-Grass Valley":                    	"60040", 	// 60 	0
+"Colgate-Palermo":                         	"60041", 	// 60 	0
+"Colgate-Smartville #1":                   	"60042", 	// 60 	0
+"NARROWS #1 60KV TAP":                     	"60042A",	// 60 	0
+"Colgate-Smartville #2":                   	"60043", 	// 60 	0
+"NARROWS #2 60KV TAP":                     	"60043A",	// 60 	0
+"SMARTVILLE 60KV TAP":                     	"60043B",	// 60 	0
+"Collector Line For Wind Farms":           	"60044", 	// 60 	0
+"Contra Costa-Du Pont":                    	"60045", 	// 60 	0
+"Contra Costa-Pittsburg":                  	"60046", 	// 60 	0
+"Contra Costa-Shell Chemical #1":          	"60047", 	// 60 	0
+"Pittsburg #1 60kv Tap":                   	"60047A",	// 60 	0
+"COOLEY LANDING-LOS ALTOS":                	"60048", 	// 60 	0
+"Westinghouse 60kv Tap":                   	"60048A",	// 60 	0
+"Cooley Landing-Stanford":                 	"60049", 	// 60 	0
+"Menlo 60kv Tap":                          	"60049A",	// 60 	0
+"CORTINA #1":                              	"60050", 	// 60 	0
+"CORTINA #2":                              	"60051", 	// 60 	0
+"Arbuckle 60kv Tap":                       	"60051A",	// 60 	0
+"CORTINA #3":                              	"60052", 	// 60 	0
+"Wadham 60kv Tap":                         	"60052A",	// 60 	0
+"CORTINA #4":                              	"60053", 	// 60 	0
+"COTTONWOOD #1":                           	"60054", 	// 60 	0
+"COTTONWOOD #2":                           	"60055", 	// 60 	0
+"Red Bank Tap":                            	"60055A",	// 60 	0
+"Cottonwood-Benton #1":                    	"60056", 	// 60 	0
+"Cottonwood-Benton #2":                    	"60057", 	// 60 	0
+"COTTONWOOD-RED BLUFF":                    	"60058", 	// 60 	0
+"Davis-Cordelia":                          	"60059", 	// 60 	0
+"DAVIS-DIXON #1":                          	"60060", 	// 60 	0
+"DAVIS-DIXON #2":                          	"60061", 	// 60 	0
+"Deer Creek-Drum":                         	"60062", 	// 60 	0
+"Del Monte-Monterey":                      	"60063", 	// 60 	0
+"DEL MONTE-VIEJO":                         	"60064", 	// 60 	0
+"Navy Lab 60kv Tap":                       	"60064A",	// 60 	0
+"DESABLA-CENTERVILLE":                     	"60065", 	// 60 	0
+"Oro Fino 60kv Tap":                       	"60065A",	// 60 	0
+"Forks of the Butte":                      	"60065B",	// 60 	0
+"DIXON-VACA #1":                           	"60066", 	// 60 	0
+"Travis 60kv Tap":                         	"60066A",	// 60 	0
+"DIXON-VACA #2":                           	"60067", 	// 60 	0
+"Cache Slough 60kv Tap":                   	"60067A",	// 60 	0
+"DELTA-MOUNTAIN GATE JCT":                 	"60068", 	// 60 	0
+"LODI-INDUSTRIAL":                         	"60069", 	// 60 	0
+"DRUM-GRASS VALLEY-WEIMAR":                	"60070", 	// 60 	0
+"Cape Horn 60kv Tap":                      	"60070A",	// 60 	0
+"Rollins 60kv Tap":                        	"60070B",	// 60 	0
+"Drum-Spaulding":                          	"60071", 	// 60 	0
+"East Quincy 60kv Tie":                    	"60072", 	// 60 	0
+"Garcia 60kv Tap":                         	"60073A",	// 60 	0
+"ESSEX JCT-ARCATA-FAIRHAVEN":              	"60074", 	// 60 	0
+"BLUE LAKE 60KV TAP":                      	"60074A",	// 60 	0
+"Blue Chip Milling 60kv Tap":              	"60074B",	// 60 	0
+"ULTRA POWER 60KV TAP":                    	"60074C",	// 60 	0
+"SIMPSON-CORBEL 60KV TAP":                 	"60074D",	// 60 	0
+"Janes Creek 60kv Tap":                    	"60074E",	// 60 	0
+"Essex Jct-Orick":                         	"60075", 	// 60 	0
+"Trinidad 60kv Tap":                       	"60075A",	// 60 	0
+"Eureka-Sta. A":                           	"60076", 	// 60 	0
+"Evergreen-Los Gatos":                     	"60077", 	// 60 	0
+"Senter #2 60kv Tap":                      	"60077A",	// 60 	0
+"Evergreen-Mabury":                        	"60078", 	// 60 	0
+"Senter #1 60kv Tap":                      	"60078A",	// 60 	0
+"Jennings 60kv Tap":                       	"60078B",	// 60 	0
+"FAIRHAVEN #1":                            	"60079", 	// 60 	0
+"Louisiana Pac (RR) 60kv Tap":             	"60079A",	// 60 	0
+"Simpson 60 kv Tap":                       	"60079B",	// 60 	0
+"Fairhaven Power Co. 60kv Tap":            	"60079C",	// 60 	0
+"FAIRHAVEN-HUMBOLDT":                      	"60080", 	// 60 	0
+"French Meadows-Middle Fork":              	"60081", 	// 60 	0
+"FULTON-CALISTOGA":                        	"60082", 	// 60 	0
+"FULTON-HOPLAND":                          	"60083", 	// 60 	0
+"Fitch Mountain #1 60kv Tap":              	"60083A",	// 60 	0
+"Healdsburg #1 60kv Tap":                  	"60083B",	// 60 	0
+"FULTON #1":                               	"60084", 	// 60 	0
+"Fitch Mountain #2 60kv Tap":              	"60084A",	// 60 	0
+"Healdsburg #2 60kv Tap":                  	"60084B",	// 60 	0
+"FULTON-MOLINO-COTATI":                    	"60085", 	// 60 	0
+"Washoe 60kv Tap":                         	"60085A",	// 60 	0
+"Laguna Tap":                              	"60085B",	// 60 	0
+"GLENN #1":                                	"60087", 	// 60 	0
+"Elk Creek 60kv Tap":                      	"60087A",	// 60 	0
+"GLENN #2":                                	"60088", 	// 60 	0
+"GLENN #3":                                	"60089", 	// 60 	0
+"Headgate 60kv Tap":                       	"60089A",	// 60 	0
+"GOLD HILL #1":                            	"60090", 	// 60 	0
+"Limestone 60kv Tap":                      	"60090A",	// 60 	0
+"Gold Hill-Pleasant Grove":                	"60091", 	// 60 	0
+"Green Valley-Watsonville":                	"60092", 	// 60 	0
+"CIC Tap 60 kv":                           	"60092A",	// 60 	0
+"Dean Foods Tap 60 kv":                    	"60092B",	// 60 	0
+"GUALALA-MONTE RIO":                       	"60093", 	// 60 	0
+"Salmon Creek 60kv Tap":                   	"60093A",	// 60 	0
+"HALSEY-PLACER":                           	"60094", 	// 60 	0
+"Mountain Quarries 60kv Tap":              	"60094A",	// 60 	0
+"Auburn 60kv Tap":                         	"60094B",	// 60 	0
+"Hamilton Branch-Chester":                 	"60095", 	// 60 	0
+"COLLINS PINE 60KV TAP":                   	"60095A",	// 60 	0
+"Hammer-Country Club (Mettler Tap)":       	"60096", 	// 60 	0
+"Mosher 60kv Tap":                         	"60096A",	// 60 	0
+"Hat Creek #1-Pit #1":                     	"60097", 	// 60 	0
+"Hat Creek #1-Westwood":                   	"60098", 	// 60 	0
+"PIT #1-HAT CREEK #2-BURNEY":              	"60099", 	// 60 	0
+"Burney 60kv Tap":                         	"60099A",	// 60 	0
+"HERDLYN-BALFOUR":                         	"60100", 	// 60 	0
+"Westside 60kv Tap":                       	"60100A",	// 60 	0
+"Middle River 60kv Tap":                   	"60100B",	// 60 	0
+"Mc Donald 60kv Tap":                      	"60100C",	// 60 	0
+"Marsh 60kv Tap":                          	"60100D",	// 60 	0
+"Briones 60kv Tap":                        	"60100E",	// 60 	0
+"Bixler 60kv Tap":                         	"60100F",	// 60 	0
+"Hillsdale Jct-Half Moon Bay":             	"60101", 	// 60 	0
+"Humboldt Bay-Eureka":                     	"60102", 	// 60 	0
+"Humboldt Bay-Humboldt #1 60kv":           	"60103", 	// 60 	0
+"Humboldt Bay-Humboldt #2":                	"60104", 	// 60 	0
+"HUMBOLDT BAY-RIO DELL JCT":               	"60105", 	// 60 	0
+"Eel River 60kv Tap":                      	"60105A",	// 60 	0
+"HUMBOLDT-ARCATA-JANES CREEK":             	"60106", 	// 60 	0
+"LP Flakeboard 60kv Tap":                  	"60106A",	// 60 	0
+"Humboldt-Eureka":                         	"60107", 	// 60 	0
+"Humboldt-Maple Creek":                    	"60108", 	// 60 	0
+"IGNACIO-BOLINAS #1":                      	"60109", 	// 60 	0
+"IGNACIO-ALTO":                            	"60110", 	// 60 	0
+"IGNACIO-ALTO-SAUSALITO #1":               	"60111", 	// 60 	0
+"IGNACIO-ALTO-SAUSALITO #2":               	"60112", 	// 60 	0
+"IGNACIO-BOLINAS #2":                      	"60113", 	// 60 	0
+"JEFFERSON-HILLSDALE JCT":                 	"60114", 	// 60 	0
+"Watershed 60kv Tap":                      	"60114A",	// 60 	0
+"Jefferson-Las Pulgas":                    	"60115", 	// 60 	0
+"JEFFERSON-MARTIN":                        	"60116", 	// 230	1
+"Crystal Springs 60kv Tap":                	"60116A",	// 60 	0
+"Jefferson-Stanford":                      	"60117", 	// 60 	0
+"SLAC 60KV Tap":                           	"60117A",	// 60 	0
+"KASSON #1":                               	"60118", 	// 60 	0
+"Carbona #1 60kv Tap":                     	"60118A",	// 60 	0
+"Lyoth 60kv Tap":                          	"60118B",	// 60 	0
+"Carbona #2 60kv Tap":                     	"60118C",	// 60 	0
+"Banta Carbona 60kv Tap":                  	"60118D",	// 60 	0
+"Kasson-Banta #1":                         	"60119", 	// 60 	0
+"Kasson-Louise":                           	"60120", 	// 60 	0
+"Calvo 60kv Tap":                          	"60120A",	// 60 	0
+"KESWICK-CASCADE":                         	"60121", 	// 60 	0
+"Keswick-Trinity-Weaverville":             	"60122", 	// 60 	0
+"Kifer-Agnew Jct.":                        	"60123", 	// 60 	0
+"Kilarc-Cedar Creek":                      	"60124", 	// 60 	0
+"Clover Creek 60kv Tap":                   	"60124A",	// 60 	0
+"Kilarc-Deschutes":                        	"60125", 	// 60 	0
+"Kilarc-Volta 60kv Tie":                   	"60126", 	// 60 	0
+"KING CITY-COBURN #1":                     	"60127", 	// 60 	0
+"Jolon 60kv Tap":                          	"60127A",	// 60 	0
+"KING CITY-COBURN #2":                     	"60128", 	// 60 	0
+"Los Coches 60kv Tap":                     	"60128A",	// 60 	0
+"LAKEVILLE #2":                            	"60129", 	// 60 	0
+"Lakeville-Petaluma C":                    	"60130", 	// 60 	0
+"LAKEVILLE #1":                            	"60131", 	// 60 	0
+"LAS POSITAS-VASCO":                       	"60132", 	// 60 	0
+"Laureles-Otter":                          	"60133", 	// 60 	0
+"Laytonville-Covelo":                      	"60134", 	// 60 	0
+"LINCOLN-PLEASANT GROVE":                  	"60135", 	// 60 	0
+"Sierra Pacific Ind 60kv Tap":             	"60135A",	// 60 	0
+"Rio Bravo(Rocklin) 60kv Tap":             	"60135C",	// 60 	0
+"LIVERMORE-LAS POSITAS":                   	"60136", 	// 60 	0
+"Lockeford-Industrial":                    	"60137", 	// 60 	0
+"Lockeford-Lodi #1":                       	"60138", 	// 60 	0
+"Lockeford-Lodi #2":                       	"60139", 	// 60 	0
+"Industrial 60kv Tap":                     	"60139A",	// 60 	0
+"Victor 60kv Tap":                         	"60139B",	// 60 	0
+"Woodbridge 60kv Tap":                     	"60139C",	// 60 	0
+"LOCKEFORD-LODI #3":                       	"60140", 	// 60 	0
+"MANTECA #1":                              	"60141", 	// 60 	0
+"Lee 60kv Tap":                            	"60141A",	// 60 	0
+"MANTECA-LOUISE":                          	"60142", 	// 60 	0
+"Gronemeyer 60kv Tap":                     	"60142A",	// 60 	0
+"Manteca-Patterson":                       	"60144", 	// 60 	0
+"Maple Creek-Hoopa":                       	"60145", 	// 60 	0
+"MARTIN-MILLBRAE #2":                      	"60146", 	// 60 	0
+"MENDOCINO-PHILO JCT-HOPLAND":             	"60148", 	// 60 	0
+"Masonite 60kv Tap":                       	"60148A",	// 60 	0
+"MENDOCINO #1":                            	"60149", 	// 60 	0
+"Mendocino-Willits":                       	"60150", 	// 60 	0
+"MENDOCINO-WILLITS-FORT BRAGG":            	"60151", 	// 60 	0
+"WEIMAR #1":                               	"60152", 	// 60 	0
+"Oxbow 60kv Tap":                          	"60152A",	// 60 	0
+"MILLBRAE-PACIFICA":                       	"60153", 	// 60 	0
+"San Andreas (CCSF) 60kv Tap":             	"60153A",	// 60 	0
+"San Bruno 60kv Tap":                      	"60153B",	// 60 	0
+"MILLBRAE-SAN MATEO #2":                   	"60154", 	// 60 	0
+"Monta Vista-Burns":                       	"60156", 	// 60 	0
+"MONTA VISTA-LOS ALTOS":                   	"60157", 	// 60 	0
+"Monta Vista-Los Gatos":                   	"60158", 	// 60 	0
+"Monta Vista-Permanente":                  	"60159", 	// 60 	0
+"Permanente #1 60kv Tap":                  	"60159A",	// 60 	0
+"Permanente #2 60kv Tap":                  	"60159B",	// 60 	0
+"MONTE RIO-FULTON":                        	"60160", 	// 60 	0
+"Wohler 60kv Tap":                         	"60160A",	// 60 	0
+"MOUNTAIN GATE JCT-CASCADE":               	"60161", 	// 60 	0
+"Mountain Gate 60kv Tap":                  	"60161A",	// 60 	0
+"Newark-Decoto":                           	"60162", 	// 60 	0
+"Decoto 60kv Tap":                         	"60162A",	// 60 	0
+"Newark-Livermore":                        	"60163", 	// 60 	0
+"NEWARK-VALLECITOS":                       	"60164", 	// 60 	0
+"Nicolaus-Catlett":                        	"60165", 	// 60 	0
+"Nicolaus-Marysville":                     	"60166", 	// 60 	0
+"NICOLAUS-PLAINFIELD JCT":                 	"60167", 	// 60 	0
+"District 1001 60kv Tap":                  	"60167A",	// 60 	0
+"NICOLAUS-WILKINS SLOUGH":                 	"60168", 	// 60 	0
+"District 1500 60kv Tap":                  	"60168A",	// 60 	0
+"Tocaloma 60kv Tap":                       	"60169A",	// 60 	0
+"Oil Fields-Salinas River":                	"60170", 	// 60 	0
+"Oil Fields-Sargent Canyon":               	"60171", 	// 60 	0
+"PALERMO-OROVILLE #1":                     	"60172", 	// 60 	0
+"Pacific Oroville Power Tap":              	"60172A",	// 60 	0
+"Louisiana Pacific (Oroville) Tap":        	"60172B",	// 60 	0
+"PALERMO-OROVILLE #2":                     	"60173", 	// 60 	0
+"Encinal 60kv Tap":                        	"60174A",	// 60 	0
+"PEASE-HARTER":                            	"60175", 	// 60 	0
+"Greenleaf #2 60kv Tap":                   	"60175A",	// 60 	0
+"PEASE-MARYSVILLE-HARTER":                 	"60176", 	// 60 	0
+"Yuba City Cogen 60kv Tap":                	"60176A",	// 60 	0
+"PHILO JCT-FORT BRAGG":                    	"60177", 	// 60 	0
+"Pit #1-McArthur":                         	"60178", 	// 60 	0
+"BIG VALLEY LUMBER 60KV TAP":              	"60178A",	// 60 	0
+"PLACER-DEL MAR":                          	"60179", 	// 60 	0
+"Sierra Pines Limited 60kv":               	"60179A",	// 60 	0
+"Potter Valley-Mendocino":                 	"60180", 	// 60 	0
+"Potter Valley-Willits":                   	"60181", 	// 60 	0
+"VINEYARD-LIVERMORE":                      	"60182", 	// 60 	0
+"Kaiser 60kv Tap":                         	"60182A",	// 60 	0
+"RADUM-VINEYARD":                          	"60183", 	// 60 	0
+"RIO DELL JCT-BRIDGEVILLE":                	"60184", 	// 60 	0
+"Rio Del 60kv Tap":                        	"60184A",	// 60 	0
+"Pacific Lumber Co 60kv Tap":              	"60184B",	// 60 	0
+"SALADO-NEWMAN #1":                        	"60185", 	// 60 	0
+"Stanislaus Recovery 60kTap":              	"60185A",	// 60 	0
+"Gustine #1 60kv Tap":                     	"60185B",	// 60 	0
+"SALADO-NEWMAN #2":                        	"60186", 	// 60 	0
+"Crows Landing 60kv Tap":                  	"60186A",	// 60 	0
+"Gustine #2 60kv Tap":                     	"60186B",	// 60 	0
+"SALINAS #1":                              	"60188", 	// 60 	0
+"Manzanita 60kv Tap":                      	"60188A",	// 60 	0
+"SALINAS-FIRESTONE #1":                    	"60189", 	// 60 	0
+"Fresh Express 60kv Tap":                  	"60189A",	// 60 	0
+"SALINAS-FIRESTONE #2":                    	"60190", 	// 60 	0
+"Salinas-Lagunitas":                       	"60191", 	// 60 	0
+"SALINAS-LAURELES":                        	"60192", 	// 60 	0
+"San Mateo-Bair":                          	"60193", 	// 60 	0
+"San Mateo-Hillsdale Jct":                 	"60194", 	// 60 	0
+"SAN RAMON-RADUM":                         	"60195", 	// 60 	0
+"Parks 60kv Tap":                          	"60195A",	// 60 	0
+"SMARTVILLE-LINCOLN":                      	"60197", 	// 60 	0
+"Beale A.F.B. #2 60kv Tap":                	"60197A",	// 60 	0
+"Camp Far West 60kv Tap":                  	"60197B",	// 60 	0
+"Smartville-Marysville":                   	"60198", 	// 60 	0
+"Smartville-Nicolaus #1":                  	"60199", 	// 60 	0
+"SMARTVILLE-NICOLAUS #2":                  	"60200", 	// 60 	0
+"Beale A.F.B. #1 60kv Tap":                	"60200A",	// 60 	0
+"SOLEDAD #1":                              	"60201", 	// 60 	0
+"Gonzales #1 60kv Tap":                    	"60201A",	// 60 	0
+"Chualar 60kv Tap":                        	"60201B",	// 60 	0
+"SOLEDAD #2":                              	"60202", 	// 60 	0
+"Gonzales #2 60kv Tap":                    	"60202A",	// 60 	0
+"SOLEDAD #3":                              	"60203", 	// 60 	0
+"SOLEDAD #4":                              	"60204", 	// 60 	0
+"Spaulding #3-Spaulding #1":               	"60205", 	// 60 	0
+"Spaulding-Summi(NERC)":                   	"60206", 	// 60 	1
+"Cisco Grove Tap 60kv":                    	"60206A",	// 60 	0
+"STAGG #1":                                	"60207", 	// 60 	0
+"Terminous 60kv Tap":                      	"60207A",	// 60 	0
+"Sebastiani 60kv Tap":                     	"60207B",	// 60 	0
+"Stagg-Country Club #1":                   	"60208", 	// 60 	0
+"Stagg-Country Club #2":                   	"60209", 	// 60 	0
+"Stagg-Hammer":                            	"60210", 	// 60 	0
+"STOCKTON A #1":                           	"60211", 	// 60 	0
+"Newark-Sierra Paperbrd 60k":              	"60211A",	// 60 	0
+"Pacific Ethanol 60kv":                    	"60211D",	// 60 	0
+"STOCKTON A-WEBER #1":                     	"60212", 	// 60 	0
+"STOCKTON A-WEBER #2":                     	"60213", 	// 60 	0
+"Stockton Acres 60kv Tap":                 	"60213A",	// 60 	0
+"STOCKTON A-WEBER #3":                     	"60214", 	// 60 	0
+"Sumiden Wire Products 60kv":              	"60214A",	// 60 	0
+"Oak Park 60kv Tap":                       	"60214B",	// 60 	0
+"Stockton-Newark":                         	"60215", 	// 60 	0
+"TRINITY #1":                              	"60216", 	// 60 	0
+"Trinity-Maple Creek":                     	"60217", 	// 60 	0
+"Hyampom 60kv Tap":                        	"60217A",	// 60 	0
+"Tulucay-Napa #1":                         	"60218", 	// 60 	0
+"Basalt #1 60kv Tap":                      	"60218A",	// 60 	0
+"Cordelia #1 60kv Tap":                    	"60218B",	// 60 	0
+"Cordelia Interim Pmps 60k T":             	"60218C",	// 60 	0
+"Cordelia #2 60kv Tap":                    	"60218D",	// 60 	0
+"Tulucay-Napa #2":                         	"60219", 	// 60 	0
+"VACA-PLAINFIELD JCT":                     	"60220", 	// 60 	0
+"Plainfield 60kv Tap":                     	"60220A",	// 60 	0
+"VALLEY SPRINGS #1":                       	"60221", 	// 60 	0
+"New Hogan 60kv Tap":                      	"60221A",	// 60 	0
+"Valley Springs-Caleveras Cement":         	"60222", 	// 60 	0
+"Valley Springs #2 60 kv":                 	"60223", 	// 60 	0
+"Pardee #1 60kv Tap":                      	"60223A",	// 60 	0
+"VALLEY SPRINGS-MARTEL #1":                	"60224", 	// 60 	0
+"Amfor 60kv Tap":                          	"60224A",	// 60 	0
+"VALLEY SPRINGS-MARTEL #2":                	"60225", 	// 60 	0
+"Pardee #2 60kv Tap":                      	"60225A",	// 60 	0
+"Ione Energy 60kv Tap":                    	"60225B",	// 60 	0
+"Ione 60kv Tap":                           	"60225C",	// 60 	0
+"VASCO-HERDLYN":                           	"60226", 	// 60 	0
+"US Windpower 60kv Tap":                   	"60226A",	// 60 	0
+"South Bay 60kv Tap":                      	"60226B",	// 60 	0
+"Altamont Cogen 60kv Tap":                 	"60226C",	// 60 	0
+"Viejo-Monterey":                          	"60227", 	// 60 	0
+"VINEYARD-VALLECITOS":                     	"60228", 	// 60 	0
+"Iuka 60kv Tap":                           	"60228A",	// 60 	0
+"Volta-Deschutes":                         	"60229", 	// 60 	0
+"Volta-South":                             	"60230", 	// 60 	0
+"WATSONVILLE-SALINAS":                     	"60231", 	// 60 	0
+"Granite Rock 60kv Tap":                   	"60231A",	// 60 	0
+"Lagunitas 60kv Tap":                      	"60231B",	// 60 	0
+"WEBER #1":                                	"60232", 	// 60 	0
+"Robertson 60kv Tap A":                    	"60232A",	// 60 	0
+"Robertson 60kv Tap B":                    	"60232B",	// 60 	0
+"Cogeneration National 60kv":              	"60232C",	// 60 	0
+"Rough & Ready 60kv Tap":                  	"60232D",	// 60 	0
+"WEBER-MORMON JCT":                        	"60234", 	// 60 	0
+"WEIMAR-HALSEY":                           	"60235", 	// 60 	0
+"WEST POINT-VALLEY SPRINGS":               	"60236", 	// 60 	0
+"PINE GROVE 60KV TAP":                     	"60236A",	// 60 	0
+"Kekawaka 60 KV Tap":                      	"60237A",	// 60 	0
+"Willits-Garberville (North/Eureka)":      	"60237n",	// 60 	0
+"Willits-Garberville (South/Ukiah)":       	"60237s",	// 60 	0
+"WILLOW PASS-CONTRA COSTA":                	"60238", 	// 60 	0
+"Pittsburg #2 60kv Tap":                   	"60238A",	// 60 	0
+"GWF #1 60KV TAP":                         	"60238B",	// 60 	0
+"Wind Farms":                              	"60239", 	// 60 	0
+"Zond Wind 60kv Tap":                      	"60239A",	// 60 	0
+"COLUSA JCT #1":                           	"60241", 	// 60 	0
+"DEL MONTE #1":                            	"60242", 	// 60 	0
+"MIDDLE FORK #1":                          	"60243", 	// 60 	0
+"ELK-GUALALA":                             	"60244", 	// 60 	0
+"CONTRA COSTA-BALFOUR":                    	"60368", 	// 60 	0
+"DEL MONTE #2":                            	"60375", 	// 60 	0
+"SALINAS #2":                              	"60376", 	// 60 	0
+"GLENN #4":                                	"60377", 	// 60 	0
+"TABLE MTN-PEASE":                         	"60378", 	// 60 	0
+"RADUM #1":                                	"60379", 	// 60 	0
+"GLENN #5":                                	"60380", 	// 60 	0
+"Atlantic-Pleasant Grove #2 60 kv":        	"60381", 	// 60 	0
+"Coleman Co-gen Tap":                      	"60382", 	// 60 	0
+"Lockeford #1 60kv":                       	"60383", 	// 60 	0
+"Del Mar Atlantic #1":                     	"60385", 	// 60 	0
+"Arcata-Humboldt":                         	"60386", 	// 60 	0
+"Allison-Davis(idle) 60kv":                	"60387", 	// 60 	0
+"Humboldt #1":                             	"60388", 	// 60 	0
+"Fort Bragg-Elk":                          	"60389", 	// 60 	0
+"Philo Junction-Elk":                      	"60390", 	// 60 	0
+"Garberville-Laytonville":                 	"60393", 	// 60 	0
+"Laytonville-Willits":                     	"60394", 	// 60 	0
+"Jefferson #1 60kv":                       	"60395", 	// 60 	0
+"Martin #1":                               	"60396", 	// 60 	0
+"Del Mar Atlantic #2":                     	"60397", 	// 60 	0
+"Almaden-Los Gatos":                       	"60401", 	// 60 	0
+"Evergreen-Almaden":                       	"60402", 	// 60 	0
+"Hartley-Clearlake 60kv":                  	"60405", 	// 60 	0
+"Mendocino-Hartley 60kv":                  	"60406", 	// 60 	0
+"Clearlake-Konocti 60kv":                  	"60418", 	// 11 	0
+"Konocti-Eagle Rock 60kv":                 	"60419", 	// 11 	0
+"Konocti-Middletown 60kv":                 	"60420", 	// 20 	0
+"Arco-Carneras":                           	"70001", 	// 70 	0
+"Arco-Cholame":                            	"70002", 	// 70 	0
+"Berrenda A 70kv Tap":                     	"70002A",	// 70 	0
+"Antelope 70kv Tap":                       	"70002B",	// 70 	0
+"Berrenda C 70kv Tap":                     	"70002C",	// 70 	0
+"Arco-Polonio Pass PP":                    	"70003", 	// 70 	0
+"Lost Hills 70kv Tap":                     	"70003A",	// 70 	0
+"Badger Hill 70kv Tap":                    	"70003B",	// 70 	0
+"Las Perillas 70kv Tap":                   	"70003C",	// 70 	0
+"Arco-Tulare Lake":                        	"70004", 	// 70 	0
+"Las Perillas Tap":                        	"70004C",	// 70 	0
+"Arco-Twissleman":                         	"70005", 	// 70 	0
+"Texaco (Lost Hills) 70k Tap":             	"70005A",	// 70 	0
+"CHEVRON (LOST HILLS) 70KTAP":             	"70005B",	// 70 	0
+"Mobile2 (Lost Hills) 70kTap":             	"70005C",	// 70 	0
+"Atascadero-Cayucos":                      	"70006", 	// 70 	0
+"ATASCADERO-SAN LUIS OBISPO":              	"70007", 	// 70 	0
+"Borden-Coppermine":                       	"70008", 	// 70 	0
+"IKG 70kv Tap":                            	"70008A",	// 70 	0
+"Yancy 70kv Tap":                          	"70008B",	// 70 	0
+"River Rock 70kv tap":                     	"70008C",	// 70 	0
+"Borden-Madera #1":                        	"70009", 	// 70 	0
+"Borden-Madera #2":                        	"70010", 	// 70 	0
+"Calif Ave-Kearney":                       	"70011", 	// 70 	0
+"Carneras-McKittrick":                     	"70012", 	// 70 	0
+"Celeron 70kv Tap":                        	"70012A",	// 70 	0
+"KING ELLIS 70KV TAP":                     	"70012B",	// 70 	0
+"Mobil South Belridgen":                   	"70012C",	// 70 	0
+"PSE McKittrick":                          	"70012D",	// 70 	0
+"CARUTHERS-KINGSBURG":                     	"70013", 	// 70 	0
+"Cayucos-Cambria":                         	"70014", 	// 70 	0
+"Coalinga #1-Coalinga #2":                 	"70015", 	// 70 	0
+"Coalinga Cogen 70kv Tap":                 	"70015A",	// 70 	0
+"Tornado 70kv Tap":                        	"70015B",	// 70 	0
+"Derrick 70kv Tap":                        	"70015C",	// 70 	0
+"Oil City 70kv Tap":                       	"70015D",	// 70 	0
+"PENN ZIER 70KV TAP":                      	"70015E",	// 70 	0
+"COALINGA #1-SAN MIGUEL":                  	"70016", 	// 70 	0
+"COPPERMINE-TIVY VALLEY":                  	"70017", 	// 70 	0
+"Corcoran-Angiola":                        	"70018", 	// 70 	0
+"Boswell 70kv Tap":                        	"70018A",	// 70 	0
+"DINUBA-OROSI":                            	"70019", 	// 70 	0
+"Stone Corral 70kv Tap":                   	"70019A",	// 70 	0
+"Divide-Vandenberg #1":                    	"70020", 	// 70 	0
+"Divide-Vandenberg #2":                    	"70021", 	// 70 	0
+"Divide-Zaca-Lompoc":                      	"70022", 	// 70 	0
+"Exchequer-Mariposa":                      	"70023", 	// 70 	0
+"Exchequer-Yosemite":                      	"70024", 	// 70 	0
+"BRICEBURG JCT-MARIPOSA 70k":              	"70024A",	// 70 	0
+"Friant-Coppermine":                       	"70025", 	// 70 	0
+"Gates-Coalinga #1":                       	"70026", 	// 70 	0
+"Gates-Coalinga #2":                       	"70027", 	// 70 	0
+"Gates-Huron-Schindler":                   	"70028", 	// 70 	0
+"Gates-Tulare Lake":                       	"70029", 	// 70 	0
+"Kettleman Hills 70kv Tap":                	"70029A",	// 70 	0
+"Avenal 70kv Tap":                         	"70029B",	// 70 	0
+"Chevron Pipeline Kettleman 70kv Tap":     	"70029C",	// 70 	0
+"GLASS-MADERA":                            	"70030", 	// 70 	0
+"GUERNSEY-HENRIETTA":                      	"70031", 	// 70 	0
+"Reserve Oil 70kv Tap":                    	"70031A",	// 70 	0
+"Armstrong 70kv Tap":                      	"70031B",	// 70 	0
+"GWF Hanford Cogen 70kv Tap":              	"70031C",	// 70 	0
+"Haas-Woodchuck":                          	"70032", 	// 70 	0
+"Helm-Kerman":                             	"70034", 	// 70 	0
+"Fresno Co-Gen (Agrico) Tap":              	"70034A",	// 70 	0
+"HELM-STROUD SW STA":                      	"70035", 	// 70 	0
+"HELM-VALLEY NITROGEN":                    	"70036", 	// 70 	0
+"Henrietta-Lemoore":                       	"70037", 	// 70 	0
+"Leprino 70kv Tap":                        	"70037A",	// 70 	0
+"HENRIETTA-LEMOORE NAS":                   	"70038", 	// 70 	0
+"Henrietta-Tulare Lake":                   	"70039", 	// 70 	0
+"HERDLYN-TRACY":                           	"70040", 	// 70 	0
+"Kearney-Biola":                           	"70041", 	// 70 	0
+"Kearney-Bowles":                          	"70042", 	// 70 	0
+"KEARNEY-CARUTHERS":                       	"70043", 	// 70 	0
+"Kearney-Kerman":                          	"70044", 	// 70 	0
+"Kern Canyon-Magunden-Weedpatch":          	"70045", 	// 70 	0
+"Kern-Fruitvale":                          	"70046", 	// 70 	0
+"Kern-Kern Oil-Famoso":                    	"70047", 	// 70 	0
+"Cawelo B 70kv Tap":                       	"70047A",	// 70 	0
+"Cawelo B Tap":                            	"70047B",	// 70 	0
+"KERN-MAGUNDEN":                           	"70048", 	// 70 	0
+"Fruitvale 70kv Tap":                      	"70048A",	// 70 	0
+"Eisen 70kv Tap":                          	"70048C",	// 70 	0
+"KERN-OLD RIVER #1":                       	"70049", 	// 70 	0
+"KERN-OLD RIVER #2":                       	"70050", 	// 70 	0
+"Carnation 70kv Tap":                      	"70050A",	// 70 	0
+"KINGSBURG-LEMOORE":                       	"70051", 	// 70 	0
+"Hardwick 70kv Tap":                       	"70051A",	// 70 	0
+"Livingston-Livingston Jct":               	"70052", 	// 70 	0
+"LOS BANOS-CANAL-ORO LOMA":                	"70053", 	// 70 	0
+"Wright 70kv Tap":                         	"70053A",	// 70 	0
+"Arburua 70kv Tap":                        	"70053B",	// 70 	0
+"LOS BANOS-LIVINGSTON JCT":                	"70054", 	// 70 	0
+"Los Banos-O'neill PGP":                   	"70055", 	// 70 	0
+"Los Banos-Pacheco":                       	"70056", 	// 70 	0
+"Dinosaur Point 70kv Tap":                 	"70056A",	// 70 	0
+"MARICOPA-OLD RIVER":                      	"70057", 	// 70 	0
+"Gardner 70kv Tap":                        	"70057A",	// 70 	0
+"Texaco Basic School 70k Tap":             	"70057B",	// 70 	0
+"Pentland 70kv Tap":                       	"70057C",	// 70 	0
+"MENDOTA-SAN JOAQUIN-HELM":                	"70058", 	// 70 	0
+"Mendota Biomass 70kv Tap":                	"70058A",	// 70 	0
+"Levis 70kv Tap":                          	"70058B",	// 70 	0
+"Westlands 70kv Tap":                      	"70058C",	// 70 	0
+"Wesix 70kv Tap":                          	"70058D",	// 70 	0
+"Giffen 70kv Tap":                         	"70058E",	// 70 	0
+"Pleasant Valley Pumps":                   	"70058F",	// 70 	0
+"Merced Falls-Exchequer":                  	"70059", 	// 70 	0
+"MC SWAIN 70KV TAP":                       	"70059A",	// 70 	0
+"MERCED #1":                               	"70060", 	// 70 	0
+"Bonita 70kv Tap":                         	"70060A",	// 70 	0
+"El Peco 70kv Tap":                        	"70060B",	// 70 	0
+"El Nido (SJVE) 70kv Tap":                 	"70060C",	// 70 	0
+"Merced-Merced Falls":                     	"70061", 	// 70 	0
+"Oro Loma-Canal #1":                       	"70062", 	// 70 	0
+"Oro Loma-Mendota":                        	"70063", 	// 70 	0
+"PG&E Tule-Springville":                   	"70064", 	// 70 	0
+"Reedley-Dinuba #1":                       	"70065", 	// 70 	0
+"Dinuba Energy 70kv Tap":                  	"70065A",	// 70 	0
+"REEDLEY-OROSI":                           	"70066", 	// 70 	0
+"Dunlap 70kv Tap":                         	"70066A",	// 70 	0
+"Rio Bravo Hydro":                         	"70067", 	// 70 	0
+"San Bernard-Tejon":                       	"70068", 	// 70 	0
+"San Luis Obispo-Cayucos":                 	"70069", 	// 70 	0
+"Mustang 70kv Tap":                        	"70069A",	// 70 	0
+"San Luis Obispo-Santa Maria - 70kv":      	"70070", 	// 70 	0
+"San Miguel-Atascadero":                   	"70071", 	// 70 	0
+"Sanger-California Ave #1":                	"70072", 	// 70 	0
+"Sanger-California Ave #2":                	"70073", 	// 70 	0
+"Sanger-Reedley":                          	"70074", 	// 70 	0
+"Sanger Cogen 70kv Tap":                   	"70074A",	// 70 	0
+"Schindler-Coalinga #2":                   	"70075", 	// 70 	0
+"SCHINDLER-HURON-GATES":                   	"70076", 	// 70 	0
+"Semitropic-Famoso - 70kv":                	"70077", 	// 70 	0
+"Mc Farland 70kv Tap":                     	"70077A",	// 70 	0
+"STROUD SW STA-SCHINDLER":                 	"70078", 	// 70 	0
+"STROUD SW STA-STROUD":                    	"70079", 	// 70 	0
+"Valley Nitrogen Tap":                     	"70079A",	// 70 	0
+"Taft-Cuyama #1":                          	"70080", 	// 70 	0
+"Taft-Cuyama #2":                          	"70081", 	// 70 	0
+"Taft-Elk Hills":                          	"70082", 	// 70 	0
+"Texaco Buena Vista Hills":                	"70082A",	// 70 	0
+"TAFT-MARICOPA":                           	"70083", 	// 70 	0
+"Solar Tannehill 70kv Tap":                	"70083A",	// 70 	0
+"Cadet 70kv Tap":                          	"70083B",	// 70 	0
+"MOCO 70kv Tap":                           	"70083C",	// 70 	0
+"University Cogen Tap":                    	"70083D",	// 70 	0
+"Taft-Mc Kittrick":                        	"70084", 	// 70 	0
+"Texaco Tap":                              	"70084A",	// 70 	0
+"Tejon-Lebec":                             	"70085", 	// 70 	0
+"Rose 70kv Tap":                           	"70085A",	// 70 	0
+"Grapevine 70kv Tap":                      	"70085B",	// 70 	0
+"Castaic 70kv Tap":                        	"70085C",	// 70 	0
+"TIVY VALLEY-REEDLEY":                     	"70086", 	// 70 	0
+"Weedpatch-San Bernard":                   	"70087", 	// 70 	0
+"Stallion 70kv Tap":                       	"70087A",	// 70 	0
+"Weedpatch-Wellfield":                     	"70088", 	// 70 	0
+"Wheeler Ridge-Lakeview":                  	"70089", 	// 70 	0
+"Emidio 70kv Tap":                         	"70089A",	// 70 	0
+"Valpredo 70kv Tap":                       	"70089B",	// 70 	0
+"Kelley 70kvTap":                          	"70089C",	// 70 	0
+"Wheeler Ridge-San Bernard":               	"70090", 	// 70 	0
+"Wheeler Ridge-Tejon":                     	"70091", 	// 70 	0
+"Tecuya 70kv Tap":                         	"70091A",	// 70 	0
+"Wheeler Ridge-Weedpatch":                 	"70092", 	// 70 	0
+"Wishon-Coppermine":                       	"70093", 	// 70 	0
+"Auberry 70kv Tap":                        	"70093A",	// 70 	0
+"Wishon-San Joaquin #3":                   	"70094", 	// 70 	0
+"Yanke (North Fork) 70kv Tap":             	"70094A",	// 70 	0
+"GLASS-BIOLA":                             	"70095", 	// 70 	0
+"Canandaiqua Winery 70kv":                 	"70095A",	// 70 	0
+"CORCORAN-GUERNSEY":                       	"70096", 	// 70 	0
+"Quebec Tap":                              	"70096A",	// 70 	0
+"Kearny Tie":                              	"70097", 	// 70 	0
+"Kearny Alternate Tie":                    	"70098", 	// 70 	0
+"SAN MIGUEL-PASO ROBLES":                  	"70106", 	// 70 	0
+"PASO ROBLES-TEMPLETON":                   	"70107", 	// 70 	0
+"TEMPLETON-ATASCADERO":                    	"70108", 	// 70 	0
+"Maricopa Copus 70kv":                     	"70114", 	// 70 	0
+"Copus Old River 70kv":                    	"70115", 	// 70 	0
+"Semitropic Wasco 70 kv":                  	"70116", 	// 70 	0
+"Wasco Famoso 70 kv":                      	"70117", 	// 70 	0
+"Los Altos Sub":                           	"71315", 	// 60 	0
+"Temblor Tap 70kv":                        	"71526", 	// 70 	0
+"Grimway Malaga 115kv":                    	"71594", 	// 115	0
+"Bucks Grizzly Tap":                       	"COSC01",	// 115	0
+"DWR Lines":                               	"DWR01", 	// 230	1
+"Oroville-Thermalito-Table-Mountain #1":   	"DWR02", 	// 230	1
+"Oroville-Thermalito-Table Mountain #2":   	"DWR03", 	// 230	1
+"Oroville-Thermalito-Table Mountain #3":   	"DWR04", 	// 230	1
+"Metcalf-Salinas #1-115 kv":               	"M10035",	// 115	0
+"Metcalf-Salinas #2 115kv":                	"M20035",	// 115	0
+"Calpine Delta Energy Center 230 KV":      	"PVT",   	// 230	0
+"Standard Line #1 and #2":                 	"SL012"  	// 60 	0
+};
+
 module.exports = {
   trim_codes: trim_codes, 
   division_codes: division_codes, 
@@ -3681,5 +5171,6 @@ module.exports = {
   transmison_circuit_codes: transmison_circuit_codes,
   crew_type: crew_type,
   work_type: work_type,
-  restriction_codes: restriction_codes
+  restriction_codes: restriction_codes, 
+  line_ids: line_ids
 };
