@@ -326,6 +326,7 @@ var trim_codes =  {
   "Top":"TO",
   "top":"TO",
   "ReTreat":"TRT",
+  "Retreat Prescription": "TRT",
   //I don't know what to translate these too so this is my best guess
   "ftp":"FAA", 
   "ftpdead": "FBA"
