@@ -2,12 +2,6 @@
  * @fileoverview This creates an alert xml for a tree record or tree location
  */
 
-/**
-* 
-* NOTE:
-* 
-*/
-
 
 var _ = require('underscore');
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
@@ -77,7 +71,13 @@ var ALERT = {         // <TreeRecsAlerts> or <TreeLocAlerts>
 
 
 
-
+/**
+ * @description Constructor for Alert
+ * @param {String} type type of allert (tree or location)
+ * @param {String} alert_code alert code that can be mapped in pge_vmd_codes
+ * @param {String} user User string
+ * @param {String} date inspection date (or date restriction was added)
+ */
 var Alert = function(type, alert_code, user, date) {
   this.root_node = {
     Loc: "TreeLocAlerts",

@@ -1,5 +1,5 @@
 /**
- * @@fileoverview This file creates a workpacket JSON sturcture that can be turned into xml
+ * @fileoverview This file creates a workpacket JSON sturcture that can be turned into xml
  */
 
 
@@ -38,7 +38,10 @@ var WORK_PACKET = {                            // <TreeWorkPacket>
     TreeLoc: null                           //   <TreeLoc>                          Inspected Locations(s)
 };                                          // </TreeWorkPacket>
 
-
+/**
+ * @description WorkPacket constructuor
+ * @param {String} test_email An optional email address to add for exports to the test system.
+ */
 function WorkPacket(test_email){
   this.packet = _.extend({}, WORK_PACKET); 
   this.packet.TreeLoc = [];
@@ -47,7 +50,10 @@ function WorkPacket(test_email){
   }
 }
 
-
+/**
+ * @description add a TreeLocation object to this WorkPacket
+ * @param {TreeLocation} location A TreeLocation to add to this work packet
+ */
 WorkPacket.prototype.addLocation = function(location){
   var packet = this.packet;
   
@@ -73,7 +79,10 @@ WorkPacket.prototype.addLocation = function(location){
   location.set("iRouteNum", this.packet.TreeLoc.length*10);
 };
 
-
+/**
+ * @description toXML 
+ * @returns {String} xml string 
+ */
 WorkPacket.prototype.toXML = function() {
   return js2xmlparser(root_node, this.packet);
 };

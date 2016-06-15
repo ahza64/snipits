@@ -1,5 +1,5 @@
 /**
- * @fileoverview gps object
+ * @fileoverview GPSRecord : This adds a lat long xml tag 
  */
 var js2xmlparser = require("js2xmlparser");
 var _ = require("underscore");

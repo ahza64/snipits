@@ -2,7 +2,7 @@
  * @fileoverview This creates a restriciton xml for a tree record or tree location
  */
 
-/**
+/*
 * 
 * NOTE:
 *   iTreeLocID is in both Rec and Loc for the doc
@@ -21,7 +21,7 @@
 * 
 */
 
-/**
+/*
  * Code     sRefusalType     sLT          sDescrip                      sNotification
  * DM         DBM            T            Debris Management              NULL
  * EG         EAG            L            Eagle                          Q

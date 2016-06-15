@@ -1,3 +1,6 @@
+/**
+ * @description JPGFile: This creates a FILE subdocument for JPG files
+ */
 var _ = require("underscore");
 
 
@@ -9,7 +12,11 @@ var FILE = {              //<TreeLocFile> or <TreeRecsFile> 	  Note that <TreeLo
 };                        //</TreeLocFile> or </TreeRecsFile>
 
 
-
+/**
+ * 
+ * @description JPGFile constructor
+ * @param {Object} jpg_asset Dispatchr jpg asset from database
+ */
 var JPGFile = function(jpg_asset) {
   this.file = _.extend({}, FILE);
   this.file.sFileName = jpg_asset._id+".jpg";

@@ -13,7 +13,7 @@ var GPS = require("./gps");
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
 require("sugar");
 
-/**
+/*
 *   SYSTEM TESTS:
 *     Missing trimcodes
 *     All trimcodes will map to a vmd trimcode (currently i just didn't export these)
@@ -343,6 +343,10 @@ TreeRecord.prototype.formatDate = function(date) {
   // The time needs to represent the local time that the inspector was at the location.   P
   // lease use this format mm/dd/yyyy hh:ss              in 24 hr format for PST/PDT time zone.    For example, 06/10/2016 14:23
   // My understanding is that you are capturing time in ZULU time, which means you will have to shift either -7 or -8 hrs depending on local daylight savings time.
+  //
+  // The above was recanted and the standard JSON time string was accepted without error.
+  
+  
   if(date) {
     if(_.isString(date)) {
       date = new Date.create(date);

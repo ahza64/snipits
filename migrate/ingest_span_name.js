@@ -9,6 +9,8 @@ var TreeV3 = require("dsp_shared/database/model/tree");
 var esri_util = require("dsp_shared/lib/gis/esri_util");
 var _ = require('underscore');
 var http_get = esri_util.http_get;
+require('sugar');
+
 var query = {
 		where: '1=1',
 		geometryType: 'esriGeometryEnvelope',
@@ -29,7 +31,9 @@ var query = {
  * @param {string} unknown_meteor   field name for meteor schema
  * @yield {Array}}  retrun from mongo
  */
-function *run(push, unknown, unknown_meteor) {
+function *run(unknown, unknown_meteor, push) {
+  push = push || false;
+  console.log("run", unknown, unknown_meteor, push)
 	var dsp_project = 'transmission_2015';
 	var project = dsp_project.toUpperCase();
 	var host = "https://esri.dispatchr.co:6443";
@@ -88,7 +92,7 @@ function *run(push, unknown, unknown_meteor) {
   		var service_current = folder.services[g].layers_circuits.layers;
   		for(var m = 0 ; m < service_current.length; m++) {
   			var layer_group = service_current[m];
-  			if( layer_group.name.indexOf(tree_without_span.circuit_name) > -1 && layer_group.name.indexOf('TreeTops') > -1 ){
+  			if( layer_group.name.indexOf(tree_without_span.circuit_name) > -1 && layer_group.name.endsWith('TreeTops')){
   				circuit_found = true;
   				yield processLayer(base_url, layer_group, tree_without_span, push, unknown, unknown_meteor);
   			}
@@ -110,6 +114,7 @@ function *run(push, unknown, unknown_meteor) {
 function *processLayer(base_url, layer, tree_without_span, push, unknown, unknown_meteor) {     
   var url = [base_url, layer.id, "query"].join("/");
   query.where = "TREEID='" + tree_without_span.qsi_id + "'";
+  console.log("Checking layer", tree_without_span.circuit_name, " >>> ", base_url, layer.name, tree_without_span.qsi_id)
   var trees = yield http_get(url, query);    
   yield process_trees(trees, push, tree_without_span, unknown, unknown_meteor);
 }
@@ -131,6 +136,7 @@ function *process_trees(trees, push, tree_without_span, unknown, unknown_meteor)
 	console.log('trees will be updated , old: ',oldValue,  '  new value: ', newValue, 'set: ', set);
 
 	if(push){
+    console.log('updating', oldValue._id, 'set: ', set);
 		yield TreeV3.update({_id: oldValue._id }, { $set: set }).exec();
 	}
 }

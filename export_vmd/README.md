@@ -2,7 +2,7 @@
 
 
 
-### Object Hiearchy:
+## Object Hiearchy:
 ```
 ----------------
 <TreeWorkPacket>					Work Packet of locations to be inspected
@@ -32,7 +32,7 @@
 
 ```
 
-### FileSturcture
+## FileSturcture
 ```
 .
 ├─src-doc 	            # VMD Spec
@@ -54,9 +54,35 @@
 └─xsd					# auto generated XSD documents 
 ```
 
-### TODO
+
+## Transfrom 
+### WorkPacket
+
+```
+	var WorkPacket = require("./workpacket/work_packet");
+	var TreeLocation = require("./workpacket/tree_location");
+	var TreeRecord = require("./workpacket/tree_record");
+	
+	var workorders = WorkOrder.find({tree_query});
+	var packet = new WorkPacket();
+	workorders.forEach(wo => {
+		var location = new TreeLocation();
+		wo.trees.forEach(tree = > {
+			var inspector = tree.getPI();
+			var line = tree.getCircuit();
+			var pmd = tree.getProject();
+			var image = tree.getImage();
+			var record = new TreeRecord(tree, inspector, line, pmd, image);
+			location.addTree(tree);
+		});
+		packet.addLocation(location);		
+	});
+		
+```
 
 
+
+## TODO
 
 - [x] Finish: TreeLocAlerts & TreeRecsAlerts
 - [x] Finish: TreeLocFile & TreeRecsFile

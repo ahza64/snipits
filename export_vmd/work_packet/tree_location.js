@@ -10,7 +10,7 @@ var Restriction = require('./restriction');
 var Alert = require('./alert');
 
 
-/**
+/*
 * 
 *   NOTES:
 *     sSourceDev: We are currently bringing in SPAN NAME but I don't know which pole would be closer
@@ -119,6 +119,10 @@ var TREE_LOCATION = { //<TreeLoc>
   // dtPrevInspDate: null,    // <dtPrevInspDate>    datetime      [NULL]
 };
 
+
+/**
+ * @description TreeLocation consturctor - Tree locations group trees.  Each tree will have the same address and customer info.
+ */
 var TreeLocation = function(){
   this.location = _.extend({}, TREE_LOCATION);
   this.location.TreeRecs = [];
@@ -127,10 +131,18 @@ var TreeLocation = function(){
   // console.log("CREATING LOCATION", this.location);
 };
 
+/**
+ * @description toXML 
+ * @returns {String} xml string 
+ */
 TreeLocation.prototype.toXML = function() {
   return js2xmlparser(root_node, this.location);
 };
 
+/**
+ * @description add a TreeRecord to this location
+ * @param {TreeRecord} tree the tree record to add to this location
+ */
 TreeLocation.prototype.addTree = function(tree){
   
   //TODO: get and check location properties from trees.
