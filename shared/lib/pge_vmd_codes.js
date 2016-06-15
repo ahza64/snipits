@@ -5154,6 +5154,35 @@ var line_ids = {
 "Standard Line #1 and #2":                 	"SL012"  	// 60 	0
 };
 
+
+/**
+ * @description cleans up line names to have standard format
+ * @param {String} str line name
+ * @returns {String} sanitized line name
+ */
+function sanitizeLineName(str){
+  str = str.trim();
+  str = str.replace(/[#\(\)\.]/g, "");
+  str = str.trim();
+  str = str.replace(/[\s-]/g, '_');
+  str = str.replace(/&/g, "_");
+  str = str.replace(/'/g, "_");    
+  str = str.replace(/_+/g, "_");
+  str = str.toUpperCase();
+  return str;
+}
+
+var sanitized = {};
+for(var line_name in line_ids) {
+  if(line_ids.hasOwnProperty(line_name)) {
+    var line_id = line_ids[line_name];
+    line_name = sanitizeLineName(line_name);
+    sanitized[line_name] = line_id;
+  }
+}
+line_ids = sanitized;
+
+
 module.exports = {
   trim_codes: trim_codes, 
   division_codes: division_codes, 
