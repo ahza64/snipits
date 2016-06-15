@@ -20,20 +20,20 @@ var treeSchema = new mongoose.Schema({
   pi_complete_time: Date,
   tc_complete_time: Date,
   map_annotations: { type: [] },
-  species: {type: String, default: "unknown"}, 
+  species: {type: String, default: "unknown"},
   span_name: String,
- 
- 
+
+
   //added things below
   inc_id: {type: Number, index: true},
   region: {type: String, index: true},
   qsi_id: {type: String, index: true},
-  assigned_user_id: String,  
+  assigned_user_id: String,
   pi_start_time: { type: Date, index: true },
   pi_user_id: { type: String, index: true },
   tc_start_time: { type: Date, index: true },
   tc_user_id: { type: String, index: true },
-  
+
   address: {type: String}, //from mobile app
   trim_code: {type: String},
   image: {type: mongoose.Schema.Types.ObjectId},
@@ -46,16 +46,17 @@ var treeSchema = new mongoose.Schema({
   health: {type: Number, default: 100},
   height: {type: Number, default: null},
   dbh: {type: Number, default: null},
-  
+
   //zone properties
   count: {type: Number, default: 1}, //trees in zone
   zone: {type: Number}, //which zone of the span  1,2,3,4,5)
   min_mgcc: {type: Number},
-  
+
   created: { type: Date, default: Date.now, index: true },
-  updated: { type: Date, default: Date.now, index: true }, 
+  updated: { type: Date, default: Date.now, index: true },
 });
 
+treeSchema.index({location: '2dsphere'});
 var Tree = connection.model('Tree', treeSchema);
 
 
@@ -69,10 +70,10 @@ Tree.queryStatus = function(statuses, not) {
   } else {
     not = "";
   }
-  
+
   var statustoString = new TreeStates.StatusFlagsToString();
   for(var i = 0; i < statuses.length; i++) {
-      statuses[i] = statustoString.getStatus(statuses[i]).statusCode[0];  
+      statuses[i] = statustoString.getStatus(statuses[i]).statusCode[0];
   }
 
   var status_char = statuses.join('');
