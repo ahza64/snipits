@@ -33,7 +33,7 @@ var query = {
  */
 function *run(unknown, unknown_meteor, push) {
   push = push || false;
-  console.log("run", unknown, unknown_meteor, push)
+  console.log("run", unknown, unknown_meteor, push);
 	var dsp_project = 'transmission_2015';
 	var project = dsp_project.toUpperCase();
 	var host = "https://esri.dispatchr.co:6443";
