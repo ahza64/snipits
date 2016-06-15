@@ -53,20 +53,28 @@ var RESTRICTION = {             // <TreeRecsRestrictions> or <TreeLocRestriction
 var q_notifiy = ["eagle", "hazard_notify", "nest_review", "quarantine", "r_review", "velb_removal"];
 
 
-var LT = {
-  "transmission_mitigation":   "L",
-  "eagle":                     "L",
-  "new_planting":              "L",
-  "nest_review":               "L",
-  "private_line":              "L",
-  "debris_management":         "T",
-  "hazard_notify":             "T",
-  "r_review":                  "T",
-  "velb_removal":              "T",
-  "quarantine":                "B",
-  "refusal_r":                 "B"
-};
+// var LT = {
+//   "transmission_mitigation":   "L",
+//   "eagle":                     "L",
+//   "new_planting":              "L",
+//   "nest_review":               "L",
+//   "private_line":              "L",
+//   "debris_management":         "T",
+//   "hazard_notify":             "T",
+//   "r_review":                  "T",
+//   "velb_removal":              "T",
+//   "quarantine":                "B",
+//   "refusal_r":                 "B"
+// };
 
+
+/**
+ * @description Constructor for restriction
+ * @param {String} type type of restriction (tree or location)
+ * @param {String} restrict_code restrictions code that can be mapped in pge_vmd_codes
+ * @param {String} user User string
+ * @param {String} date inspection date (or date restriction was added)
+ */
 var Restriction = function(type, restrict_code, user, date) {
   this.root_node = {
     Loc: "TreeLocRestrictions",
@@ -80,9 +88,9 @@ var Restriction = function(type, restrict_code, user, date) {
     this.restrict = _.extend({}, RESTRICTION);
     this.restrict_code = restrict_code;
     this.restrict.sRestrictionCode = vmd.restriction_codes[restrict_code];
-    this.restrict.bTreeRecsRestriction = LT[restrict_code] === "L" ? 0 : 1;
-    this.sUserID = user;
-    this.dtDateAdded = date;    
+    this.restrict.bTreeRecsRestriction = this.root_node === "TreeLocRestrictions" ? 0 : 1;
+    this.restrict.sUserID = user;
+    this.restrict.dtDateAdded = date || null;
   } else {  
     throw Error("No Restriction Code");
   }
@@ -92,7 +100,10 @@ Restriction.prototype.getData = function() {
   return this.restrict;
 };
 
-
+/**
+ * @description create a tree restrictions
+ * @param {Object} tree tree to inspect and add restrictions too
+ */
 Restriction.createTreeRestricitons = function(tree) {
   var res; 
   if(tree.statusFlags.refused) {
@@ -103,12 +114,11 @@ Restriction.createTreeRestricitons = function(tree) {
   res = {
     "velb": "velb_removal",
     "riparian": "quarantine"
-  };  
-  try {
-    res = new Restriction(res[tree.statusFlags.environment]);
-    tree.addRestriction(res);    
-  } catch (e) {
-    //ok
+  }[tree.statusFlags.environment];  
+  
+  if(res) {
+    res = new Restriction("Rec", res, tree.get('sInsp'), tree.get('dtInspDate'));
+    tree.addRestriction(res);
   }
   
 };
@@ -116,32 +126,33 @@ Restriction.createTreeRestricitons = function(tree) {
 Restriction.createLocRestrictions = function(location) {
   location.clearRestrictions();
   var restrict_codes = new Set();
-  var user, date, tree;
+  var trees = {};
+  var tree;
+
   for(var i = 0; i < location.trees.length; i++) {
-    tree = location.trees[i];
-    user = user || tree.get('sInsp');
-    date = date || tree.get('dtInspDate');
-  }
-  for(i = 0; i < location.trees.length; i++) {
     tree = location.trees[i];
     if(tree.statusFlags.refused) {
       restrict_codes.add("refusal_r");
+      trees.refusal_r = tree;
     }
     
     
     var restrict_code = {
       "raptor_nest": "nest_review",
       "riparian":    "quarantine",
-      "other":       "quarantine"
+      "other":       "quarantine",
+      "velb":        "velb_removal"    
     }[tree.statusFlags.environment];
     if(restrict_code) {
       restrict_codes.add(restrict_code);
+      trees[restrict_code] = tree;
     }
   }
 
   restrict_codes.forEach(function(restrict_code){
     try {
-      var res = new Restriction(restrict_code, user, date);
+      tree = trees[restrict_code];
+      var res = new Restriction("Loc", restrict_code, tree.get('sInsp'), tree.get('dtInspDate'));
       location.addRestriction(res);    
     } catch (e) {
       //ok

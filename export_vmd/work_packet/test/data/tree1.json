@@ -30,7 +30,7 @@
             38.5386546538368
         ]
     },
-    "status" : "4110010000000",
+    "status" : "3110010000002",
     "zipcode" : "95826",
     "state" : null,
     "city" : "West Sacramento",
@@ -99,11 +99,27 @@
         "cufs" : [],
         "nerc" : false,
         "__v" : 1
+    }, 
+    "image": {
+        "_id" : "569eaaeb1cc8a3580ef91798",
+        "meta" : {
+            "workorder" : "565426262895a53d2840f73d",
+            "tree_index" : "10021_513",
+            "device_location" : ""
+        },
+        "__v" : 0,
+        "data" : "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD<IMAGE TRUNCATED>",
+        "ressourceType" : "task",
+        "ressourceId" : "10021_513",
+        "updated" : "2016-01-19T21:32:48.803Z",
+        "created" : "2016-01-19T21:32:48.803Z",
+        "description" : "task: 10021_513",
+        "contentType" : "image"
     }
   }, 
   "results": {
     "sTreeCode": "PEAR",
-    "sNotification": "O",
+    "sNotification": "Q",
     "nDBH": 14,
     "nHeight": 28,
     "nClearance": 25,
@@ -114,10 +130,10 @@
     "dtNextTrimDate": "01/19/2017 13:30",
     "sInspComp": "ACR",
     "sInsp": "SDSJ@pge.com : Sterling Smith",
-    "bVELBArea": 0,
+    "bVELBArea": 1,
     "ExternalTreeID": "E121408691N38538654",
     "sAcctType": "M",
     "sCrewType": "CA",
-    "sTreeRecsStatus": "OK"
+    "sTreeRecsStatus": "CONTACT_WI"
   }
 }

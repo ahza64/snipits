@@ -74,33 +74,39 @@
 - [ ] Need to get data from public fire soruces SRA
 
 ## Data migratons
+- [ ] Put new backup of trans database onto prod meteor
 - [ ] Export Field (sarvar)
 - [x] Address (tejas)
 - [x] User Companies (tejas)
 - [ ] Project (pmd_num) should be integers (tejas)
 - [ ] SpanNames (rahul)
 - [ ] Division (rahul)
-- [ ] Lines need LineNumbers, voltage, division, and type(dist/trans)
+- [ ] Lines need LineNumbers, voltage, division, and type(dist/trans) 
 - [ ] GPS aquasition date. (from GIS data)
 
 ## Other issues and things to check
 - [ ] Missing trimcodes on inspected trees
-- [ ] All database trim codes in database will map to a trimcode in pge_vmd_codes.js
+- [x] All database trim codes in database will map to a trimcode in pge_vmd_codes.js (tejas)
 - [ ] Warnings when states are inconsistant (i.e. READY BUT MISSING NTW )
-- [ ] All projects are integers
+- [x] All projects are integers
 - [ ] All lines map to a line in pge_vmd_codes.js
 - [ ] GPS date needs date GPS was captured f (minor)
 
 ## Final Steps
 - [ ] Make sure all data is migrated in production.
 - [ ] Generate Workorders in production.
-
+- [ ] Check against XSD schema
 
 ## Questions
 - [x] Can I use the P (phone) notification for our "notify customer" flag
  - NO, we'll use a "notify first" alert
 - [ ] What is the "Nest BMP" alert
 - [ ] What is the "Environmental BMP" alert (other env alert?)
+- [ ] If a tree is ready can it still have restrictions on it?  I.e. it is in a riparian zone but has been okayed to work?
+- [ ] bTreeRecsRestriction: null,   //   <bTreeRecsRestriction> [bit]    IF related sLT value is L, then 0, else 1   (Or should it be 1 for a tree and 0 for location)
+- [ ] if a two trees were at the same adderess but inspected by different people should mulitple Locations and WorkPackets get created
+- [ ] What were the two fields you needed?
+
 
 ## Moving forward
 - [ ] Are all trees being correctly added to workorders.

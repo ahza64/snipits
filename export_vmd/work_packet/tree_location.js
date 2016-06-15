@@ -7,6 +7,7 @@ var js2xmlparser = require("js2xmlparser");
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
 var GPS = require("./gps");
 var Restriction = require('./restriction');
+var Alert = require('./alert');
 
 
 /**
@@ -68,8 +69,9 @@ var TREE_LOCATION = { //<TreeLoc>
   ExternalLocID: null,   // <ExternalLocID>     varchar(50)   Unique identifier of location from external source system
   
   bSRA: null,           // <bSRA>              bit           *SRA = 1 if state/federal fire responsibility area, else 0 for LRA
+  sArea: null,           // <sArea>             char(10)      [NULL]
+    
   //omiting thes optional values
-  // sArea: null,           // <sArea>             char(10)      [NULL]
   // sQuadMap: null,        // <sQuadMap>          char(11)      [NULL]
   // sMapType: null,        // <sMapType>          char(1)       [NULL]
   // sMapTypeNum: null,     // <sMapTypeNum>       char(8)       [NULL]
@@ -190,6 +192,7 @@ TreeLocation.prototype.addTree = function(tree){
   tree.set("iTreeSort", this.location.TreeRecs.length);
 
   Restriction.createLocRestrictions(this);  
+  Alert.createLocAlerts(this);
 };
 
 TreeLocation.prototype.getLocationStatus = function(tree){  
@@ -230,8 +233,20 @@ TreeLocation.prototype.clearRestrictions = function() {
 TreeLocation.prototype.addRestriction = function(restrict) {
   this.restrictions = this.restrictions || [];
   this.restrictions.push(restrict);
-  this.location.TreeRecsRestrictions = this.location.TreeRecsRestrictions || [];
-  this.location.TreeRecsRestrictions.push(restrict.getData());
+  this.location.TreeLocRestrictions = this.location.TreeLocRestrictions || [];
+  this.location.TreeLocRestrictions.push(restrict.getData());
+};
+
+TreeLocation.prototype.clearAlerts = function() {
+  delete this.alerts;
+  delete this.location.TreeLocAlerts;
+};
+
+TreeLocation.prototype.addAlert = function(alert) {
+  this.alerts = this.alerts || [];
+  this.alerts.push(alert);
+  this.location.TreeLocAlerts = this.location.TreeLocAlerts || [];
+  this.location.TreeLocAlerts.push(alert.getData());
 };
 
 TreeLocation.prototype.get = function(key) {

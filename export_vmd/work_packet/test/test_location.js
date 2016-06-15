@@ -4,7 +4,10 @@ var test_tree = require("./test_trees");
 var test_util = require("./util");
 
 var locations = {
-  location1: require("./data/location1.json")
+  location1: require("./data/location1.json"),
+  location2: require("./data/location2.json"),
+  location2tree: require("./data/location2tree.json"),    
+  notify_location: require("./data/notify_location.json")
 };
 
 

@@ -1,5 +1,5 @@
 {
-    "locations": ["notify_location", "location1"],
+    "locations": ["location1"],
     "results": {
         "sAcctType": "M",
         "sDivCode": "SA",

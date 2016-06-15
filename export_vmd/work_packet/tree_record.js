@@ -5,11 +5,12 @@ var _ = require("underscore");
 var assert = require('assert');
 var js2xmlparser = require("js2xmlparser");
 var moment = require('moment-timezone');
-// var tzwhere = require('tzwhere');
-// tzwhere.init();
+var tzwhere = require('tzwhere');
+tzwhere.init();
 
 var Restriction = require('./restriction');
 var Alert = require('./alert');
+var JPGImage = require('./jpg_file.js');
 var TreeStates = require('tree-status-codes');
 var GPS = require("./gps");
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
@@ -88,7 +89,7 @@ var TREE_RECORD = {     // <TreeRecs>
   bVELBArea: null,        // <bVELBArea>          bit             [0]
   ExternalTreeID: null,   // <ExternalTreeID>     varchar(50)     Unique identifier of tree from external source system
   sTreeRecsStatus: null,  // <sTreeRecsStatus>    char(10)        [OPEN] or value from list below  
-  
+  nWireType: 0,           // <nWireType>          tinyint         [NULL]
   
   //omiting thes optional values
   // nManHours: null,         // <nManHours>          numeric(5, 2)   [NULL]
@@ -105,7 +106,7 @@ var TREE_RECORD = {     // <TreeRecs>
   // nProximity: null,        // <nProximity>         tinyint         [NULL] or lateral distance in ft. to line
   // dtTGRPriorLast: null,    // <dtTGRPriorLast>     datetime        [NULL]
   // dtTrimPriorLast: null,   // <dtTrimPriorLast>    datetime        [NULL]
-  // nWireType: null,         // <nWireType>          tinyint         [NULL]
+
   // dtVisitedDate: null,     // <dtVisitedDate>      datetime        Inspection Date
   // sLineID2: null,          // <sLineID2>           char(6)         Secondary Line
   // sMWSUserID: null,        // <sMWSUserID>         char(50)        [NULL]
@@ -125,7 +126,7 @@ var TREE_RECORD = {     // <TreeRecs>
  * @param {Object} line - grid/circuit/line object 
  * @param {Object} pmd - PMD project object
  */
-var TreeRecord = function(tree, inspector, line, pmd){
+var TreeRecord = function(tree, inspector, line, pmd, image){
   this.tree = tree;
   this.inspector = inspector;
   this.line = line || {};
@@ -183,13 +184,25 @@ var TreeRecord = function(tree, inspector, line, pmd){
   Restriction.checkNotifications(this);
   
   Alert.createTreeAlerts(this);
+  
+  if(image) {
+    var jpg = new JPGImage(image);
+    this.record.TreeRecsFile = [jpg.getData()];
+  }
 };
 
 TreeRecord.prototype.addRestriction = function(restrict) {
   this.restrictions = this.restrictions || [];
   this.restrictions.push(restrict);
-  this.record.TreeLocRestrictions = this.record.TreeLocRestrictions || [];
-  this.record.TreeLocRestrictions.push(restrict.getData());
+  this.record.TreeRecsRestrictions = this.record.TreeLocRestrictions || [];
+  this.record.TreeRecsRestrictions.push(restrict.getData());
+};
+
+TreeRecord.prototype.addAlert = function(alert) {
+  this.alerts = this.alerts || [];
+  this.alerts.push(alert);
+  this.record.TreeRecsAlerts = this.record.TreeRecsAlerts || [];
+  this.record.TreeRecsAlerts.push(alert.getData());
 };
 
 
@@ -220,7 +233,6 @@ TreeRecord.prototype.getTreeRecordStatus = function() {
   
   var has_issues = this.getNotificationIssue() !== null;
   
-  console.log("getTreeRecordStatus", has_issues, status);
   var record_status;
   if(has_issues) {
     record_status = {
@@ -341,13 +353,12 @@ TreeRecord.prototype.formatDate = function(date) {
       date = moment(date);
     }
   
-
-
     var tree = this.tree;
     var loc = tree.location;
-    // var tz_name = tzwhere.tzNameAt(loc.coordinates[1], loc.coordinates[0]);
-    var tz_name = "America/Los_Angeles";
-    console.log("GOT DATE", tz_name);  
+    var tz_name = tzwhere.tzNameAt(loc.coordinates[1], loc.coordinates[0]);
+    // var tz_name = "America/Los_Angeles";
+    // console.error("Timezone Hard Coded", tz_name);
+
     return date.tz(tz_name).format('MM/DD/YYYY HH:mm');
   } 
   return null;

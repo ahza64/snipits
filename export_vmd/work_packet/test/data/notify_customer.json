@@ -1,6 +1,11 @@
 {
   "data": {
     "status": "300000010000",
+    "city": "San Jose",
+    "county": "Santa Clara",
+    "division" : "Sacramento",
+    "pge_pmd_num" : "134775",    
+    "span_name": "001/111-001/112",
     "location" : {
         "type" : "Point",
         "coordinates" : [ 

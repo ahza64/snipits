@@ -90,9 +90,9 @@ var Alert = function(type, alert_code, user, date) {
   if(alert_code) {
     this.alert = _.extend({}, ALERT);
     this.alert_code = alert_code;
-    this.alert.sRACode = vmd.alert_code[alert_code];
-    this.sUserID = user;
-    this.dtDateAdded = date;    
+    this.alert.sRACode = vmd.alert_codes[alert_code];
+    this.alert.sUserID = user;
+    this.alert.dtDateAdded = date;    
   } else {  
     throw Error("No Alert Code");
   }
@@ -105,7 +105,7 @@ Alert.prototype.getData = function() {
 
 Alert.createTreeAlerts = function(tree) {
   if(tree.statusFlags.environment === "raptor nest") {
-    var alert = new Alert("nest bmp", tree.get('sInsp'), tree.get('dtInspDate'));
+    var alert = new Alert("Rec", "nest bmp", tree.get('sInsp'), tree.get('dtInspDate'));
     tree.addAlert(alert);
   }  
 };
@@ -113,34 +113,36 @@ Alert.createTreeAlerts = function(tree) {
 Alert.createLocAlerts = function(location) {
   location.clearAlerts();
   var alert_codes = new Set();
-  var user, date, tree;
+  var trees = {};  
+  var tree;
+  
   for(var i = 0; i < location.trees.length; i++) {
-    tree = location.trees[i];
-    user = user || tree.get('sInsp');
-    date = date || tree.get('dtInspDate');
-  }
-  for(i = 0; i < location.trees.length; i++) {
     tree = location.trees[i];
     if(tree.statusFlags.dog) {
       alert_codes.add("dog");
+      trees.dog = tree;
     }
     if(tree.statusFlags.irate_customer) {
       alert_codes.add("concerned customer");
+      trees["concerned customer"] = tree;
     }
     if(tree.statusFlags.notify_customer) {
       alert_codes.add("notify first");
+      trees["notify first"] = tree;      
     }
     if(tree.statusFlags.environment === "riparian") {
       alert_codes.add("riparian");
+      trees.riparian = tree;      
     }
     if(tree.statusFlags.environment === "velb") {
       alert_codes.add("velb site");
+      trees["velb site"] = tree;            
     }
   }
 
-
   alert_codes.forEach(function(alert_code){
-    var res = new Alert(alert_code, user, date);
+    tree = trees[alert_code];
+    var res = new Alert("Loc", alert_code, tree.get('sInsp'), tree.get('dtInspDate'));
     location.addAlert(res);    
   });
 };

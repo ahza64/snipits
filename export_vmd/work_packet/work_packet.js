@@ -7,15 +7,14 @@
 var _ = require("underscore");
 
 var js2xmlparser = require("js2xmlparser");
-var vmd_codes = require("dsp_shared/lib/pge_vmd_codes");
 
 var root_node = "TreeWorkPacket";
 var WORK_PACKET = {                            // <TreeWorkPacket>
-    "@": {
-      "xmlns":"http://www.dispatchr.co/vmd",
-      "xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance",
-      "xsi:schemaLocation":"export_vmd/sxd/work-request.xsd"
-    },
+    // "@": {
+    //   "xmlns":"http://www.dispatchr.co/vmd",
+    //   "xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance",
+    //   "xsi:schemaLocation":"export_vmd/sxd/work-request.xsd"
+    // },
     sAcctType: null, //    <sAcctType>         varchar(1)*   [W], R, Y, Z (see list below)
     sRoleType: "PI",                           //    <sRoleType>         varchar(2)*   [PI], TT - TT is no valid as work packets are never created for trimmers
     sDT: "T",                                  //    <sDT>               varchar(1)*   D, [T]//T for transmission, D for distribution
@@ -40,10 +39,12 @@ var WORK_PACKET = {                            // <TreeWorkPacket>
 };                                          // </TreeWorkPacket>
 
 
-function WorkPacket(){
+function WorkPacket(test_email){
   this.packet = _.extend({}, WORK_PACKET); 
   this.packet.TreeLoc = [];
-
+  if(test_email) {
+    this.packet.sEmailID = test_email;
+  }
 }
 
 
@@ -65,6 +66,7 @@ WorkPacket.prototype.addLocation = function(location){
   packet.TreeLoc.push(location.getData());
   
   packet.sAcctType = location.get("sAcctType");
+  
   
   
   location.set("iSSDRoute", 10);

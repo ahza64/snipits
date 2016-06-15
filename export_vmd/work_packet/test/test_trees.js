@@ -9,6 +9,7 @@ var trees = {
   tree1: require("./data/tree1.json"),
   tree2: require("./data/tree2.json"),  
   velb: require("./data/velb.json"),
+  raptor: require("./data/raptor.json"),
   refused: require("./data/refused.json"),
   ntw_tree: require("./data/ntw_needed.json"),
   notify_customer: require("./data/notify_customer.json"),
@@ -38,12 +39,15 @@ function loadTreeRecord(tree) {
   var inspector = _.extend({}, tree_data.pi_user);
   var line = _.extend({}, tree_data.line);
   var pmd = _.extend({}, tree_data.pmd);
-  
+  if(tree_data.image) {
+    var image = _.extend({}, tree_data.image);
+  }
+
   delete tree_data.inspector;
   delete tree_data.line;
   delete tree_data.pmd;
-  
-  return new TreeRecord(tree_data, inspector, line, pmd);   
+  delete tree_data.file;
+  return new TreeRecord(tree_data, inspector, line, pmd, image);   
 }
 
 module.exports = {

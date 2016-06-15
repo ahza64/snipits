@@ -1,5 +1,5 @@
 {
-    "trees": ["tree1"],
+    "trees": ["velb", "tree1"],
     "results": {
         "sDivCode": "SA",
         "sInspComp": "ACR",
@@ -19,6 +19,15 @@
         "dtInspDate": "2016-01-19T21:30:53.394Z",
         "sTreeLocStatus": "OPEN",
         "ExternalLocID":"565426262895a53d2840f739",
-        "sAcctType": "M"        
+        "sAcctType": "M",
+        "TreeLocRestrictions": [
+            {
+                "sRestrictionCode": "VR",
+                "bTreeRecsRestriction": 0,
+                "sUserID": "SDSJ@pge.com : Sterling Smith",
+                "dtDateAdded": "01/19/2016 13:30"              
+            }
+        ]
+        
     }
 }
