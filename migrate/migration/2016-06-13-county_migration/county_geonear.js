@@ -22,23 +22,29 @@ function geoNearCounty(){
     if(!doc.county){
       this.pause();
       var self = this;
-      TREE.geoNear(doc.location, {minDistance: 0, maxDistance: 5000, spherical: true, query:{county:{$exists:true}}, limit:1}, function(err, nearbyTree){
+      TREE.geoNear(doc.location, {minDistance: 0, maxDistance: 17000, spherical: true, query:{county:{$exists:true}}, limit:1}, function(err, nearbyTree){
         if(err){
           console.error(err);
           self.resume();
         }
         else{
-          doc.county = nearbyTree[0].obj.county;
-          TREE.update({_id: doc._id}, {county: doc.county}, function(err){
-            if(err){
-              console.log(err);
-              self.resume();
-            }
-            else{
-              console.log(doc.county, doc._id);
-              self.resume();
-            }
-          });
+          if(nearbyTree[0] === undefined){
+            console.log('------> No Nearby Tree for', doc._id);
+            self.resume();
+          }
+          else{
+            doc.county = nearbyTree[0].obj.county;
+            TREE.update({_id: doc._id}, {county: doc.county}, function(err){
+              if(err){
+                console.log(err);
+                self.resume();
+              }
+              else{
+                console.log(doc.county, doc._id);
+                self.resume();
+              }
+            });
+          }
         }
       });
     }
