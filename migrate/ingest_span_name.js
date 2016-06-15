@@ -69,7 +69,7 @@ function *run(push, unknown, unknown_meteor) {
 		}).exec();
 	}
   
-  for(var s = 0; s < 7; s++){
+  for(var s = 0; s < folder.services.length; s++){
   	var service = folder.services[s];
   	console.log("service", folder.services[s]);
   	var service_path = ["/arcgis/rest/services", service.name, "MapServer"].join("/");
@@ -82,7 +82,7 @@ function *run(push, unknown, unknown_meteor) {
   for (var i = 0; i < trees_without_spans.length; i++) {
   	var tree_without_span = trees_without_spans[i];
   	var circuit_found = false;
-  	for(var g = 0; g < 7; g++){
+  	for(var g = 0; g < folder.services.length; g++){
   		service_path = ["/arcgis/rest/services", folder.services[g].name, "MapServer"].join("/");
   		base_url = [host, service_path].join('/');
   		var service_current = folder.services[g].layers_circuits.layers;
