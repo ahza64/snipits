@@ -58,28 +58,32 @@
 
 
 
-- [ ] Finish: TreeLocAlerts & TreeRecsAlerts
-- [ ] Finish: TreeLocFile & TreeRecsFile
-- [ ] Test:   TreeLocRestrictions & TreeRecsRestrictions
+- [x] Finish: TreeLocAlerts & TreeRecsAlerts
+- [x] Finish: TreeLocFile & TreeRecsFile
+- [x] Test:   TreeLocRestrictions & TreeRecsRestrictions
+- [ ] Document workpacket transform Classes
 - [ ] Testing with more than one tree in a location
  - [ ] Throw errors if inspected by diffrent people
  - [ ] Throw errors if trees are have different locations
  - [ ] ExternalLocID - static workorder, is it okay to have have the same ExternalLocID in locations from different packets?
 - [ ] Checks to makesure all required values exist in exports
 - [ ] Extract layer 
-- [ ] pull trees from the database 
-- [ ] trees that have been inspected
-- [ ] trees that have not been exproted before  
+ - [ ] pull trees from the database 
+ - [ ] trees that have been inspected (ready or no_trim)
+ - [ ] trees that have not been exproted before  
+ - [ ] Inspected in a given date range
 - [ ] Migrations
 - [ ] Need to get data from public fire soruces SRA
 
 ## Data migratons
+- [ ] Publish all deliveries on ArcServer
 - [ ] Put new backup of trans database onto prod meteor
-- [ ] Export Field (sarvar)
+- [x] Export Field (sarvar)
 - [x] Address (tejas)
 - [x] User Companies (tejas)
-- [ ] Project (pmd_num) should be integers (tejas)
-- [ ] SpanNames (rahul)
+- [x] Project (pmd_num) should be integers (xuchang)
+- [x] Bad pmd_num in trees (rahul)
+- [x] SpanNames (rahul)
 - [ ] Division (rahul)
 - [ ] Lines need LineNumbers, voltage, division, and type(dist/trans) 
 - [ ] GPS aquasition date. (from GIS data)
@@ -105,7 +109,6 @@
 - [ ] If a tree is ready can it still have restrictions on it?  I.e. it is in a riparian zone but has been okayed to work?
 - [ ] bTreeRecsRestriction: null,   //   <bTreeRecsRestriction> [bit]    IF related sLT value is L, then 0, else 1   (Or should it be 1 for a tree and 0 for location)
 - [ ] if a two trees were at the same adderess but inspected by different people should mulitple Locations and WorkPackets get created
-- [ ] What were the two fields you needed?
 
 
 ## Moving forward

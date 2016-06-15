@@ -4,9 +4,6 @@
 var _ = require("underscore");
 var assert = require('assert');
 var js2xmlparser = require("js2xmlparser");
-var moment = require('moment-timezone');
-var tzwhere = require('tzwhere');
-tzwhere.init();
 
 var Restriction = require('./restriction');
 var Alert = require('./alert');
@@ -348,18 +345,9 @@ TreeRecord.prototype.formatDate = function(date) {
   // My understanding is that you are capturing time in ZULU time, which means you will have to shift either -7 or -8 hrs depending on local daylight savings time.
   if(date) {
     if(_.isString(date)) {
-      date = moment(new Date.create(date));
-    } else {
-      date = moment(date);
-    }
-  
-    var tree = this.tree;
-    var loc = tree.location;
-    var tz_name = tzwhere.tzNameAt(loc.coordinates[1], loc.coordinates[0]);
-    // var tz_name = "America/Los_Angeles";
-    // console.error("Timezone Hard Coded", tz_name);
-
-    return date.tz(tz_name).format('MM/DD/YYYY HH:mm');
+      date = new Date.create(date);
+    } 
+    return JSON.parse(JSON.stringify(date));
   } 
   return null;
 };
