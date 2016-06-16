@@ -5,7 +5,6 @@ require('sugar');
 const fs = require('fs');
 utils.connect(['meteor']);
 
-
 const TreeModel = require('dsp_shared/database/model/tree');
 const CircuitModel = require('dsp_shared/database/model/circuit');
 const PmdModel = require('dsp_shared/database/model/pmd');
@@ -45,7 +44,7 @@ function *run(params) {
     var aggr = aggregates[i];
     console.log("aggr", i);
     var pmd = _.find(projects, prj => prj.pge_pmd_num === aggr._id);
-    var packet = new WorkPacket("gabe@dispatchr.co");
+    var packet = new WorkPacket();//"gabe@dispatchr.co");
 		var images = yield AssetModel.find({ _id: { $in: aggr.trees.map(tree => tree.image) } }, { data: 1 });
 
     aggr.trees.forEach(tree => {
@@ -73,7 +72,7 @@ function *run(params) {
 
     
     var filename = "vmd_export_"+pmd.pge_pmd_num+"_"+date+".xml";
-    fs.writeFile(filename, packet.toXML())
+    fs.writeFile(filename, packet.toXML());
 
     // var success = yield TreeModel.update({ _id: { $in: aggr.trees.map(tree => tree._id) }},
     //     { $set: { exported: new Date().toISOString() }}, { multi: true });
