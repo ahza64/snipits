@@ -1,4 +1,4 @@
-var migrate_fix = require('./lib/migrate_fix');
+var migrate_fix = require('./migrate_fix');
 var utils = require('dsp_shared/lib/cmd_utils');
 utils.connect(['meteor']);
 
