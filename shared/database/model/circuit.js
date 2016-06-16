@@ -4,6 +4,7 @@ var connection = require('dsp_database/connections')('meteor');
 var geoschema = new mongoose.Schema({
   name:String,
   voltage: String,
+  line_number: String,
   number: String,
   division: String,
   url:String,
