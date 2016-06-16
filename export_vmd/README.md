@@ -73,7 +73,7 @@
 			var pmd = tree.getProject();
 			var image = tree.getImage();
 			var record = new TreeRecord(tree, inspector, line, pmd, image);
-			location.addTree(tree);
+			location.addTree(record);
 		});
 		packet.addLocation(location);		
 	});
@@ -110,8 +110,10 @@
 - [x] Project (pmd_num) should be integers (xuchang)
 - [x] Bad pmd_num in trees (rahul)
 - [x] SpanNames (rahul)
-- [ ] Division (rahul)
-- [ ] Lines need LineNumbers, voltage, division, and type(dist/trans) 
+- [x] PMD (Trees) (rahul)
+- [ ] Lines need LineNumbers, voltage, and type(dist/trans) 
+- [ ] Division (Trees) (rahul)
+- [ ] Region (Trees) (rahul)
 - [ ] GPS aquasition date. (from GIS data)
 
 ## Other issues and things to check
