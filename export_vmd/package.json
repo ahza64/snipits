@@ -22,6 +22,7 @@
   "dependencies": {
     "assert": "^1.4.1",
     "bluebird": "^3.4.0",
+    "co": "^4.6.0",
     "js2xmlparser": "^1.0.0",
     "libxml-xsd": "^0.5.2",
     "moment": "^2.13.0",
