@@ -27,6 +27,7 @@ function addCounty(){
       var lat = coord[0];
       var long = coord[1];
       var self = this;
+      setTimeout(function(){	
       geocode.getAddress(lat, long).then(function(res){
         if(res.county !== undefined){
           TREE.update({_id: doc._id}, {county: res.county, state: res.administrativeLevels.level1short}, function(err){
@@ -45,6 +46,7 @@ function addCounty(){
         console.error("geocode fail", err);
         self.resume();
       });
+     },200);
     }
   });
 
