@@ -23,20 +23,21 @@ function getAddress(x, y){
              getAddress(x, y).then(function(result){
                resolve(result);
              });
-         }, 5000);
+         }, 500);
        } else{
          reject(err);
        }
      }else {
        var address = res[0];
-       address.streetName = address.streetName;
-       if(!address.streetName) {
-         console.error("Could not find streetName", [x, y]);
-         // if(address.county.endsWith("County")) {
-         //   address.county = address.county.substring(0, address.county.length - " County".length);
-         // }
-       // } else {
-       //   console.error("Could not find streetName", [x, y]);
+       address.streetNumber = address.streetNumber;
+       if(address.streetNumber) {
+         console.log('Found streetNumber');
+         //console.error("Could not find streetNumber", [x, y]);
+        //  if(address.county.endsWith("County")) {
+        //    address.county = address.county.substring(0, address.county.length - " County".length);
+        //  }
+       } else {
+         console.error("Could not find streetNumber", [x, y]);
        }
        resolve(address);
      }
