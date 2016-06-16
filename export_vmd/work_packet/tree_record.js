@@ -129,6 +129,11 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   this.line = line || {};
   this.project = pmd;
   
+  
+  if(!inspector) {
+    console.error("No user for tree", tree._id);
+  }
+  
 
   
   this.tree.inspector = inspector.uniq_id +" : "+inspector.first+" "+inspector.last;

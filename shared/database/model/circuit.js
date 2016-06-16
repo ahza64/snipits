@@ -19,4 +19,4 @@ var geoschema = new mongoose.Schema({
 });
 
 
-module.exports = connection.model('GEOTREE', geoschema);
+module.exports = connection.model('geotrees', geoschema);

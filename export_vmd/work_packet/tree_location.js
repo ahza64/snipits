@@ -153,6 +153,10 @@ TreeLocation.prototype.addTree = function(tree){
   this.set("sInsp", tree.get("inspector"));
 
   this.pmd_num = tree.get("pge_pmd_num");
+  if(this.pmd_num.endsWith("BLM")) {
+    this.pmd_num = this.pmd_num.replace("BLM", '');
+  }
+  
 
   var voltage = tree.get("line_voltage");
   var line_type = tree.get("line_type");
@@ -178,7 +182,7 @@ TreeLocation.prototype.addTree = function(tree){
     this.set("sComments", tree.get("comment") || null);
   }
   
-  this.set("dtInspDate", tree.get("pi_complete_time"));
+  this.set("dtInspDate", tree.get("dtInspDate"));
   
   var towers = tree.get("span_name").split("-");
   this.set("sSourceDev", towers[0]);
@@ -206,6 +210,30 @@ TreeLocation.prototype.addTree = function(tree){
   Restriction.createLocRestrictions(this);  
   Alert.createLocAlerts(this);
 };
+
+
+// TreeLocation.prototype.setFromTree = function(key, value) {
+//   var packet = this.packet;
+//
+//   if(!packet[key]) {
+//     packet[key] = value;
+//   } else if(packet[key] !== value) {
+//     throw new Error('Can not add location with different '+key+" : "+packet[key]+" >> "+value);
+//   }
+// };
+//
+// TreeLocation.prototype.validateRequired = function() {
+//   this._testValue("sAcctType", _.values(vmd.account_types));
+//   this._testValue("sDivCode", _.values(vmd.division_codes));
+//   this._testValue("sRoleType", ["PI"]);
+//   this._testValue("sDT", ["T"]);
+//   this._testValue("bReadOnly", [0]);
+//   this._testValue("bObsolete", [0]);
+//
+//   isNumeric(this.packet.iProjID);
+//
+// };
+
 
 TreeLocation.prototype.getLocationStatus = function(tree){  
   var codes = {

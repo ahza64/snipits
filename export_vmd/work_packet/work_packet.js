@@ -60,7 +60,7 @@ WorkPacket.prototype.addLocation = function(location){
   this.setFromLocation("sDivCode", location.get("sDivCode"));
   this.setFromLocation("iProjID", location.getPMDNum());
   
-  this.setFromLocation("sAssignedUser", location.get("sInsp"));
+  this.setFromLocation("sAssignedUser", location.get("sInsp"), true);
   this.setFromLocation("sInspComp", location.get("sInspComp"));
   this.setFromLocation("sAcctType", location.get("sAcctType"));
 
@@ -71,10 +71,10 @@ WorkPacket.prototype.addLocation = function(location){
 };
 
 
-WorkPacket.prototype.setFromLocation = function(key, value) {
+WorkPacket.prototype.setFromLocation = function(key, value, override) {
   var packet = this.packet;
   
-  if(!packet[key]) {
+  if(!packet[key] || override) {
     packet[key] = value;
   } else if(packet[key] !== value) {
     throw new Error('Can not add location with different '+key+" : "+packet[key]+" >> "+value);
@@ -84,7 +84,26 @@ WorkPacket.prototype.setFromLocation = function(key, value) {
 WorkPacket.prototype.validateRequired = function() {
   this._testValue("sAcctType", _.values(vmd.account_types));
   this._testValue("sDivCode", _.values(vmd.division_codes));
+  this._testValue("sRoleType", ["PI"]);
+  this._testValue("sDT", ["T"]);   
+  this._testValue("bReadOnly", [0]);
+  this._testValue("bObsolete", [0]);
+  
+  isNumeric(this.packet.iProjID);
+   
 };
+
+//https://github.com/jquery/jquery/blob/master/src/core.js
+function isNumeric( obj ) {
+
+		return ( _.isNumber(obj) || _.isString(obj) ) &&
+
+		// parseFloat NaNs numeric-cast false positives ("")
+		// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
+		// subtraction forces infinities to NaN
+		!isNaN( obj - parseFloat( obj ) );
+}
+
 
 WorkPacket.prototype._testValue = function(key, acceptible) {
   assert(_.contains(acceptible, this.packet[key]), "Bad "+key+": "+this.packet[key]);
@@ -97,6 +116,7 @@ WorkPacket.prototype._testValue = function(key, acceptible) {
  * @returns {String} xml string 
  */
 WorkPacket.prototype.toXML = function() {
+  this.validateRequired();
   return js2xmlparser(root_node, this.packet);
 };
 
