@@ -23,23 +23,14 @@ function *run(collection, field, push){
 	push = push || false;
 	var circuit_names =
 				[{
-					"old": "LOS_BANOS_O'NEILL_PGP",
-					"new": "LOS_BANOS_O_NEILL_PGP"
-				},
-				{ "old": "BOTTLE_ROCK_TAP_D.W.R.",
-					"new": "BOTTLE_ROCK_TAP_DWR"
-				},
-				{ "old": "DELTA_MTN_GATE_JCT",
-					"new": "DELT_MTN_GATE_JCT"
-				},
-				{ "old": "METCALF_HICKS_1_IDLE",
-					"new": "METCALF_HICKS_1_2_IDLE"
-				},
-				{ "old": "DEL_SWITCHING_YARD_TESLA",
-					"new": "DEL_TA_SWITCHING_YARD_TESLA"
-				},
-				{ "old": "7TH_STANDARD_KERN",
-					"new": "SEVENTH__STANDARD_KERN"
+					"old": "Montaray Pin",
+					"new": "Monterey Pine"
+				},{
+					"old": "Liq Ambar",
+					"new": "Liq Ambar (Sw Gum)"
+				},{
+					"old": "Monterey Pin",
+					"new": "Monterey Pine"
 				}];
 	for (var i = 0; i < circuit_names.length; i++) {
 		var circuit_name = circuit_names[i];
