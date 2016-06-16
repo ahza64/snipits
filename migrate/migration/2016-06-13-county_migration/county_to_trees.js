@@ -27,7 +27,7 @@ function addCounty(){
       var lat = coord[0];
       var long = coord[1];
       var self = this;
-      setTimeout(function(){	
+      setTimeout(function(){
       geocode.getAddress(lat, long).then(function(res){
         if(res.county !== undefined){
           TREE.update({_id: doc._id}, {county: res.county, state: res.administrativeLevels.level1short}, function(err){
@@ -61,9 +61,60 @@ function addCounty(){
   });
 }
 
+function addStreetName(){
+  console.log("ADD COUNTY");
+  TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', streetName: {$exists: false}}).count().then(function(count){
+    console.log("Tree Count", count);
+  });
+
+  var trees = TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', streetName: {$exists: false}}).stream();
+
+  trees.on('data', function(doc){
+    if(!doc.streetName && doc.project === 'transmission_2015'){
+      this.pause();
+      var coord = doc.location.coordinates;
+      var lat = coord[0];
+      var long = coord[1];
+      var self = this;
+      setTimeout(function(){
+        geocode.getAddress(lat, long).then(function(res){
+          self.resume();
+          if(res.streetName !== undefined){
+            TREE.update({_id: doc._id}, {streetName: res.streetName}, function(err){
+              if(err){
+                throw err;
+              }
+              else{
+                console.log(res.streetName, res.administrativeLevels.level1short, doc._id);
+                self.resume();
+              }
+            });
+          } else {
+            self.resume();
+          }
+        }, function (err) {
+          console.error("geocode fail", err);
+          self.resume();
+        });
+      }, 500);
+    }
+  });
+
+trees.on('error', function (err) {
+// handle err
+console.error(err);
+});
+
+trees.on('close', function () {
+// all done
+console.log("ALL DONE");
+});
+}
+
 //baker module
 if (require.main === module) {
-  var baker = require("dsp_shared/lib/baker");
-  baker.command(addCounty);
-  baker.run();
+var baker = require("dsp_shared/lib/baker");
+baker.command(addCounty);
+baker.command(addStreetName);
+baker.run();
 }
