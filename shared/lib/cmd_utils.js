@@ -22,15 +22,15 @@ function *waitForConnections(){
 function connect(connection_names) {
   if(!connections) {
     if(!connection_names) {
-      connection_names = ['dispatchr', 'meteor'];
+      connection_names = ['trans', 'meteor'];
     }      
     connections = {};
     for(var i = 0; i < connection_names.length; i++) {
+
       var name = connection_names[i];
       if(!connections[name]) {
-          connections[name] = require('dsp_database/database')(config[name]);
-      }
-      return connections[name];
+        connections[name] = require('dsp_database/database')(config[name]);
+      }      
     }
   }
 } 
