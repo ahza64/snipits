@@ -4,7 +4,7 @@ utils.connect(['meteor']);
 
 function *run(push){
 	push = push || false;
-	yield fix_circuit( 'line','name',  push);
+	yield fix_circuit( 'tree','species', push);
 }
 
 if (require.main === module) {

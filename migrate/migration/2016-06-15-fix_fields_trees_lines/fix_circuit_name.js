@@ -15,29 +15,31 @@ var model_name ={
 	'tree': TreeV3
 };
 
-var name_field ={
-	'line': 'name',
-	'tree': 'circuit_name'
-};
-
-function *run(collection, push){
+function *run(collection, field, push){
+	var name_field ={
+		'line': 'name',
+		'tree': field
+	};
 	push = push || false;
-	var circuit_names = 
-				[{	
+	var circuit_names =
+				[{
 					"old": "LOS_BANOS_O'NEILL_PGP",
 					"new": "LOS_BANOS_O_NEILL_PGP"
 				},
 				{ "old": "BOTTLE_ROCK_TAP_D.W.R.",
 					"new": "BOTTLE_ROCK_TAP_DWR"
 				},
-				{ "old": "DELTA_MTN_GATE_JCT", 
+				{ "old": "DELTA_MTN_GATE_JCT",
 					"new": "DELT_MTN_GATE_JCT"
 				},
 				{ "old": "METCALF_HICKS_1_IDLE",
 					"new": "METCALF_HICKS_1_2_IDLE"
 				},
+				{ "old": "DEL_SWITCHING_YARD_TESLA",
+					"new": "DEL_TA_SWITCHING_YARD_TESLA"
+				},
 				{ "old": "7TH_STANDARD_KERN",
-					"new": "SEVENTH_STANDARD_KERN"
+					"new": "SEVENTH__STANDARD_KERN"
 				}];
 	for (var i = 0; i < circuit_names.length; i++) {
 		var circuit_name = circuit_names[i];
@@ -54,7 +56,7 @@ function *run(collection, push){
 			none_found = true;
 		}
 		_.each(trees, tree => console.log(tree, "will be updated") );
-		
+
 		if(push && !none_found){
 			console.log('updating ', collection, " oldvlaue:  ", circuit_name.old, " new value: ", circuit_name.new );
 			var set = {};
@@ -68,6 +70,6 @@ module.exports = run;
 
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');
-  utils.bakerGen(run, {default:true});  
-  baker.run();  
+  utils.bakerGen(run, {default:true});
+  baker.run();
 }
