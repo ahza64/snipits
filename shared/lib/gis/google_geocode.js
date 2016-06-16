@@ -31,7 +31,6 @@ function getAddress(x, y){
        var address = res[0];
        address.streetNumber = address.streetNumber;
        if(address.streetNumber) {
-         console.log('Found streetNumber');
          //console.error("Could not find streetNumber", [x, y]);
         //  if(address.county.endsWith("County")) {
         //    address.county = address.county.substring(0, address.county.length - " County".length);
