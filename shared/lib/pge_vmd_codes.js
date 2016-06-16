@@ -427,7 +427,8 @@ var alert_codes = {
 var inspection_companies = {
   "ACRT":                   "ACR",	       
   "Brenton VMS":            "BVM",	       
-  "Davey Tree":             "DAV",	       
+  "Davey Tree":             "DAV",
+  "DRG":                    "DAV",  
   "High Country Forestry":  "HCF",	       
   "Martinez Utility":       "MAR",	       
   "Nelson Tree":            "NEL",	       
@@ -438,8 +439,11 @@ var inspection_companies = {
   "Total Quality Mgmt":     "TQM",	       
   "Trees Inc.":             "TRI",	       
   "Utility Tree Service":   "UTS",	       
-  "Western ECI":            "WEC",	       
-  "Wright Tree":            "WRT"
+  "Western ECI":            "WEC",
+  "WECI":                   "WEC",  
+  "Wright Tree":            "WRT",
+  "Windy Tree":             "WIN",
+  "Mountain F Enterprises": "MFE"
 };
 
 var tree_types = {
@@ -462,11 +466,13 @@ var tree_types = {
   "Avocado":             "AVOC",	
   "Bamboo":              "BAMB",	
   "Bay, Calif.":         "BAY",	
+  "Bay":                 "BAY",	  
   "Beech":               "BEEC",	
   "Birch":               "BIRC",	
   "Bottlebrush":         "BOTT",	
   "Brisbane Box":        "BRIS",	
   "Brush (misc)":        "BRUS",	
+  "Brush":               "BRUS",	  
   "Buckeye":             "BUCK",	
   "Camphor":             "CAMP",	
   "Carob":               "CARO",	
@@ -545,6 +551,7 @@ var tree_types = {
   "Norfolk Island Pine": "NORF",	
   "Oak":                 "OAK",	
   "Coast Live Oak":      "OAKC",	
+  "Coastal live oak":    "OAKC",	  
   "Blue Oak":            "OAKD",	
   "Blue oak":            "OAKD",	  
   "English Oak":         "OAKE",	
@@ -552,6 +559,7 @@ var tree_types = {
   "Holly Oak":           "OAKH",	
   "Interior Live Oak":   "OAKI",	
   "Black Oak":           "OAKK",	
+  "Black oak":           "OAKK",	  
   "Live Oak":            "OAKL",	
   "Oracle Oak":          "OAKM",	
   "Pin Oak":             "OAKP",	

@@ -35,8 +35,12 @@ function *run(params) {
   query.span_name = { $ne: null };
   query.city = { $ne: null, $exists: true };
   var cufs = yield CufModel.find({ work_type: 'tree_inspect' });
-  var aggregates = yield TreeModel.aggregate([{ $match: query }, { $group: { _id: { pge_pmd_num: '$pge_pmd_num', pi_user_id: '$pi_user_id' }, trees: { $push: "$$ROOT" }}}]).exec();
-  var circuits = yield CircuitModel.find()
+  var aggregates = yield TreeModel.aggregate([{ $match: query }, 
+    { $group: { 
+      _id: { pge_pmd_num: '$pge_pmd_num', pi_user_id: '$pi_user_id' }, 
+      trees: { $push: "$$ROOT" }
+    }}]).exec();
+  var circuits = yield CircuitModel.find();
   var projects = yield PmdModel.find();
   var workorders = yield WorkorderModel.find({}, { uniq_id: 1, name: 1 });
 

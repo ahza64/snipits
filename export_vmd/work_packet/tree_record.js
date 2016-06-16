@@ -129,25 +129,14 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   this.line = line || {};
   this.project = pmd;
   
-  
-  if(!inspector) {
-    console.error("No user for tree", tree._id);
-  }
-  
-
-  
+  this.statusFlags = TreeStates.fetchStatusFlags(tree.status);
   this.tree.inspector = inspector.uniq_id +" : "+inspector.first+" "+inspector.last;
   this.tree.inspector_company = inspector.company;
   this.tree.line_voltage = this.line.voltage;
   this.tree.line_number = this.line.number;
   this.tree.line_type = this.line.type;
-  
-  
-  this.statusFlags = TreeStates.fetchStatusFlags(tree.status);  
-  
+    
   this.record = _.extend({}, TREE_RECORD);
-  
-  
   this.record.sTreeCode = vmd.tree_types[tree.species];
   this.record.sNotification = this.getNotificationType();
   this.record.nDBH = tree.dbh;
@@ -174,24 +163,32 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
     this.record.sAcctType = vmd.account_types.Maintenance;
   }
 
-  if(tree.location) {
-    var gps = new GPS("TreeRec", tree.location.coordinates[1], tree.location.coordinates[0]);
-    this.record[gps.root_node] = gps.getData();
-  }
+  var gps = new GPS("TreeRec", tree.location.coordinates[1], tree.location.coordinates[0]);
+  this.record[gps.root_node] = gps.getData();
   
   this.record.sCrewType = vmd.crew_type[this.statusFlags.vehicle_type||"climb"];  
-  
-  
   Restriction.createTreeRestricitons(this);
-  Restriction.checkNotifications(this);
-  
+  Restriction.checkNotifications(this);  
   Alert.createTreeAlerts(this);
   
   if(image) {
     var jpg = new JPGImage(image);
     this.record.TreeRecsFile = [jpg.getData()];
   }
+  console.log("ADDING TREE>>>>>", this.tree._id);
+  this.validateRequired();
 };
+
+TreeRecord.prototype.validateRequired = function() {
+  
+  this._testValue("sInspComp", _.values(vmd.inspection_companies));
+};
+
+TreeRecord.prototype._testValue = function(key, acceptible) {
+  console.log("CHECKING THESTSSSSS", key, this.get(key), acceptible);
+  assert(_.contains(acceptible, this.get(key)), "Bad "+key+": "+this.get(key));
+};
+
 
 TreeRecord.prototype.addRestriction = function(restrict) {
   this.restrictions = this.restrictions || [];

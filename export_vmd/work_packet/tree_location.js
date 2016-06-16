@@ -8,7 +8,7 @@ var vmd = require("dsp_shared/lib/pge_vmd_codes");
 var GPS = require("./gps");
 var Restriction = require('./restriction');
 var Alert = require('./alert');
-
+var assert = require('assert');
 
 /*
 * 
@@ -157,7 +157,6 @@ TreeLocation.prototype.addTree = function(tree){
     this.pmd_num = this.pmd_num.replace("BLM", '');
   }
   
-
   var voltage = tree.get("line_voltage");
   var line_type = tree.get("line_type");
   var line_number = tree.get("line_number");
@@ -200,39 +199,36 @@ TreeLocation.prototype.addTree = function(tree){
   }
   
 
-  this.trees.push(tree);
-  
+  this.trees.push(tree);  
   this.location.TreeRecs = this.location.TreeRecs || [];  
   this.location.TreeRecs.push(tree.getData());
-
   tree.set("iTreeSort", this.location.TreeRecs.length);
 
   Restriction.createLocRestrictions(this);  
   Alert.createLocAlerts(this);
+  
+  this.validateRequired();
 };
 
 
-// TreeLocation.prototype.setFromTree = function(key, value) {
-//   var packet = this.packet;
-//
-//   if(!packet[key]) {
-//     packet[key] = value;
-//   } else if(packet[key] !== value) {
-//     throw new Error('Can not add location with different '+key+" : "+packet[key]+" >> "+value);
-//   }
-// };
-//
-// TreeLocation.prototype.validateRequired = function() {
-//   this._testValue("sAcctType", _.values(vmd.account_types));
-//   this._testValue("sDivCode", _.values(vmd.division_codes));
-//   this._testValue("sRoleType", ["PI"]);
-//   this._testValue("sDT", ["T"]);
-//   this._testValue("bReadOnly", [0]);
-//   this._testValue("bObsolete", [0]);
-//
-//   isNumeric(this.packet.iProjID);
-//
-// };
+TreeLocation.prototype.setFromTree = function(key, value) {
+  var packet = this.packet;
+
+  if(!packet[key]) {
+    packet[key] = value;
+  } else if(packet[key] !== value) {
+    throw new Error('Can not add location with different '+key+" : "+packet[key]+" >> "+value);
+  }
+};
+
+TreeLocation.prototype.validateRequired = function() {
+  this._testValue("sAcctType", _.values(vmd.account_types));
+};
+
+TreeLocation.prototype._testValue = function(key, acceptible) {
+  assert(_.contains(acceptible, this.get(key)), "Bad "+key+": "+this.get(key));
+};
+
 
 
 TreeLocation.prototype.getLocationStatus = function(tree){  
