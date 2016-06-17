@@ -158,6 +158,7 @@ function *processLayer(base_url, collection, layer, push) {
     console.log(">>>>>>>>>>>>>>>>>");
     folder.services[s].layers_circuits = service;
   }
+
   for(var g = 0; g < folder.services.length; g++){
     service_path = ["arcgis/rest/services", folder.services[g].name, "MapServer"].join("/");
     base_url = [host, service_path].join('/');
