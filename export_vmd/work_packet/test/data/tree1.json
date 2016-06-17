@@ -69,7 +69,7 @@
     "line":{
         "_id" : "569a7f6c43962bfc3fe5a25f",
         "name" : "BRIGHTON_DAVIS",
-        "number": "10021",
+        "line_number": "10021",
         "division": "Sacramento",
         "type": "transmission",
         "voltage": "70",

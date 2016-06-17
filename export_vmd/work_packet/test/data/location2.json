@@ -11,7 +11,7 @@
         "sSourceDev": "000/005",
         "sPoleNum": "000/005",
         "sPoleNum2": "000/006",
-        "sTreeLocStatus": "OPEN",
+        "sTreeLocStatus": "CMP_WK_RE",
         "sAcctType": "M",
         "TreeLocRestrictions": [
             {

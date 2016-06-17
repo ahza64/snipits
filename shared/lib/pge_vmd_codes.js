@@ -424,27 +424,119 @@ var alert_codes = {
 	"concurrent patrol-sys":    "YS",
 };
 
-var inspection_companies = {
-  "ACRT":                   "ACR",	       
-  "Brenton VMS":            "BVM",	       
-  "Davey Tree":             "DAV",
-  "DRG":                    "DAV",  
-  "High Country Forestry":  "HCF",	       
-  "Martinez Utility":       "MAR",	       
-  "Nelson Tree":            "NEL",	       
-  "Newcomb Tree Svc":       "NTS",	       
-  "P.G.& E.":               "PGE",	       
-  "Provco":                 "PRO",	       
-  "Craig Thurber":          "THU",	       
-  "Total Quality Mgmt":     "TQM",	       
-  "Trees Inc.":             "TRI",	       
-  "Utility Tree Service":   "UTS",	       
-  "Western ECI":            "WEC",
-  "WECI":                   "WEC",  
-  "Wright Tree":            "WRT",
-  "Windy Tree":             "WIN",
-  "Mountain F Enterprises": "MFE"
+
+// Company Name                      sInspComp      bPI            bTrim          bTrans
+var company_codes = {
+  "ACRT":                           "ACR", //      1              0              0
+  "ArborMetrics":                   "AMS", //      1              0              NULL
+  "Utility Tree (ASP)":             "ASP", //      0              1              1
+  "Asplundh (T&M)":                 "ASX", //      0              0              0
+  "Big Hill":                       "BHI", //      0              0              0
+  "Blue Tent":                      "BLT", //      1              1              1
+  "Brenton VMS":                    "BRE", //      1              0              1
+  "Bunyan Bros":                    "BUN", //      0              0              0
+  "Paul Bunyan":                    "BUY", //      0              0              0
+  "CC Land Clearing":               "CCL", //      0              0              0
+  "CD Trees":                       "CDT", //      0              0              0
+  "Calif. Forestry":                "CFV", //      0              0              0
+  "Chem Weed":                      "CHW", //      0              1              1
+  "CN Utility":                     "CNU", //      1              0              NULL
+  "California Reforestation":       "CRF", //      1              1              1
+  "Calif. Ref.":                    "CRI", //      0              0              0
+  "Central Sierra Pest":            "CSP", //      0              1              1
+  "Craig Thurber":                  "CTH", //      1              0              1
+  "CD Trees Inc.":                  "CTI", //      0              0              0
+  "Davey Tree":                     "DAV", //      0              1              1  
+  "Davey Tree (T&M)(dup)":          "DAX", //      0              0              0
+  "D & L Enterprises":              "DLE", //      1              0              0
+  "Davey RG":                       "DRG", //      1              0              0
+  "CamLand":                        "DT1", //      0              0              0
+  "Davey Tree (T&M)":               "DVX", //      0              0              0
+  "ENRESTEK":                       "ERT", //      1              1              1
+  "Evans":                          "EVA", //      0              0              0
+  "Family Tree":                    "FTS", //      0              1              1
+  "Godon":                          "GOD", //      0              0              0
+  "Gosnell Tree":                   "GOS", //      0              0              0
+  "Green":                          "GRE", //      0              0              0
+  "GRT":                            "GTT", //      0              0              0
+  "High Country Forestry":          "HCF", //      1              0              NULL
+  "Hill Top":                       "HIL", //      0              0              0
+  "Incline":                        "INC", //      0              0              0
+  "K.W.Emerson":                    "KWE", //      0              0              0
+  "Loggers Unl.":                   "LOG", //      0              0              0
+  "Loggers Unlimited":              "LUN", //      0              1              0
+  "Martinez Utility":               "MAR", //      1              0              0
+  "Mc Colloch":                     "MCC", //      0              0              0
+  "Meadowlark":                     "MEA", //      0              0              0
+  "Mountain F. Enterprises":        "MFE", //      0              1              1
+  "Mtn Firewood":                   "MFW", //      0              0              0
+  "Mowbray":                        "MOW", //      0              1              0
+  "Mt. Firewood":                   "MTF", //      0              0              0
+  "N/A":                            "N/A", //      1              1              1
+  "Nelson Tree":                    "NEL", //      0              0              0
+  "North State Forestry":           "NSF", //      1              1              1
+  "NW Forestry":                    "NWF", //      0              0              0
+  "Orient Consulting":              "OCJ", //      1              0              0
+  "Osmose":                         "OSM", //      0              0              0
+  "Other":                          "OTH", //      0              0              0
+  "Outback Comm.":                  "OUT", //      0              0              0
+  "P.G.& E.":                       "PGE", //      1              0              0
+  "Pest Mgmt Tech":                 "PMT", //      0              1              1
+  "Precision":                      "PRE", //      0              0              0
+  "Provco":                         "PRO", //      0              0              0
+  "Provco (T&M)":                   "PRX", //      0              0              0
+  "Quality Cl.":                    "QEC", //      0              0              0
+  "Quality Ent.":                   "QEI", //      0              0              0
+  "R. Brown":                       "RBR", //      0              0              0
+  "Renee Godon":                    "REN", //      0              0              0
+  "Robinson Timber":                "RTC", //      0              0              0
+  "Redding Tree Growers":           "RTG", //      0              1              1
+  "Sound Forest":                   "SND", //      0              0              0
+  "Scott Timber Contracting":       "STC", //      0              1              0
+  "Skyline Tree":                   "STS", //      0              1              1
+  "Trees Inc.":                     "TAS", //      0              1              1
+  "TBD":                            "TBD", //      1              1              0
+  "Tree Elements":                  "TEL", //      0              0              0
+  "Total Foresty":                  "TOF", //      0              0              0
+  "Total Quality Mgmt":             "TQM", //      0              0              0
+  "Trees Inc.  (old)":              "TRI", //      0              0              0
+  "Trees Inc.  (T&M)":              "TRX", //      0              0              0
+  "Tree Service Unlimited":         "TSU", //      0              1              0
+  "Utility Tree (UAS)":             "UAS", //      0              1              1
+  "UPT":                            "UPT", //      0              0              0
+  "Utility Tree  (old)":            "UTS", //      0              0              0
+  "Utility Tree (T&M)":             "UTX", //      0              0              0
+  "Webb":                           "WEB", //      0              0              0
+  "WECI":                           "WEC", //      1              0              1
+  "Windy City":                     "WIC", //      0              0              0
+  "Wright Tree":                    "WRT", //      0              1              1
+  "Windy Tree":                     "WTS", //      0              1              1
+  "Windy Tree (dup)":               "WTX", //      0              0              0
+  "Wild West Reforesters":          "WWR"  //      0              1              1
 };
+
+// var inspection_companies = {
+//   "ACRT":                   "ACR",
+//   "Brenton VMS":            "BVM",
+//   "Davey Tree":             "DAV",
+//   "DRG":                    "DAV",
+//   "High Country Forestry":  "HCF",
+//   "Martinez Utility":       "MAR",
+//   "Nelson Tree":            "NEL",
+//   "Newcomb Tree Svc":       "NTS",
+//   "P.G.& E.":               "PGE",
+//   "Provco":                 "PRO",
+//   "Craig Thurber":          "THU",
+//   "Total Quality Mgmt":     "TQM",
+//   "Trees Inc.":             "TRI",
+//   "Utility Tree Service":   "UTS",
+//   "Western ECI":            "WEC",
+//   "WECI":                   "WEC",
+//   "Wright Tree":            "WRT",
+//   "Windy Tree":             "WIN",
+//   "Mountain F Enterprises": "MFE"
+// };
+
 
 var tree_types = {
   "Acacia":              "ACA",	
@@ -530,6 +622,7 @@ var tree_types = {
   "Laurel, Grecian":     "LAUR",	
   "Linden":              "LIND",	
   "Liq Ambar (Sw Gum)":  "LIQ",	
+  "Liq Ambar":           "LIQ",	
   "Honey Locust":        "LOCH",	
   "Locust, Black":       "LOCU",	
   "Loquat":              "LOQ",	
@@ -5199,7 +5292,7 @@ module.exports = {
   tree_record_status: tree_record_status,
   notification_codes: notification_codes,
   alert_codes: alert_codes,
-  inspection_companies: inspection_companies,
+  company_codes: company_codes,
   tree_types: tree_types,
   city_codes: city_codes,
   county_codes: county_codes,

@@ -59,6 +59,7 @@
 ### WorkPacket
 
 ```
+
 	var WorkPacket = require("./workpacket/work_packet");
 	var TreeLocation = require("./workpacket/tree_location");
 	var TreeRecord = require("./workpacket/tree_record");
@@ -78,6 +79,7 @@
 		packet.addLocation(location);		
 	});
 		
+
 ```
 
 
@@ -129,16 +131,28 @@
 - [ ] Generate Workorders in production.
 - [ ] Check against XSD schema
 
-## Questions
+
+
+
+## Questions (Mike Morely)
 - [x] Can I use the P (phone) notification for our "notify customer" flag
  - NO, we'll use a "notify first" alert
-- [ ] What is the "Nest BMP" alert
-- [ ] What is the "Environmental BMP" alert (other env alert?)
-- [ ] If a tree is ready can it still have restrictions on it?  I.e. it is in a riparian zone but has been okayed to work?
-- [ ] bTreeRecsRestriction: null,   //   <bTreeRecsRestriction> [bit]    IF related sLT value is L, then 0, else 1   (Or should it be 1 for a tree and 0 for location)
-- [ ] if a two trees were at the same adderess but inspected by different people should mulitple Locations and WorkPackets get created
-- [ ] Does the work packet Assigned user have to be the same as the inspect users of threes and locations?
-
+- [x] What is BMP?
+ - “Best Management Practice” – Which refers to a published procedure that the CUF must follow.) 
+- [x] What is the "Nest BMP" alert (I was thinking I could map our "raptor nest" flag to this)  
+ - It indicates a next is in the tree.  Josh, can you clarify when users would select “Nest BMP” vs. “Eagle” restriction?  It seems like a raptor issue should map to an Eagle restriction AND a Nest BMP alert.
+- [x] What is the "Environmental BMP" alert (Our system has an "other" environmental flag I was thinking of mapping to this?) 
+ - Seems appropriate to me, but Josh should weigh in.
+- [x] If a tree is ready can it still have restrictions on it?  I.e. it is in a riparian zone but has been okayed to work? 
+ - No.  The record cannot be OK to work if there are any restrictions.   When the restriction is removed, then a corresponding alert code is added to the record (RA – Riparian Area) and the sNotification is changed to O.    This way the tree crews are alerted to the fact that it’s in a riparian area and they need to follow certain procedures.
+- [x] bTreeRecsRestriction notes says "IF related sLT value is L, then 0, else 1"  On restrictions that the LT value is (B)oth should it be 1 or should it be 1 if it is in a TreeRec?  
+ - I’m not 100% certain how the developer used this, so for now let’s go with using a value of 1 only if it is being used in a tree record restriction.   If it’s being used with a location restriction, use 0.
+- [x] If a two trees were at the same address but inspected by different people should multiple Locations and WorkPackets get created?  
+ - I would say yes.
+- [x] Does the work packet Assigned user have to be the same as the inspect users of threes and locations?
+ - Yes implied by previous answer
+ 
+ 
 ## Moving forward
 - [ ] Are all trees being correctly added to workorders.
 

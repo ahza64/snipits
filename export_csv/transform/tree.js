@@ -6,7 +6,7 @@ var assert = require('assert');
 const TreeStates = require('tree-status-codes');
 var ROLE_PRIVATE_INSPECTOR = "PI";
 
-var ACRT_INSPECT_COMPANY = vmd.inspection_companies.ACRT;
+var ACRT_INSPECT_COMPANY = vmd.company_codes.ACRT;
 
 assert(ACRT_INSPECT_COMPANY);
 

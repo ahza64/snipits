@@ -104,7 +104,8 @@ Alert.prototype.getData = function() {
 
 
 Alert.createTreeAlerts = function(tree) {
-  if(tree.statusFlags.environment === "raptor nest") {
+  if(tree.statusFlags.environment === "raptor nest") {    
+    //might want to use eagle
     var alert = new Alert("Rec", "nest bmp", tree.get('sInsp'), tree.get('dtInspDate'));
     tree.addAlert(alert);
   }  
@@ -137,6 +138,10 @@ Alert.createLocAlerts = function(location) {
     if(tree.statusFlags.environment === "velb") {
       alert_codes.add("velb site");
       trees["velb site"] = tree;            
+    }
+    if(tree.statusFlags.environment === "other") {
+      alert_codes.add("velb site");
+      trees["environmental bmp"] = tree;            
     }
   }
 

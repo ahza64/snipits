@@ -17,7 +17,7 @@
         "sPoleNum2": "000/006",
         "sPriVolt": "70",
         "dtInspDate": "2016-01-19T21:30:53.394Z",
-        "sTreeLocStatus": "OPEN",
+        "sTreeLocStatus": "CMP_WK_RE",
         "ExternalLocID":"565426262895a53d2840f739",
         "sAcctType": "M"        
     }

@@ -6,6 +6,8 @@
     "span_name" : "000/005-000/006",    
     "city" : "West Sacramento",
     "county": "Sacramento",
+    "division": "Sacramento",    
+    "pge_pmd_num": "135399",
     "streetName" : "Power Inn Road",
     "streetNumber" : "3925",
     "circuit_name" : "BRIGHTON_DAVIS",    
@@ -16,10 +18,15 @@
             38.6073309363329
         ]
     },
+    "line": {
+      "voltage": "230",
+      "line_number": "12345"  
+    },    
     "pi_user": {
       "uniq_id": "NOEMAIL",
       "first": "NO",
-      "last": "ONE"
+      "last": "ONE",
+      "company": "WECI"
     },
     "pmd": {
         "_id" : "56aa0ff8398cf249f959c8c1",

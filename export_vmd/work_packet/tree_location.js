@@ -144,12 +144,12 @@ TreeLocation.prototype.toXML = function() {
  * @param {TreeRecord} tree the tree record to add to this location
  */
 TreeLocation.prototype.addTree = function(tree){
-  
+  this.trees.push(tree);
   //TODO: get and check location properties from trees.
   
   var div_code = vmd.division_codes[tree.get("division")];
   this.set("sDivCode", div_code);
-  this.set("sInspComp", vmd.inspection_companies[tree.get("inspector_company")]);
+  this.set("sInspComp", vmd.company_codes[tree.get("inspector_company")]);
   this.set("sInsp", tree.get("inspector"));
 
   this.pmd_num = tree.get("pge_pmd_num");
@@ -162,6 +162,8 @@ TreeLocation.prototype.addTree = function(tree){
   var line_number = tree.get("line_number");
 
   this.set("sPriVolt", voltage);
+  
+  assert(tree.get("line_type"), "Tree needs to have line type");
   if(line_type === "transmission") {  
     var circuit = vmd.transmison_circuit_codes[div_code][voltage];
     this.set("sCircuit", circuit);    
@@ -170,7 +172,7 @@ TreeLocation.prototype.addTree = function(tree){
     this.set("sCircuit", line_number);    
   }
     
-  this.set("sStreetNum", tree.get("streetNumber"));
+  this.set("sStreetNum", tree.get("streetNumber") || 0);
   this.set("sStreet", tree.get("streetName"));    
   this.set("sCity", tree.get("city").substring(0, 11));    
   this.set("iCityID", vmd.city_codes[tree.get("city").toUpperCase()]);
@@ -189,7 +191,7 @@ TreeLocation.prototype.addTree = function(tree){
   this.set("sPoleNum2", towers[1]);
   
   this.set("ExternalLocID", tree.get("workorder_id"));
-  this.set("sTreeLocStatus", this.getLocationStatus(tree));
+
   this.set("sAcctType", tree.get("sAcctType"));
   
   var gps_location = tree.getLocation();
@@ -199,13 +201,13 @@ TreeLocation.prototype.addTree = function(tree){
   }
   
 
-  this.trees.push(tree);  
   this.location.TreeRecs = this.location.TreeRecs || [];  
   this.location.TreeRecs.push(tree.getData());
   tree.set("iTreeSort", this.location.TreeRecs.length);
 
   Restriction.createLocRestrictions(this);  
   Alert.createLocAlerts(this);
+  this.set("sTreeLocStatus", this.getLocationStatus(tree));  
   
   this.validateRequired();
 };
@@ -223,6 +225,10 @@ TreeLocation.prototype.setFromTree = function(key, value) {
 
 TreeLocation.prototype.validateRequired = function() {
   this._testValue("sAcctType", _.values(vmd.account_types));
+  this._testValue("sDivCode", _.values(vmd.division_codes));
+  this._testValue("sCircuit", _.values(vmd.transmison_circuit_codes[this.get("sDivCode")]));
+  assert(this.get("sLineID"), "Location needs to have line_id");
+  
 };
 
 TreeLocation.prototype._testValue = function(key, acceptible) {
@@ -231,46 +237,73 @@ TreeLocation.prototype._testValue = function(key, acceptible) {
 
 
 
-TreeLocation.prototype.getLocationStatus = function(tree){  
+TreeLocation.prototype.getLocationStatus = function(){  
+  
+  
   var codes = {
     restrictions: {
+      ready: "work_no_restrict",  
+      not_ready: "work_with_restrict",
       no_trim: "no_work_with_restrict",
-      ready: "work_with_restrict" 
+      left: "open",
+      worked: "work_complete"
     },
     no_restrictions: {
+      ready: "work_no_restrict",  
+      not_ready: "open",
       no_trim: "no_work_no_restrict",
-      ready: "work_no_restrict"       
+      left: "open",
+      worked: "work_complete"
     }
   };
 
-  var restrict;
-  var status = tree.getStatus();
-  if(tree.hasRestrictions()){
-    restrict = "restrictions";
-  } else {
-    restrict = "no_restrictions";
-  }
-  var code = codes[restrict][status];
-  if(!code) {
-    if(status === "worked") {
-      code = "work_complete";
+  var code_priority = { 
+    "work_complete": 1,
+    "open": 2, 
+    "no_work_no_restrict": 3,
+    "no_work_with_restrict": 4,
+    "work_no_restrict": 5,
+    "work_with_restrict": 6,
+  };
+
+  var final;
+  for(var i = 0; i < this.trees.length; i++) {
+    var tree = this.trees[i];
+    var restrict;
+    var status = tree.getStatus();
+    if(tree.hasRestrictions()){
+      restrict = "restrictions";
     } else {
-      code = "open";
-    }      
+      restrict = "no_restrictions";
+    }
+    
+    
+    var code = codes[restrict][status];
+    
+    if(!final || code_priority[code] > code_priority[final]) {
+      final = code;
+    }
   }
-  return vmd.location_status[code];  
+  
+  delete this.location.TreeLocRestrictions;
+  if(final === "no_work_with_restrict" || final === "work_with_restrict") {
+    assert(this.restrictions.length > 0, "with_restrict status code and no restrictions");
+    this.location.TreeLocRestrictions = [];
+    for(i = 0; i < this.restrictions.length; i++) {
+      this.location.TreeLocRestrictions.push(this.restrictions[i].getData());
+    }    
+  }
+  
+  return vmd.location_status[final];  
 };
 
 TreeLocation.prototype.clearRestrictions = function() {
   delete this.restrictions;
-  delete this.location.TreeLocRestrictions;
 };
 
 TreeLocation.prototype.addRestriction = function(restrict) {
   this.restrictions = this.restrictions || [];
   this.restrictions.push(restrict);
-  this.location.TreeLocRestrictions = this.location.TreeLocRestrictions || [];
-  this.location.TreeLocRestrictions.push(restrict.getData());
 };
 
 TreeLocation.prototype.clearAlerts = function() {

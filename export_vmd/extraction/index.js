@@ -15,6 +15,8 @@ const WorkPacket = require('../work_packet/work_packet');
 const TreeLocation = require("../work_packet/tree_location");
 const TreeRecord = require("../work_packet/tree_record");
 
+const export_dir = "vmd_export";
+
 function *run(params) {
   var startDate = Date.create(params.startDate);
   var endDate = Date.create(params.endDate);
@@ -49,7 +51,7 @@ function *run(params) {
     console.log("aggr", i);
 
     var pmd = _.find(projects, prj => prj.pge_pmd_num === aggr._id.pge_pmd_num);
-    var packet = new WorkPacket();
+    var packet = new WorkPacket("gabe@dispatchr.co");
     var images = yield AssetModel.find({ _id: { $in: aggr.trees.map(tree => tree.image) } }, { data: 1 });
     var cuf = _.find(cufs, cuf => cuf._id === aggr._id.pi_user_id) || cufs[0];
 
@@ -61,7 +63,10 @@ function *run(params) {
     location_names.forEach(name => packet.addLocation(createLocation(locations[name], pmd, images)));
 
     var filename = "vmd_export_"+pmd.pge_pmd_num + "_" + cuf.uniq_id + "_" +"_"+date+".xml";
-    fs.writeFile(filename, packet.toXML());
+    if(!fs.existsSync(export_dir)){
+      fs.mkdir(export_dir);
+    }
+    fs.writeFile(export_dir+"/"+filename, packet.toXML());
   }
 }
 
@@ -79,8 +84,8 @@ function createLocation(trees, pmd, images) {
   trees.forEach(tree => {
     var inspector = tree.pi;
     var line = tree.circuit;
-    var image = _.find(images, img => img._id === tree.image) || {};
-    var record = new TreeRecord(tree, inspector, line, pmd, image.data);
+    var image = _.find(images, img => tree.image && img._id.toString() === tree.image.toString());
+    var record = new TreeRecord(tree, inspector, line, pmd, image);
     location.addTree(record);
   });
   return location;

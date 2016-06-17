@@ -129,14 +129,22 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   this.line = line || {};
   this.project = pmd;
   
+  if(tree.image && !image) {
+    console.error("TREE IMAGE MISSING: "+ tree.image+" on tree: "+ tree._id);
+  }
+  
   this.statusFlags = TreeStates.fetchStatusFlags(tree.status);
   this.tree.inspector = inspector.uniq_id +" : "+inspector.first+" "+inspector.last;
   this.tree.inspector_company = inspector.company;
+
   this.tree.line_voltage = this.line.voltage;
-  this.tree.line_number = this.line.number;
-  this.tree.line_type = this.line.type;
+  this.tree.line_number = this.line.line_number;
+  this.tree.line_type = this.line.type || 'transmission';
+    
     
   this.record = _.extend({}, TREE_RECORD);
+  
+  this.tree.species = this.tree.species || "unknown";
   this.record.sTreeCode = vmd.tree_types[tree.species];
   this.record.sNotification = this.getNotificationType();
   this.record.nDBH = tree.dbh;
@@ -151,7 +159,7 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
     this.record.dtNextTrimDate = JSON.parse(JSON.stringify(this.record.dtNextTrimDate));        
   } 
   this.record.sInsp = tree.inspector;
-  this.record.sInspComp = vmd.inspection_companies[tree.inspector_company];  
+  this.record.sInspComp = vmd.company_codes[tree.inspector_company];  
   this.record.bVELBArea = this.statusFlags.environment === "velb" ? 1 : 0;  
   this.record.ExternalTreeID = tree.qsi_id || tree._id;
   this.record.sTreeRecsStatus = this.getTreeRecordStatus();
@@ -175,18 +183,19 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
     var jpg = new JPGImage(image);
     this.record.TreeRecsFile = [jpg.getData()];
   }
-  console.log("ADDING TREE>>>>>", this.tree._id);
+
   this.validateRequired();
 };
 
 TreeRecord.prototype.validateRequired = function() {
   
-  this._testValue("sInspComp", _.values(vmd.inspection_companies));
+  this._testValue("sInspComp", _.values(vmd.company_codes));
+  this._testValue("species", _.keys(vmd.tree_types));  
+  this._testValue("sTreeCode", _.values(vmd.tree_types));  
 };
 
 TreeRecord.prototype._testValue = function(key, acceptible) {
-  console.log("CHECKING THESTSSSSS", key, this.get(key), acceptible);
-  assert(_.contains(acceptible, this.get(key)), "Bad "+key+": "+this.get(key));
+  assert(_.contains(acceptible, this.get(key)), "Bad "+key+ " in tree "+this.tree._id+" : "+this.get(key));
 };
 
 
@@ -238,7 +247,7 @@ TreeRecord.prototype.getTreeRecordStatus = function() {
         "left":       "open",
         "ready":      "tree_ok",
         "worked":     "tree_ok",      
-        "no_trim":   "no_work_with_issues",
+        "no_trim":    "no_work_with_issues",
         "not_ready":  "contact_with_issues"
     }[status];
   } else {
@@ -252,7 +261,8 @@ TreeRecord.prototype.getTreeRecordStatus = function() {
   }
 
   if(record_status === "tree_ok") {
-    assert(this.record.sNotification === "O");
+    assert(this.record.sNotification === "O", "BAD record status / notification combo "+this.tree._id);
+    assert(!this.restrictions);
   } else if(record_status === "contact_no_issues" || record_status === "contact_with_issues") {
     assert(_.contains(["C", "Q", "R"], this.record.sNotification));
   } else if(record_status === "no_work_no_issues" || record_status === "no_work_with_issues") {
@@ -295,12 +305,13 @@ TreeRecord.prototype.getNotificationType = function() {
     var notification = null;
     if(statusFlags.status === "ready" || statusFlags.status === "worked"){
       notification = "ok";
-    }
-    var issue = this.getNotificationIssue();
-    if(issue) {
-      notification = issue;
-    } else if(statusFlags.status === "not_ready") {
-      notification = "contact";
+    } else {
+      var issue = this.getNotificationIssue();
+      if(issue) {
+        notification = issue;
+      } else if(statusFlags.status === "not_ready") {
+        notification = "contact";
+      }
     }
   }
   assert(vmd.notification_codes[notification], "missing notification code: "+ tree._id);

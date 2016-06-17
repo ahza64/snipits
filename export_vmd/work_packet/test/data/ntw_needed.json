@@ -11,7 +11,8 @@
     "pi_user": {
       "uniq_id": "NOEMAIL",
       "first": "NO",
-      "last": "ONE"
+      "last": "ONE",
+      "company": "WECI"      
     },
     "pmd": {
         "_id" : "56aa0ff8398cf249f959c8c1",

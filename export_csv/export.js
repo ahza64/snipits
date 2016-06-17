@@ -16,8 +16,8 @@ var log = require('log4js').getLogger('['+__filename+']');
 
 
 // var vmd = require('./pge_vmd_codes');
-// var TREES_INC_COMPANY_ID = vmd.inspection_companies["Trees Inc."];
-// var ACRT_INSPECT_COMPANY = vmd.inspection_companies.ACRT;
+// var TREES_INC_COMPANY_ID = vmd.company_codes["Trees Inc."];
+// var ACRT_INSPECT_COMPANY = vmd.company_codes.ACRT;
 var transform_tree = require('./transform/tree');
 require('sugar');
 

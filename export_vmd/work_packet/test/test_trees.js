@@ -7,7 +7,8 @@ var _ = require('underscore');
 
 var trees = {
   tree1: require("./data/tree1.json"),
-  tree2: require("./data/tree2.json"),  
+  tree2: require("./data/tree2.json"),
+  tree3: require("./data/tree3.json"),
   velb: require("./data/velb.json"),
   raptor: require("./data/raptor.json"),
   refused: require("./data/refused.json"),
