@@ -21,16 +21,10 @@ function *run(collection, field, push){
 		'tree': field
 	};
 	push = push || false;
-	var circuit_names =
-				[{
-					"old": "Montaray Pin",
-					"new": "Monterey Pine"
-				},{
-					"old": "Liq Ambar",
-					"new": "Liq Ambar (Sw Gum)"
-				},{
-					"old": "Monterey Pin",
-					"new": "Monterey Pine"
+	var circuit_names = 
+				[{	
+					"old": "DELT_MTN_GATE_JCT",
+					"new": "DELTA_MTN_GATE_JCT"
 				}];
 	for (var i = 0; i < circuit_names.length; i++) {
 		var circuit_name = circuit_names[i];

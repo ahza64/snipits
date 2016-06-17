@@ -52,7 +52,7 @@ var treeSchema = new mongoose.Schema({
   zone: {type: Number}, //which zone of the span  1,2,3,4,5)
   min_mgcc: {type: Number},
   exported: { type: Date, index: true },
-
+  gps_acq_date: { type: Date, index: true },
   created: { type: Date, default: Date.now, index: true },
   updated: { type: Date, default: Date.now, index: true },
 });
