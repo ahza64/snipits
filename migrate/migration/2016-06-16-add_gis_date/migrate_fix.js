@@ -68,7 +68,7 @@ function *find_and_update_tree(line_names,trees, qsi_ids_with_dates, layer, push
     var line_name = sanitizeLineName(line_names[k]);
     for(var dte in qsi_ids_with_dates){
       var qsi_ids = _.pluck(qsi_ids_with_dates[dte], 'TREEID');
-      var tree_docs = yield TreeV3.find({qsi_id: {$in: qsi_ids}, circuit_name: line_name, acq_date:null}, {_id:1});
+      var tree_docs = yield TreeV3.find({qsi_id: {$in: qsi_ids}, circuit_name: line_name, gps_acq_date:null}, {_id:1});
       console.log("DB Trees found", tree_docs.length);
       console.log("Layer Trees", qsi_ids.length, line_name, dte, layer); 
       var tree_ids = _.pluck(tree_docs, '_id');
@@ -76,7 +76,7 @@ function *find_and_update_tree(line_names,trees, qsi_ids_with_dates, layer, push
       console.log(tree_ids.length, " trees will be updated with date ", dte_obj);
       if(tree_docs.length > 0 && push){
         console.log('updating ',tree_ids.length, " trees with date ", dte_obj);
-        yield TreeV3.update({ _id: {$in: tree_ids }},{ $set: { acq_date: dte_obj}}, {multi: true}).exec();
+        yield TreeV3.update({ _id: {$in: tree_ids }},{ $set: { gps_acq_date: dte_obj}}, {multi: true}).exec();
       }  
     }
   }

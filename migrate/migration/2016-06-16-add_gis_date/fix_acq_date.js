@@ -4,7 +4,7 @@ utils.connect(['meteor']);
 
 function *run(push){
 	push = push || false;
-	yield migrate_fix('tree', 'ACQ_DATE', 'acq_date', push);
+	yield migrate_fix('tree', 'ACQ_DATE', 'gps_acq_date', push);
 }
 
 if (require.main === module) {
