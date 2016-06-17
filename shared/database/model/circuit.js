@@ -7,7 +7,7 @@ var geoschema = new mongoose.Schema({
   line_number: String,
   number: String,
   division: String,
-  url:String,
+  url:Array,
   project:String,
   total_count:Number,
   detected_count:Number,
