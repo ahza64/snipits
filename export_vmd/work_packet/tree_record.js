@@ -171,7 +171,7 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
     this.record.sAcctType = vmd.account_types.Maintenance;
   }
 
-  var gps = new GPS("TreeRec", tree.location.coordinates[1], tree.location.coordinates[0]);
+  var gps = new GPS("TreeRec", tree.location.coordinates[1], tree.location.coordinates[0], tree.gps_acq_date);
   this.record[gps.root_node] = gps.getData();
   
   this.record.sCrewType = vmd.crew_type[this.statusFlags.vehicle_type||"climb"];  
@@ -181,7 +181,7 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   
   if(image) {
     var jpg = new JPGImage(image);
-    this.record.TreeRecsFile = [jpg.getData()];
+    this.record.TreeRecFile = [jpg.getData()];
   }
 
   this.validateRequired();

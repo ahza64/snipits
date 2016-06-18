@@ -178,9 +178,9 @@ TreeLocation.prototype.addTree = function(tree){
   this.set("iCityID", vmd.city_codes[tree.get("city").toUpperCase()]);
   this.set("sCountyCode", vmd.county_codes[tree.get("county").toUpperCase()]);
   
-  if(!this.get("sComments")) {
+  if(tree.get("notify_customer_value")) {
     //using the first comment for nows
-    this.set("sComments", tree.get("comment") || null);
+    this.set("sComments", tree.get("notify_customer_value"));
   }
   
   this.set("dtInspDate", tree.get("dtInspDate"));
@@ -196,7 +196,7 @@ TreeLocation.prototype.addTree = function(tree){
   
   var gps_location = tree.getLocation();
   if(gps_location) {
-    var gps = new GPS("TreeLoc", gps_location.coordinates[1], gps_location.coordinates[0]);
+    var gps = new GPS("TreeLoc", gps_location.coordinates[1], gps_location.coordinates[0], tree.gps_acq_date);
     this.location[gps.root_node] = gps.getData();
   }
   

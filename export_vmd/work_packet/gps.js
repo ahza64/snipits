@@ -28,6 +28,10 @@ var GPSRecord = function(type, lat, long, date) {
   this.gps.nLongitude = long;
   this.gps.nLatitude = lat;
   this.gps.dtMobileCapture = date;
+  if(date && !_.isString(date)) {
+    this.gps.dtMobileCapture = JSON.parse(JSON.stringify(date));
+  }
+  
 };
 
 GPSRecord.prototype.getData = function(){
