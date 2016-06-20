@@ -42,7 +42,7 @@ var detection_priorities = {
 /**
  * Entry point of script
  */
-function *run(){
+function *run(service_name, force){
   console.log("RUNNING arcgis ingest");
   var project = dsp_project.toUpperCase();
   var host = "https://esri.dispatchr.co:6443";
@@ -63,26 +63,36 @@ function *run(){
   latest.details = [];
   yield latest.save();
   
+  if(service_name) {
+    service_name = [project, service_name].join('/');
+  }
+  
+  
   console.log("folder", folder_path)
   var base_url = [host, folder_path].join('/');  
   console.log("FOLDER", base_url);  
   var folder = yield http_get(base_url, base_params);  
   console.log("FOLDER", folder);
   for(var s = 0; s < folder.services.length; s++){
-    var service = folder.services[s];
-    console.log("service", folder.services[s])
-    var service_path = ["/arcgis/rest/services", service.name, "MapServer"].join("/");
+    var service = folder.services[s];    
+    console.log("LOOKING FOR ", service_name);
+    console.log("LOOKING FOR ", service.name);
+    if(!service_name || service_name === service.name ){
 
-    base_url = [host, service_path].join('/');
-    console.log("service url PATH", base_url);
+      console.log("service", folder.services[s])
+      var service_path = ["/arcgis/rest/services", service.name, service.type].join("/");
+
+      base_url = [host, service_path].join('/');
+      console.log("service url PATH", base_url);
  
-    service = yield http_get(base_url, base_params);
-    for(var i = 0 ; i < service.layers.length; i++) {
-      var layer_group = service.layers[i];
-      if(layer_group.subLayerIds && layer_group.parentLayerId === -1) {
-        var ingest = yield ingestGroup(layer_group, service, base_url);
-        latest.details.push(ingest);
-      }
+      service = yield http_get(base_url, base_params);
+      for(var i = 0 ; i < service.layers.length; i++) {
+        var layer_group = service.layers[i];
+        if(layer_group.subLayerIds && layer_group.parentLayerId === -1) {
+          var ingest = yield ingestGroup(layer_group, service, base_url, force);
+          latest.details.push(ingest);
+        }
+      }      
     }
   }
   latest.status = "complete";
@@ -90,10 +100,10 @@ function *run(){
 }
 
 
-function *ingestGroup(layer_group, service, base_url){
+function *ingestGroup(layer_group, service, base_url, force){
   
   var ingest = yield Ingest.findOne({name: layer_group.name, script: "arcgis_ingest"}).sort({date: -1});
-  if(ingest) {
+  if(ingest && !force) {
     console.log("Layer group previously ingested", layer_group.name);
   } else {
     ingest = yield Ingest.create({
@@ -248,12 +258,13 @@ function *processTrees(trees) {
         } else {
           var doc_pri = detection_priorities[doc.pge_detection_type];
           var tree_pri = detection_priorities[tree.pge_detection_type];
-          if(tree_pri < doc_pri) {
+          
+          if(tree_pri < doc_pri || tree_pri == doc_pri && tree.pge_pmd_num != doc.pge_pmd_num) {
           
             console.log("Updated Tree", doc.qsi_id);
             //override particular values (don't override user entered values)
             doc.pge_detection_type = tree.pge_detection_type;
-            doc.pge_pmd_num = tree.pge_detection_type;
+            doc.pge_pmd_num = tree.pge_pmd_num;
             doc.span_name = tree.span_name;
             doc.circuit_name = tree.circuit_name;
             doc.save();
