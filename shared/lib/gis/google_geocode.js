@@ -36,7 +36,7 @@ function getAddress(x, y){
         //    address.county = address.county.substring(0, address.county.length - " County".length);
         //  }
        } else {
-         console.error("Could not find streetNumber", [x, y]);
+         console.error("Could not find ", [x, y]);
        }
        resolve(address);
      }
