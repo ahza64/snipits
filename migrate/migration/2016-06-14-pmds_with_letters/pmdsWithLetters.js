@@ -19,8 +19,7 @@ function *pmdsWithLetters(){
 
 function *getBadPmds () {
   var badPmds = yield TREE.distinct('pge_pmd_num', {pge_pmd_num: new RegExp(/[a-zA-Z]+/)});
-  console.log('Bad Pmds: ', badPmds);
-  return badPmds.length === 0;
+  return badPmds;
 }
 
 // baker module

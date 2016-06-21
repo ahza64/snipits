@@ -9,14 +9,13 @@ function *runCheck () {
   var res = yield addressCheck.checkAll();
   console.log('CHECKING ADDRESS ===>', res);
   res = yield trimCodeCheck.getBadTrimCodes();
-  console.log('CHECKING TRIMCODE ===>', res);
+  console.log('BAD TRIMCODE ===>', res);
   res = yield speciesCheck.getBadSpecies();
-  console.log('CHECKING SPECIES ===>', res);
+  console.log('BAD SPECIES ===>', res);
   res = yield pmdCheck.getBadPmds();
-  console.log('CHECKING PMD NUMBER ===>', res);
-  
-  //console.log('CHECKING CUF COMPANY ===>');
-  //yield cufCheck.cufsWithNoCompany();
+  console.log('BAD PMD NUMBER ===>', res);
+  //res = yield cufCheck.cufsWithNoCompany();
+  //console.log('CHECKING CUF COMPANY ===>', res);
 }
 
 // baker module
