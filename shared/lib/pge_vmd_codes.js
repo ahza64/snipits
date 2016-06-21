@@ -450,6 +450,7 @@ var company_codes = {
   "Davey Tree (T&M)(dup)":          "DAX", //      0              0              0
   "D & L Enterprises":              "DLE", //      1              0              0
   "Davey RG":                       "DRG", //      1              0              0
+  "DRG":                            "DRG", //      1              0              0
   "CamLand":                        "DT1", //      0              0              0
   "Davey Tree (T&M)":               "DVX", //      0              0              0
   "ENRESTEK":                       "ERT", //      1              1              1

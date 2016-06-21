@@ -165,6 +165,7 @@ TreeLocation.prototype.addTree = function(tree){
   
   assert(tree.get("line_type"), "Tree needs to have line type");
   if(line_type === "transmission") {  
+    assert(vmd.transmison_circuit_codes[div_code], tree.get("_id"));
     var circuit = vmd.transmison_circuit_codes[div_code][voltage];
     this.set("sCircuit", circuit);    
     this.set("sLineID", line_number);

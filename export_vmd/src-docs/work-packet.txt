@@ -7,7 +7,7 @@ file format, which can be used to import inspection data from external sources.
 09-17-2014	Added sections for restrictions, alerts, and contacts
 09-03-2015	Changed file extenstion to .WP
 10-14-2015	Added <TreeLocFile> tag for location files (JPG, etc)
-		Added <TreeRecsFile> tag for tree specific files (JPG, etc)
+		Added <TreeRecFile> tag for tree specific files (JPG, etc)
 *******************************************************************************
 File Structure and naming convention:
 The VMDEF file will be a text file containing standard XML tag data in a format
@@ -28,7 +28,7 @@ Object Hiearchy:
 			<TreeRecs_GPS>		GPS coordinates of tree
 			<TreeRecsAlerts>	Alerts for specfic tree
 			<TreeRecsRestrictions>	Restrictions for specific tree
-			<TreeRecsFile>		File specific to tree (JPG, etc)
+			<TreeRecFile>		File specific to tree (JPG, etc)
 			
 A work packet is a bundle of locations to be inspected.  Current practical
 limits on the number of locations per work packet is about 300-400 locations.
@@ -263,8 +263,8 @@ Object Definitions:
 	<dtDateAdded> datetime 			*[Inspection Date]
 </TreeRecsRestrictions>
 
-<TreeRecsFile>					Note that <TreeRecsFile> section can be repeated for multiple files
+<TreeRecFile>					Note that <TreeRecFile> section can be repeated for multiple files
 	<iTreeRecsID> int			*File will be associated with this tree
 	<sFileName> varchar(100)		*Should conform to windows file naming standards - no special chars such as ? , etc...
 	<sFile> BLOB data stream		*No data limit
-</TreeRecsFile>
+</TreeRecFile>

@@ -140,12 +140,13 @@ Alert.createLocAlerts = function(location) {
       trees["velb site"] = tree;            
     }
     if(tree.statusFlags.environment === "other") {
-      alert_codes.add("velb site");
+      alert_codes.add("environmental bmp");
       trees["environmental bmp"] = tree;            
     }
   }
-
+  // console.log(trees);
   alert_codes.forEach(function(alert_code){
+    // console.log("alert", alert_code);
     tree = trees[alert_code];
     var res = new Alert("Loc", alert_code, tree.get('sInsp'), tree.get('dtInspDate'));
     location.addAlert(res);    

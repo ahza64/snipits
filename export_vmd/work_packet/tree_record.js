@@ -161,15 +161,13 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   this.record.sInsp = tree.inspector;
   this.record.sInspComp = vmd.company_codes[tree.inspector_company];  
   this.record.bVELBArea = this.statusFlags.environment === "velb" ? 1 : 0;  
-  this.record.ExternalTreeID = tree.qsi_id || tree._id;
+  this.record.ExternalTreeID = tree.qsi_id || tree._id.toString();
   this.record.sTreeRecsStatus = this.getTreeRecordStatus();
   
-  
-  if(pmd.type.startsWith("Orchard")) {
-    this.record.sAcctType = vmd.account_types.Orchard;
-  } else {
-    this.record.sAcctType = vmd.account_types.Maintenance;
-  }
+  // We are curretly only exporting trees as Maintenance 
+  // if(pmd.type.startsWith("Orchard")) {
+  this.record.sAcctType = vmd.account_types.Maintenance;
+
 
   var gps = new GPS("TreeRec", tree.location.coordinates[1], tree.location.coordinates[0], tree.gps_acq_date);
   this.record[gps.root_node] = gps.getData();
@@ -181,7 +179,7 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   
   if(image) {
     var jpg = new JPGImage(image);
-    this.record.TreeRecFile = [jpg.getData()];
+    this.record.TreeRecsFile = [jpg.getData()];
   }
 
   this.validateRequired();

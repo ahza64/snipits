@@ -2,7 +2,7 @@
   "name": "ingest_map_service",
   "version": "0.0.1",
   "description": "Ingests trees from ArcGIS map service ",
-  "private": true,  
+  "private": true,
   "main": "arcgis_ingest.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -30,6 +30,7 @@
     "node-geocoder": "^3.10.0",
     "restler": "^3.4.0",
     "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "xml2js": "^0.4.16"
   }
 }
