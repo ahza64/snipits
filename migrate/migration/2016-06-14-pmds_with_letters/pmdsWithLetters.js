@@ -3,7 +3,7 @@ var _ = require('underscore');
 util.connect(["meteor"]);
 
 var PMD = require('dsp_shared/database/model/pmd');
-
+var TREE = require('dsp_shared/database/model/tree');
 
 /**
  *  pmdsWithLetters - return all pmds that contain letters
@@ -16,9 +16,22 @@ function *pmdsWithLetters(){
     console.log(pmd.pge_pmd_num);
   });
 }
-//baker module
+
+function *getBadPmds () {
+  var badPmds = yield TREE.distinct('pge_pmd_num', {pge_pmd_num: new RegExp(/[a-zA-Z]+/)});
+  return badPmds;
+}
+
+// baker module
 if (require.main === module) {
  var baker = require('dsp_shared/lib/baker');
  util.bakerGen(pmdsWithLetters, {default:true});
+ util.bakerGen(getBadPmds);
  baker.run();
 }
+
+// export
+module.exports = {
+  pmdsWithLetters: pmdsWithLetters,
+  getBadPmds: getBadPmds
+};

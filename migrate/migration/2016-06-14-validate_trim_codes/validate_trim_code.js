@@ -11,7 +11,7 @@ var correct_trim_codes = Object.keys(origin_trim_codes);
 /**
  * Check if there are bad trim codes
  * 
- * @return {Boolean} True if no bad trim code, False if exists bad trim code
+ * @return {Array} return bad trim codes
  */
 function *getBadTrimCodes () {
   var bad_trim_codes = [];
@@ -23,8 +23,7 @@ function *getBadTrimCodes () {
     }
   });
 
-  console.log('Bad Tirm Codes: ', bad_trim_codes);
-  return bad_trim_codes.length === 0;
+  return bad_trim_codes;
 }
 
 // baker module

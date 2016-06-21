@@ -18,8 +18,7 @@ function *getBadSpecies(){
     }
   });
 
-  console.log('Bad Species: ', badSpecies);
-  return badSpecies.length === 0;
+  return badSpecies;
 }
 
 //baker module
@@ -31,4 +30,4 @@ if (require.main === module) {
 
 module.exports = {
   getBadSpecies: getBadSpecies
-}
+};
