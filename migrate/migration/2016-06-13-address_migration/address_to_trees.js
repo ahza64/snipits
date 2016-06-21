@@ -1,6 +1,7 @@
 var BPromise = require('bluebird');
 var geocode = require('dsp_shared/lib/gis/google_geocode');
 var util = require('dsp_shared/lib/cmd_utils');
+var _ = require('underscore');
 
 // connect to database and schema
 util.connect(["meteor"]);
@@ -12,24 +13,35 @@ var TREE = require('dsp_shared/database/model/tree');
  *
  * @return {void}
  */
-function *updateAddress(check_street_num){
+function *updateAddress(field){
   console.log("ADD COUNTY");
   var conditions = {
     status: {$regex: /^[^06]/}, 
     project: 'transmission_2015', 
-    $or: [
-      {streetName: null},
-      {city: null},
-      {county: null},
-      {state: null},
-      {zipcode: null}
-    ]
   };
   
-  if(check_street_num) {
-    conditions.$or.push({streetNumber: null});
+  var all = {
+    streetName: {streetName: null},
+    city: {city: null},
+    county: {county: null},
+    state: {state: null},
+    zipcode: {zipcode: null},
+    streetNumber: {streetNumber: null}
+  };
+  
+  var fields = _.extend({}, all, {all: {$or: _.values(all)}}, 
+                                 {default: {$or:_.values(_.omit(all, "streetNumber"))} } );
+  field = field || "default";
+  
+  if(field) {
+    if(!fields[field]) {
+      throw new Error("Invalid Field: "+field);
+    } else {
+      _.extend(conditions, fields[field]);
+    }
   }
     
+  console.log("CONDTIONS", conditions);
   
   
   
