@@ -18,7 +18,7 @@ var Tree = require("dsp_shared/database/model/tree");
 // var PMD = require('dsp_shared/database/model/pmd');
 // var Circuit = require('dsp_shared/database/model/circuit');
 // var TreeStates = require('tree-status-codes');
-var getAddress = require("dsp_shared/lib/gis/google_geocode");
+var geocode = require("dsp_shared/lib/gis/google_geocode");
 
 // var Ingest = require('dsp_shared/database/model/ingest');
 
@@ -514,7 +514,7 @@ if (require.main === module) {
   utils.bakerGen(run, {default:true});  
   utils.bakerGen(function *treeAddress(tree_id){
     var tree = yield Tree.findOne({_id: tree_id});
-    var address = yield getAddress(tree.location.coordinates[0], tree.location.coordinates[1]);
+    var address = yield geocode.getAddress(tree.location.coordinates[0], tree.location.coordinates[1]);
     return address;
   });
   baker.run();  

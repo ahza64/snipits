@@ -115,6 +115,7 @@ function dumpAsCSV(row_data, tabs) {
 
 module.exports = {
   connect: connect,
+  closeConnections: closeConnections,
 	dumpAsCSV: dumpAsCSV,
 	withDb: withDb,
 	generatorWithDb: generatorWithDb,

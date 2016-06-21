@@ -18,7 +18,7 @@ var TreeV3 = require("dsp_shared/database/model/tree");
 var PMD = require('dsp_shared/database/model/pmd');
 var Circuit = require('dsp_shared/database/model/circuit');
 var TreeStates = require('tree-status-codes');
-var getAddress = require("dsp_shared/lib/gis/google_geocode");
+var geocode = require("dsp_shared/lib/gis/google_geocode");
 
 var Ingest = require('dsp_shared/database/model/ingest');
 
@@ -68,7 +68,7 @@ function *run(service_name, force){
   }
   
   
-  console.log("folder", folder_path)
+  console.log("folder", folder_path);
   var base_url = [host, folder_path].join('/');  
   console.log("FOLDER", base_url);  
   var folder = yield http_get(base_url, base_params);  
@@ -79,7 +79,7 @@ function *run(service_name, force){
     console.log("LOOKING FOR ", service.name);
     if(!service_name || service_name === service.name ){
 
-      console.log("service", folder.services[s])
+      console.log("service", folder.services[s]);
       var service_path = ["/arcgis/rest/services", service.name, service.type].join("/");
 
       base_url = [host, service_path].join('/');
@@ -259,7 +259,7 @@ function *processTrees(trees) {
           var doc_pri = detection_priorities[doc.pge_detection_type];
           var tree_pri = detection_priorities[tree.pge_detection_type];
           
-          if(tree_pri < doc_pri || tree_pri == doc_pri && tree.pge_pmd_num != doc.pge_pmd_num) {
+          if(tree_pri < doc_pri || tree_pri === doc_pri && tree.pge_pmd_num !== doc.pge_pmd_num) {
           
             console.log("Updated Tree", doc.qsi_id);
             //override particular values (don't override user entered values)
@@ -396,7 +396,7 @@ function shouldIngest(tree) {
  */
 function *translateTree(tree, address) {
   if(!address) {
-    address = yield getAddress(tree.geometry.x, tree.geometry.y);        
+    address = yield geocode.getAddress(tree.geometry.x, tree.geometry.y);        
   }
   tree = _.extend({}, tree.attributes, {geometry: tree.geometry}, address);
   return yield migrate_util.applyMigrationSchema(migrate_schema, tree);
@@ -489,7 +489,7 @@ if (require.main === module) {
   utils.bakerGen(run, {default:true});  
   utils.bakerGen(function *treeAddress(tree_id){
     var tree = yield TreeV3.findOne({_id: tree_id});
-    var address = yield getAddress(tree.location.coordinates[0], tree.location.coordinates[1]);
+    var address = yield geocode.getAddress(tree.location.coordinates[0], tree.location.coordinates[1]);
     return address;
   });
   baker.run();  

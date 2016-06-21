@@ -67,7 +67,7 @@ function *query_db(collection, dispatchr_field, options){
 	var docs_missing_field;
 	if( collection === 'tree'){
  		if( dispatchr_field === 'pge_pmd_num'){
- 			docs_missing_field = yield TreeV3.find({pge_pmd_num:{$regex: /^V/} , 
+ 			docs_missing_field = yield TreeV3.find({pge_pmd_num: null , 
  				project:"transmission_2015",
  				qsi_id:{ 
  					$ne:null 
