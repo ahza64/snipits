@@ -31,4 +31,4 @@ if (require.main === module) {
 
 module.exports = {
   getBadSpecies: getBadSpecies
-}
+};

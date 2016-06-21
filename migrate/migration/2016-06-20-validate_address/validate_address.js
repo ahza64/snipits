@@ -39,12 +39,26 @@ function *checkIfAddressMissing () {
   return yield checkIfMiss('address');
 }
 
+function *checkAll () {
+  var county = yield checkIfMiss('county');
+  var city = yield checkIfMiss('city');
+  var street = yield checkIfMiss('street');
+  var address = yield checkIfMiss('address');
+  return {
+    county: county,
+    city: city,
+    street: street,
+    address: address
+  };
+}
+
 function help () {
   return 'Here is the options: ' +
     'checkIfCountyMissing, ' +
     'checkIfCityMissing, ' +
     'checkIfStreetMissing, ' + 
-    'checkIfAddressMissing';
+    'checkIfAddressMissing' +
+    'checkAll';
 }
 
 // baker module
@@ -55,6 +69,7 @@ if (require.main === module) {
   util.bakerGen(checkIfCityMissing);
   util.bakerGen(checkIfAddressMissing);
   util.bakerGen(checkIfStreetMissing);
+  util.bakerGen(checkAll);
   baker.run();
 }
 
@@ -63,5 +78,6 @@ module.exports = {
   checkIfCountyMissing: checkIfCountyMissing,
   checkIfCityMissing: checkIfCityMissing,
   checkIfStreetMissing: checkIfStreetMissing,
-  checkIfAddressMissing: checkIfAddressMissing
+  checkIfAddressMissing: checkIfAddressMissing,
+  checkAll: checkAll
 };
