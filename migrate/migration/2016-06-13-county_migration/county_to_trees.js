@@ -19,7 +19,7 @@ function addCounty(){
   });
 
   var trees = TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', county: {$exists: false}}).stream();
-
+  var count = 0;	
   trees.on('data', function(doc){
     if(!doc.county && doc.project === 'transmission_2015'){
       this.pause();
@@ -40,6 +40,7 @@ function addCounty(){
             }
           });
         } else {
+          count++;
           self.resume();
         }
       }, function (err) {
@@ -57,6 +58,7 @@ function addCounty(){
 
   trees.on('close', function () {
   // all done
+  console.log('Count of trees that could not be geocoded: ',count);
   console.log("ALL DONE");
   });
 }
