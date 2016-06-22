@@ -288,7 +288,7 @@ TreeLocation.prototype.getLocationStatus = function(){
   
   delete this.location.TreeLocRestrictions;
   if(final === "no_work_with_restrict" || final === "work_with_restrict") {
-    assert(this.restrictions.length > 0, "with_restrict status code and no restrictions");
+    assert(this.restrictions && this.restrictions.length > 0, "with_restrict status code and no restrictions");
     this.location.TreeLocRestrictions = [];
     for(i = 0; i < this.restrictions.length; i++) {
       this.location.TreeLocRestrictions.push(this.restrictions[i].getData());

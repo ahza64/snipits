@@ -4,7 +4,7 @@
 var _ = require("underscore");
 require('sugar');
 
-var FILE = {              //<TreeLocFile> or <TreeRecsFile> 	  Note that <TreeLocFile> section can be repeated for multiple files
+var FILE = {              //<TreeLocFile> or <TreeRecsFile> <TreeWorkCompFile>  Note that <TreeLocFile> section can be repeated for multiple files
                           //	<iTreeLocID>    int			          *File will be associated with this location
   sFileName: null,        //  <sFileName>     varchar(100)		  *Should conform to windows file naming standards - 
                           //                                    no special chars such as ? , etc...

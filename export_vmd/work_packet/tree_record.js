@@ -224,9 +224,6 @@ TreeRecord.prototype.hasRestrictions = function(){
   if(this.statusFlags.refused) {
     return true;
   }
-  if(this.statusFlags.ntw_needed && !this.tree.ntw_image) {
-    return true;
-  }
   if(this.statusFlags.environment) {
     return true;
   }
