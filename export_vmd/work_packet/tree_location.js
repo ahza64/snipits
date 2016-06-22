@@ -174,7 +174,7 @@ TreeLocation.prototype.addTree = function(tree){
   }
     
   this.set("sStreetNum", tree.get("streetNumber") || 0);
-  this.set("sStreet", tree.get("streetName"));    
+  this.set("sStreet", tree.get("streetName") || "NO ROAD");    
   this.set("sCity", tree.get("city").substring(0, 11));    
   this.set("iCityID", vmd.city_codes[tree.get("city").toUpperCase()]);
   this.set("sCountyCode", vmd.county_codes[tree.get("county").toUpperCase()]);

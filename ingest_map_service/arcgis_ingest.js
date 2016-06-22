@@ -42,7 +42,7 @@ var detection_priorities = {
 /**
  * Entry point of script
  */
-function *run(service_name, force){
+function *run(service_name, force, block_create){
   console.log("RUNNING arcgis ingest");
   var project = dsp_project.toUpperCase();
   var host = "https://esri.dispatchr.co:6443";
@@ -89,7 +89,7 @@ function *run(service_name, force){
       for(var i = 0 ; i < service.layers.length; i++) {
         var layer_group = service.layers[i];
         if(layer_group.subLayerIds && layer_group.parentLayerId === -1) {
-          var ingest = yield ingestGroup(layer_group, service, base_url, force);
+          var ingest = yield ingestGroup(layer_group, service, base_url, force, block_create);
           latest.details.push(ingest);
         }
       }      
@@ -100,9 +100,9 @@ function *run(service_name, force){
 }
 
 
-function *ingestGroup(layer_group, service, base_url, force){
+function *ingestGroup(layer_group, service, base_url, force, block_create){
   
-  var ingest = yield Ingest.findOne({name: layer_group.name, script: "arcgis_ingest"}).sort({date: -1});
+  var ingest = yield Ingest.findOne({name: layer_group.name, script: "arcgis_ingest", status: "complete"}).sort({date: -1});
   if(ingest && !force) {
     console.log("Layer group previously ingested", layer_group.name);
   } else {
@@ -119,7 +119,7 @@ function *ingestGroup(layer_group, service, base_url, force){
       console.log("LAYERS", layer_id);
       var layer = service.layers[layer_id];
       if(layer.name.endsWith("TreeTops")) {
-        yield processLayer(base_url, layer);
+        yield processLayer(base_url, layer, block_create);
       }else if(layer.name.endsWith("Spans")) {
         yield processSpansLayer(base_url, layer);
       } 
@@ -200,7 +200,7 @@ function *processSpansLayer(base_url, layer) {
  * @param {String} base_url paramDescription
  * @param {Object} layer layer object from a ESRI MapService 
  */
-function *processLayer(base_url, layer) {
+function *processLayer(base_url, layer, block_create) {
   var tree_ids = yield getFeatureIds(base_url, layer);
   var tree_count = tree_ids.length;
   console.log("Process Tree Layer", layer.name, layer.id, tree_count);           
@@ -220,7 +220,7 @@ function *processLayer(base_url, layer) {
     params.objectIds = ids.join(",");
     var trees = yield http_get(url, params);    
     assert(trees.features.length === batch_size || i+trees.features.length === tree_count);
-    yield processTrees(trees.features);
+    yield processTrees(trees.features, block_create);
   }  
 }
 
@@ -228,11 +228,12 @@ function *processLayer(base_url, layer) {
  * @description Process a list of tree objects 
  * @param {Array} trees An array of tree objects from the Map Service
  */
-function *processTrees(trees) {
+function *processTrees(trees, block_create) {
   var qsi_ids = _.map(trees, function(tree){return tree.attributes.TREEID; });
   var tree_docs = yield TreeV3.find({qsi_id: {$in: qsi_ids}});
   console.log("DB Trees found", tree_docs.length);  
   console.log("Layer Trees", trees.length);
+  // console.log("Block Create", block_create);
   tree_docs = _.indexBy(tree_docs, "qsi_id");
   for(var i = 0; i < trees.length; i++) {
     var doc = tree_docs[trees[i].attributes.TREEID];
@@ -247,23 +248,29 @@ function *processTrees(trees) {
         zipcode: doc.postal,
       };
     }
-    
 
+    if(block_create && !address) {
+      //ingore address
+      address = {}
+    }
     var tree = yield translateTree(trees[i], address);
     if(shouldIngest(tree)){
       try{
         if(!doc) {
-          doc = yield TreeV3.create(tree);
-          console.log("Created Tree", doc.qsi_id);
+          if(!block_create) {
+            doc = yield TreeV3.create(tree);
+            console.log("Created Tree", doc.qsi_id);
+          }
         } else {
           var doc_pri = detection_priorities[doc.pge_detection_type];
           var tree_pri = detection_priorities[tree.pge_detection_type];
-          
-          if(tree_pri < doc_pri || tree_pri === doc_pri && tree.pge_pmd_num !== doc.pge_pmd_num) {
-          
+
+          if(tree_pri < doc_pri || doc.circuit_name === tree.circuit_name && 
+            (tree.pge_pmd_num !== doc.pge_pmd_num || tree.division !== doc.division)) {
             console.log("Updated Tree", doc.qsi_id);
             //override particular values (don't override user entered values)
             doc.pge_detection_type = tree.pge_detection_type;
+            doc.division = tree.division;
             doc.pge_pmd_num = tree.pge_pmd_num;
             doc.span_name = tree.span_name;
             doc.circuit_name = tree.circuit_name;
@@ -420,6 +427,9 @@ var migrate_schema = {
   },  
 
   division: function*(tree) {
+    if(tree.DIVISION){
+      return tree.DIVISION;
+    }
     var pmd = yield getPMD(tree.PMD_NUM);
     return pmd.division;
   },
