@@ -6,20 +6,54 @@ var s3 = new AWS.S3();
 var spawn = require('child_process').spawn;
 var backupStatus = require('../../models/backup_status');
 var co = require('co');
+var Bpromise = require('bluebird');
 var performer = '6d88c16f19a7874c5d6c82f99b532a15';
+var _ = require('underscore');
 /**
- * list_files list all buckets from s3
+ * list_buckets list all buckets from s3
  * @return {void} void
  */
-function list_files(){
-  s3.listBuckets(function(err, data) {
-    if (err) { console.log("Error:", err); }
-    else {
-        for (var index in data.Buckets) {
-              var bucket = data.Buckets[index];
-              console.log("Bucket: ", bucket.Name, ' : ', bucket.CreationDate);
-            }
-      }
+function list_buckets(){
+  return new Bpromise(function(resolve, reject){
+    s3.listBuckets(function(err, data) {
+      if (err) { console.log("Error:", err);
+                  reject(err); 
+                }
+      else {
+          resolve(data.Buckets);
+        }
+      });
+  });
+}
+
+/**
+ * list_files lists all files in the bucket with a url 
+ * @param  {string} bucket name of the bucket
+ * @return {array}          array of files in the bucket with a url         
+ */
+function list_files(bucket){  
+  return new Bpromise(function(resolve, reject){
+      s3.listObjects({ 
+        Bucket: bucket, 
+        Delimiter: '/'
+      }, function(err, data) {
+      if (err) {
+        console.log(err, err.stack); // an error occurred
+        reject(err);
+      } else {
+        var data_with_url = _.map(data.Contents, key => {
+          var params = {Bucket: 'bucket', Key: key.Key};
+          var url = s3.getSignedUrl('getObject', params);
+          return {
+              Key: key.Key,
+              LastModified: key.LastModified,
+              Size: key.Size,
+              URL: url
+            };
+        });
+        resolve(data_with_url);
+      }    
+    });
   });
 }
 
@@ -63,7 +97,8 @@ function restore_from_backup(){
 
 
 module.exports = {
-  list: list_files,
+  list: list_buckets,
+  list_files: list_files,
   restore_from_backup: restore_from_backup,
   backup_now: backup_now
 };

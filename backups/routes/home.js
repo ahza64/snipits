@@ -13,24 +13,29 @@ var backupStatus = require('../models/backup_status');
 
 var performer = '6d88c16f19a7874c5d6c82f99b532a15';
 
-router.get('/:id', function *(next){  
-  if(this.params.id === performer){
-  	var currStatus = yield backupStatus.find({ performer: performer }, { completed:1 }).exec();
-  	if(currStatus[0].completed){
-  		yield backupStatus.update({performer: performer}, { $set: {
-  			completed: false, 
-  			performer: performer
-  		} }, { upsert: true });
-      awsMethods.backup_now();
-  		this.body = this.params.id;
-    }
-  	else{
-  		this.body = 'previous backup is still running';
-  	}
+
+router.get('/query', function *(next){  
+  console.log("in query path");
+  var query = this.request.query;
+  if(!query.bucket){
+    this.body = { error: 'no bucket field inserted' };
+    this.status = 404;
   }
-  else{
-  	this.body = 'need correct hash';
-  }
+  //list all objects in the bucket
+  else {
+    var files = yield awsMethods.list_files(query.bucket);
+    this.body = files;
+    yield next;
+  }  
+});
+
+
+
+router.get('/', function *(next){  
+  console.log("in root path");
+  var buckets = yield awsMethods.list();
+  console.log(buckets);
+  this.body = buckets;
   yield next;
 });
 
