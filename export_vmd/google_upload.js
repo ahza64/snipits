@@ -45,7 +45,8 @@ if (require.main === module) {
             body: fs.createReadStream(fileName)                                              
           }
         });
-        file_info = file_info[0];
+        console.log(file_info)
+        // file_info = file_info[0];
         var permission = {
           auth:auth,
           fileId: file_info.id,          
@@ -61,7 +62,9 @@ if (require.main === module) {
           yield create_permission(permission);
           console.log("ADDED USER", USERS[i]);
         }
-      })();
+      }).catch(function(err){
+        console.log("GOT ERR", err);
+      });
     });
   }, {command: "uploadFile"});
   
