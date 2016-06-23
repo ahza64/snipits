@@ -1,5 +1,5 @@
 /**
- * @fileOverview contains the backup status model to make it persistance and cannot be run until the previous backup has completed
+ * @fileOverview contains the backup status model to make it persistant. this is not used anymore
  */
 
 var mongoose = require('mongoose');
@@ -24,7 +24,7 @@ backupStatusSchema.pre('save', function(next){
 backupStatusSchema.pre('update', function(next){
   var now = new Date();
   this.update({},{ $set: { updated_at: now } });
-  next()
+  next();
 });
 
 module.exports = mongoose.model('BACKUPSTATUS', backupStatusSchema);
