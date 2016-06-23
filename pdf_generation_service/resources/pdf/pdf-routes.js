@@ -52,7 +52,7 @@ router.get('/:id', (req, res, next) => {
     });
   } else {
     res.json({
-      file: req.protocol + '://' + req.get('host') + "pdf/" + id + ".pdf"
+      file: req.protocol + '://' + req.get('host') + "/pdf/" + id + ".pdf"
     })
   }
 });
