@@ -12,17 +12,17 @@ var TREE = require('dsp_shared/database/model/tree');
  */
 function geoNearCounty(){
   console.log('Trees with no county');
-  TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', county: {$exists: false}}).count().then(function(count){
+  TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', county: null}).count().then(function(count){
     console.log("Tree Count", count);
   });
 
-  var trees = TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', county: {$exists: false}}).stream();
+  var trees = TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', county: null}).stream();
 
   trees.on('data', function(doc){
     if(!doc.county){
       this.pause();
       var self = this;
-      TREE.geoNear(doc.location, {minDistance: 0, maxDistance: 17000, spherical: true, query:{county:{$exists:true}}, limit:1}, function(err, nearbyTree){
+      TREE.geoNear(doc.location, {minDistance: 0, maxDistance: 17000, spherical: true, query:{county: {$ne: null}}, limit:1}, function(err, nearbyTree){
         if(err){
           console.error(err);
           self.resume();
@@ -36,11 +36,11 @@ function geoNearCounty(){
             doc.county = nearbyTree[0].obj.county;
             TREE.update({_id: doc._id}, {county: doc.county}, function(err){
               if(err){
-                console.log(err);
+                console.log('update err', err);
                 self.resume();
               }
               else{
-                console.log(doc.county, doc._id);
+                console.log('updated', doc.county, doc._id);
                 self.resume();
               }
             });
@@ -49,21 +49,31 @@ function geoNearCounty(){
       });
     }
   })
+
+    trees.on('error', function (err) {
+      // handle err
+      console.error(err);
+    });
+
+    trees.on('close', function () {
+      // all done
+      console.log("ALL DONE");
+    });
 }
 
 function geoNearCity(){
   console.log('Trees with no county');
-  TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', city: {$exists: false}}).count().then(function(count){
+  TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', city: null}}).count().then(function(count){
     console.log("Tree Count", count);
   });
 
-  var trees = TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', city: {$exists: false}}).stream();
+  var trees = TREE.find({status: {$regex: /^[^06]/}, project: 'transmission_2015', city: null}).stream();
 
   trees.on('data', function(doc){
     if(!doc.city){
       this.pause();
       var self = this;
-      TREE.geoNear(doc.location, {minDistance: 0, maxDistance: 5500, spherical: true, query:{city:{$exists:true}}, limit:1}, function(err, nearbyTree){
+      TREE.geoNear(doc.location, {minDistance: 0, maxDistance: 5500, spherical: true, query:{city:{$ne: null}}, limit:1}, function(err, nearbyTree){
         if(err){
           console.error(err);
           self.resume();
@@ -90,6 +100,17 @@ function geoNearCity(){
       });
     }
   })
+    trees.on('error', function (err) {
+      // handle err
+      console.error(err);
+    });
+
+    trees.on('close', function () {
+      // all done
+      console.log("ALL DONE");
+    });
+
+
 }
 
 //baker module

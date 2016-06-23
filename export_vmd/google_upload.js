@@ -1,5 +1,6 @@
 var fs = require('fs');
 var co = require('co');
+var path = require('path');
 var readline = require('readline');
     var google = require('googleapis');
 var googleAuth = require('google-auth-library');
@@ -36,7 +37,7 @@ if (require.main === module) {
         var file_info = yield create_file({        
           auth: auth,
           resource: {
-            name: fileName,
+            name: path.basename(fileName),
             mimeType: 'application/x-gzip',
             parents: [TRANS_FOLDER_ID]
           },
