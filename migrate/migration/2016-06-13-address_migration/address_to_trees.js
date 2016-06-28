@@ -61,12 +61,12 @@ function *updateAddress(field){
       setTimeout(function(){
         geocode.getAddress(lat, long).then(function(res){
           var update = {
-            city: res.city,
+            city: res.city || doc.city, 
             zipcode: res.zipcode,
             streetNumber: res.streetNumber,
             streetName: res.streetName,
-            county: res.county, 
-            state: res.state
+            county: res.county || doc.county, 
+            state: res.state || doc.state
           };            
           TREE.update({_id: doc._id}, update, function(err){
             if(err){

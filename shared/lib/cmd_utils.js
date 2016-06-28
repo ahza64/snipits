@@ -57,9 +57,12 @@ function bakerGen(gen, options) {
   baker.command(function*(){
     yield waitForConnections();    
     console.log("RUNNING");    
-    var result = yield gen.apply(this, arguments);
-    yield timer(3000);
-    closeConnections();
+    try {
+      var result = yield gen.apply(this, arguments);
+      yield timer(3000);      
+    } finally {
+      closeConnections();
+    }
     return result;
   }, options);    
   return baker;

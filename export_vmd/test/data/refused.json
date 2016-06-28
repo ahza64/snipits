@@ -1,6 +1,7 @@
 {
   "data": {
-    "status": "303000001000",
+    "_id": "asdf",
+    "status": "300000000010",
     "location" : {
         "type" : "Point",
         "coordinates" : [ 
@@ -21,8 +22,7 @@
     }        
   },
   "results": {
-    "sTreeRecsStatus": "CONTACT_WI",
-    "sNotification": "C",
-    "sPCode": "I"
+    "sTreeRecsStatus": "CONTACT_WI",      
+    "sNotification": "R"
   }
 }

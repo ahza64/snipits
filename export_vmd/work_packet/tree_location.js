@@ -247,14 +247,14 @@ TreeLocation.prototype.getLocationStatus = function(){
       not_ready: "work_with_restrict",
       no_trim: "no_work_with_restrict",
       left: "open",
-      worked: "work_complete"
+      worked: "work_no_restrict"
     },
     no_restrictions: {
       ready: "work_no_restrict",  
       not_ready: "open",
       no_trim: "no_work_no_restrict",
       left: "open",
-      worked: "work_complete"
+      worked: "work_no_restrict"
     }
   };
 

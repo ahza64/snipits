@@ -1,6 +1,6 @@
 /* globals describe, it */
 
-var TreeRecord = require("../tree_record");
+var TreeRecord = require("../work_packet/tree_record");
 
 var test_util = require("./util");
 var _ = require('underscore');

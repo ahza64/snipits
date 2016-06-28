@@ -27,6 +27,8 @@ require("sugar");
 *     
 * 
 *   NOTES:
+*     Exports are hard coded with sAcctType === M for mantainance 
+*         (Be aware that this will have to change if we export orchard trees)
 *     iTreeSort: Needs to be added when this record is added to a location
 *     sInspComp: need to get all the companies for users
 *     dtNextTrimDate: I could use PMD planned complete dates
@@ -164,7 +166,8 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   this.record.ExternalTreeID = tree.qsi_id || tree._id.toString();
   this.record.sTreeRecsStatus = this.getTreeRecordStatus();
   
-  // We are curretly only exporting trees as Maintenance 
+  // We are curretly only exporting trees as Maintenance (
+  // TODO: Update sAcctType if we ever export Orchard trees
   // if(pmd.type.startsWith("Orchard")) {
   this.record.sAcctType = vmd.account_types.Maintenance;
 

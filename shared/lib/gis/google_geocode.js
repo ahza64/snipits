@@ -31,7 +31,7 @@ function getAddress(x, y){
        var address = res[0];
        address.county = address.administrativeLevels.level2long;		 
        address.state = address.administrativeLevels.level1short;
-       address.streetName = address.streetName || "NO ROAD";
+       address.streetName = address.streetName;
        if(address.county) {		 
          if(address.county.endsWith("County")) {		 
            address.county = address.county.substring(0, address.county.length - " County".length);		 

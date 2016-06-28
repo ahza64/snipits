@@ -364,6 +364,24 @@ var notification_codes = {
 };
 
 
+var work_categories = {
+  "local":      "AL", // GO165 - Local             A
+  "cema":       "CM", // Proj - CEMA               E
+  "div_non_vm": "DV", // Division / Non-VM         NULL
+  "emergency":  "EM", // Emergency                 NULL
+  "express":    "EX", // EXPRESS                   NULL
+  "sar_fire":   "FP", // Proj - SRA Fire           NULL
+  "orchard":        "OP", // Orchard Project           NULL
+  "outage_reduce":  "OR", // Proj - Outage Redctn      NULL
+  "project":        "PR", // Project                   NULL
+  "routine":        "RT", // Routine Maint             NULL
+  "unit_reduce":    "UR", // Unit Reduction            NULL
+  "trow":           "WT", // TROW                      W
+  "rely_capital":   "YC", // Reliability-Capital       C
+  "rely_local":     "YL", // Reliability - Local       NULL
+  "rely_system":    "YS", // Reliability - System      NULL
+}
+
 //Mike Morley Email:  This column has not been used in a very long time.  It used to indicate what kind of billing to use 
 //                    for the tree, but now the work complete file indicates how work will be billed.   Here are the values 
 //                    just for reference:
@@ -470,6 +488,7 @@ var company_codes = {
   "Mc Colloch":                     "MCC", //      0              0              0
   "Meadowlark":                     "MEA", //      0              0              0
   "Mountain F. Enterprises":        "MFE", //      0              1              1
+  "Mountain F Enterprises":         "MFE", //      0              1              1  
   "Mtn Firewood":                   "MFW", //      0              0              0
   "Mowbray":                        "MOW", //      0              1              0
   "Mt. Firewood":                   "MTF", //      0              0              0
@@ -5304,5 +5323,6 @@ module.exports = {
   crew_type: crew_type,
   work_type: work_type,
   restriction_codes: restriction_codes, 
-  line_ids: line_ids
+  line_ids: line_ids,
+  work_categories: work_categories
 };

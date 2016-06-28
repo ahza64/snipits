@@ -1,5 +1,5 @@
 /* globals describe, it */
-var TreeLocation = require("../tree_location");
+var TreeLocation = require("../work_packet/tree_location");
 var test_tree = require("./test_trees");
 var test_util = require("./util");
 

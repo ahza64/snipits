@@ -40,7 +40,7 @@
     "circuit_name" : "BRIGHTON_DAVIS",
     "project" : "transmission_2015",
     "__v" : 0,
-    "workorder_id": "565426262895a53d2840f739",
+    "workorder_id": "WO-T-12345",
     "pi_user": {
         "_id" : "5654cfde2895a53d284117cd",
         "vehicle" : "5654cfde2895a53d284117cd",

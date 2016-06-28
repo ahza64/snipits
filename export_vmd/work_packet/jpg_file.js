@@ -22,7 +22,7 @@ var JPGFile = function(jpg_asset) {
   this.file.sFileName = jpg_asset._id+".jpg";
   this.file.sFile = jpg_asset.data;
   
-  if(this.file.sFile.startsWith("data:image/jpeg;base64,")) {
+  if(this.file.sFile && this.file.sFile.startsWith("data:image/jpeg;base64,")) {
     this.file.sFile = this.file.sFile.replace("data:image/jpeg;base64,", "");
   }
 };

@@ -2,6 +2,7 @@
 
 var _ = require('underscore');
 var co = require('co');
+var BPromise = require("bluebird");
 
 var commands = {};
 var default_command = null;
@@ -52,15 +53,12 @@ function run() {
     if(args) {
       if(commands[command].func.constructor.name === 'GeneratorFunction') {
         console.log("GOT GEN");
-        co(function*(){
-          var result = yield commands[command].func.apply(this, args);
-          console.log(result);
-        }).catch(function(e){
-          console.log("ERROR", e.message, e.stack);
-          throw e;
-          console.log("ERROR", e.message, e.stack);          
-          return Promise.reject(e);
-        });
+        BPromise.resolve(
+          co(function*(){
+            var result = yield commands[command].func.apply(this, args);
+            console.log(result);
+          })
+        );
       } else {
         var result = commands[command].func.apply(this, args);        
         if(result){

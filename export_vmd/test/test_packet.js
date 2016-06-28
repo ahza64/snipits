@@ -1,5 +1,5 @@
 /* globals describe, it */
-var WorkPacket = require("../work_packet");
+var WorkPacket = require("../work_packet/work_packet");
 var test_location = require("./test_location");
 var test_util = require("./util");
 var xsd = require('libxml-xsd');
@@ -7,7 +7,7 @@ var path = require('path');
 var process = require('process');
 var _ = require('underscore');
 
-var xsd_file_path =   path.dirname(__filename)+'/../../xsd/work-packet.xsd';
+var xsd_file_path =   path.dirname(__filename)+'/../xsd/work-packet.xsd';
 var packets = {
   simple_packet: require("./data/simple_packet.json"),
   packet1: require("./data/work_packet1.json")
@@ -45,6 +45,7 @@ function createTest(packet_name, packet) {
     //TODO: Fix this ... schema check is not working (never errors)
     test_util.testResults(packet.results, "work_packet", packet_name, workPacket.packet);
     xsd.parseFile(xsd_file_path, function(err, schema){    
+      if(err) { err = err.message; }
       (err === null).should.be.eql(true, err);
       schema.validate(workPacket.toXML(), function(err, validationErrors){
         // err contains any technical error 
