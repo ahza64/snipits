@@ -118,7 +118,7 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
       packet.addLocation(createLocation(locations[name], pmd, images));
     }
 
-    var filename = "vmd_export_"+pmd.pge_pmd_num + "_" + cuf.uniq_id + "_" +"_"+export_name+".WR";
+    var filename = "vmd_export_"+pmd.pge_pmd_num + "_" + cuf.uniq_id + "_" +"_"+export_name+".WP";
     if(!fs.existsSync(export_dir)){
       fs.mkdir(export_dir);
     }

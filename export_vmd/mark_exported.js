@@ -94,7 +94,7 @@ function *get_trees(folder) {
   
   for(var i = 0; i < files.length; i++) {
     var file = files[i];
-    if(file.endsWith('WR')) {
+    if(file.endsWith('WP')) {
       
       file = yield fs.readFileAsync([folder, file].join('/'));
       var work_packet = yield xml2js.parseStringAsync(file);
