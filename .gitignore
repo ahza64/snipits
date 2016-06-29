@@ -43,4 +43,5 @@ node_modules/*
 **/conf.d/*.json
 
 data
+!export_vmd/test/data
 pdf_generation_service/public/pdf/*
