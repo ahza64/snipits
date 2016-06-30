@@ -18,24 +18,43 @@ const TreeLocation = require("../work_packet/tree_location");
 const TreeRecord = require("../work_packet/tree_record");
 const Export = require("dsp_shared/database/model/export");
 
+
+const WorkComplete = require("../work_complete/work_complete");
+
+
 var export_dir = "vmd_export";
 
-function buildQuery(startDate, endDate, includeExported, treeIds) {
+function buildQuery(startDate, endDate, includeExported, treeIds, workComplete) {
   console.log("from", startDate);
   console.log("to", endDate);
   console.log("includeExported", includeExported);  
   console.log("treeIds", treeIds);
-  var query = { status: { $regex: /^[245]/}, pi_user_id: { $exists: true, $ne: null } };
+  var query;
+  if(workComplete) {
+    query = {tc_user_id: { $ne: null }, status: { $regex: /^[5]/}};
+  } else {
+    query = {pi_user_id: { $ne: null }, status: { $regex: /^[245]/}};
+  }
+
+  var exported_field = 'exported';      
+  var date_field = "pi_complete_time";
+  if(workComplete) {
+    exported_field = 'exported_worked';
+    date_field = "tc_complete_time";
+  } 
+  
 
   if(!includeExported) {
-    query.exported = null;
+    query[exported_field] = null;
   }
 
+
+
   if(startDate) {
-    query.pi_complete_time = {$gte: startDate};
+    query[date_field] = {$gte: startDate};
   }
   if(endDate) {
-    query.pi_complete_time = _.extend({}, {$lte: endDate}, query.pi_complete_time);
+    query[date_field] = _.extend({}, {$lte: endDate}, query[date_field]);
   }
 
   query.span_name = { $ne: null };
@@ -47,9 +66,18 @@ function buildQuery(startDate, endDate, includeExported, treeIds) {
 }
 
 
-
-function *run(startDate, endDate, includeExported, treeIds, export_name, email) {
-  if(startDate === undefined) {
+/**
+ * @param {String} startDate the start range of tree inspections.  
+ *                  null == start of time. "last_export" === date of the last export
+ * @param {String} endDate the end range of tree inspeciton date.  null == now
+ * @param {Boolean} includeExported
+ * @parms {String|Array} Comma delimited tree ids or list of tree ids to export
+ * @parms {Stirng} exportName sub directory to store export files
+ * @parms {String} email email address for test system to send errors 
+ */
+function *run(startDate, endDate, includeExported, treeIds, exportName, email, workComplete, incrementTime) {
+  //sanitize input
+  if(startDate === "last_export") {
     var export_dates = yield TreeModel.distinct("exported", {});
     export_dates.sort(function(a,b){
       return b - a;
@@ -70,19 +98,75 @@ function *run(startDate, endDate, includeExported, treeIds, export_name, email) 
     treeIds = _.map(treeIds, function(t) { return mongoose.Types.ObjectId(t); });
   }
 
-  if(!export_name) {
-    export_name = JSON.parse(JSON.stringify(new Date())).replace(/:/g, '.');  
+  if(!exportName) {
+    exportName = JSON.parse(JSON.stringify(new Date())).replace(/:/g, '.');  
   }
-  if(export_name) {
+  if(exportName) {
     if(!fs.existsSync(export_dir)){
       fs.mkdir(export_dir);
     }    
-    export_dir = [export_dir, export_name].join('/');
+    export_dir = [export_dir, exportName].join('/');
     console.log("UPDATING EXPORT DIR", export_dir);
   }
-  return yield generateWorkPacket(startDate,endDate, includeExported, treeIds, export_name, email);
+  if(workComplete) {
+    return yield generateWorkComplete(startDate,endDate, includeExported, treeIds, exportName, email, incrementTime);
+  } else {
+    return yield generateWorkPacket(startDate,endDate, includeExported, treeIds, exportName, email, incrementTime);
+  }
 }    
-function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export_name, email) {
+
+
+function *generateWorkComplete(startDate, endDate, includeExported, treeIds, exportName, email) {
+  var query = buildQuery(startDate, endDate, includeExported, treeIds, true);
+  console.log("TREE QUERY", query);
+  
+  var trees = yield TreeModel.find(query);
+
+  var cufs = yield CufModel.find({ work_type: 'tree_trim' });   
+  var images = yield AssetModel.find({ _id: { $in: _.map(trees, tree => tree.tc_image) } }, { data: 1 });
+  var exports = yield Export.find({type: "vmd_work_packet", tree_id: {$in: _.map(trees, tree => tree._id)}});
+  
+  cufs = _.indexBy(cufs, cuf => cuf._id.toString());
+  exports = _.indexBy(exports, exp => exp.tree_id.toString());
+  images = _.indexBy(images, image => image._id.toString());
+  
+  var export_warnings = 0;
+  for(var i = 0; i < trees.length; i++) {
+    var tree = trees[i];
+    var image = null;
+    if(tree.tc_image) {
+      image = images[tree.tc_image.toString()];
+    }
+    var cuf = cufs[tree.tc_user_id.toString()];    
+    var exp = exports[tree._id.toString()];
+    
+    if(!exp) {
+      if(!tree.exported) {
+        console.error("Tree Not Exported via vmd_work_packet", tree._id, tree.pi_complete_time, tree.tc_complete_time);
+      } else {
+        export_warnings++;
+      }
+    } else {
+      tree.workorder_id = exp.workorder_id;
+      var work_complete = new WorkComplete(tree, cuf, image, email);      
+      var filename = "vmd_export_"+tree._id.toString() + "_" + cuf.uniq_id + "_" +"_"+exportName+".WC";
+      if(!fs.existsSync(export_dir)){
+        fs.mkdir(export_dir);
+      }
+      console.log("Creating ", export_dir, filename);
+      fs.writeFile(export_dir+"/"+filename, work_complete.toXML());          
+    }    
+  }
+  if(export_warnings) {
+    console.warn("Trees Not Exported via vmd_work_packet: ", export_warnings);
+  }
+}
+
+
+/**
+ * @description generate workpacket export the the deired trees
+ */
+function *generateWorkPacket(startDate,endDate, includeExported, treeIds, exportName, email, incrementTime) {
   var query = buildQuery(startDate, endDate, includeExported, treeIds);
   var cufs = yield CufModel.find({ work_type: 'tree_inspect' });
   
@@ -105,7 +189,7 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
     var images = yield AssetModel.find({ _id: { $in: aggr.trees.map(tree => tree.image) } }, { data: 1 });
     var cuf = _.find(cufs, cuf => cuf._id.toString() === aggr._id.pi_user_id.toString());
 
-    aggr.trees.forEach(tree => preprareTree(tree, workorders, circuits, cuf));
+    aggr.trees.forEach(tree => preprareTree(tree, workorders, circuits, cuf, incrementTime));
 
     var locations = _.groupBy(aggr.trees, tree => tree.workorder_id);
     var location_names = Object.keys(locations);
@@ -118,7 +202,8 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
       packet.addLocation(createLocation(locations[name], pmd, images));
     }
 
-    var filename = "vmd_export_"+pmd.pge_pmd_num + "_" + cuf.uniq_id + "_" +"_"+export_name+".WP";
+
+    var filename = "vmd_export_"+pmd.pge_pmd_num + "_" + cuf.uniq_id + "_" +"_"+exportName+".WP";
     if(!fs.existsSync(export_dir)){
       fs.mkdir(export_dir);
     }
@@ -127,12 +212,17 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
   }
 }
 
-function preprareTree(tree, workorders, circuits, cuf) {
+function preprareTree(tree, workorders, circuits, cuf, incrementTime) {
   var uniq_id = tree.pge_pmd_num + tree.span_name + tree.streetNumber + tree.streetName + tree.city + tree.zipcode;
   var workorder = _.find(workorders, wo => wo.uniq_id === uniq_id);
   tree.pi = cuf;
   tree.circuit = _.find(circuits, circuit => circuit.name === tree.circuit_name);
   tree.workorder_id = 'WO-T-' + workorder.name;
+  
+  if(incrementTime) {
+    assert(tree.pi_complete_time, "Missing PI complete time: "+tree._id);
+    tree.pi_complete_time = Date.create(tree.pi_complete_time).addMinutes(incrementTime);
+  }
   return tree;
 }
 

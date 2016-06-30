@@ -10,7 +10,7 @@ var projectSchema = new mongoose.Schema({
   region: {type: String, index: true },  
   division: {type: String, index: true },    
   pge_pmd_num: {type: String, index: { unique: true }},
-
+  vmd_circuit_num:  {type: String, index: { unique: true }},
   plan_pi_complete: { type: Date, default: Date.now, index: true},
   plan_tc_complete: { type: Date, default: Date.now, index: true},
   status: {type: String, index: true},

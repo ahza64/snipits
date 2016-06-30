@@ -142,7 +142,8 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   this.tree.line_voltage = this.line.voltage;
   this.tree.line_number = this.line.line_number;
   this.tree.line_type = this.line.type || 'transmission';
-    
+
+  this.tree.pmd_name = pmd.name;
     
   this.record = _.extend({}, TREE_RECORD);
   
@@ -156,6 +157,9 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   this.record.sPCode = this.getPriorityCode();
   this.record.sComment = tree.comment || null;
   this.record.dtInspDate = this.formatDate(tree.pi_complete_time); 
+  this.record.sLineID2 = this.tree.line_number;
+  
+  
   if(tree.pi_complete_time) {
     this.record.dtNextTrimDate = this.formatDate(Date.create(tree.pi_complete_time).addYears(1));
     this.record.dtNextTrimDate = JSON.parse(JSON.stringify(this.record.dtNextTrimDate));        

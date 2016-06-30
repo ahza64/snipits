@@ -1,48 +1,17 @@
 const utils = require('dsp_shared/lib/cmd_utils');
 utils.connect(['meteor']);
-
-const assert = require("assert");
-const parse = require('csv-parse');
-const _ = require('underscore');
-const BPromise = require("bluebird");
 const fs = require('fs');
-const log = require('log4js').getLogger('['+__filename+']');
+const assert = require("assert");
+const _ = require('underscore');
 const path = require('path');
 const Tree = require('dsp_shared/database/model/tree');
 require("sugar");
+const readCSVFile = require("dsp_shared/lib/read_csv");
 
-function readCSVExport(file_path){
-  return new BPromise(function(resolve, reject){
-    console.log("READING", file_path);
-    var parser = parse({columns: true});    
-    var input = fs.createReadStream(file_path);
-    input.pipe(parser);
-    var records = [];
-
-    parser.on('readable', function(){
-      while(true){
-        var record = parser.read();
-        if( record ) {
-          records.push(record);
-        } else {
-          break;
-        }
-      }
-    });
-    
-    parser.on('end', function(){
-      log.info("CSV Record Count:", _.size(records));
-      resolve(records);
-    });
-    parser.on('error', function(error){
-      reject(error);
-    });
-  });
-}
 
 
 function *createMapping(file_path) {
-  var records = yield readCSVExport(file_path);
+  var records = yield readCSVFile(file_path);
   var inspect_date_mapping = {};
   _.each(records, function(record){
     assert(record.DISPATCHR_ID);
@@ -72,13 +41,13 @@ function *run(fix) {
   for(i = 0; i < trees.length; i++) {
     var tree = trees[i];
     if(mapping[tree._id.toString()]) {
-      if(mapping[tree._id.toString()] > tree.pi_complete_time) {
+      if(mapping[tree._id.toString()] >= tree.pi_complete_time) {
         console.error("New date is after the old one", tree._id, tree.pi_complete_time, '==>', mapping[tree._id.toString()]);
       } else {
         console.log("Updating Tree", tree._id, tree.pi_complete_time, '==>', mapping[tree._id.toString()]);
         tree.pi_complete_time = mapping[tree._id.toString()];
         if(fix) {
-          tree.save();
+          yield tree.save();
         }        
       }
       

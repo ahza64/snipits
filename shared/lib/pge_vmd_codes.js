@@ -73,6 +73,3731 @@ var crew_type = {
   veg_crew:           "VC", // VC: Veg Crew P/U w/Spray-Tank w/Tools 
 };
 
+
+
+var circuit_numbers = { 
+  "LOS GATOS 1107":               "0082021107", //CC	& DA
+  "INDUSTRIAL ACRES 0414":        "0082300414", //CC	
+  "PACHECO 1101":                 "0082511101", //CC	
+  "BIG BASIN 1101":               "0082841101", //CC	
+  "BIG BASIN 1102":               "0082841102", //CC & DA
+  "POINT MORETTI 1101":           "0082941101", //CC	
+  "ARANA 0401":                   "0083010401", //CC	
+  "ARANA 0402":                   "0083010402", //CC	
+  "BEN LOMOND 0401":              "0083040401", //CC	
+  "BEN LOMOND 1101":              "0083041101", //CC	
+  "BIG TREES 0402":               "0083050402", //CC	
+  "BLAINE STREET 0401":           "0083060401", //CC	
+  "BLAINE STREET 0403":           "0083060403", //CC	
+  "BLAINE STREET 0405":           "0083060405", //CC	
+  "BLAINE STREET 0406":           "0083060406", //CC	
+  "BLAINE STREET 0407":           "0083060407", //CC	
+  "CASSERLY 0401":                "0083110401", //CC	
+  "EAST LAKE AVENUE 0401":        "0083130401", //CC	
+  "EAST LAKE AVENUE 0402":        "0083130402", //CC	
+  "FELTON 0401":                  "0083140401", //CC	
+  "FREEDOM 0401":                 "0083160401", //CC	
+  "GREEN VALLEY 2101":            "0083192101", //CC	
+  "GREEN VALLEY 2102":            "0083192102", //CC	
+  "GREEN VALLEY 2103":            "0083192103", //CC	
+  "GREEN VALLEY 2104":            "0083192104", //CC	
+  "CAPITOLA 0401":                "0083200401", //CC	
+  "CAPITOLA 0402":                "0083200402", //CC	
+  "CLIFF DRIVE 0401":             "0083230401", //CC	
+  "CLIFF DRIVE 0402":             "0083230402", //CC	
+  "CLIFF DRIVE 0403":             "0083230403", //CC	
+  "PAUL SWEET 2102":              "0083252102", //CC	
+  "PAUL SWEET 2103":              "0083252103", //CC	
+  "PAUL SWEET 2104":              "0083252104", //CC	
+  "PAUL SWEET 2105":              "0083252105", //CC	
+  "PAUL SWEET 2106":              "0083252106", //CC	
+  "PAUL SWEET 2107":              "0083252107", //CC	
+  "RIO DEL MAR 0401":             "0083260401", //CC	
+  "RIO DEL MAR 0402":             "0083260402", //CC	
+  "SOQUEL 0401":                  "0083300401", //CC	
+  "SOQUEL 0402":                  "0083300402", //CC	
+  "PAJARO 0401":                  "0083320401", //CC	
+  "WATSONVILLE 0401":             "0083330401", //CC	
+  "WATSONVILLE 0411":             "0083330411", //CC	
+  "WATSONVILLE 0412":             "0083330412", //CC	
+  "WATSONVILLE 0413":             "0083330413", //CC	
+  "WATSONVILLE 0414":             "0083330414", //CC	
+  "WATSONVILLE 2101":             "0083332101", //CC	
+  "OPAL CLIFFS 0401":             "0083450401", //CC	
+  "OPAL CLIFFS 0402":             "0083450402", //CC	
+  "SEACLIFF 0401":                "0083500401", //CC	
+  "SEACLIFF 0402":                "0083500402", //CC	
+  "ERTA 0401":                    "0083510401", //CC	
+  "ERTA 0403":                    "0083510403", //CC	
+  "ERTA 0404":                    "0083510404", //CC	
+  "MEDER 0401":                   "0083550401", //CC	
+  "BURNS 2401":                   "0083582401", //CC	
+  "CAMP EVERS 2104":              "0083622104", //CC	
+  "CAMP EVERS 2105":              "0083622105", //CC	& DA
+  "CAMP EVERS 2106":              "0083622106", //CC	& DA
+  "ROB ROY 2104":                 "0083692104", //CC	
+  "ROB ROY 2105":                 "0083692105", //CC	
+  "ROLAND SUB 0401":              "0083750401", //CC	
+  "ROLAND SUB 0402":              "0083750402", //CC	
+  "COAST RD. 0401":               "0088820401", //CC	
+  "STRUVE RD. 1101":              "0088831101", //CC	
+  "QUARRY RD. 0401":              "0088870401", //CC	
+  "LOMPICO 0401":                 "0088880401", //CC	
+  "SALINAS 0402":                 "0182010402", //CC	
+  "SALINAS 0403":                 "0182010403", //CC	
+  "SALINAS 0406":                 "0182010406", //CC	
+  "SALINAS 0407":                 "0182010407", //CC	
+  "SALINAS 0408":                 "0182010408", //CC	
+  "SALINAS 0412":                 "0182010412", //CC	
+  "SALINAS 1101":                 "0182011101", //CC	
+  "SALINAS 1102":                 "0182011102", //CC	
+  "SALINAS 1103":                 "0182011103", //CC	
+  "SALINAS 1104":                 "0182011104", //CC	
+  "SALINAS 1105":                 "0182011105", //CC	
+  "SALINAS 1106":                 "0182011106", //CC	
+  "SALINAS 1107":                 "0182011107", //CC	
+  "KING CITY 1101":               "0182031101", //CC	
+  "KING CITY 1102":               "0182031102", //CC	
+  "KING CITY 1103":               "0182031103", //CC	
+  "KING CITY 1104":               "0182031104", //CC	
+  "KING CITY 1105":               "0182031105", //CC	
+  "KING CITY 1106":               "0182031106", //CC	
+  "CARMEL 0401":                  "0182040401", //CC	
+  "CARMEL 0402":                  "0182040402", //CC	
+  "CARMEL 0403":                  "0182040403", //CC	
+  "CARMEL 0405":                  "0182040405", //CC	
+  "SOLEDAD 1114":                 "0182051114", //CC	
+  "SOLEDAD 2101":                 "0182052101", //CC	
+  "CAMPHORA 0401":                "0182070401", //CC	
+  "CAMPHORA 1101":                "0182071101", //CC	
+  "LOS OSITOS 2101":              "0182082101", //CC	
+  "MONTEREY 0401":                "0182090401", //CC	
+  "MONTEREY 0402":                "0182090402", //CC	
+  "GONZALES 1101":                "0182131101", //CC	
+  "GONZALES 1102":                "0182131102", //CC	
+  "GONZALES 1103":                "0182131103", //CC	
+  "GONZALES 1104":                "0182131104", //CC	
+  "LOS COCHES 1101":              "0182151101", //CC	
+  "LOS COCHES 1102":              "0182151102", //CC	
+  "SAN ARDO 1101":                "0182191101", //CC	
+  "SAN ARDO 1102":                "0182191102", //CC	
+  "SPENCE 1121":                  "0182201121", //CC	
+  "SPENCE 1122":                  "0182201122", //CC	
+  "SPENCE 1123":                  "0182201123", //CC	
+  "DEL MONTE 1101":               "0182221101", //CC	
+  "DEL MONTE 2102":               "0182222102", //CC	
+  "DEL MONTE 2103":               "0182222103", //CC	
+  "DEL MONTE 2104":               "0182222104", //CC	
+  "DEL MONTE 2105":               "0182222105", //CC	
+  "BUENA VISTA 0401":             "0182260401", //CC	
+  "BUENA VISTA 0402":             "0182260402", //CC	
+  "BUENA VISTA 1101":             "0182261101", //CC	
+  "BUENA VISTA 1102":             "0182261102", //CC	
+  "BUENA VISTA 1103":             "0182261103", //CC	
+  "BUENA VISTA 1104":             "0182261104", //CC	
+  "HATTON 1101":                  "0182291101", //CC	
+  "HATTON 1102":                  "0182291102", //CC	
+  "INDUSTRIAL ACRES 0411":        "0182300411", //CC	
+  "INDUSTRIAL ACRES 0412":        "0182300412", //CC	
+  "INDUSTRIAL ACRES 0413":        "0182300413", //CC	
+  "INDUSTRIAL ACRES 0415":        "0182300415", //CC	
+  "GABILAN 1101":                 "0182331101", //CC	
+  "GABILAN 1102":                 "0182331102", //CC	
+  "CASTROVILLE 2103":             "0182352103", //CC	
+  "CASTROVILLE 2104":             "0182352104", //CC	
+  "LAURELES 1111":                "0182371111", //CC	
+  "LAURELES 1112":                "0182371112", //CC	
+  "DOLAN ROAD 1101":              "0182381101", //CC	
+  "DOLAN ROAD 1102":              "0182381102", //CC	
+  "DOLAN ROAD 1103":              "0182381103", //CC	
+  "DOLAN ROAD 1104":              "0182381104", //CC	
+  "OILFIELDS 1102":               "0182391102", //CC	
+  "OILFIELDS 1103":               "0182391103", //CC	& LP
+  "OILFIELDS 1104":               "0182391104", //CC	
+  "FORT ORD 1101":                "0182401101", //CC	
+  "FORT ORD 1102":                "0182401102", //CC	
+  "FORT ORD 1103":                "0182401103", //CC	
+  "FORT ORD 1104":                "0182401104", //CC	
+  "FORT ORD 1105":                "0182401105", //CC	
+  "FORT ORD 1106":                "0182401106", //CC	
+  "FORT ORD 1107":                "0182401107", //CC	
+  "FORT ORD 1108":                "0182401108", //CC	
+  "FORT ORD 1109":                "0182401109", //CC	
+  "FOREST 0422":                  "0182420422", //CC	
+  "PACIFIC GROVE 0421":           "0182440421", //CC	
+  "PACIFIC GROVE 0422":           "0182440422", //CC	
+  "PACIFIC GROVE 0423":           "0182440423", //CC	
+  "PACIFIC GROVE 0424":           "0182440424", //CC	
+  "BORONDA 1101":                 "0182461101", //CC	
+  "BORONDA 1102":                 "0182461102", //CC	
+  "HOLLISTER 2101":               "0182492101", //CC	
+  "HOLLISTER 2102":               "0182492102", //CC	
+  "HOLLISTER 2103":               "0182492103", //CC	
+  "HOLLISTER 2104":               "0182492104", //CC	
+  "HOLLISTER 2105":               "0182492105", //CC	
+  "TRES PINOS 1111":              "0182531111", //CC	
+  "MANZANITA 0402":               "0182700402", //CC	
+  "MANZANITA 0403":               "0182700403", //CC	
+  "SAN JUSTO 1101":               "0182711101", //CC	
+  "RESERVATION ROAD 1101":        "0182731101", //CC	
+  "RESERVATION ROAD 1102":        "0182731102", //CC	
+  "VIEJO 2201":                   "0182852201", //CC	
+  "VIEJO 2202":                   "0182852202", //CC	
+  "VIEJO 2203":                   "0182852203", //CC	
+  "VIEJO 2204":                   "0182852204", //CC	
+  "OTTER 1101":                   "0182941101", //CC	
+  "OTTER 1102":                   "0182941102", //CC	
+  "PRUNEDALE 1107":               "0182961107", //CC	
+  "PRUNEDALE 1110":               "0182961110", //CC	
+  "JOLON 1102":                   "0182981102", //CC	
+  "PANOCHE VALLEY 1103":          "0188001103", //CC	
+  "ASBESTOS 1101":                "0188051101", //CC	
+  "Cal-Trans Hwy 9":              "018HW09001", //CC	
+  "TRAN - CC 60Kv":               "TR00806001", //CC	
+  "TRAN - CC 70Kv":               "TR00807001", //CC	
+  "TRAN - CC 115Kv":              "TR00811501", //CC	
+  "TRAN - CC 230Kv":              "TR00823001", //CC	
+  "TRAN - CC 500Kv":              "TR00850001", //CC	
+  "CR-Aerial Patrol CC":            "TRC2301111", //CC	
+  "LOS GATOS 1101":               "0082021101", //DA	
+  "LOS GATOS 1102":               "0082021102", //DA	
+  "LOS GATOS 1106":               "0082021106", //DA	
+  "LOS GATOS 1108":               "0082021108", //DA	
+  "MOUNTAIN VIEW 1102":           "0082031102", //DA	
+  "MOUNTAIN VIEW 1103":           "0082031103", //DA	
+  "MOUNTAIN VIEW 1104":           "0082031104", //DA	
+  "MOUNTAIN VIEW 1105":           "0082031105", //DA	
+  "MOUNTAIN VIEW 1106":           "0082031106", //DA	
+  "MOUNTAIN VIEW 1107":           "0082031107", //DA	
+  "MOUNTAIN VIEW 1108":           "0082031108", //DA	
+  "MOUNTAIN VIEW 1109":           "0082031109", //DA	
+  "MOUNTAIN VIEW 1110":           "0082031110", //DA	
+  "MOUNTAIN VIEW 1111":           "0082031111", //DA	
+  "MOUNTAIN VIEW 1112":           "0082031112", //DA	
+  "MOUNTAIN VIEW 1113":           "0082031113", //DA	
+  "MOUNTAIN VIEW 1114":           "0082031114", //DA	
+  "LOYOLA 0401":                  "0082160401", //DA	
+  "LOYOLA 0403":                  "0082160403", //DA	
+  "LOYOLA 1101":                  "0082161101", //DA	
+  "LOYOLA 1102":                  "0082161102", //DA	
+  "LOS ALTOS 0403":               "0082240403", //DA	
+  "LOS ALTOS 1103":               "0082241103", //DA	
+  "LOS ALTOS 1104":               "0082241104", //DA	
+  "LOS ALTOS 1105":               "0082241105", //DA	
+  "LOS ALTOS 1106":               "0082241106", //DA	
+  "LOS ALTOS 1107":               "0082241107", //DA	
+  "River Oaks 2102":              "0082342102", //DA	
+  "MENLO 1103 DA":                   "0082481103", //DA	
+  "MILPITAS 1103":                "0082831103", //DA	& SJ
+  "MILPITAS 2104":                "0082832104", //DA	& SJ
+  "EL PATIO 1101":                "0082921101", //DA	
+  "EL PATIO 1102":                "0082921102", //DA	& SJ
+  "EL PATIO 1103":                "0082921103", //DA	& SJ
+  "EL PATIO 1104":                "0082921104", //DA	& SJ
+  "EL PATIO 1106":                "0082921106", //DA	& SJ
+  "EL PATIO 1107":                "0082921107", //DA	& SJ
+  "EL PATIO 1108":                "0082921108", //DA	& SJ
+  "EL PATIO 1109":                "0082921109", //DA	& SJ
+  "EL PATIO 1110":                "0082921110", //DA	& SJ
+  "EL PATIO 1111":                "0082921111", //DA	
+  "EL PATIO 1112":                "0082921112", //DA	& SJ
+  "EL PATIO 1113":                "0082921113", //DA	
+  "EL PATIO 1114":                "0082921114", //DA	
+  "EL PATIO 1115":                "0082921115", //DA	
+  "EDENVALE 2111":                "0082952111", //DA	& SJ
+  "EDENVALE 2112":                "0082952112", //DA	& SJ
+  "EDENVALE 2113":                "0082952113", //DA	& SJ
+  "LOCKHEED NO.1 1101":           "0082991101", //DA	
+  "LOCKHEED NO.1 1103":           "0082991103", //DA	
+  "LOCKHEED NO.2 1102":           "0083001102", //DA	
+  "LOCKHEED NO.2 1103":           "0083001103", //DA	
+  "LOCKHEED NO.2 1106":           "0083001106", //DA	
+  "LOCKHEED NO.2 1107":           "0083001107", //DA	
+  "SARATOGA 1103":                "0083371103", //DA	
+  "SARATOGA 1104":                "0083371104", //DA	
+  "SARATOGA 1105":                "0083371105", //DA	
+  "SARATOGA 1106":                "0083371106", //DA	
+  "SARATOGA 1107":                "0083371107", //DA	
+  "SARATOGA 1108":                "0083371108", //DA	
+  "SARATOGA 1109":                "0083371109", //DA	
+  "SARATOGA 1110":                "0083371110", //DA	& SJ
+  "SARATOGA 1111":                "0083371111", //DA	& SJ
+  "SARATOGA 1112":                "0083371112", //DA	& SJ
+  "SARATOGA 1113":                "0083371113", //DA	& SJ
+  "SARATOGA 1114":                "0083371114", //DA	& SJ
+  "SARATOGA 1115":                "0083371115", //DA	
+  "LAWRENCE 1102":                "0083421102", //DA	
+  "LAWRENCE 1103":                "0083421103", //DA	
+  "LAWRENCE 1104":                "0083421104", //DA	
+  "LAWRENCE 1105":                "0083421105", //DA	
+  "LAWRENCE 1106":                "0083421106", //DA	
+  "LAWRENCE 1107":                "0083421107", //DA	
+  "LAWRENCE 1108":                "0083421108", //DA	
+  "LAWRENCE 1109":                "0083421109", //DA	
+  "LAWRENCE 1110":                "0083421110", //DA	& SJ
+  "LAWRENCE 1111":                "0083421111", //DA	
+  "LAWRENCE 1112":                "0083421112", //DA	
+  "LAWRENCE 1113":                "0083421113", //DA	
+  "HICKS 1109":                   "0083431109", //DA	& SJ
+  "HICKS 1111":                   "0083431111", //DA	& SJ
+  "HICKS 1113":                   "0083431113", //DA	& SJ
+  "HICKS 1114":                   "0083431114", //DA	& SJ
+  "HICKS 1115":                   "0083431115", //DA	& SJ
+  "HICKS 1116":                   "0083431116", //DA	& SJ
+  "HICKS 1117":                   "0083431117", //DA	& SJ
+  "HICKS 2103":                   "0083432103", //DA	& SJ
+  "STELLING 1102":                "0083481102", //DA	
+  "STELLING 1103":                "0083481103", //DA	
+  "STELLING 1104":                "0083481104", //DA	
+  "STELLING 1105":                "0083481105", //DA	
+  "STELLING 1106":                "0083481106", //DA	
+  "STELLING 1107":                "0083481107", //DA	
+  "STELLING 1108":                "0083481108", //DA	
+  "STELLING 1109":                "0083481109", //DA	
+  "STELLING 1110":                "0083481110", //DA	
+  "STELLING 1111":                "0083481111", //DA	
+  "STELLING 1112":                "0083481112", //DA	
+  "STELLING 1113":                "0083481113", //DA	
+  "BRITTON 1104":                 "0083611104", //DA	
+  "BRITTON 1105":                 "0083611105", //DA	
+  "BRITTON 1106":                 "0083611106", //DA	
+  "BRITTON 1107":                 "0083611107", //DA	
+  "BRITTON 1108":                 "0083611108", //DA	
+  "BRITTON 1109":                 "0083611109", //DA	
+  "BRITTON 1110":                 "0083611110", //DA	
+  "BRITTON 1111":                 "0083611111", //DA	
+  "BRITTON 1112":                 "0083611112", //DA	
+  "BRITTON 1113":                 "0083611113", //DA	
+  "BRITTON 1114":                 "0083611114", //DA	
+  "BRITTON 1115":                 "0083611115", //DA	
+  "WHISMAN 1101":                 "0083631101", //DA	
+  "WHISMAN 1102":                 "0083631102", //DA	
+  "WHISMAN 1103":                 "0083631103", //DA	
+  "WHISMAN 1104":                 "0083631104", //DA	
+  "WHISMAN 1105":                 "0083631105", //DA	
+  "WHISMAN 1106":                 "0083631106", //DA	
+  "WHISMAN 1107":                 "0083631107", //DA	
+  "WHISMAN 1108":                 "0083631108", //DA	
+  "WHISMAN 1109":                 "0083631109", //DA	
+  "WHISMAN 1110":                 "0083631110", //DA	
+  "WHISMAN 1111":                 "0083631111", //DA	
+  "WOLFE 1103":                   "0083671103", //DA	
+  "WOLFE 1104":                   "0083671104", //DA	
+  "WOLFE 1105":                   "0083671105", //DA	
+  "WOLFE 1107":                   "0083671107", //DA	
+  "WOLFE 1108":                   "0083671108", //DA	
+  "WOLFE 1109":                   "0083671109", //DA	
+  "WOLFE 1110":                   "0083671110", //DA	
+  "WOLFE 1113":                   "0083671113", //DA	
+  "WOLFE 1114":                   "0083671114", //DA	
+  "VASONA 1101":                  "0083771101", //DA	
+  "VASONA 1102":                  "0083771102", //DA	
+  "VASONA 1103":                  "0083771103", //DA	
+  "VASONA 1104":                  "0083771104", //DA	
+  "VASONA 1105":                  "0083771105", //DA	
+  "VASONA 1108":                  "0083771108", //DA	
+  "AMD 1101":                     "0083851101", //DA	
+  "FMC 1109":                     "0083871109", //DA	& SJ
+  "FMC 1110":                     "0083871110", //DA	& SJ
+  "FMC 1111":                     "0083871111", //DA	& SJ
+  "Ames 1101":                    "0083901101", //DA	
+  "Ames 1102":                    "0083901102", //DA	
+  "CALTRANS PROJECT":             "008HW0001 ", //DA	
+  "TRAN - DA 60Kv":               "TR00806002", //DA	
+  "TRAN - DA 70Kv":               "TR00807002", //DA	
+  "TRAN - DA 115Kv":              "TR00811502", //DA	
+  "TRAN - DA 230Kv":              "TR00823002", //DA	
+  "TRAN - DA 500Kv":              "TR00850002", //DA	
+  "CLAYTON 1103":                 "0012021103", //DI	
+  "CLAYTON 1104":                 "0012021104", //DI	
+  "CLAYTON 2211":                 "0012022211", //DI	
+  "CLAYTON 2212":                 "0012022212", //DI	
+  "CLAYTON 2213":                 "0012022213", //DI	
+  "CLAYTON 2214":                 "0012022214", //DI	
+  "CLAYTON 2215":                 "0012022215", //DI	
+  "CLAYTON 2216":                 "0012022216", //DI	
+  "CLAYTON 2217":                 "0012022217", //DI	
+  "SUBSTATION K 1102":            "0012101102", //DI	& EB
+  "ANTIOCH 0401":                 "0012130401", //DI	
+  "ANTIOCH 0402":                 "0012130402", //DI	
+  "ANTIOCH 0403":                 "0012130403", //DI	
+  "ANTIOCH 0404":                 "0012130404", //DI	
+  "PITTSBURG 0401":               "0012160401", //DI	
+  "PITTSBURG 0402":               "0012160402", //DI	
+  "WALNUT CREEK 0403":            "0012200403", //DI	
+  "WALNUT CREEK 0404":            "0012200404", //DI	
+  "ORINDA 0401":                  "0012350401", //DI	
+  "CONCORD NO 1 0401":            "0012960401", //DI	
+  "CONCORD NO 1 0402":            "0012960402", //DI	
+  "BRYANT 0401":                  "0013090401", //DI	
+  "BRYANT 0402":                  "0013090402", //DI	
+  "LONE TREE 2101":               "0013232101", //DI	
+  "LONE TREE 2102":               "0013232102", //DI	
+  "LONE TREE 2105":               "0013232105", //DI	
+  "WHITNEY 0402":                 "0013240402", //DI	
+  "PLEASANT HILL 0401":           "0013300401", //DI	
+  "FAIRVIEW 2206":                "0013432206", //DI	
+  "FAIRVIEW 2207":                "0013432207", //DI	
+  "FAIRVIEW 2208":                "0013432208", //DI	
+  "LAKEWOOD 1101":                "0013531101", //DI	
+  "LAKEWOOD 1102":                "0013531102", //DI	
+  "LAKEWOOD 1103":                "0013531103", //DI	
+  "LAKEWOOD 1104":                "0013531104", //DI	
+  "LAKEWOOD 2107":                "0013532107", //DI	
+  "LAKEWOOD 2108":                "0013532108", //DI	
+  "LAKEWOOD 2109":                "0013532109", //DI	
+  "LAKEWOOD 2110":                "0013532110", //DI	
+  "LAKEWOOD 2111":                "0013532111", //DI	
+  "LAKEWOOD 2112":                "0013532112", //DI	
+  "LAKEWOOD 2223":                "0013532223", //DI	
+  "LAKEWOOD 2224":                "0013532224", //DI	
+  "LAKEWOOD 2225":                "0013532225", //DI	
+  "LAKEWOOD 2226":                "0013532226", //DI	
+  "GILL 0401":                    "0013550401", //DI	
+  "GILL 0402":                    "0013550402", //DI	
+  "SARANAP 0401":                 "0013560401", //DI	
+  "ROBLES 0401":                  "0013580401", //DI	
+  "GEARY 0401":                   "0013590401", //DI	
+  "LAS AROMAS 0401":              "0013600401", //DI	
+  "CONTRA COSTA 1102":            "0013651102", //DI	
+  "CONTRA COSTA 2106":            "0013652106", //DI	
+  "CONTRA COSTA 2107":            "0013652107", //DI	
+  "CONTRA COSTA 2108":            "0013652108", //DI	
+  "CONTRA COSTA 2109":            "0013652109", //DI	
+  "CONTRA COSTA 2110":            "0013652110", //DI	
+  "CONTRA COSTA 2111":            "0013652111", //DI	
+  "CONTRA COSTA 2112":            "0013652112", //DI	
+  "CONTRA COSTA 2113":            "0013652113", //DI	
+  "CONTRA COSTA 2203":            "0013652203", //DI	
+  "CONTRA COSTA 2204":            "0013652204", //DI	
+  "CONTRA COSTA 2205":            "0013652205", //DI	
+  "MORAGA 1101":                  "0013801101", //DI	
+  "MORAGA 1102":                  "0013801102", //DI	
+  "MORAGA 1103":                  "0013801103", //DI	
+  "MORAGA 1104":                  "0013801104", //DI	
+  "MORAGA 1105":                  "0013801105", //DI	
+  "WAYNE 0401":                   "0013810401", //DI	
+  "BABEL 0401":                   "0013850401", //DI	
+  "WILLOW PASS 1101":             "0013911101", //DI	
+  "WILLOW PASS 1102":             "0013911102", //DI	
+  "WILLOW PASS 2107":             "0013912107", //DI	
+  "ALHAMBRA 1101":                "0014101101", //DI	
+  "ALHAMBRA 1102":                "0014101102", //DI	
+  "ALHAMBRA 1105":                "0014101105", //DI	
+  "SINCLAIR 0401":                "0014150401", //DI	
+  "ROSSMOOR 1101":                "0014161101", //DI	
+  "ROSSMOOR 1102":                "0014161102", //DI	
+  "ROSSMOOR 1103":                "0014161103", //DI	
+  "ROSSMOOR 1104":                "0014161104", //DI	
+  "ROSSMOOR 1105":                "0014161105", //DI	
+  "ROSSMOOR 1106":                "0014161106", //DI	
+  "ROSSMOOR 1107":                "0014161107", //DI	
+  "ROSSMOOR 1108":                "0014161108", //DI	
+  "SAN RAMON 2102":               "0014232102", //DI	& MI
+  "MEADOW LANE 2102":             "0014302102", //DI	
+  "MEADOW LANE 2103":             "0014302103", //DI	
+  "MEADOW LANE 2104":             "0014302104", //DI	
+  "MEADOW LANE 2105":             "0014302105", //DI	
+  "MEADOW LANE 2106":             "0014302106", //DI	
+  "MEADOW LANE 2107":             "0014302107", //DI	
+  "MEADOW LANE 2108":             "0014302108", //DI	
+  "MEADOW LANE 2109":             "0014302109", //DI	
+  "MEADOW LANE 2110":             "0014302110", //DI	
+  "BALFOUR 1101":                 "0014321101", //DI	
+  "KIRKER SUB 2103":              "0014452103", //DI	
+  "KIRKER SUB 2104":              "0014452104", //DI	
+  "KIRKER SUB 2105":              "0014452105", //DI	
+  "KIRKER SUB 2106":              "0014452106", //DI	
+  "KIRKER SUB 2107":              "0014452107", //DI	
+  "KIRKER SUB 2108":              "0014452108", //DI	
+  "KIRKER SUB 2109":              "0014452109", //DI	
+  "BRENTWOOD SUB 2105":           "0014592105", //DI	
+  "BRENTWOOD SUB 2106":           "0014592106", //DI	
+  "BRENTWOOD SUB 2108":           "0014592108", //DI	
+  "BRENTWOOD SUB 2109":           "0014592109", //DI	
+  "BRENTWOOD SUB 2110":           "0014592110", //DI	
+  "BRENTWOOD SUB 2111":           "0014592111", //DI	
+  "BRENTWOOD SUB 2112":           "0014592112", //DI	
+  "BRENTWOOD SUB 2113":           "0014592113", //DI	
+  "TIDE WATER 2104":              "0014652104", //DI	
+  "TIDE WATER 2105":              "0014652105", //DI	
+  "TIDE WATER 2106":              "0014652106", //DI	
+  "TIDE WATER 2107":              "0014652107", //DI	
+  "TIDE WATER 2108":              "0014652108", //DI	
+  "TIDE WATER 2109":              "0014652109", //DI	
+  "TASSAJARA 2103":               "0014662103", //DI	
+  "TASSAJARA 2104":               "0014662104", //DI	
+  "TASSAJARA 2105":               "0014662105", //DI	
+  "TASSAJARA 2106":               "0014662106", //DI	& MI
+  "TASSAJARA 2107":               "0014662107", //DI	
+  "TASSAJARA 2108":               "0014662108", //DI	
+  "TASSAJARA 2109":               "0014662109", //DI	
+  "TASSAJARA 2110":               "0014662110", //DI	
+  "SOBRANTE 1101":                "0014671101", //DI	
+  "SOBRANTE 1102":                "0014671102", //DI	
+  "SOBRANTE 1103":                "0014671103", //DI	
+  "RESEARCH SUB 2101":            "0014692101", //DI	
+  "RESEARCH SUB 2102":            "0014692102", //DI	& MI
+  "FRASER 0401":                  "0018020401", //DI	& EB
+  "HERDLYN 1102 DI":                 "0018031102", //DI	
+  "MCAVOY TAP 0401":              "0018090401", //DI	
+  "SHORE ACRES BANK 0401":        "0018100401", //DI	
+  "PIPER BANK 0401":              "0018120401", //DI	
+  "BETHEL BANK 0401":             "0018150401", //DI	
+  "HOLLAND TRACT TAP 1101":       "0018211101", //DI	
+  "WEBB TRACT TAP 1101":          "0018221101", //DI	
+  "ORWOOD TRACT TAP 1101":        "0018231101", //DI	
+  "JERSEY ISLAND 0401":           "0018320401", //DI	
+  "BAY POINT 0401":               "0018330401", //DI	
+  "Cal Trans":                    "001HWCTR01", //DI	
+  "OAKLAND 1109":                 "0012011109", //EB	
+  "OAKLAND 1110":                 "0012011110", //EB	
+  "OAKLAND 1111":                 "0012011111", //EB	
+  "OAKLAND 1112":                 "0012011112", //EB	
+  "OAKLAND 1113":                 "0012011113", //EB	
+  "OAKLAND 1114":                 "0012011114", //EB	
+  "OAKLAND 1115":                 "0012011115", //EB	
+  "OAKLAND 1116":                 "0012011116", //EB	
+  "OAKLAND 1117":                 "0012011117", //EB	
+  "OAKLAND 1118":                 "0012011118", //EB	
+  "OAKLAND 1119":                 "0012011119", //EB	
+  "OAKLAND 1120":                 "0012011120", //EB	
+  "OAKLAND 1121":                 "0012011121", //EB	
+  "OAKLAND 1132":                 "0012011132", //EB	
+  "OAKLAND 1133":                 "0012011133", //EB	
+  "OAKLAND 1151":                 "0012011151", //EB	
+  "SUBSTATION D 0406":            "0012040406", //EB	
+  "SUBSTATION D 0407":            "0012040407", //EB	
+  "SUBSTATION D 0408":            "0012040408", //EB	
+  "SUBSTATION D 0410":            "0012040410", //EB	
+  "SUBSTATION D 0412":            "0012040412", //EB	
+  "SUBSTATION D 1101":            "0012041101", //EB	
+  "SUBSTATION D 1102":            "0012041102", //EB	
+  "SUBSTATION D 1103":            "0012041103", //EB	
+  "SUBSTATION D 1104":            "0012041104", //EB	
+  "SUBSTATION D 1105":            "0012041105", //EB	
+  "SUBSTATION D 1106":            "0012041106", //EB	
+  "SUBSTATION D 1107":            "0012041107", //EB	
+  "SUBSTATION D 1108":            "0012041108", //EB	
+  "SUBSTATION D 1109":            "0012041109", //EB	
+  "SUBSTATION D 1110":            "0012041110", //EB	
+  "SUBSTATION D 1111":            "0012041111", //EB	
+  "SUBSTATION D 1112":            "0012041112", //EB	
+  "SUBSTATION D 1113":            "0012041113", //EB	
+  "SUBSTATION D 1114":            "0012041114", //EB	
+  "SUBSTATION D 1115":            "0012041115", //EB	
+  "SUBSTATION D 1116":            "0012041116", //EB	
+  "SUBSTATION D 1117":            "0012041117", //EB	
+  "SUBSTATION F 0401":            "0012060401", //EB	
+  "SUBSTATION F 0402":            "0012060402", //EB	
+  "SUBSTATION F 0403":            "0012060403", //EB	
+  "SUBSTATION F 0404":            "0012060404", //EB	
+  "SUBSTATION F 0405":            "0012060405", //EB	
+  "SUBSTATION F 0406":            "0012060406", //EB	
+  "SUBSTATION F 0407":            "0012060407", //EB	
+  "SUBSTATION F 0408":            "0012060408", //EB	
+  "SUBSTATION F 0409":            "0012060409", //EB	
+  "SUBSTATION F 0410":            "0012060410", //EB	
+  "SUBSTATION F 0411":            "0012060411", //EB	
+  "SUBSTATION F 0412":            "0012060412", //EB	
+  "SUBSTATION F 1102":            "0012061102", //EB	
+  "SUBSTATION F 1103":            "0012061103", //EB	
+  "SUBSTATION F 1105":            "0012061105", //EB	
+  "SUBSTATION F 1151":            "0012061151", //EB	
+  "SUBSTATION F 1152":            "0012061152", //EB	
+  "SUBSTATION I 0401":            "0012080401", //EB	
+  "SUBSTATION I 0402":            "0012080402", //EB	
+  "SUBSTATION J 0401":            "0012090401", //EB	
+  "SUBSTATION J 0403":            "0012090403", //EB	
+  "SUBSTATION J 0408":            "0012090408", //EB	
+  "SUBSTATION J 0409 EB":            "0012090409", //EB	
+  "SUBSTATION J 1101 EB":            "0012091101", //EB	
+  "SUBSTATION J 1102 EB":            "0012091102", //EB	
+  "SUBSTATION J 1103":            "0012091103", //EB	
+  "SUBSTATION J 1104":            "0012091104", //EB	
+  "SUBSTATION J 1105 EB":            "0012091105", //EB	
+  "SUBSTATION J 1106 EB":            "0012091106", //EB	
+  "SUBSTATION J 1108":            "0012091108", //EB	
+  "SUBSTATION J 1109":            "0012091109", //EB	
+  "SUBSTATION J 1110":            "0012091110", //EB	
+  "SUBSTATION J 1111":            "0012091111", //EB	
+  "SUBSTATION J 1112":            "0012091112", //EB	
+  "SUBSTATION J 1113":            "0012091113", //EB	
+  "SUBSTATION J 1114":            "0012091114", //EB	
+  "SUBSTATION J 1115":            "0012091115", //EB	
+  "SUBSTATION J 1116":            "0012091116", //EB	
+  "SUBSTATION J 1117":            "0012091117", //EB	
+  "SUBSTATION J 1118":            "0012091118", //EB	& MI
+  "SUBSTATION K 1101 EB":            "0012101101", //EB	
+  "SUBSTATION K 1103":            "0012101103", //EB	
+  "SUBSTATION K 1104":            "0012101104", //EB	
+  "SUBSTATION L 0401 EB":            "0012110401", //EB	
+  "SUBSTATION L 0405 EB":            "0012110405", //EB	
+  "SUBSTATION L 0406 EB":            "0012110406", //EB	
+  "SUBSTATION L 0407 EB":            "0012110407", //EB	
+  "SUBSTATION L 0408 EB":            "0012110408", //EB	
+  "SUBSTATION L 0409 EB":            "0012110409", //EB	
+  "SUBSTATION L 1101 EB":            "0012111101", //EB	
+  "SUBSTATION L 1102 EB":            "0012111102", //EB	
+  "SUBSTATION L 1104":            "0012111104", //EB	
+  "SUBSTATION L 1105":            "0012111105", //EB	
+  "SUBSTATION L 1107":            "0012111107", //EB	
+  "MIRA VISTA 0401":              "0012330401", //EB	
+  "MIRA VISTA 0403":              "0012330403", //EB	
+  "SUBSTATION G 1101 EB":            "0012501101", //EB	
+  "SUBSTATION G 1102 EB":            "0012501102", //EB	
+  "SUBSTATION G 1103":            "0012501103", //EB	
+  "SUBSTATION G 1104":            "0012501104", //EB	
+  "SUBSTATION G 1105":            "0012501105", //EB	
+  "SUBSTATION G 1106":            "0012501106", //EB	
+  "SUBSTATION G 1107":            "0012501107", //EB	
+  "SUBSTATION G 1108":            "0012501108", //EB	
+  "SUBSTATION G 1109":            "0012501109", //EB	
+  "SUBSTATION G 1110":            "0012501110", //EB	
+  "SUBSTATION G 1111":            "0012501111", //EB	
+  "SUBSTATION G 1112":            "0012501112", //EB	
+  "SUBSTATION G 1113":            "0012501113", //EB	
+  "SUBSTATION G 1114":            "0012501114", //EB	
+  "SUBSTATION Q 0401":            "0012520401", //EB	
+  "SUBSTATION Q 0402":            "0012520402", //EB	
+  "SUBSTATION X 0401":            "0012540401", //EB	
+  "SUBSTATION X 0402":            "0012540402", //EB	
+  "SUBSTATION X 1101":            "0012541101", //EB	
+  "SUBSTATION X 1102":            "0012541102", //EB	
+  "SUBSTATION X 1103":            "0012541103", //EB	
+  "SUBSTATION X 1104":            "0012541104", //EB	
+  "SUBSTATION X 1105":            "0012541105", //EB	
+  "SUBSTATION X 1106":            "0012541106", //EB	
+  "SUBSTATION X 1107":            "0012541107", //EB	
+  "SUBSTATION X 1108":            "0012541108", //EB	
+  "SUBSTATION X 1109":            "0012541109", //EB	
+  "SUBSTATION X 1110":            "0012541110", //EB	
+  "SUBSTATION X 1111":            "0012541111", //EB	
+  "SUBSTATION X 1112":            "0012541112", //EB	
+  "SUBSTATION X 1114":            "0012541114", //EB	
+  "SUBSTATION X 1115":            "0012541115", //EB	
+  "OAK 0401":                     "0012600401", //EB	
+  "BECK STREET 0401":             "0012640401", //EB	
+  "FAIRMONT 0401":                "0012650401", //EB	
+  "FAIRMONT 0402":                "0012650402", //EB	
+  "SUBSTATION T 0401":            "0012660401", //EB	
+  "SUBSTATION T 0402":            "0012660402", //EB	
+  "SUBSTATION T 0403":            "0012660403", //EB	
+  "SUBSTATION T 0404":            "0012660404", //EB	
+  "8TH AVENUE 0401":              "0012670401", //EB	
+  "FLORENCE 0401":                "0012690401", //EB	
+  "RIDGE 0401":                   "0012840401", //EB	
+  "RIDGE 0402":                   "0012840402", //EB	
+  "BARRETT 0401":                 "0013020401", //EB	
+  "BARRETT 0402":                 "0013020402", //EB	
+  "BANCROFT 0401":                "0013030401", //EB	& MI
+  "BANCROFT 0402":                "0013030402", //EB	& MI
+  "SAN LEANDRO 1109":             "0013111109", //EB	& MI
+  "SAN LEANDRO 1114":             "0013111114", //EB	& MI
+  "SAN LEANDRO 1116":             "0013111116", //EB	& MI
+  "SOLANO 0401":                  "0013140401", //EB	
+  "SOLANO 0402":                  "0013140402", //EB	
+  "HOLLYWOOD 0401":               "0013170401", //EB	
+  "PALO SECO 0401":               "0013180401", //EB	
+  "BROOKSIDE 0401":               "0013210401", //EB	
+  "RUSSELL 0401":                 "0013310401", //EB	
+  "RUSSELL 0402":                 "0013310402", //EB	
+  "BOSTON 0401":                  "0013320401", //EB	
+  "CROCKETT 0401":                "0013330401", //EB	
+  "SPRUCE 0401":                  "0013340401", //EB	
+  "SPRUCE 0402":                  "0013340402", //EB	
+  "WALDO 0401":                   "0013350401", //EB	
+  "WALDO 0402":                   "0013350402", //EB	
+  "WOOD 0401":                    "0013380401", //EB	
+  "RICHMOND 1119":                "0013471119", //EB	
+  "RICHMOND 1120":                "0013471120", //EB	
+  "RICHMOND 1121":                "0013471121", //EB	
+  "RICHMOND 1122":                "0013471122", //EB	
+  "RICHMOND 1123":                "0013471123", //EB	
+  "RICHMOND 1124":                "0013471124", //EB	
+  "RICHMOND 1125":                "0013471125", //EB	
+  "RICHMOND 1126":                "0013471126", //EB	
+  "RICHMOND 1127":                "0013471127", //EB	
+  "RICHMOND 1128":                "0013471128", //EB	
+  "RICHMOND 1129":                "0013471129", //EB	
+  "RICHMOND 1130":                "0013471130", //EB	
+  "ESTUDILLO 0401":               "0013480401", //EB	& MI
+  "MAPLE 0401":                   "0013520401", //EB	
+  "EDES 1101":                    "0013681101", //EB	
+  "EDES 1103":                    "0013681103", //EB	& MI
+  "EDES 1104":                    "0013681104", //EB	
+  "EDES 1105":                    "0013681105", //EB	& MI
+  "EDES 1110":                    "0013681110", //EB	& MI
+  "EDES 1111":                    "0013681111", //EB	& MI
+  "EDES 1112":                    "0013681112", //EB	
+  "EDES 1113":                    "0013681113", //EB	
+  "EDES 1114":                    "0013681114", //EB	
+  "EDES 1115":                    "0013681115", //EB	
+  "ARLINGTON 0401":               "0013700401", //EB	
+  "WALL 0401":                    "0013740401", //EB	
+  "VIRGINIA 0401":                "0013780401", //EB	
+  "STUART 0401":                  "0013840401", //EB	
+  "STUART 0402":                  "0013840402", //EB	
+  "STUART 0403":                  "0013840403", //EB	
+  "STUART 0405":                  "0013840405", //EB	
+  "STUART 0406":                  "0013840406", //EB	
+  "STUART 0408":                  "0013840408", //EB	
+  "FRANKLIN 1101":                "0013921101", //EB	
+  "FRANKLIN 1102":                "0013921102", //EB	
+  "FRANKLIN 1103":                "0013921103", //EB	
+  "FRANKLIN 1104":                "0013921104", //EB	
+  "POINT PINOLE 1101":            "0014261101", //EB	
+  "POINT PINOLE 1102":            "0014261102", //EB	
+  "POINT PINOLE 1103":            "0014261103", //EB	
+  "VALLEY VIEW 1103":             "0014341103", //EB	
+  "VALLEY VIEW 1105":             "0014341105", //EB	
+  "VALLEY VIEW 1106":             "0014341106", //EB	
+  "SAN PABLO 1105":               "0014371105", //EB	
+  "SAN PABLO 1106":               "0014371106", //EB	
+  "NORTH TOWER 2201 EB":             "0018512201", //EB	
+  "FAIRVIEW (DIST.28) 2207":      "0018522207", //EB	
+  "TRAN - EB 60Kv":               "TR00106002", //EB	
+  "TRAN - EB 70Kv":               "TR00107002", //EB	
+  "TRAN - EB 115Kv":              "TR00111502", //EB	
+  "TRAN - EB 230Kv":              "TR00123002", //EB	
+  "TRAN - EB 500Kv":              "TR00150002", //EB	
+  "CR-PITTSBURG-STONEMAN JCT":    "TRC0010001", //EB	
+  "CR-TESLA-NEWARK":              "TRC0010002", //EB	
+  "CR-CROCKETT-SOBRANTE":         "TRC0010003", //EB	
+  "CR-PITTSBURG-CLAYTON":         "TRC0010004", //EB	
+  "CR-MORAGA-OAKLAND":            "TRC0010005", //EB	
+  "CR-MORAGA SUB":                "TRC0010006", //EB	
+  "CR-PITTSBURG-SOBRANTE":        "TRC0010007", //EB	
+  "CR-MARTINEZ-SOBRANTE":         "TRC0010008", //EB	
+  "CR-SOBRANTE-SUB G":            "TRC0010009", //EB	
+  "CR-SOBRANTE-CLAREMONT":        "TRC0010010", //EB	
+  "CR-MORAGA-CASTRO VALLEY":      "TRC0010011", //EB	
+  "CR-CASTRO VALLEY-NEWARK":      "TRC0010012", //EB	
+  "CR-CONTRACOSTA-TESLA":         "TRC0010013", //EB	
+  "CR-PITTSBURG-EASTSHORE":       "TRC0010014", //EB	
+  "CR-VACA-TESLA 500KV":          "TRC0010015", //EB	
+  "CR-CONTRACOSTA PP/SUB 230KV":  "TRC0010016", //EB	
+  "CR-MORAGA-OAKPORT":            "TRC0010017", //EB	
+  "CR-NEWARK-FREMONT-JARVIS":     "TRC0010018", //EB	
+  "CR-Columbia Steel":            "TRC0010019", //EB	
+  "CR-Brighton Clayton":          "TRC0010020", //EB	
+  "CR-ContraCosta Livermore":     "TRC0010021", //EB	
+  "CR-Oakland Newark":            "TRC0010022", //EB	
+  "CR-Oakland Ports":             "TRC0010023", //EB	
+  "CR-Meadowlane Triangle":       "TRC0010024", //EB	
+  "CR-Pittsburg Martinez":        "TRC0010025", //EB	
+  "CR-SobranteStandard Oil":      "TRC0010026", //EB	
+  "CR-Oleum Moeser":              "TRC0010027", //EB	
+  "CR-Franklin 60KV":             "TRC0010028", //EB	
+  "CR-Willow Pass 60KV":          "TRC0010029", //EB	
+  "CR-ContraCosta Moraga":        "TRC0010030", //EB	
+  "CR-East ContraCosta":          "TRC0010031", //EB	
+  "CR-Pittsburg 60KV":            "TRC0010032", //EB	
+  "CR-East Alameda 60KV":         "TRC0010033", //EB	
+  "CR-Stanislaus Livermore":      "TRC0010034", //EB	
+  "CR-Pleasanton 60KV":           "TRC0010035", //EB	
+  "CR-Aerial Patrol EB":            "TRC0011111", //EB	
+  "GO 165 Pilot - Hardwick1101":  "0000000000", //FR	
+  "GO 165 Pilot - Huron 1116":    "0000000005", //FR	
+  "ORCHARD 1101":                 "0250OR1101", //FR	
+  "ORCHARD 1102":                 "0250OR1102", //FR	
+  "ORCHARD 1103":                 "0250OR1103", //FR	
+  "Sierra Forest":                "025101111F", //FR	
+  "Sequoia Forest":               "025101112F", //FR	
+  "WISHON 1101":                  "0251511101", //FR	& YO
+  "AIRWAYS 1101":                 "0252041101", //FR	
+  "AIRWAYS 1102":                 "0252041102", //FR	
+  "AIRWAYS 1103":                 "0252041103", //FR	
+  "ASHLAN AVENUE 1102":           "0252051102", //FR	
+  "ASHLAN AVENUE 1103":           "0252051103", //FR	
+  "ASHLAN AVENUE 1104":           "0252051104", //FR	
+  "ASHLAN AVENUE 1106":           "0252051106", //FR	
+  "ASHLAN AVENUE 1107":           "0252051107", //FR	
+  "ASHLAN AVENUE 1108":           "0252051108", //FR	
+  "ASHLAN AVENUE 1109":           "0252051109", //FR	
+  "ASHLAN AVENUE 1111":           "0252051111", //FR	
+  "ASHLAN AVENUE 1112":           "0252051112", //FR	
+  "ASHLAN AVENUE 1113":           "0252051113", //FR	
+  "ASHLAN AVENUE 1114":           "0252051114", //FR	
+  "ASHLAN AVENUE 1116":           "0252051116", //FR	
+  "ASHLAN AVENUE 2101":           "0252052101", //FR	
+  "ASHLAN AVENUE 2105":           "0252052105", //FR	
+  "ASHLAN AVENUE 2110":           "0252052110", //FR	
+  "ASHLAN AVENUE 2115":           "0252052115", //FR	
+  "ASHLAN AVENUE 2117":           "0252052117", //FR	
+  "ASHLAN AVENUE 2118":           "0252052118", //FR	
+  "ASHLAN AVENUE 2119":           "0252052119", //FR	
+  "ANGIOLA 1102":                 "0252151102", //FR	
+  "ANGIOLA 1103":                 "0252151103", //FR	
+  "ANGIOLA 1104":                 "0252151104", //FR	
+  "COALINGA NO 1 1106":           "0252161106", //FR	
+  "COALINGA NO 1 1107":           "0252161107", //FR	
+  "COALINGA NO 1 1108":           "0252161108", //FR	
+  "COALINGA NO 1 1109":           "0252161109", //FR	
+  "CORCORAN 1106":                "0252171106", //FR	
+  "CORCORAN 1108":                "0252171108", //FR	
+  "CORCORAN 1112":                "0252171112", //FR	
+  "CORCORAN 1116":                "0252171116", //FR	
+  "CORCORAN 1118":                "0252171118", //FR	
+  "BIOLA 1101":                   "0252211101", //FR	& YO
+  "BIOLA 1102":                   "0252211102", //FR	& YO
+  "BIOLA 1103":                   "0252211103", //FR	
+  "BIOLA 1104":                   "0252211104", //FR	& YO
+  "KINGSBURG 1102":               "0252241102", //FR	
+  "KINGSBURG 1108":               "0252241108", //FR	
+  "KINGSBURG 1110":               "0252241110", //FR	
+  "KINGSBURG 1112":               "0252241112", //FR	
+  "KINGSBURG 1113":               "0252241113", //FR	
+  "KINGSBURG 1114":               "0252241114", //FR	
+  "KINGSBURG 1116":               "0252241116", //FR	
+  "CALIFORNIA AVE 1102":          "0252281102", //FR	
+  "CALIFORNIA AVE 1103":          "0252281103", //FR	
+  "CALIFORNIA AVE 1104":          "0252281104", //FR	
+  "CALIFORNIA AVE 1106":          "0252281106", //FR	
+  "CALIFORNIA AVE 1108":          "0252281108", //FR	
+  "CALIFORNIA AVE 1110":          "0252281110", //FR	
+  "CALIFORNIA AVE 1111":          "0252281111", //FR	
+  "CALIFORNIA AVE 1112":          "0252281112", //FR	
+  "CALIFORNIA AVE 1113":          "0252281113", //FR	
+  "CALIFORNIA AVE 1114":          "0252281114", //FR	
+  "CALIFORNIA AVE 1116":          "0252281116", //FR	
+  "CALIFORNIA AVE 1117":          "0252281117", //FR	
+  "PARLIER 1102":                 "0252291102", //FR	
+  "PARLIER 1103":                 "0252291103", //FR	
+  "PARLIER 1104":                 "0252291104", //FR	
+  "CAMDEN 1102":                  "0252301102", //FR	
+  "CAMDEN 1103":                  "0252301103", //FR	
+  "CAMDEN 1104":                  "0252301104", //FR	
+  "CAMDEN 1105":                  "0252301105", //FR	
+  "MENDOTA 1104":                 "0252311104", //FR	& YO
+  "REEDLEY 1101":                 "0252341101", //FR	
+  "REEDLEY 1104":                 "0252341104", //FR	
+  "REEDLEY 1106":                 "0252341106", //FR	
+  "REEDLEY 1110":                 "0252341110", //FR	
+  "REEDLEY 1112":                 "0252341112", //FR	
+  "SANGER 1104":                  "0252351104", //FR	
+  "SANGER 1106":                  "0252351106", //FR	
+  "SANGER 1108":                  "0252351108", //FR	
+  "SANGER 1110":                  "0252351110", //FR	
+  "SANGER 1112":                  "0252351112", //FR	
+  "SANGER 1114":                  "0252351114", //FR	
+  "SANGER 1116":                  "0252351116", //FR	
+  "SANGER 1118":                  "0252351118", //FR	
+  "SAN JOAQUIN 1106":             "0252361106", //FR	
+  "SAN JOAQUIN 1108":             "0252361108", //FR	
+  "SAN JOAQUIN 1110":             "0252361110", //FR	
+  "SAN JOAQUIN 1112":             "0252361112", //FR	& YO
+  "CARUTHERS 1101":               "0252371101", //FR	
+  "CARUTHERS 1102":               "0252371102", //FR	
+  "CARUTHERS 1103":               "0252371103", //FR	
+  "CARUTHERS 1104":               "0252371104", //FR	
+  "COALINGA NO 2 1104":           "0252381104", //FR	
+  "COALINGA NO 2 1105":           "0252381105", //FR	
+  "COALINGA NO 2 1106":           "0252381106", //FR	
+  "COALINGA NO 2 1107":           "0252381107", //FR	
+  "COPPERMINE 1102":              "0252411102", //FR	& YO
+  "COPPERMINE 1104":              "0252411104", //FR	
+  "COPPERMINE 1106":              "0252411106", //FR	
+  "COPPERMINE 1112":              "0252411112", //FR	
+  "COPPERMINE 2110":              "0252412110", //FR	
+  "BALCH NO 1 1101":              "0252501101", //FR	
+  "KERCKHOFF 1101":               "0252561101", //FR	& YO
+  "GUERNSEY 1101":                "0252661101", //FR	
+  "GUERNSEY 1102":                "0252661102", //FR	
+  "GUERNSEY 1103":                "0252661103", //FR	
+  "GUERNSEY 1104":                "0252661104", //FR	
+  "HENRIETTA 1104":               "0252681104", //FR	
+  "HENRIETTA 1106":               "0252681106", //FR	
+  "HENRIETTA 1108":               "0252681108", //FR	
+  "HENRIETTA 1110":               "0252681110", //FR	
+  "KEARNEY 1104":                 "0252701104", //FR	
+  "KEARNEY 1106":                 "0252701106", //FR	
+  "KEARNEY 1108":                 "0252701108", //FR	
+  "KEARNEY 1110":                 "0252701110", //FR	
+  "KEARNEY 1113":                 "0252701113", //FR	
+  "KEARNEY 1114":                 "0252701114", //FR	
+  "KERMAN 1101":                  "0252711101", //FR	
+  "KERMAN 1103":                  "0252711103", //FR	
+  "KERMAN 1104":                  "0252711104", //FR	
+  "KERMAN 1106":                  "0252711106", //FR	
+  "KERMAN 1108":                  "0252711108", //FR	
+  "KETTLEMAN HILLS 1101":         "0252731101", //FR	
+  "KETTLEMAN HILLS 2104":         "0252732104", //FR	
+  "OROSI 1101":                   "0252841101", //FR	
+  "OROSI 1102":                   "0252841102", //FR	
+  "OROSI 1103":                   "0252841103", //FR	
+  "OROSI 1104":                   "0252841104", //FR	
+  "Pinedale 2105":                "0252852105", //FR	
+  "Pinedale 2106":                "0252852106", //FR	
+  "Pinedale 2107":                "0252852107", //FR	
+  "Pinedale 2109":                "0252852109", //FR	
+  "Pinedale 2110":                "0252852110", //FR	
+  "Pinedale 2111":                "0252852111", //FR	
+  "SCHINDLER 1104":               "0252891104", //FR	
+  "SCHINDLER 1105":               "0252891105", //FR	
+  "SCHINDLER 1112":               "0252891112", //FR	
+  "SCHINDLER 1114":               "0252891114", //FR	
+  "SCHINDLER 1116":               "0252891116", //FR	
+  "STONE CORRAL 1108":            "0252921108", //FR	
+  "STONE CORRAL 1109":            "0252921109", //FR	
+  "STONE CORRAL 1110":            "0252921110", //FR	
+  "TIVY VALLEY 1106":             "0252941106", //FR	
+  "TIVY VALLEY 1107":             "0252941107", //FR	
+  "TULARE LAKE 1104":             "0252951104", //FR	
+  "TULARE LAKE 1106":             "0252951106", //FR	
+  "TULARE LAKE 2108":             "0252952108", //FR	
+  "GIFFEN 1102":                  "0253151102", //FR	& YO
+  "GIFFEN 1103":                  "0253151103", //FR	
+  "HURON 1106":                   "0253161106", //FR	
+  "HURON 1108":                   "0253161108", //FR	
+  "HURON 1110":                   "0253161110", //FR	
+  "HURON 1112":                   "0253161112", //FR	
+  "HURON 1116":                   "0253161116", //FR	
+  "CALFLAX 1101":                 "0253441101", //FR	
+  "CALFLAX 1102":                 "0253441102", //FR	
+  "CALFLAX 1103":                 "0253441103", //FR	
+  "CALFLAX 1104":                 "0253441104", //FR	
+  "DEVILS DEN 1101":              "0253451101", //FR	& KE
+  "DEVILS DEN 1102":              "0253451102", //FR	& KE
+  "BOWLES 1101":                  "0253531101", //FR	
+  "BOWLES 1102":                  "0253531102", //FR	
+  "BOWLES 1103":                  "0253531103", //FR	
+  "BOWLES 1104":                  "0253531104", //FR	
+  "SMYRNA 1101":                  "0253551101", //FR	& KE
+  "BARTON 1101":                  "0253571101", //FR	
+  "BARTON 1102":                  "0253571102", //FR	
+  "BARTON 1104":                  "0253571104", //FR	
+  "BARTON 1105":                  "0253571105", //FR	
+  "BARTON 1106":                  "0253571106", //FR	
+  "BARTON 1108":                  "0253571108", //FR	
+  "BARTON 1109":                  "0253571109", //FR	
+  "BARTON 1110":                  "0253571110", //FR	
+  "BARTON 1111":                  "0253571111", //FR	
+  "BARTON 1112":                  "0253571112", //FR	
+  "BARTON 1114":                  "0253571114", //FR	
+  "BARTON 1115":                  "0253571115", //FR	
+  "BARTON 1116":                  "0253571116", //FR	
+  "CANTUA 1101":                  "0253591101", //FR	
+  "CANTUA 1102":                  "0253591102", //FR	
+  "CANTUA 1103":                  "0253591103", //FR	
+  "CANTUA 1105":                  "0253591105", //FR	
+  "LEMOORE 1101":                 "0253601101", //FR	
+  "LEMOORE 1102":                 "0253601102", //FR	
+  "LEMOORE 1103":                 "0253601103", //FR	
+  "LEMOORE 1104":                 "0253601104", //FR	
+  "LEMOORE 1105":                 "0253601105", //FR	
+  "STROUD 1101":                  "0253661101", //FR	
+  "STROUD 1102":                  "0253661102", //FR	
+  "STROUD 1104":                  "0253661104", //FR	
+  "HARDWICK 1101":                "0253711101", //FR	
+  "HARDWICK 1102":                "0253711102", //FR	
+  "WEST FRESNO 1101":             "0253731101", //FR	
+  "WEST FRESNO 1102":             "0253731102", //FR	
+  "WEST FRESNO 1103":             "0253731103", //FR	
+  "WEST FRESNO 1104":             "0253731104", //FR	
+  "WEST FRESNO 1105":             "0253731105", //FR	
+  "WEST FRESNO 1106":             "0253731106", //FR	
+  "WEST FRESNO 1107":             "0253731107", //FR	
+  "WEST FRESNO 1108":             "0253731108", //FR	
+  "WEST FRESNO 1109":             "0253731109", //FR	
+  "WEST FRESNO 1110":             "0253731110", //FR	
+  "VALLEY NITROGEN 0401":         "0253850401", //FR	
+  "MANCHESTER 1101":              "0253921101", //FR	
+  "MANCHESTER 1102":              "0253921102", //FR	
+  "MANCHESTER 1103":              "0253921103", //FR	
+  "MANCHESTER 1104":              "0253921104", //FR	
+  "MANCHESTER 1105":              "0253921105", //FR	
+  "MANCHESTER 1106":              "0253921106", //FR	
+  "MANCHESTER 1107":              "0253921107", //FR	
+  "MANCHESTER 1108":              "0253921108", //FR	
+  "MANCHESTER 1109":              "0253921109", //FR	
+  "MANCHESTER 1110":              "0253921110", //FR	
+  "MANCHESTER 1111":              "0253921111", //FR	
+  "MANCHESTER 1112":              "0253921112", //FR	
+  "GATES 1101":                   "0253931101", //FR	
+  "GATES 1102":                   "0253931102", //FR	
+  "GATES 1103":                   "0253931103", //FR	
+  "ARMSTRONG 1101":               "0253941101", //FR	
+  "BULLARD 1101":                 "0253961101", //FR	
+  "BULLARD 1102":                 "0253961102", //FR	
+  "BULLARD 1103":                 "0253961103", //FR	
+  "BULLARD 1104":                 "0253961104", //FR	
+  "BULLARD 1105":                 "0253961105", //FR	
+  "BULLARD 1106":                 "0253961106", //FR	
+  "BULLARD 1107":                 "0253961107", //FR	
+  "BULLARD 1108":                 "0253961108", //FR	
+  "BULLARD 1109":                 "0253961109", //FR	
+  "BULLARD 1110":                 "0253961110", //FR	
+  "BULLARD 1113":                 "0253961113", //FR	
+  "BULLARD 2111":                 "0253962111", //FR	
+  "BULLARD 2112":                 "0253962112", //FR	
+  "BULLARD 2114":                 "0253962114", //FR	
+  "BULLARD 2115":                 "0253962115", //FR	
+  "ALPAUGH 1105":                 "0254001105", //FR	
+  "ALPAUGH 1106":                 "0254001106", //FR	
+  "DUNLAP 1102":                  "0254061102", //FR	
+  "DUNLAP 1103":                  "0254061103", //FR	
+  "CLOVIS 1101":                  "0254081101", //FR	
+  "CLOVIS 1102":                  "0254081102", //FR	
+  "CLOVIS 1103":                  "0254081103", //FR	
+  "CLOVIS 1104":                  "0254081104", //FR	
+  "CLOVIS 1105":                  "0254081105", //FR	
+  "CLOVIS 1106":                  "0254081106", //FR	
+  "CLOVIS 1107":                  "0254081107", //FR	
+  "CLOVIS 1108":                  "0254081108", //FR	
+  "CLOVIS 2109":                  "0254082109", //FR	
+  "CLOVIS 2110":                  "0254082110", //FR	
+  "CLOVIS 2111":                  "0254082111", //FR	
+  "DINUBA 1102":                  "0254091102", //FR	
+  "DINUBA 1104":                  "0254091104", //FR	
+  "DINUBA 1105":                  "0254091105", //FR	
+  "MC CALL 1101":                 "0254121101", //FR	
+  "MC CALL 1102":                 "0254121102", //FR	
+  "MC CALL 1103":                 "0254121103", //FR	
+  "MC CALL 1104":                 "0254121104", //FR	
+  "MC CALL 1105":                 "0254121105", //FR	
+  "MC CALL 1106":                 "0254121106", //FR	
+  "AUBERRY 1101":                 "0254151101", //FR	
+  "AUBERRY 1102":                 "0254151102", //FR	
+  "RESERVE OIL 1101":             "0254181101", //FR	
+  "MALAGA 1101":                  "0254251101", //FR	
+  "MALAGA 1102":                  "0254251102", //FR	
+  "MALAGA 1103":                  "0254251103", //FR	
+  "MALAGA 1104":                  "0254251104", //FR	
+  "MALAGA 1105":                  "0254251105", //FR	
+  "MALAGA 1106":                  "0254251106", //FR	
+  "MALAGA 1107":                  "0254251107", //FR	
+  "MALAGA 1108":                  "0254251108", //FR	
+  "MALAGA 1109":                  "0254251109", //FR	
+  "MALAGA 1110":                  "0254251110", //FR	
+  "MALAGA 1111":                  "0254251111", //FR	
+  "MALAGA 1113":                  "0254251113", //FR	
+  "CASSIDY 1103":                 "0254271103", //FR	& YO
+  "TWISSELMAN 1102":              "0254401102", //FR	& KE
+  "MC MULLIN SUB 1104":           "0254411104", //FR	
+  "MC MULLIN SUB 1105":           "0254411105", //FR	
+  "MC MULLIN SUB 1106":           "0254411106", //FR	
+  "RAINBOW SUB 1105":             "0254441105", //FR	
+  "RAINBOW SUB 1106":             "0254441106", //FR	
+  "WAHTOKE SUB 1106":             "0254531106", //FR	
+  "WAHTOKE SUB 1107":             "0254531107", //FR	
+  "WAHTOKE SUB 1108":             "0254531108", //FR	
+  "WAHTOKE SUB 1109":             "0254531109", //FR	
+  "WAHTOKE SUB 1110":             "0254531110", //FR	
+  "FIGARDEN SUB. 2102":           "0254552102", //FR	
+  "FIGARDEN SUB. 2103":           "0254552103", //FR	
+  "FIGARDEN SUB. 2104":           "0254552104", //FR	& YO
+  "FIGARDEN SUB. 2105":           "0254552105", //FR	
+  "FIGARDEN SUB. 2107":           "0254552107", //FR	
+  "FIGARDEN SUB. 2108":           "0254552108", //FR	
+  "FIGARDEN SUB. 2109":           "0254552109", //FR	& YO
+  "FIGARDEN SUB. 2110":           "0254552110", //FR	
+  "SAND CREEK 1103":              "0254601103", //FR	
+  "JACOBS CORNER SUB 1101":       "0254771101", //FR	
+  "JACOBS CORNER SUB 1102":       "0254771102", //FR	
+  "RANCHERS COTTON 1101":         "0254801101", //FR	
+  "WOODCHUCK 2101":               "0254912101", //FR	
+  "Las Palmas 1101":              "0254921101", //FR	
+  "Las Palmas 1102":              "0254921102", //FR	
+  "BOSWELL 1101":                 "0254941101", //FR	
+  "AVENAL 2101":                  "0255002101", //FR	
+  "RIVER ROCK 1101":              "0255251101", //FR	
+  "WOODWARD 2101":                "0255292101", //FR	& YO
+  "WOODWARD 2102":                "0255292102", //FR	
+  "WOODWARD 2103":                "0255292103", //FR	
+  "WOODWARD 2104":                "0255292104", //FR	
+  "WOODWARD 2105":                "0255292105", //FR	
+  "WOODWARD 2106":                "0255292106", //FR	
+  "WOODWARD 2107":                "0255292107", //FR	
+  "WOODWARD 2108":                "0255292108", //FR	& YO
+  "WOODWARD 2109":                "0255292109", //FR	
+  "TULE POWER HOUSE 1101":        "0258591101", //FR	
+  "SO. CAL. EDISON 1001":         "0258881001", //FR	
+  "FR HCP MBZ 2103":              "025HCP2103", //FR	
+  "FR HCP MBZ 2105":              "025HCP2105", //FR	
+  "FR HCP MBZ 2501":              "025HCP2501", //FR	
+  "FR HCP MBZ 2502":              "025HCP2502", //FR	
+  "FR HCP MBZ 2503":              "025HCP2503", //FR	
+  "FR HCP MBZ 2504":              "025HCP2504", //FR	
+  "FR HCP MBZ 2505":              "025HCP2505", //FR	
+  "Interstate 5":                 "025HW00501", //FR	
+  "Hwy 41":                       "025HW04101", //FR	
+  "Hwy 99 (North)":               "025HW09901", //FR	
+  "Hwy 99 (South)":               "025HW09902", //FR	
+  "Hwy 168":                      "025HW16801", //FR	
+  "Hwy 180":                      "025HW18001", //FR	
+  "TRAN - FR 60Kv":               "TR02506001", //FR	
+  "TRAN - FR 70Kv":               "TR02507001", //FR	
+  "TRAN - FR 115Kv":              "TR02511501", //FR	
+  "TRAN - FR 230Kv":              "TR02523001", //FR	
+  "TRAN - FR 500Kv":              "TR02550001", //FR	
+  "CR-Los Banos-Midway":          "TRC0251001", //FR	
+  "CR-Gates Panoche":             "TRC0251002", //FR	
+  "CR-Gates-Barton":              "TRC0251003", //FR	
+  "CR-Raisin City":               "TRC0251004", //FR	
+  "CR-Baker Farms":               "TRC0251005", //FR	
+  "CR Hwy 99":                    "TRC0251006", //FR	
+  "CR-Gates Gregg McCall":        "TRC0251007", //FR	
+  "CR-Panoche McCall":            "TRC0251008", //FR	
+  "CR-Balch Sanger":              "TRC0251009", //FR	
+  "CR-Diablo Gates":              "TRC0251010", //FR	
+  "CR-Helms Gregg":               "TRC0251011", //FR	
+  "CR Herndon Ashlan":            "TRC0251012", //FR	
+  "CR-Aerial Patrol FR":            "TRC4601111", //FR	
+  "CR-FR HCP MBZ 2501":           "TRCHCP2501", //FR	
+  "CR-FR HCP MBZ 2502":           "TRCHCP2502", //FR	
+  "CR-FR HCP MBZ 2503":           "TRCHCP2503", //FR	
+  "CR-FR HCP MBZ 2504":           "TRCHCP2504", //FR	
+  "CR-FR HCP MBZ 2505":           "TRCHCP2505", //FR	
+  "CR-Orchards Transmission":     "TRCOR00001", //FR & KE
+  "SISQUOC 1102":                 "0182811102", //KE & LP
+  "ORCHARD 1110":                 "0250OR1110", //KE	
+  "ORCHARD 1111":                 "0250OR1111", //KE	
+  "ANTELOPE 1101":                "0252021101", //KE	
+  "ANTELOPE 1102":                "0252021102", //KE	
+  "TAFT 1101":                    "0252081101", //KE	
+  "TAFT 1102":                    "0252081102", //KE	
+  "TAFT 1103":                    "0252081103", //KE	
+  "TAFT 1104":                    "0252081104", //KE	
+  "TAFT 1106":                    "0252081106", //KE	
+  "TAFT 1108":                    "0252081108", //KE	
+  "CARNERAS 1102":                "0252321102", //KE	
+  "CARNERAS 1103":                "0252321103", //KE	
+  "ELK HILLS 1104":               "0252441104", //KE	
+  "ELK HILLS 1106":               "0252441106", //KE	
+  "FAMOSO 1101":                  "0252461101", //KE	
+  "FAMOSO 1102":                  "0252461102", //KE	
+  "FAMOSO 1103":                  "0252461103", //KE	
+  "FAMOSO 1105":                  "0252461105", //KE	
+  "FAMOSO 1107":                  "0252461107", //KE	
+  "TEMBLOR 1104":                 "0252551104", //KE	
+  "TEMBLOR 2103":                 "0252552103", //KE	
+  "MIDWAY 1101":                  "0252611101", //KE	
+  "MIDWAY 1102":                  "0252611102", //KE	
+  "MIDWAY 1103":                  "0252611103", //KE	
+  "MIDWAY 1104":                  "0252611104", //KE	
+  "CAWELO B 1101":                "0252621101", //KE	
+  "KERN OIL 1103":                "0252721103", //KE	
+  "KERN OIL 1104":                "0252721104", //KE	
+  "KERN OIL 1106":                "0252721106", //KE	
+  "KERN OIL 1107":                "0252721107", //KE	
+  "KERN OIL 1108":                "0252721108", //KE	
+  "KERN OIL 1109":                "0252721109", //KE	
+  "KERN OIL 1110":                "0252721110", //KE	
+  "KERN OIL 1112":                "0252721112", //KE	
+  "KERN OIL 1114":                "0252721114", //KE	
+  "KERN OIL 1116":                "0252721116", //KE	
+  "MAGUNDEN 1101":                "0252771101", //KE	
+  "MAGUNDEN 1104":                "0252771104", //KE	
+  "MAGUNDEN 1105":                "0252771105", //KE	
+  "MAGUNDEN 1106":                "0252771106", //KE	
+  "MAGUNDEN 1108":                "0252771108", //KE	
+  "MAGUNDEN 2108":                "0252772108", //KE	
+  "MAGUNDEN 2109":                "0252772109", //KE	
+  "MC KITTRICK 1106":             "0252781106", //KE	
+  "MC KITTRICK 1107":             "0252781107", //KE	
+  "OLD RIVER 1101":               "0252821101", //KE	
+  "OLD RIVER 1102":               "0252821102", //KE	
+  "OLD RIVER 1103":               "0252821103", //KE	
+  "RIO BRAVO 1101":               "0252861101", //KE	
+  "RIO BRAVO 1102":               "0252861102", //KE	
+  "RIO BRAVO 1103":               "0252861103", //KE	
+  "RIO BRAVO 1106":               "0252861106", //KE	
+  "SEMITROPIC 1104":              "0252901104", //KE	
+  "SEMITROPIC 1106":              "0252901106", //KE	
+  "SEMITROPIC 1108":              "0252901108", //KE	
+  "SEMITROPIC 1110":              "0252901110", //KE	
+  "SEMITROPIC 1112":              "0252901112", //KE	
+  "TEJON 1101":                   "0252931101", //KE	
+  "TEJON 1102":                   "0252931102", //KE	
+  "TEJON 1103":                   "0252931103", //KE	
+  "TEJON 1104":                   "0252931104", //KE	
+  "WASCO 1101":                   "0252961101", //KE	
+  "WASCO 1102":                   "0252961102", //KE	
+  "WASCO 1104":                   "0252961104", //KE	
+  "WEEDPATCH 1101":               "0252971101", //KE	
+  "WEEDPATCH 1102":               "0252971102", //KE	
+  "WEEDPATCH 1103":               "0252971103", //KE	
+  "WEEDPATCH 1105":               "0252971105", //KE	
+  "WEEDPATCH 1106":               "0252971106", //KE	
+  "CUYAMA 1103":                  "0253141103", //KE	
+  "CUYAMA 1104":                  "0253141104", //KE	
+  "CUYAMA 2102":                  "0253142102", //KE	
+  "MC FARLAND 1101":              "0253181101", //KE	
+  "MC FARLAND 1102":              "0253181102", //KE	
+  "MC FARLAND 1104":              "0253181104", //KE	
+  "MC FARLAND 1105":              "0253181105", //KE	
+  "SAN BERNARD 1101":             "0253191101", //KE	
+  "SAN BERNARD 1102":             "0253191102", //KE	
+  "SAN BERNARD 1103":             "0253191103", //KE	
+  "SAN BERNARD 1104":             "0253191104", //KE	
+  "SAN BERNARD 1105":             "0253191105", //KE	
+  "BAKERSFIELD 1101":             "0253371101", //KE	
+  "BAKERSFIELD 1102":             "0253371102", //KE	
+  "BAKERSFIELD 1105":             "0253371105", //KE	
+  "BAKERSFIELD 1106":             "0253371106", //KE	
+  "BAKERSFIELD 1107":             "0253371107", //KE	
+  "BAKERSFIELD 1108":             "0253371108", //KE	
+  "BAKERSFIELD 1110":             "0253371110", //KE	
+  "BAKERSFIELD 1114":             "0253371114", //KE	
+  "BAKERSFIELD 1115":             "0253371115", //KE	
+  "BAKERSFIELD 1116":             "0253371116", //KE	
+  "BAKERSFIELD 1118":             "0253371118", //KE	
+  "BAKERSFIELD 2106":             "0253372106", //KE	
+  "BAKERSFIELD 2107":             "0253372107", //KE	
+  "BAKERSFIELD 2108":             "0253372108", //KE	
+  "FRUITVALE 1101":               "0253391101", //KE	
+  "FRUITVALE 1103":               "0253391103", //KE	
+  "FRUITVALE 1104":               "0253391104", //KE	
+  "FRUITVALE 1105":               "0253391105", //KE	
+  "FRUITVALE 1108":               "0253391108", //KE	
+  "FRUITVALE 2106":               "0253392106", //KE	
+  "LAKEVIEW 1101":                "0253411101", //KE	
+  "LAKEVIEW 1102":                "0253411102", //KE	
+  "LAKEVIEW 1103":                "0253411103", //KE	
+  "PANAMA 2101":                  "0253422101", //KE	
+  "CARRIZO PLAINS 1101":          "0253461101", //KE	
+  "WHEELER RIDGE 1101":           "0253481101", //KE	
+  "WHEELER RIDGE 1102":           "0253481102", //KE	
+  "WHEELER RIDGE 1103":           "0253481103", //KE	
+  "LERDO 1103":                   "0253491103", //KE	
+  "LERDO 1104":                   "0253491104", //KE	
+  "LERDO 1105":                   "0253491105", //KE	
+  "LERDO 1106":                   "0253491106", //KE	
+  "LERDO 1107":                   "0253491107", //KE	
+  "LERDO 1108":                   "0253491108", //KE	
+  "LERDO 1109":                   "0253491109", //KE	
+  "SMYRNA 1102":                  "0253551102", //KE	
+  "SMYRNA 1103":                  "0253551103", //KE	
+  "POSO MOUNTAIN 2101":           "0253642101", //KE	
+  "SHAFTER 1101":                 "0253651101", //KE	
+  "SHAFTER 1102":                 "0253651102", //KE	
+  "SHAFTER 1103":                 "0253651103", //KE	
+  "SHAFTER 1104":                 "0253651104", //KE	
+  "WESTPARK 1101":                "0253701101", //KE	
+  "WESTPARK 1102":                "0253701102", //KE	
+  "WESTPARK 1103":                "0253701103", //KE	
+  "WESTPARK 1104":                "0253701104", //KE	
+  "WESTPARK 1105":                "0253701105", //KE	
+  "WESTPARK 1106":                "0253701106", //KE	
+  "WESTPARK 1107":                "0253701107", //KE	
+  "WESTPARK 1108":                "0253701108", //KE	
+  "WESTPARK 1109":                "0253701109", //KE	
+  "WESTPARK 1110":                "0253701110", //KE	
+  "WESTPARK 1111":                "0253701111", //KE	
+  "WESTPARK 1112":                "0253701112", //KE	
+  "ARVIN 1101":                   "0253801101", //KE	
+  "ARVIN 1102":                   "0253801102", //KE	
+  "ARVIN 1103":                   "0253801103", //KE	
+  "COPUS 1102":                   "0253871102", //KE	
+  "COPUS 1103":                   "0253871103", //KE	
+  "LAMONT 1102":                  "0253911102", //KE	
+  "LAMONT 1103":                  "0253911103", //KE	
+  "LAMONT 1104":                  "0253911104", //KE	
+  "LAMONT 1105":                  "0253911105", //KE	
+  "LAMONT 1106":                  "0253911106", //KE	
+  "LAMONT 1107":                  "0253911107", //KE	
+  "COLUMBUS 1103":                "0253951103", //KE	
+  "COLUMBUS 1104":                "0253951104", //KE	
+  "COLUMBUS 1105":                "0253951105", //KE	
+  "COLUMBUS 1106":                "0253951106", //KE	
+  "COLUMBUS 1109":                "0253951109", //KE	
+  "COLUMBUS 1110":                "0253951110", //KE	
+  "STOCKDALE 1105":               "0254071105", //KE	
+  "STOCKDALE 1106":               "0254071106", //KE	
+  "STOCKDALE 1108":               "0254071108", //KE	
+  "STOCKDALE 1109":               "0254071109", //KE	
+  "STOCKDALE 1110":               "0254071110", //KE	
+  "STOCKDALE 1111":               "0254071111", //KE	
+  "STOCKDALE 2106":               "0254072106", //KE	
+  "STOCKDALE 2107":               "0254072107", //KE	
+  "STOCKDALE 2108":               "0254072108", //KE	
+  "STOCKDALE 2109":               "0254072109", //KE	
+  "STOCKDALE 2110":               "0254072110", //KE	
+  "STOCKDALE 2111":               "0254072111", //KE	
+  "STOCKDALE 2112":               "0254072112", //KE	
+  "STOCKDALE 2113":               "0254072113", //KE	
+  "STOCKDALE 2114":               "0254072114", //KE	
+  "STOCKDALE 2115":               "0254072115", //KE	
+  "GOOSE LAKE 1103":              "0254201103", //KE	
+  "GOOSE LAKE 1106":              "0254201106", //KE	
+  "GOOSE LAKE 2104":              "0254202104", //KE	
+  "MARICOPA 1101":                "0254211101", //KE	
+  "MARICOPA 1102":                "0254211102", //KE	
+  "EISEN 1101":                   "0254231101", //KE	
+  "FELLOWS 2103":                 "0254242103", //KE	
+  "FELLOWS 2104":                 "0254242104", //KE	
+  "WELLFIELD 1102":               "0254291102", //KE	
+  "WELLFIELD 1103":               "0254291103", //KE	
+  "WELLFIELD 1104":               "0254291104", //KE	
+  "LEBEC 1101":                   "0254351101", //KE	
+  "ROSE 1101":                    "0254361101", //KE	
+  "BELRIDGE 1A 1101":             "0254371101", //KE	
+  "TWISSELMAN 2105":              "0254402105", //KE	
+  "BERRENDA C 1101":              "0254481101", //KE	
+  "CHARCA SUB 1106":              "0254501106", //KE	
+  "GANSO 1103":                   "0254541103", //KE	
+  "GANSO 1104":                   "0254541104", //KE	
+  "TUPMAN 1103":                  "0254561103", //KE	
+  "TUPMAN 1104":                  "0254561104", //KE	
+  "RENFRO 2101":                  "0254572101", //KE	
+  "RENFRO 2102":                  "0254572102", //KE	
+  "RENFRO 2103":                  "0254572103", //KE	
+  "BLACKWELL 1102":               "0254681102", //KE	
+  "BLACKWELL 2101":               "0254682101", //KE	
+  "NORCO 1101":                   "0254691101", //KE	
+  "NORCO 1102":                   "0254691102", //KE	
+  "ROSEDALE SUB 1101":            "0254761101", //KE	
+  "ROSEDALE SUB 2102":            "0254762102", //KE	
+  "CADET 1101":                   "0254821101", //KE	
+  "KERN POWER 2101":              "0255262101", //KE	
+  "KERN POWER 2102":              "0255262102", //KE	
+  "KERN POWER 2103":              "0255262103", //KE	
+  "KERN POWER 2104":              "0255262104", //KE	
+  "KERN POWER 2105":              "0255262105", //KE	
+  "CELERON 1101":                 "0255271101", //KE	
+  "TEVIS 2101":                   "0255322101", //KE	
+  "TEVIS 2102":                   "0255322102", //KE	
+  "TEVIS 2103":                   "0255322103", //KE	
+  "CAL WATER 1102":               "0255451102", //KE	
+  "SO. CAL. EDISON #11 1101":     "0258111101", //KE	
+  "S.C.E. 13 1101":               "0258131101", //KE	
+  "Cal Trans 1101":               "025HW1101 ", //KE	
+  "State Highway-1":              "025HW11011", //KE	
+  "State Highway-2":              "025HW11012", //KE	
+  "State Highway-3":              "025HW11013", //KE	
+  "State Highway-4":              "025HW11014", //KE	
+  "KE HCP MBZ 2601":              "026HCP2601", //KE	
+  "KE HCP MBZ 2602":              "026HCP2602", //KE	
+  "KE HCP MBZ 2603":              "026HCP2603", //KE	
+  "KE HCP MBZ 2604":              "026HCP2604", //KE	
+  "KE HCP MBZ 2605":              "026HCP2605", //KE	
+  "TRAN - KE 60Kv":               "TR02506002", //KE	
+  "TRAN - KE 70Kv":               "TR02507002", //KE	
+  "TRAN - KE 115Kv":              "TR02511502", //KE	
+  "TRAN - KE 230Kv":              "TR02523002", //KE	
+  "TRAN - KE 500Kv":              "TR02550002", //KE	
+  "CR-MW KE RioB Renfro":         "TRC0250001", //KE	
+  "CR-Gates Arco LB MW":          "TRC0250002", //KE	
+  "CR-Arco MW Gates LB":          "TRC0250003", //KE	
+  "CR-Kern Old River":            "TRC0250004", //KE	
+  "CR-Buena Vista":               "TRC0250005", //KE	
+  "CR-MW Wheeler Ridge":          "TRC0250006", //KE	
+  "CR-Tevis":                     "TRC0250007", //KE	
+  "CR-Wind Gap PP":               "TRC0250008", //KE	
+  "CR-Wheeler Ridge PP":          "TRC0250009", //KE	
+  "CR-Cal Trans Transmission 1":  "TRC0250010", //KE	
+  "CR-Cal Trans Transmission 2":  "TRC0250011", //KE	
+  "CR-Aerial Patrol KE":            "TRC0251111", //KE	
+  "CR-Aerial Patrol NON NERC":    "TRC0251112", //KE	
+  "CR-Lerdo Cawelo":              "TRC0251113", //KE	
+  "CR-Shafter RB MW":             "TRC0251114", //KE	
+  "CR-7th Standard Kern":         "TRC0251115", //KE	
+  "CR-Midway Hub":                "TRC0251116", //KE	
+  "CR-Kern-Stockdale":            "TRC0251117", //KE	
+  "CR-KE HCP MBZ 2601":           "TRCHCP2601", //KE	
+  "CR-KE HCP MBZ 2602":           "TRCHCP2602", //KE	
+  "CR-KE HCP MBZ 2603":           "TRCHCP2603", //KE	
+  "CR-KE HCP MBZ 2605":           "TRCHCP2605", //KE	
+  "D - SANTA YNEZ RIVER":         "0180000001", //LP	
+  "FAIRWAY 1104":                 "0182061104", //LP	
+  "FAIRWAY 1106":                 "0182061106", //LP	
+  "FAIRWAY 1107":                 "0182061107", //LP	
+  "FAIRWAY 1108":                 "0182061108", //LP	
+  "ATASCADERO 1101":              "0182541101", //LP	
+  "ATASCADERO 1102":              "0182541102", //LP	
+  "ATASCADERO 1103":              "0182541103", //LP	
+  "CAYUCOS 1101":                 "0182551101", //LP	
+  "CAYUCOS 1102":                 "0182551102", //LP	
+  "CHOLAME 1101":                 "0182561101", //LP	
+  "CHOLAME 2102":                 "0182562102", //LP	
+  "DIVIDE 1101":                  "0182571101", //LP	
+  "DIVIDE 1102":                  "0182571102", //LP	
+  "DIVIDE 1103":                  "0182571103", //LP	
+  "GOLDTREE 1105":                "0182581105", //LP	
+  "GOLDTREE 1107":                "0182581107", //LP	
+  "GOLDTREE 1108":                "0182581108", //LP	
+  "OCEANO 1101":                  "0182601101", //LP	
+  "OCEANO 1102":                  "0182601102", //LP	
+  "OCEANO 1103":                  "0182601103", //LP	
+  "OCEANO 1104":                  "0182601104", //LP	
+  "OCEANO 1105":                  "0182601105", //LP	
+  "OCEANO 1106":                  "0182601106", //LP	
+  "PASO ROBLES 1101":             "0182611101", //LP	
+  "PASO ROBLES 1102":             "0182611102", //LP	
+  "PASO ROBLES 1103":             "0182611103", //LP	
+  "PASO ROBLES 1104":             "0182611104", //LP	
+  "SAN LUIS OBISPO 1101":         "0182631101", //LP	
+  "SAN LUIS OBISPO 1102":         "0182631102", //LP	
+  "SAN LUIS OBISPO 1104":         "0182631104", //LP	
+  "SAN LUIS OBISPO 1105":         "0182631105", //LP	
+  "SAN LUIS OBISPO 1107":         "0182631107", //LP	
+  "SAN LUIS OBISPO 1108":         "0182631108", //LP	
+  "SAN MIGUEL 1104":              "0182661104", //LP	
+  "SAN MIGUEL 1105":              "0182661105", //LP	
+  "SAN MIGUEL 1106":              "0182661106", //LP	
+  "SAN MIGUEL 1107":              "0182661107", //LP	
+  "SANTA MARIA 1105":             "0182671105", //LP	
+  "SANTA MARIA 1106":             "0182671106", //LP	
+  "SANTA MARIA 1107":             "0182671107", //LP	
+  "SANTA MARIA 1108":             "0182671108", //LP	
+  "SANTA MARIA 1109":             "0182671109", //LP	
+  "SANTA MARIA 1110":             "0182671110", //LP	
+  "SANTA MARIA 1111":             "0182671111", //LP	
+  "SANTA MARIA 1112":             "0182671112", //LP	
+  "ZACA 1101":                    "0182681101", //LP	
+  "ZACA 1102":                    "0182681102", //LP	
+  "SANTA YNEZ 1101":              "0182721101", //LP	
+  "SANTA YNEZ 1102":              "0182721102", //LP	
+  "CAMBRIA 1101":                 "0182771101", //LP	
+  "CAMBRIA 1102":                 "0182771102", //LP	
+  "BAYWOOD 1101":                 "0182801101", //LP	
+  "BAYWOOD 1102":                 "0182801102", //LP	
+  "SISQUOC 1101":                 "0182811101", //LP	
+  "SISQUOC 1103":                 "0182811103", //LP	
+  "SISQUOC 1104":                 "0182811104", //LP	
+  "FOOTHILLS 1101":               "0182951101", //LP	
+  "FOOTHILLS 1102":               "0182951102", //LP	
+  "PURISIMA SUB 1101":            "0182971101", //LP	
+  "MORRO BAY 1101":               "0183011101", //LP	
+  "MORRO BAY 1102":               "0183011102", //LP	
+  "PALMER 1101":                  "0183031101", //LP	
+  "BUELLTON 1101":                "0183041101", //LP	
+  "BUELLTON 1102":                "0183041102", //LP	
+  "TEMPLETON 2108":               "0183052108", //LP	
+  "TEMPLETON 2109":               "0183052109", //LP	
+  "TEMPLETON 2110":               "0183052110", //LP	
+  "TEMPLETON 2111":               "0183052111", //LP	
+  "TEMPLETON 2112":               "0183052112", //LP	
+  "PERRY 1101":                   "0183071101", //LP	
+  "CABRILLO 1103":                "0183101103", //LP	
+  "CABRILLO 1104":                "0183101104", //LP	
+  "DIABLO CANYON":                "0189001102", //LP	
+  "CAL TRANS 101 NORTH":          "018HW10101", //LP	
+  "CAL TRANS 101 SOUTH":          "018HW10102", //LP	
+  "CR-Santa Ynez River CORDR":    "TR01800001", //LP	
+  "TRAN - LP 60Kv":               "TR01806001", //LP	
+  "TRAN - LP 70Kv":               "TR01807001", //LP	
+  "TRAN - LP 115Kv":              "TR01811501", //LP	
+  "TRAN - LP 230Kv":              "TR01823001", //LP	
+  "TRAN - LP 500Kv":              "TR01850001", //LP	
+  "CR-PILITAS CORRIDOR":          "TRC1800104", //LP	
+  "CR-MARGARITA CORRIDOR":        "TRC1800106", //LP	
+  "CR-JOHNSON CORRIDOR":          "TRC1800201", //LP	
+  "CR-HOLLISTER CORRIDOR":        "TRC1800202", //LP	
+  "CR-GOLDTREE CORRIDOR":         "TRC1800203", //LP	
+  "CR-MIDWAY CORRIDOR":           "TRC1800212", //LP	
+  "CR-NIPOMO CORRIDOR":           "TRC1800213", //LP	
+  "CR-LOPEZ CORRIDOR":            "TRC1800214", //LP	
+  "CR-PEREIRA CORRIDOR":          "TRC1800216", //LP	
+  "CR-MESA CORRIDOR":             "TRC1800217", //LP	
+  "CR-MESA - MIDWAY CORRIDOR":    "TRC1800218", //LP	
+  "CR-ORCUTT CORRIDOR":           "TRC1800305", //LP	
+  "CR-FAIRWAY CORRIDOR":          "TRC1800307", //LP	
+  "CR-SISQUOC CORRIDOR":          "TRC1800308", //LP	
+  "CR-VANDENBERG CORRIDOR":       "TRC1800309", //LP	
+  "CR-DIVIDE CORRIDOR":           "TRC1800311", //LP	
+  "CR-CLARK CORRIDOR":            "TRC1800315", //LP	
+  "CR-Aerial Patrol NERC":        "TRC1800316", //LP	
+  "CR-Aerial Patrol Non NERC":    "TRC1800317", //LP	
+  "CR-Cuesta":                    "TRC1800318", //LP	
+  "CR-Aerial Patrol LP":            "TRC1801111", //LP	
+  "GO 165 Pilot Jarvis 1111":     "0000000001", //MI	
+  "GO 165 Pilot Dumbarton 1107":  "0000000003", //MI	
+  "GO 165 Pilot Newark 1103":     "0000000004", //MI	
+  "LIVERMORE 1101":               "0012141101", //MI	
+  "LIVERMORE 1102":               "0012141102", //MI	
+  "LIVERMORE 1103":               "0012141103", //MI	
+  "LIVERMORE 1104":               "0012141104", //MI	
+  "NEWARK 1101":                  "0012221101", //MI	
+  "NEWARK 1102":                  "0012221102", //MI	
+  "NEWARK 1103":                  "0012221103", //MI	
+  "NEWARK 1104":                  "0012221104", //MI	
+  "NEWARK 1105":                  "0012221105", //MI	
+  "NEWARK 1108":                  "0012221108", //MI	
+  "NEWARK 1109":                  "0012221109", //MI	
+  "NEWARK 2102":                  "0012222102", //MI	
+  "NEWARK 2103":                  "0012222103", //MI	
+  "NEWARK 2104":                  "0012222104", //MI	
+  "NEWARK 2105":                  "0012222105", //MI	
+  "NEWARK 2107":                  "0012222107", //MI	
+  "NEWARK 2108":                  "0012222108", //MI	
+  "NEWARK 2109":                  "0012222109", //MI	
+  "NEWARK 2110":                  "0012222110", //MI	
+  "SUBSTATION O 0401":            "0012240401", //MI	
+  "SUBSTATION O 0402":            "0012240402", //MI	
+  "ALTAMONT 0201":                "0012430201", //MI	
+  "WARD 0401":                    "0012980401", //MI	
+  "SAN LEANDRO 1101":             "0013111101", //MI	
+  "SAN LEANDRO 1102":             "0013111102", //MI	
+  "SAN LEANDRO 1103":             "0013111103", //MI	
+  "SAN LEANDRO 1104":             "0013111104", //MI	
+  "SAN LEANDRO 1105":             "0013111105", //MI	
+  "SAN LEANDRO 1106":             "0013111106", //MI	
+  "SAN LEANDRO 1107":             "0013111107", //MI	
+  "SAN LEANDRO 1108":             "0013111108", //MI	
+  "SAN LEANDRO 1110":             "0013111110", //MI	
+  "SAN LEANDRO 1111":             "0013111111", //MI	
+  "SAN LEANDRO 1112":             "0013111112", //MI	
+  "SAN LEANDRO 1113":             "0013111113", //MI	
+  "SAN LEANDRO 1115":             "0013111115", //MI	
+  "SAN LEANDRO 1151":             "0013111151", //MI	
+  "RADUM 1101":                   "0013151101", //MI	
+  "RADUM 1102":                   "0013151102", //MI	
+  "RADUM 1105":                   "0013151105", //MI	
+  "CHERRY 0401":                  "0013200401", //MI	
+  "SOTO 0401":                    "0013260401", //MI	
+  "SOTO 0402":                    "0013260402", //MI	
+  "SAN LORENZO 0401":             "0013460401", //MI	
+  "SAN LORENZO 0402":             "0013460402", //MI	
+  "JARVIS 1101":                  "0013501101", //MI	
+  "JARVIS 1102":                  "0013501102", //MI	
+  "JARVIS 1103":                  "0013501103", //MI	
+  "JARVIS 1104":                  "0013501104", //MI	
+  "JARVIS 1105":                  "0013501105", //MI	
+  "JARVIS 1106":                  "0013501106", //MI	
+  "JARVIS 1108":                  "0013501108", //MI	
+  "JARVIS 1109":                  "0013501109", //MI	
+  "JARVIS 1110":                  "0013501110", //MI	
+  "JARVIS 1111":                  "0013501111", //MI	
+  "JARVIS 1112":                  "0013501112", //MI	
+  "PARKS 1101":                   "0013511101", //MI	
+  "PARSONS 0401":                 "0013660401", //MI	
+  "PARSONS 0402":                 "0013660402", //MI	
+  "ORIOLE 0401":                  "0013730401", //MI	
+  "ORIOLE 0402":                  "0013730402", //MI	
+  "VASCO 1101":                   "0013751101", //MI	
+  "VASCO 1102":                   "0013751102", //MI	
+  "VASCO 1103":                   "0013751103", //MI	
+  "MT. EDEN 1101":                "0013761101", //MI	
+  "MT. EDEN 1102":                "0013761102", //MI	
+  "MT. EDEN 1103":                "0013761103", //MI	
+  "MT. EDEN 1104":                "0013761104", //MI	
+  "MT. EDEN 1105":                "0013761105", //MI	
+  "MT. EDEN 1106":                "0013761106", //MI	
+  "MT. EDEN 1107":                "0013761107", //MI	
+  "MT. EDEN 1108":                "0013761108", //MI	
+  "MT. EDEN 1109":                "0013761109", //MI	
+  "MT. EDEN 1110":                "0013761110", //MI	
+  "MT. EDEN 1111":                "0013761111", //MI	
+  "MT. EDEN 1112":                "0013761112", //MI	
+  "MT. EDEN 1113":                "0013761113", //MI	
+  "MT. EDEN 1114":                "0013761114", //MI	
+  "NORTH DUBLIN 2101":            "0014052101", //MI	
+  "NORTH DUBLIN 2103":            "0014052103", //MI	
+  "CASTRO VALLEY 1101":           "0014091101", //MI	
+  "CASTRO VALLEY 1102":           "0014091102", //MI	
+  "CASTRO VALLEY 1103":           "0014091103", //MI	
+  "CASTRO VALLEY 1104":           "0014091104", //MI	
+  "CASTRO VALLEY 1105":           "0014091105", //MI	
+  "CASTRO VALLEY 1106":           "0014091106", //MI	
+  "CASTRO VALLEY 1107":           "0014091107", //MI	
+  "CASTRO VALLEY 1108":           "0014091108", //MI	
+  "SAN RAMON 2101":               "0014232101", //MI	
+  "SAN RAMON 2103":               "0014232103", //MI	
+  "SAN RAMON 2104":               "0014232104", //MI	
+  "SAN RAMON 2105":               "0014232105", //MI	
+  "SAN RAMON 2106":               "0014232106", //MI	
+  "SAN RAMON 2107":               "0014232107", //MI	
+  "SAN RAMON 2108":               "0014232108", //MI	
+  "SAN RAMON 2110":               "0014232110", //MI	
+  "SAN RAMON 2111":               "0014232111", //MI	
+  "SAN RAMON 2112":               "0014232112", //MI	
+  "SAN RAMON 2113":               "0014232113", //MI	
+  "SAN RAMON 2114":               "0014232114", //MI	
+  "SAN RAMON 2116":               "0014232116", //MI	
+  "SAN RAMON 2117":               "0014232117", //MI	
+  "SAN RAMON 2118":               "0014232118", //MI	
+  "SAN RAMON 2119":               "0014232119", //MI	
+  "SUNOL 1101":                   "0014241101", //MI	
+  "FREMONT 1105":                 "0014351105", //MI	
+  "FREMONT 1106":                 "0014351106", //MI	
+  "FREMONT 1107":                 "0014351107", //MI	
+  "FREMONT 1108":                 "0014351108", //MI	
+  "FREMONT 1109":                 "0014351109", //MI	
+  "FREMONT 1110":                 "0014351110", //MI	
+  "FREMONT 1111":                 "0014351111", //MI	
+  "FREMONT 1112":                 "0014351112", //MI	
+  "GRANT 1102":                   "0014381102", //MI	
+  "GRANT 1103":                   "0014381103", //MI	
+  "GRANT 1104":                   "0014381104", //MI	
+  "GRANT 1105":                   "0014381105", //MI	
+  "GRANT 1106":                   "0014381106", //MI	
+  "GRANT 1107":                   "0014381107", //MI	
+  "GRANT 1108":                   "0014381108", //MI	
+  "LAS POSITAS 2103":             "0014402103", //MI	
+  "LAS POSITAS 2104":             "0014402104", //MI	
+  "LAS POSITAS 2105":             "0014402105", //MI	
+  "LAS POSITAS 2106":             "0014402106", //MI	
+  "LAS POSITAS 2107":             "0014402107", //MI	
+  "LAS POSITAS 2108":             "0014402108", //MI	
+  "LAS POSITAS 2109":             "0014402109", //MI	
+  "LAS POSITAS 2110":             "0014402110", //MI	
+  "Cayetano 2109":                "0014422109", //MI	
+  "Cayetano 2111":                "0014422111", //MI	
+  "DUMBARTON SUB 1102":           "0014471102", //MI	
+  "DUMBARTON SUB 1103":           "0014471103", //MI	
+  "DUMBARTON SUB 1104":           "0014471104", //MI	
+  "DUMBARTON SUB 1105":           "0014471105", //MI	
+  "DUMBARTON SUB 1106":           "0014471106", //MI	
+  "DUMBARTON SUB 1107":           "0014471107", //MI	
+  "DUMBARTON SUB 1108":           "0014471108", //MI	
+  "DUMBARTON SUB 1109":           "0014471109", //MI	
+  "DUMBARTON SUB 1110":           "0014471110", //MI	
+  "DUMBARTON SUB 2111":           "0014472111", //MI	
+  "VINEYARD 2104":                "0014502104", //MI	
+  "VINEYARD 2105":                "0014502105", //MI	
+  "VINEYARD 2106":                "0014502106", //MI	
+  "VINEYARD 2107":                "0014502107", //MI	
+  "VINEYARD 2108":                "0014502108", //MI	
+  "VINEYARD 2109":                "0014502109", //MI	
+  "VINEYARD 2110":                "0014502110", //MI	
+  "KATO SUB 2101":                "0014682101", //MI	
+  "KATO SUB 2102":                "0014682102", //MI	
+  "DIXON LANDING 2101 MI":           "0014722101", //MI	
+  "DIXON LANDING 2102 MI":           "0014722102", //MI	
+  "DIXON LANDING 2103 MI":           "0014722103", //MI	
+  "DIXON LANDING 2105":           "0014722105", //MI	
+  "DIXON LANDING 2106":           "0014722106", //MI	
+  "DIXON LANDING 2107":           "0014722107", //MI	
+  "DIXON LANDING 2109":           "0014722109", //MI	
+  "FREMONT-SAN JOSE 1101":        "0018261101", //MI	
+  "TRAN - MI 60Kv":               "TR00106003", //MI	
+  "TRAN - MI 70Kv":               "TR00107003", //MI	
+  "TRAN - MI 115Kv":              "TR00111503", //MI	
+  "TRAN - MI 230Kv":              "TR00123003", //MI	
+  "TRAN - MI 500Kv":              "TR00150003", //MI	
+  "CR-MI Moraga Castro Valley":   "TRC0015000", //MI	
+  "CR-MI Castro Valley Newark":   "TRC0015001", //MI	
+  "CR-MI Contra Cost Livermore":  "TRC0015002", //MI	
+  "CR-MI Pittsburg Eastshore":    "TRC0015003", //MI	
+  "CR-MI Tesla Newark":           "TRC0015004", //MI	
+  "CR-MI Moraga Oakport":         "TRC0015005", //MI	
+  "CR-MI Oakland Newark":         "TRC0015006", //MI	
+  "CR-MI Newark Fremont Jarvis":  "TRC0015007", //MI	
+  "CR-MI Stanislaus Livermore":   "TRC0015008", //MI	
+  "CR-MI Pleasanton 60kv":        "TRC0015009", //MI	
+  "CR-MI East Alameda":           "TRC0015010", //MI	
+  "SAN RAFAEL 0402":              "0042010402", //NB	
+  "SAN RAFAEL 1101":              "0042011101", //NB	
+  "SAN RAFAEL 1102":              "0042011102", //NB	
+  "SAN RAFAEL 1103":              "0042011103", //NB	
+  "SAN RAFAEL 1104":              "0042011104", //NB	
+  "SAN RAFAEL 1105":              "0042011105", //NB	
+  "SAN RAFAEL 1106":              "0042011106", //NB	
+  "SAN RAFAEL 1107":              "0042011107", //NB	
+  "SAN RAFAEL 1108":              "0042011108", //NB	
+  "SAN RAFAEL 1109":              "0042011109", //NB	
+  "SAN RAFAEL 1110":              "0042011110", //NB	
+  "NAPA 1101":                    "0042021101", //NB	
+  "NAPA 1102":                    "0042021102", //NB	
+  "NAPA 1103":                    "0042021103", //NB	
+  "NAPA 1104":                    "0042021104", //NB	
+  "NAPA 1105":                    "0042021105", //NB	
+  "NAPA 1106":                    "0042021106", //NB	
+  "NAPA 1107":                    "0042021107", //NB	
+  "ALTO 1120":                    "0042031120", //NB	
+  "ALTO 1121":                    "0042031121", //NB	
+  "ALTO 1122":                    "0042031122", //NB	
+  "ALTO 1123":                    "0042031123", //NB	
+  "ALTO 1124":                    "0042031124", //NB	
+  "ALTO 1125":                    "0042031125", //NB	
+  "NORTH TOWER 1101":             "0042041101", //NB	
+  "NORTH TOWER 1102":             "0042041102", //NB	
+  "NORTH TOWER 1103":             "0042041103", //NB	
+  "NORTH TOWER 1104":             "0042041104", //NB	
+  "NORTH TOWER 1105":             "0042041105", //NB	
+  "NORTH TOWER 2201 NB":             "0042042201", //NB	
+  "NORTH TOWER 2204":             "0042042204", //NB	
+  "PARKWAY 1101":                 "0042051101", //NB	
+  "SANTA ROSA B 0411":            "0042070411", //NB	
+  "SANTA ROSA B 0413":            "0042070413", //NB	
+  "MIRABEL 1101":                 "0042091101", //NB	
+  "MIRABEL 1102":                 "0042091102", //NB	
+  "PETALUMA A 0411":              "0042120411", //NB	
+  "PETALUMA A 0413":              "0042120413", //NB	
+  "SANTA ROSA A 1101":            "0042151101", //NB	
+  "SANTA ROSA A 1102":            "0042151102", //NB	
+  "SANTA ROSA A 1103":            "0042151103", //NB	
+  "SANTA ROSA A 1104":            "0042151104", //NB	
+  "SANTA ROSA A 1105":            "0042151105", //NB	
+  "SANTA ROSA A 1106":            "0042151106", //NB	
+  "SANTA ROSA A 1107":            "0042151107", //NB	
+  "SANTA ROSA A 1108":            "0042151108", //NB	
+  "SANTA ROSA A 1109":            "0042151109", //NB	
+  "SANTA ROSA A 1110":            "0042151110", //NB	
+  "SANTA ROSA A 1111":            "0042151111", //NB	
+  "SANTA ROSA A 1112":            "0042151112", //NB	
+  "NOVATO 1101":                  "0042211101", //NB	
+  "NOVATO 1102":                  "0042211102", //NB	
+  "NOVATO 1103":                  "0042211103", //NB	
+  "NOVATO 1104":                  "0042211104", //NB	
+  "BOLINAS 1101":                 "0042261101", //NB	
+  "COTATI 1102":                  "0042271102", //NB	
+  "COTATI 1103":                  "0042271103", //NB	
+  "COTATI 1104":                  "0042271104", //NB	
+  "COTATI 1105":                  "0042271105", //NB	
+  "OLEMA 1101":                   "0042291101", //NB	& NC
+  "TULUCAY 1101":                 "0042301101", //NB	
+  "VALLEJO STA B 0411":           "0042450411", //NB	
+  "VALLEJO STA B 0412":           "0042450412", //NB	
+  "VALLEJO STA B 0413":           "0042450413", //NB	
+  "VALLEJO STA B 0414":           "0042450414", //NB	
+  "VALLEJO STA B 0415":           "0042450415", //NB	
+  "VALLEJO STA B 1101":           "0042451101", //NB	
+  "VALLEJO STA B 1102":           "0042451102", //NB	
+  "BASALT 1101":                  "0042461101", //NB	
+  "BASALT 1102":                  "0042461102", //NB	
+  "IGNACIO 1101":                 "0042481101", //NB	
+  "IGNACIO 1102":                 "0042481102", //NB	
+  "IGNACIO 1103":                 "0042481103", //NB	
+  "SAUSALITO 0401":               "0042490401", //NB	
+  "SAUSALITO 0402":               "0042490402", //NB	
+  "SAUSALITO 1101":               "0042491101", //NB	
+  "SAUSALITO 1102":               "0042491102", //NB	
+  "SAN ANSELMO 0412":             "0042500412", //NB	
+  "VALLEJO STA C 0401":           "0042550401", //NB	
+  "FULTON 1101":                  "0042561101", //NB	
+  "FULTON 1102":                  "0042561102", //NB	
+  "FULTON 1103":                  "0042561103", //NB	
+  "FULTON 1104":                  "0042561104", //NB	
+  "FULTON 1105":                  "0042561105", //NB	
+  "FULTON 1106":                  "0042561106", //NB	
+  "FULTON 1107":                  "0042561107", //NB	
+  "MOLINO 1101":                  "0042571101", //NB	
+  "MOLINO 1102":                  "0042571102", //NB	
+  "MOLINO 1103":                  "0042571103", //NB	
+  "MOLINO 1104":                  "0042571104", //NB	
+  "PETALUMA C 0402":              "0042630402", //NB	
+  "PETALUMA C 1101":              "0042631101", //NB	
+  "PETALUMA C 1102":              "0042631102", //NB	
+  "PETALUMA C 1105":              "0042631105", //NB	
+  "PETALUMA C 1106":              "0042631106", //NB	
+  "PETALUMA C 1108":              "0042631108", //NB	
+  "PETALUMA C 1109":              "0042631109", //NB	
+  "HIGHWAY 1101":                 "0042651101", //NB	
+  "HIGHWAY 1102":                 "0042651102", //NB	
+  "HIGHWAY 1103":                 "0042651103", //NB	
+  "HIGHWAY 1104":                 "0042651104", //NB	
+  "CALISTOGA 1101":               "0042711101", //NB	
+  "CALISTOGA 1102":               "0042711102", //NB	
+  "SONOMA 1102":                  "0042721102", //NB	
+  "SONOMA 1103":                  "0042721103", //NB	
+  "SONOMA 1104":                  "0042721104", //NB	
+  "SONOMA 1105":                  "0042721105", //NB	& NC
+  "SONOMA 1106":                  "0042721106", //NB	
+  "SONOMA 1107":                  "0042721107", //NB	
+  "FITCH MOUNTAIN 1111":          "0042751111", //NB	
+  "FITCH MOUNTAIN 1112":          "0042751112", //NB	
+  "FITCH MOUNTAIN 1113":          "0042751113", //NB	& NC
+  "MONTE RIO 1111":               "0042811111", //NB	
+  "MONTE RIO 1112":               "0042811112", //NB	
+  "MONTE RIO 1113":               "0042811113", //NB	
+  "CLOVERDALE 1101":              "0042821101", //NB	
+  "CLOVERDALE 1102":              "0042821102", //NB	
+  "FORT ROSS 1121":               "0042851121", //NB	
+  "GEYSERVILLE 1101":             "0042891101", //NB	
+  "GEYSERVILLE 1102":             "0042891102", //NB	
+  "LAS GALLINAS A 1103":          "0042991103", //NB	
+  "LAS GALLINAS A 1104":          "0042991104", //NB	
+  "LAS GALLINAS A 1105":          "0042991105", //NB	
+  "LAS GALLINAS A 1106":          "0042991106", //NB	
+  "LAS GALLINAS A 1107":          "0042991107", //NB	
+  "WOODACRE 1101":                "0043021101", //NB	
+  "WOODACRE 1102":                "0043021102", //NB	
+  "MONTICELLO 1101":              "0043051101", //NB	
+  "DUNBAR 1101":                  "0043071101", //NB	
+  "DUNBAR 1102":                  "0043071102", //NB	
+  "DUNBAR 1103":                  "0043071103", //NB	
+  "GREENBRAE 1101":               "0043091101", //NB	
+  "GREENBRAE 1102":               "0043091102", //NB	
+  "GREENBRAE 1103":               "0043091103", //NB	
+  "GREENBRAE 1104":               "0043091104", //NB	
+  "MIDDLETOWN 1102":              "0043141102", //NB	& NC
+  "SALMON CREEK 1101":            "0043161101", //NB	
+  "BELLEVUE 1102":                "0043181102", //NB	
+  "BELLEVUE 1104":                "0043181104", //NB	
+  "BELLEVUE 2101":                "0043182101", //NB	
+  "BELLEVUE 2103":                "0043182103", //NB	
+  "BELLEVUE 2105":                "0043182105", //NB	
+  "STAFFORD 1101":                "0043201101", //NB	
+  "STAFFORD 1102":                "0043201102", //NB	
+  "BAHIA 1101":                   "0043251101", //NB	
+  "BAHIA 1102":                   "0043251102", //NB	
+  "BAHIA 1103":                   "0043251103", //NB	
+  "BAHIA 1104":                   "0043251104", //NB	
+  "BAHIA 1105":                   "0043251105", //NB	
+  "CARQUINEZ 1103":               "0043281103", //NB	
+  "CARQUINEZ 1104":               "0043281104", //NB	
+  "CARQUINEZ 1105":               "0043281105", //NB	
+  "PUEBLO 1102":                  "0043291102", //NB	
+  "PUEBLO 1103":                  "0043291103", //NB	
+  "PUEBLO 1104":                  "0043291104", //NB	
+  "PUEBLO 1105":                  "0043291105", //NB	
+  "PUEBLO 2102":                  "0043292102", //NB	
+  "PUEBLO 2103":                  "0043292103", //NB	
+  "MONROE 1104":                  "0043301104", //NB	
+  "MONROE 1105":                  "0043301105", //NB	
+  "MONROE 1106":                  "0043301106", //NB	
+  "MONROE 2102":                  "0043302102", //NB	
+  "MONROE 2103":                  "0043302103", //NB	
+  "MONROE 2107":                  "0043302107", //NB	
+  "RINCON 1101":                  "0043321101", //NB	
+  "RINCON 1102":                  "0043321102", //NB	
+  "RINCON 1103":                  "0043321103", //NB	
+  "RINCON 1104":                  "0043321104", //NB	
+  "SKAGGS ISLAND 1101":           "0043341101", //NB	
+  "LAKEVILLE 1101":               "0043371101", //NB	
+  "LAKEVILLE 1102":               "0043371102", //NB	& NC
+  "SILVERADO 2103":               "0043432103", //NB	& NC
+  "SILVERADO 2104":               "0043432104", //NB	
+  "SILVERADO 2105":               "0043432105", //NB	
+  "GEYSERS 9 & 10 2109":          "0043442109", //NB	
+  "GEYSERS 5 & 6 2103":           "0043452103", //NB	
+  "PENNGROVE 1101":               "0043471101", //NB	
+  "PENNGROVE 1102":               "0043471102", //NB	
+  "GEYSERS 17":                   "0043482117", //NB	
+  "CORONA 1101":                  "0043491101", //NB	
+  "CORONA 1102":                  "0043491102", //NB	
+  "CORONA 1103":                  "0043491103", //NB	
+  "DEVELOPMENT 9901":             "0045999901", //NB	
+  "DEVELOPMENT 9902":             "0045999902", //NB	
+  "Hwy 12 (Sonoma)":              "004HW01201", //NB	
+  "Hwy 101North (Sonoma)":        "004HW10101", //NB	
+  "Hwy 101South (Sonoma)":        "004HW10102", //NB	
+  "Notre Dame 1102":              "0102041102", //NB	
+  "TRAN - NB 60Kv":               "TR00406002", //NB	
+  "TRAN - NB 70Kv":               "TR00407002", //NB	
+  "TRAN - NB 115Kv":              "TR00411502", //NB	
+  "TRAN - NB 230Kv":              "TR00423002", //NB	
+  "TRAN - NB 500Kv":              "TR00450002", //NB	
+  "CR-Larkfield CR":              "TRC0040001", //NB	
+  "CR-Aerial Patrol NB":            "TRC0041111", //NB	
+  "CR-Lakeville-Ignacio":         "TRC0041112", //NB	
+  "CR-Geysers-Fulton":            "TRC0041113", //NB	
+  "CR-Lakeville-Tulucay":         "TRC0041114", //NB	
+  "CR-Fulton-Lakeville":          "TRC0041115", //NB	
+  "CR-Geysers":                   "TRC0041116", //NB	
+  "CR-Aerial Patrol NON-NERC":    "TRC0041117", //NB	
+  "CLEAR LAKE 1101":              "0042141101", //NC	
+  "CLEAR LAKE 1102":              "0042141102", //NC	
+  "HOPLAND 1101":                 "0042251101", //NC	
+  "POTTER VALLEY P H 1102":       "0042281102", //NC	
+  "POTTER VALLEY P H 1104":       "0042281104", //NC	
+  "POTTER VALLEY P H 1105":       "0042281105", //NC	
+  "PHILO 1101":                   "0042601101", //NC	
+  "PHILO 1102":                   "0042601102", //NC	
+  "WILLITS 1102":                 "0042661102", //NC	
+  "WILLITS 1103":                 "0042661103", //NC	
+  "WILLITS 1104":                 "0042661104", //NC	
+  "LAYTONVILLE 1101":             "0042681101", //NC	
+  "LAYTONVILLE 1102":             "0042681102", //NC	
+  "FORT BRAGG STA A 1101":        "0042761101", //NC	
+  "FORT BRAGG STA A 1102":        "0042761102", //NC	
+  "FORT BRAGG STA A 1103":        "0042761103", //NC	
+  "FORT BRAGG STA A 1104":        "0042761104", //NC	
+  "FORT BRAGG STA A 1110":        "0042761110", //NC	
+  "UKIAH 1111":                   "0042771111", //NC	
+  "UKIAH 1113":                   "0042771113", //NC	
+  "UKIAH 1114":                   "0042771114", //NC	
+  "UKIAH 1115":                   "0042771115", //NC	
+  "GUALALA 1111":                 "0042841111", //NC	
+  "GUALALA 1112":                 "0042841112", //NC	
+  "ANNAPOLIS 1101":               "0042861101", //NC	
+  "UPPER LAKE 1101":              "0042871101", //NC	
+  "MENDOCINO 1101":               "0042951101", //NC	
+  "MENDOCINO 1102":               "0042951102", //NC	
+  "ELK 1101":                     "0042981101", //NC	
+  "GARCIA 0401":                  "0043040401", //NC	
+  "COVELO 1101":                  "0043061101", //NC	
+  "BIG RIVER 1101":               "0043081101", //NC	
+  "MIDDLETOWN 1101":              "0043141101", //NC	
+  "REDBUD 1101":                  "0043191101", //NC	
+  "REDBUD 1102":                  "0043191102", //NC	
+  "HARTLEY 1101":                 "0043211101", //NC	
+  "HARTLEY 1102":                 "0043211102", //NC	
+  "KONOCTI 1101":                 "0043311101", //NC	
+  "KONOCTI 1102":                 "0043311102", //NC	
+  "LUCERNE 1103":                 "0043351103", //NC	
+  "Lucerne 1106":                 "0043351106", //NC	
+  "HIGHLANDS 1102":               "0043361102", //NC	
+  "HIGHLANDS 1103":               "0043361103", //NC	
+  "Highlands 1104":               "0043361104", //NC	
+  "POINT ARENA 1101":             "0043381101", //NC	
+  "CALPELLA 1101":                "0043411101", //NC	
+  "CALPELLA 1102":                "0043411102", //NC	
+  "ARCATA 1105":                  "0192021105", //NC	
+  "ARCATA 1106":                  "0192021106", //NC	
+  "ARCATA 1121":                  "0192021121", //NC	
+  "ARCATA 1122":                  "0192021122", //NC	
+  "ARCATA 1123":                  "0192021123", //NC	
+  "MAPLE CREEK 1101":             "0192101101", //NC	
+  "STATION A EUREKA 1103":        "0192121103", //NC	
+  "STATION A EUREKA 1106":        "0192121106", //NC	
+  "STATION A EUREKA 1107":        "0192121107", //NC	
+  "NEWBURG 1131":                 "0192151131", //NC	
+  "NEWBURG 1132":                 "0192151132", //NC	
+  "NEWBURG 1133":                 "0192151133", //NC	
+  "WILLOW CREEK 1101":            "0192171101", //NC	
+  "WILLOW CREEK 1102":            "0192171102", //NC	
+  "WILLOW CREEK 1103":            "0192171103", //NC	
+  "BLUE LAKE 1101":               "0192181101", //NC	
+  "BLUE LAKE 1102":               "0192181102", //NC	
+  "GARBERVILLE 1101":             "0192221101", //NC	
+  "GARBERVILLE 1102":             "0192221102", //NC	
+  "GARBERVILLE 1103":             "0192221103", //NC	
+  "TRINIDAD 1101":                "0192231101", //NC	
+  "TRINIDAD 1102":                "0192231102", //NC	
+  "RIO DELL 1101":                "0192251101", //NC	
+  "RIO DELL 1102":                "0192251102", //NC	
+  "ORICK 1101":                   "0192261101", //NC	
+  "ORICK 1102":                   "0192261102", //NC	
+  "CARLOTTA 1121":                "0192291121", //NC	
+  "FRUITLAND 1141":               "0192311141", //NC	
+  "FRUITLAND 1142":               "0192311142", //NC	
+  "FORT SEWARD 1121":             "0192321121", //NC	
+  "FORT SEWARD 1122":             "0192321122", //NC	
+  "STATION E EUREKA 1101":        "0192331101", //NC	
+  "STATION E EUREKA 1104":        "0192331104", //NC	
+  "STATION E EUREKA 1105":        "0192331105", //NC	
+  "HUM BAY 1101":                 "0192341101", //NC	
+  "HUM BAY 1102":                 "0192341102", //NC	
+  "BIG LAGOON 1101":              "0192361101", //NC	
+  "EEL RIVER 1101":               "0192381101", //NC	
+  "EEL RIVER 1102":               "0192381102", //NC	
+  "JANES CREEK 1101":             "0192391101", //NC	
+  "JANES CREEK 1102":             "0192391102", //NC	
+  "JANES CREEK 1103":             "0192391103", //NC	
+  "JANES CREEK 1104":             "0192391104", //NC	
+  "HOOPA 1101":                   "0192401101", //NC	
+  "LOW GAP 1101":                 "0192411101", //NC	
+  "HARRIS 1108":                  "0192431108", //NC	
+  "HARRIS 1109":                  "0192431109", //NC	
+  "FAIRHAVEN 1103":               "0192451103", //NC	
+  "FAIRHAVEN 1104":               "0192451104", //NC	
+  "BRIDGEVILLE 1101":             "0192461101", //NC	
+  "BRIDGEVILLE 1102":             "0192461102", //NC	
+  "RUSS RANCH 1101":              "0192471101", //NC	
+  "LAYTONVILLE N.B. FD. 1101":    "0198001101", //NC	
+  "Humboldt S Q1 State Parks":    "0199999990", //NC	
+  "Humboldt S Q4 State Parks":    "0199999991", //NC	
+  "Humbldt North State Parks":    "0199999992", //NC	
+  "Humboldt River Cross South":   "019HW00001", //NC	
+  "Humboldt River Cross North":   "019HW00002", //NC	
+  "Hw36 (Hw101 - Forest Glen":    "019HW03601", //NC	
+  "Hw96 (Willow Ck - Somes Br)":  "019HW09601", //NC	
+  "Hw101 (Orick - King Salmon)":  "019HW10101", //NC	
+  "Hw101 (King Salmon --Holmes)": "019HW10102", //NC	
+  "Hw101 (Holmes - Spy Rock)":    "019HW10103", //NC	
+  "Hw299 (Eureka -Redwd Vly.)":   "019HW29901", //NC	
+  "Hw299 (Redwd Vly.-Del Loma)":  "019HW29902", //NC	
+  "Lake Hwy-1":                   "042HW00001", //NC	
+  "Lake Hwy-2":                   "042HW00002", //NC	
+  "Lake Hwy-3":                   "042HW00003", //NC	
+  "Lake Hwy-4":                   "042HW00004", //NC	
+  "Hw1 (Navarro Rv - Rock Pt.)":  "042HW00101", //NC	
+  "Hw1 (Stewarts Pt-Navarro R)":  "042HW00102", //NC	
+  "Hw20 (Hw101 - Lake County)":   "042HW02001", //NC	
+  "Hw20 (Hw101 - Irmulco Rd)":    "042HW02002", //NC	
+  "Hw20 (Lake Co - Colusa Co)":   "042HW02003", //NC	
+  "Hw20 (Hw 1 - Camp 20)":        "042HW02004", //NC	
+  "Hw101 (Redwd Vly -Squaw Rk)":  "042HW10101", //NC	
+  "Hw101 (Willits - Spy Rock)":   "042HW10102", //NC	
+  "Hw116 (All)":                  "042HW11601", //NC	
+  "Hw128 (Mtn Hse-Flynn Ck Rd)":  "042HW12801", //NC	
+  "Hw162 (All)":                  "042HW16201", //NC	
+  "Hw175 (Hw 101 -Lake County)":  "042HW17501", //NC	
+  "Hw222 (All)":                  "042HW22201", //NC	
+  "Hw253 (All)":                  "042HW25301", //NC	
+  "TRAN - NC 60Kv":               "TR00406001", //NC	
+  "TRAN - NC 70Kv":               "TR00407001", //NC	
+  "TRAN - NC 115Kv":              "TR00411501", //NC	
+  "TRAN - NC 230Kv":              "TR00423001", //NC	
+  "TRAN - NC 500Kv":              "TR00450001", //NC	
+  "PIT NO.5 1101":                "0101321101", //NV	
+  "CENTERVILLE 1101":             "0102021101", //NV	
+  "NOTRE DAME 1101":              "0102041101", //NV	
+  "NOTRE DAME 1102":              "0102041102", //NV	
+  "NOTRE DAME 1104":              "0102041104", //NV	
+  "CHICO STATION A 0401":         "0102050401", //NV	
+  "CHICO STATION A 0402":         "0102050402", //NV	
+  "CHICO STATION A 1101":         "0102051101", //NV	
+  "CHICO STATION A 1102":         "0102051102", //NV	
+  "CHICO STATION A 1103":         "0102051103", //NV	
+  "CHICO STATION A 1104":         "0102051104", //NV	
+  "CAPAY 1101":                   "0102111101", //NV	
+  "CAPAY 1102":                   "0102111102", //NV	
+  "HAMILTON STATION A 1101":      "0102121101", //NV	
+  "HAMILTON STATION A 1102":      "0102121102", //NV	
+  "ESQUON 1101":                  "0102171101", //NV	
+  "ESQUON 1102":                  "0102171102", //NV	
+  "ESQUON 1103":                  "0102171103", //NV	
+  "BUCKS CREEK 1101":             "0102211101", //NV	
+  "BUCKS CREEK 1102":             "0102211102", //NV	
+  "BUCKS CREEK 1103":             "0102211103", //NV	
+  "CARIBOU 2102":                 "0102222102", //NV	
+  "HAMILTON BRANCH 1101":         "0102361101", //NV	
+  "CHICO STATION B 1101":         "0102491101", //NV	
+  "CHICO STATION B 1102":         "0102491102", //NV	
+  "CHICO STATION B 1103":         "0102491103", //NV	
+  "CHICO STATION B 1105":         "0102491105", //NV	
+  "CHICO STATION B 1106":         "0102491106", //NV	
+  "OROVILLE 0402":                "0102520402", //NV	
+  "OROVILLE 0403":                "0102520403", //NV	
+  "OROVILLE 1101":                "0102521101", //NV	
+  "OROVILLE 1102":                "0102521102", //NV	
+  "OROVILLE 1103":                "0102521103", //NV	
+  "OROVILLE 1104":                "0102521104", //NV	
+  "GRAYS FLAT 0401":              "0102530401", //NV	
+  "VOLTA 1101":                   "0102541101", //NV	
+  "VOLTA 1102":                   "0102541102", //NV	
+  "EAST QUINCY 1101":             "0102551101", //NV	
+  "Glenn 1101":                   "0102601101", //NV	
+  "CHICO STATION C 0401":         "0102650401", //NV	
+  "ORLAND STATION B 1101":        "0102701101", //NV	
+  "ORLAND STATION B 1102":        "0102701102", //NV	
+  "ORLAND STATION B 1103":        "0102701103", //NV	
+  "WILLOWS STATION A 1101":       "0102741101", //NV	
+  "WILLOWS STATION A 1103":       "0102741103", //NV	
+  "WILLOWS STATION A 1104":       "0102741104", //NV	
+  "ELK CREEK 1101-StnyFrd":       "0102781101", //NV	
+  "ELK CREEK 1101-ElkCk":         "010278110A", //NV	
+  "BIG MEADOWS 2101":             "0102812101", //NV	
+  "BIG MEADOWS 4472":             "0102814472", //NV	
+  "PARADISE Tap":                 "0102831100", //NV	
+  "PARADISE 1101":                "0102831101", //NV	
+  "PARADISE 1102":                "0102831102", //NV	
+  "PARADISE 1103":                "0102831103", //NV	
+  "PARADISE 1104":                "0102831104", //NV	
+  "PARADISE 1105":                "0102831105", //NV	
+  "PARADISE 1106":                "0102831106", //NV	
+  "PARADISE 1105 USFS":           "010283110Z", //NV	
+  "ANITA 1101":                   "0102841101", //NV	
+  "ANITA 1102":                   "0102841102", //NV	
+  "JACINTO 1101":                 "0102851101", //NV	
+  "JACINTO 1102":                 "0102851102", //NV	
+  "Wyandotte 1102":               "0102911102", //NV	
+  "WYANDOTTE 1103-Sub":           "0102911103", //NV	
+  "WYANDOTTE 1105":               "0102911105", //NV	
+  "WYANDOTTE 1106":               "0102911106", //NV	
+  "WYANDOTTE 1107-MnrRnch":       "0102911107", //NV	
+  "WYANDOTTE 1108":               "0102911108", //NV	
+  "WYANDOTTE 1109":               "0102911109", //NV	
+  "WYANDOTTE 1103-Pdse":          "010291110A", //NV	
+  "WYANDOTTE 1103-BaldRk":        "010291110B", //NV	
+  "WYANDOTTE 1107-BlkBrt":        "010291110C", //NV	
+  "WYANDOTTE 1103-Sub USFS":      "010291110Y", //NV	
+  "WYANDOTTE 1103-Pdse USFS":     "010291110Z", //NV	
+  "WYANDOTTE 1110":               "0102911110", //NV	
+  "COTTONWOOD 1101":              "0102931101", //NV	
+  "COTTONWOOD 1102":              "0102931102", //NV	
+  "COTTONWOOD 1103":              "0102931103", //NV	
+  "DAYTON ROAD 0401":             "0102940401", //NV	
+  "DAYTON ROAD 0402":             "0102940402", //NV	
+  "SYCAMORE CREEK 1101":          "0102971101", //NV	
+  "SYCAMORE CREEK 1102":          "0102971102", //NV	
+  "SYCAMORE CREEK 1103":          "0102971103", //NV	
+  "SYCAMORE CREEK 1104":          "0102971104", //NV	
+  "SYCAMORE CREEK 1105":          "0102971105", //NV	
+  "SYCAMORE CREEK 1107":          "0102971107", //NV	
+  "SYCAMORE CREEK 1109":          "0102971109", //NV	
+  "SYCAMORE CREEK 1110":          "0102971110", //NV	
+  "SYCAMORE CREEK 1111":          "0102971111", //NV	
+  "CAMELLIA 0401":                "0103010401", //NV	
+  "GANSNER 1101-MdwVly":          "0103021101", //NV	
+  "GANSNER 1101-Quincy":          "010302110A", //NV	
+  "ORO FINO 1101":                "0103031101", //NV	
+  "ORO FINO 1102-ButteMdws":      "0103031102", //NV	
+  "ORO FINO 1102-FR":             "010303110A", //NV	
+  "ORO FINO 1102-Pdse":           "010303110B", //NV	
+  "ORO FINO 1102-Pdse-USFS":      "010303110F", //NV	
+  "GREENVILLE 0401":              "0103040401", //NV	
+  "GREENVILLE 1101":              "0103041101", //NV	
+  "NORD 1103":                    "0103071103", //NV	
+  "NORD 1104":                    "0103071104", //NV	
+  "NORD 1105":                    "0103071105", //NV	
+  "NORD 1106":                    "0103071106", //NV	
+  "BUTTE 1103":                   "0103081103", //NV	
+  "BUTTE 1104":                   "0103081104", //NV	
+  "BUTTE 1105":                   "0103081105", //NV	
+  "BUTTE 1106":                   "0103081106", //NV	
+  "BUTTE 1107":                   "0103081107", //NV	
+  "CLARK ROAD 1102-Chrkee":       "0103091102", //NV	
+  "CLARK ROAD 1102-ButtVly":      "010309110A", //NV	
+  "SPANISH CREEK 4401":           "0103104401", //NV	
+  "CRESCENT MILLS. 2101":         "0103132101", //NV	
+  "LOGAN CREEK 2101":             "0103142101", //NV	
+  "LOGAN CREEK 2102":             "0103142102", //NV	
+  "LOGAN CREEK 2103":             "0103142103", //NV	
+  "CHESTER 1101":                 "0103181101", //NV	
+  "CHESTER 1102":                 "0103181102", //NV	
+  "BANGOR 1101":                  "0103191101", //NV	& SI
+  "CHALLENGE 1101":               "0103201101", //NV	
+  "CHALLENGE 1101- USFS":         "010320110A", //NV	
+  "CHALLENGE 1102-USFS":          "010320110D", //NV	
+  "HONCUT 1101":                  "0103211101", //NV	& SI 
+  "HONCUT 1102":                  "0103211102", //NV	& SI 
+  "KANAKA 1101-FEATHERFLS":       "0103221101", //NV	
+  "KANAKA 1101-RBNSNMILL":        "010322110A", //NV	
+  "KANAKA 1101-RBNSNML-USFS":     "010322110D", //NV	
+  "PEACHTON 1101":                "0103241101", //NV	
+  "PEACHTON 1102":                "0103241102", //NV	
+  "PEACHTON 1103":                "0103241103", //NV	
+  "TRES VIAS 1101":               "0103251101", //NV	
+  "ANDERSON 1101":                "0103261101", //NV	
+  "ANDERSON 1102":                "0103261102", //NV	
+  "ANDERSON 1103":                "0103261103", //NV	
+  "ANTLER 1101":                  "0103271101", //NV	
+  "BOGARD 1101":                  "0103301101", //NV	
+  "BURNEY 1101":                  "0103311101", //NV	
+  "BURNEY 1102":                  "0103311102", //NV	
+  "CEDAR CREEK 1101":             "0103321101", //NV	
+  "CORNING 0401":                 "0103330401", //NV	
+  "CORNING 0402":                 "0103330402", //NV	
+  "CORNING 1101":                 "0103331101", //NV	
+  "CORNING 1102":                 "0103331102", //NV	
+  "CORNING 1103":                 "0103331103", //NV	
+  "CORNING 1104":                 "0103331104", //NV	
+  "DAIRYVILLE 1101":              "0103341101", //NV	
+  "DESCHUTES 1101":               "0103351101", //NV	
+  "FRENCH GULCH 1101":            "0103381101", //NV	
+  "FRENCH GULCH 1102":            "0103381102", //NV	
+  "GERBER 1101":                  "0103391101", //NV	
+  "GERBER 1102":                  "0103391102", //NV	
+  "GIRVAN 1101":                  "0103401101", //NV	
+  "GIRVAN 1102":                  "0103401102", //NV	
+  "JESSUP 1101":                  "0103441101", //NV	
+  "JESSUP 1102":                  "0103441102", //NV	
+  "JESSUP 1103":                  "0103441103", //NV	
+  "KESWICK 1101":                 "0103451101", //NV	
+  "PANORAMA 1101":                "0103461101", //NV	
+  "PANORAMA 1102":                "0103461102", //NV	
+  "LOS MOLINOS 1101":             "0103481101", //NV	
+  "LOS MOLINOS 1102":             "0103481102", //NV	
+  "MC ARTHUR 1101":               "0103491101", //NV	
+  "MC ARTHUR 1102":               "0103491102", //NV	
+  "PIT NO.7 1101":                "0103501101", //NV	
+  "OREGON TRAIL 1102":            "0103521102", //NV	
+  "OREGON TRAIL 1103":            "0103521103", //NV	
+  "OREGON TRAIL 1104":            "0103521104", //NV	
+  "RAWSON 1103":                  "0103531103", //NV	
+  "RED BLUFF 1101":               "0103541101", //NV	
+  "RED BLUFF 1102":               "0103541102", //NV	
+  "RED BLUFF 1103":               "0103541103", //NV	
+  "RED BLUFF 1104":               "0103541104", //NV	
+  "RED BLUFF 1105":               "0103541105", //NV	
+  "RISING RIVER 1101":            "0103551101", //NV	
+  "STILLWATER STATION 1101":      "0103561101", //NV	
+  "STILLWATER STATION 1102":      "0103561102", //NV	
+  "TYLER 1103":                   "0103571103", //NV	
+  "TYLER 1104":                   "0103571104", //NV	
+  "TYLER 1105":                   "0103571105", //NV	
+  "VINA 1101":                    "0103581101", //NV	
+  "WHITMORE 1101":                "0103601101", //NV	
+  "WILDWOOD 1101":                "0103611101", //NV	
+  "PIT NO 1 1101":                "0103721101", //NV	
+  "PIT NO 3 1101":                "0103731101", //NV	
+  "I 5 Corridor":                 "010HW05001", //NV	
+  "Oroville D.C":                 "010HW05002", //NV	
+  "Hwy 99":                       "010HW09901", //NV	
+  "Hwy 162":                      "010HW16201", //NV	
+  "RED BLUFF HWY 99":             "010HW99001", //NV	
+  "CHICO HIGHWAYS":               "010HWCH001", //NV	
+  "RED BLUFF ORCHARDS":           "010OR00001", //NV	
+  "CHICO Orchards":               "010OR00002", //NV	
+  "SUMMER ORCHARDS":              "010OR00003", //NV	
+  "GLENN ORCHARDS":               "010OR00004", //NV	
+  "Red Bluff Summer Orchards":    "010OR00005", //NV	
+  "TRAN - NV 60Kv":               "TR01006001", //NV	
+  "TRAN - NV 70Kv":               "TR01007001", //NV	
+  "TRAN - NV 115Kv":              "TR01011501", //NV	
+  "TRAN - NV 230Kv":              "TR01023001", //NV	
+  "TRAN - NV 500Kv":              "TR01050001", //NV	
+  "CR-ButteCoLine to Big Bend":   "TRC1000101", //NV	
+  "CR-Big Bend to Cresta":        "TRC1000102", //NV	
+  "CR-Cresta to Rock Creek":      "TRC1000103", //NV	
+  "CR-Rock Creek to Belden":      "TRC1000104", //NV	
+  "CR-Belden to Caribou":         "TRC1000105", //NV	
+  "CR-Tbl Mtn Sub to Lk Orvll":   "TRC1000106", //NV	
+  "CR-Pit1 to Burney":            "TRC1000107", //NV	
+  "CR-Pit 3":                     "TRC1000108", //NV	
+  "CR-Burney to Round Mtn":       "TRC1000109", //NV	
+  "CR-Pit5 to Round Mtn":         "TRC1000110", //NV	
+  "CR-Cottonwood to Glen":        "TRC1000111", //NV	
+  "CR-Cascade to Lakehead":       "TRC1000112", //NV	
+  "CR-Whiskytown to Cottonwood":  "TRC1000113", //NV	
+  "CR-GCS to Big Flat":           "TRC1000114", //NV	
+  "CR-Glen to Colusa County":     "TRC1000115", //NV	
+  "CR-Palermo Sub to Yuba Cnty":  "TRC1000116", //NV	
+  "CR-Twain to Elizabeth Town":   "TRC1000117", //NV	
+  "CR-Table Mtn to Sutter Cnty":  "TRC1000118", //NV	
+  "CR-Round Mtn-Cottonwood":      "TRC1000119", //NV	
+  "CR-Paradise-Butte-BigBend":    "TRC1000120", //NV	
+  "CR-Sycamore-Butte-TableMtn":   "TRC1000121", //NV	
+  "CR-Colgate-Rio Oso":           "TRC1000122", //NV	
+  "CR-Round Mtn 500kV North":     "TRC1000123", //NV	
+  "CR-Round Mtn 500kV South":     "TRC1000124", //NV	
+  "CR-Transmission Orchards":     "TRC1000125", //NV	
+  "CR-Chico Three":               "TRC1000126", //NV	
+  "CR-Quincy Loop":               "TRC1000127", //NV	
+  "CR-Cottonwood 60kV":           "TRC1000128", //NV	
+  "CR-Glenn 60kV":                "TRC1000129", //NV	
+  "CR-S Fork Feather":            "TRC1000130", //NV	
+  "CR-Lake Almanor":              "TRC1000131", //NV	
+  "CR-Oroville Taps":             "TRC1000132", //NV	
+  "CR-Butte Creek Canyon":        "TRC1000133", //NV	
+  "CR-Kilarc to Bullskin Ridge":  "TRC1000134", //NV	
+  "CR-Battle Creek Valley":       "TRC1000135", //NV	
+  "CR-North Valley LOP":          "TRC1000136", //NV	
+  "CR-Browns Mountain":           "TRC1000137", //NV	
+  "CR-S Fork Trinity":            "TRC1000138", //NV	
+  "CR-Round Table Mtn":           "TRC1000142", //NV	
+  "CR-Cottonwood to Colusa":      "TRC1000201", //NV	
+  "CR-DWR LINES IN OROVILLE":     "TRC1000301", //NV	
+  "CR-Aerial Patrol NV":             "TRC3141111", //NV	
+  "SUBSTATION H 0401":            "0022100401", //PE	& SF
+  "SUBSTATION H 0402":            "0022100402", //PE	& SF
+  "SUBSTATION H 0403":            "0022100403", //PE	
+  "SUBSTATION H 0404":            "0022100404", //PE	& SF
+  "SUBSTATION H 0405":            "0022100405", //PE	& SF
+  "SUBSTATION H 1101":            "0022101101", //PE	& SF
+  "BELMONT 1109":                 "0022401109", //PE	
+  "BELMONT 1111":                 "0022401111", //PE	
+  "LAWNDALE 0401":                "0022440401", //PE	
+  "LAWNDALE 0402":                "0022440402", //PE	
+  "ACTON 0401":                   "0022470401", //PE	& SF
+  "ACTON 0402":                   "0022470402", //PE	& SF
+  "EAST GRAND 0401":              "0022570401", //PE	
+  "EAST GRAND 0404":              "0022570404", //PE	
+  "EAST GRAND 1101":              "0022571101", //PE	
+  "EAST GRAND 1102":              "0022571102", //PE	
+  "EAST GRAND 1103":              "0022571103", //PE	
+  "EAST GRAND 1104":              "0022571104", //PE	
+  "EAST GRAND 1105":              "0022571105", //PE	
+  "EAST GRAND 1106":              "0022571106", //PE	
+  "EAST GRAND 1107":              "0022571107", //PE	
+  "EAST GRAND 1108":              "0022571108", //PE	
+  "EAST GRAND 1109":              "0022571109", //PE	
+  "EAST GRAND 1110":              "0022571110", //PE	
+  "EAST GRAND 1111":              "0022571111", //PE	
+  "EAST GRAND 1112":              "0022571112", //PE	
+  "EAST GRAND 1113":              "0022571113", //PE	
+  "EAST GRAND 1114":              "0022571114", //PE	
+  "WESTLAKE 0401":                "0022600401", //PE	
+  "WESTLAKE 0402":                "0022600402", //PE	
+  "WESTLAKE 0403":                "0022600403", //PE	& SF
+  "DALY CITY 0401":               "0022640401", //PE	
+  "DALY CITY 1101":               "0022641101", //PE	& SF
+  "DALY CITY 1102":               "0022641102", //PE	
+  "DALY CITY 1103":               "0022641103", //PE	
+  "DALY CITY 1104":               "0022641104", //PE	
+  "DALY CITY 1105":               "0022641105", //PE	
+  "DALY CITY 1106":               "0022641106", //PE	& SF
+  "DALY CITY 1107":               "0022641107", //PE	& SF
+  "DALY CITY 1108":               "0022641108", //PE	
+  "DALY CITY 1109":               "0022641109", //PE	& SF 
+  "DALY CITY 1110":               "0022641110", //PE	
+  "DALY CITY 1111":               "0022641111", //PE  & SF
+  "DALY CITY 1112":               "0022641112", //PE	
+  "PLYMOUTH 0401":                "0022680401", //PE	& SF
+  "MILLBRAE 0401":                "0022690401", //PE	
+  "MILLBRAE 0403":                "0022690403", //PE	
+  "MILLBRAE 0404":                "0022690404", //PE	
+  "MILLBRAE 1101":                "0022691101", //PE	
+  "MILLBRAE 1102":                "0022691102", //PE	
+  "MILLBRAE 1103":                "0022691103", //PE	
+  "MILLBRAE 1104":                "0022691104", //PE	
+  "MILLBRAE 1105":                "0022691105", //PE	
+  "MILLBRAE 1106":                "0022691106", //PE	
+  "MILLBRAE 1107":                "0022691107", //PE	
+  "MILLBRAE 1108":                "0022691108", //PE	
+  "SAN BRUNO 0401":               "0022700401", //PE	
+  "SAN BRUNO 0402":               "0022700402", //PE	
+  "SAN BRUNO 0403":               "0022700403", //PE	
+  "SNEATH LANE 1101":             "0022721101", //PE	
+  "SNEATH LANE 1102":             "0022721102", //PE	
+  "SNEATH LANE 1106":             "0022721106", //PE	
+  "SNEATH LANE 1107":             "0022721107", //PE	
+  "PACIFICA 1101":                "0022811101", //PE	
+  "PACIFICA 1102":                "0022811102", //PE	
+  "PACIFICA 1103":                "0022811103", //PE	
+  "PACIFICA 1104":                "0022811104", //PE	
+  "SULLIVAN 0402":                "0022850402", //PE	
+  "SERRAMONTE 1103":              "0022861103", //PE	
+  "SERRAMONTE 1104":              "0022861104", //PE	
+  "AIRPORT 1101":                 "0022901101", //PE	
+  "AIRPORT 1129":                 "0022901129", //PE	
+  "BAY MEADOWS 1102":             "0024011102", //PE	
+  "BAY MEADOWS 1103":             "0024011103", //PE	
+  "BAY MEADOWS 1104":             "0024011104", //PE	
+  "BAY MEADOWS 1105":             "0024011105", //PE	
+  "BAY MEADOWS 1106":             "0024011106", //PE	
+  "BAY MEADOWS 1107":             "0024011107", //PE	
+  "BAY MEADOWS 1108":             "0024011108", //PE	
+  "BAY MEADOWS 2101":             "0024012101", //PE	
+  "BAY MEADOWS 2102":             "0024012102", //PE	
+  "BAY MEADOWS 2103":             "0024012103", //PE	
+  "BELL HAVEN 0401":              "0024020401", //PE	
+  "BELL HAVEN 0402":              "0024020402", //PE	
+  "BELL HAVEN 0403":              "0024020403", //PE	
+  "BELL HAVEN 0404":              "0024020404", //PE	
+  "BELL HAVEN 0405":              "0024020405", //PE	
+  "BELL HAVEN 0406":              "0024020406", //PE	
+  "BELL HAVEN 0407":              "0024020407", //PE	
+  "BELL HAVEN 0408":              "0024020408", //PE	
+  "BELL HAVEN 0409":              "0024020409", //PE	
+  "BELL HAVEN 1101":              "0024021101", //PE	
+  "BELL HAVEN 1102":              "0024021102", //PE	
+  "BELL HAVEN 1103":              "0024021103", //PE	
+  "BELL HAVEN 1104":              "0024021104", //PE	
+  "BELL HAVEN 1105":              "0024021105", //PE	
+  "BELL HAVEN 1106":              "0024021106", //PE	
+  "BELL HAVEN 1107":              "0024021107", //PE	
+  "BELMONT 0401":                 "0024030401", //PE	
+  "BELMONT 0402":                 "0024030402", //PE	
+  "BELMONT 0403":                 "0024030403", //PE	
+  "BELMONT 0406":                 "0024030406", //PE	
+  "BELMONT 1102":                 "0024031102", //PE	
+  "BELMONT 1103":                 "0024031103", //PE	
+  "BELMONT 1104":                 "0024031104", //PE	
+  "BELMONT 1105":                 "0024031105", //PE	
+  "BELMONT 1106":                 "0024031106", //PE	
+  "BELMONT 1107":                 "0024031107", //PE	
+  "BELMONT 1108":                 "0024031108", //PE	
+  "BELMONT 1110":                 "0024031110", //PE	
+  "BERESFORD 0401":               "0024040401", //PE	
+  "BERESFORD 0402":               "0024040402", //PE	
+  "BERESFORD 0403":               "0024040403", //PE	
+  "BERESFORD 0404":               "0024040404", //PE	
+  "BERESFORD 0405":               "0024040405", //PE	
+  "BURLINGAME 0401":              "0024050401", //PE	
+  "BURLINGAME 0402":              "0024050402", //PE	
+  "BURLINGAME 0403":              "0024050403", //PE	
+  "BURLINGAME 0404":              "0024050404", //PE	
+  "BURLINGAME 0405":              "0024050405", //PE	
+  "BURLINGAME 2101":              "0024052101", //PE	
+  "CAROLANDS 0401":               "0024060401", //PE	
+  "CAROLANDS 0402":               "0024060402", //PE	
+  "CAROLANDS 0403":               "0024060403", //PE	
+  "CAROLANDS 0404":               "0024060404", //PE	
+  "EMERALD LAKE 0401":            "0024080401", //PE	
+  "EMERALD LAKE 0402":            "0024080402", //PE	
+  "GLENWOOD 0404":                "0024090404", //PE	
+  "GLENWOOD 0405":                "0024090405", //PE	
+  "GLENWOOD 0406":                "0024090406", //PE	
+  "GLENWOOD 1101":                "0024091101", //PE	
+  "GLENWOOD 1102":                "0024091102", //PE	
+  "HALF MOON BAY 1101":           "0024101101", //PE	
+  "HALF MOON BAY 1102":           "0024101102", //PE	
+  "HALF MOON BAY 1103":           "0024101103", //PE	
+  "HILLSDALE 0401":               "0024110401", //PE	
+  "HILLSDALE 0402":               "0024110402", //PE	
+  "HILLSDALE 0403":               "0024110403", //PE	
+  "HILLSDALE 0404":               "0024110404", //PE	
+  "HILLSDALE 0405":               "0024110405", //PE	
+  "LAS PULGAS 0401":              "0024120401", //PE	
+  "LAS PULGAS 0402":              "0024120402", //PE	
+  "LAS PULGAS 0403":              "0024120403", //PE	
+  "MENLO 0401":                   "0024130401", //PE	
+  "MENLO 0402":                   "0024130402", //PE	
+  "MENLO 0403":                   "0024130403", //PE	
+  "MENLO 0404":                   "0024130404", //PE	
+  "MENLO 1101":                   "0024131101", //PE	
+  "MENLO 1102":                   "0024131102", //PE	
+  "MENLO 1103 PE":                   "0024131103", //PE	
+  "MENLO 1104":                   "0024131104", //PE	
+  "RALSTON 1101":                 "0024141101", //PE	
+  "RALSTON 1102":                 "0024141102", //PE	
+  "REDWOOD CITY 0402":            "0024160402", //PE	
+  "REDWOOD CITY 0403":            "0024160403", //PE	
+  "REDWOOD CITY 0404":            "0024160404", //PE	
+  "REDWOOD CITY 0405":            "0024160405", //PE	
+  "REDWOOD CITY 0406":            "0024160406", //PE	
+  "REDWOOD CITY 0407":            "0024160407", //PE	
+  "REDWOOD CITY 0408":            "0024160408", //PE	
+  "REDWOOD CITY 0409":            "0024160409", //PE	
+  "REDWOOD CITY 0410":            "0024160410", //PE	
+  "REDWOOD CITY 1101":            "0024161101", //PE	
+  "REDWOOD CITY 1102":            "0024161102", //PE	
+  "REDWOOD CITY 1103":            "0024161103", //PE	
+  "REDWOOD CITY 1104":            "0024161104", //PE	
+  "REDWOOD CITY 1105":            "0024161105", //PE	
+  "REDWOOD CITY 1106":            "0024161106", //PE	
+  "SAN CARLOS 0401":              "0024180401", //PE	
+  "SAN CARLOS 0402":              "0024180402", //PE	
+  "SAN CARLOS 0403":              "0024180403", //PE	
+  "SAN CARLOS 0404":              "0024180404", //PE	
+  "SAN CARLOS 0405":              "0024180405", //PE	
+  "SAN CARLOS 0406":              "0024180406", //PE	
+  "SAN CARLOS 1101":              "0024181101", //PE	
+  "SAN CARLOS 1102":              "0024181102", //PE	
+  "SAN CARLOS 1103":              "0024181103", //PE	
+  "SAN CARLOS 1104":              "0024181104", //PE	
+  "SAN MATEO 0404":               "0024190404", //PE	
+  "SAN MATEO 0407":               "0024190407", //PE	
+  "SAN MATEO 0408":               "0024190408", //PE	
+  "SAN MATEO 0409":               "0024190409", //PE	
+  "SAN MATEO 0410":               "0024190410", //PE	
+  "SAN MATEO 2101":               "0024192101", //PE	
+  "SAN MATEO 2102":               "0024192102", //PE	
+  "WATERSHED 0401":               "0024240401", //PE	
+  "WATERSHED 0402":               "0024240402", //PE	
+  "WOODSIDE 1101":                "0024251101", //PE	
+  "WOODSIDE 1102":                "0024251102", //PE	
+  "WOODSIDE 1103":                "0024251103", //PE	
+  "WOODSIDE 1104":                "0024251104", //PE	
+  "WOODSIDE 1105":                "0024251105", //PE	
+  "BAIR 1101":                    "0024261101", //PE	
+  "BAIR 1102":                    "0024261102", //PE	
+  "CIRCUIT: 27777777":            "0027777777", //PE	
+  "ALPINE-MENLO":                 "0028881103", //PE	
+  "CIRCUIT: 29991199":            "0029991199", //PE	
+  "TRAN - PE 60Kv":               "TR00206001", //PE	
+  "TRAN - PE 115Kv":              "TR00211501", //PE	
+  "TRAN - PE 230Kv":              "TR00223001", //PE	
+  "CR-MARTIN-SAN MATEO":          "TRC0020001", //PE	
+  "CR-Ravenswood-San Mateo":      "TRC0020002", //PE	
+  "CR-Bair-CLanding/Bel hav":     "TRC0020003", //PE	
+  "CR-EASTSHORE-SAN MATEO":       "TRC0020004", //PE	
+  "CR H-P #3 CABLE/P-X 115KV":    "TRC0020005", //PE	
+  "CR-JEFFERSON-MARTIN 230KV":    "TRC0020006", //PE	
+  "CR-Martin-Daly City 115kv":    "TRC0020007", //PE	
+  "CR-MILLBRAE-PACIFICA":         "TRC0020008", //PE	
+  "CR-Monta Vista-Jefferson":     "TRC0020009", //PE	
+  "CR-Newark/Tesla-Ravenswood":   "TRC0020010", //PE	
+  "CR-Jeff-Las Pulgas/Stanford":  "TRC0020011", //PE	
+  "CR-Ravenswood/CLanding-PA":    "TRC0020012", //PE	
+  "CR-SMateo-Bair/Bel 115/60KV":  "TRC0020013", //PE	
+  "CR-SMateo-Bay Meadows 115KV":  "TRC0020014", //PE	
+  "CR-CLnding-Stanf/Menlo/SLAC":  "TRC0020015", //PE	
+  "CR-Serramonte/Martin 115/60KV":"TRC0020016", //PE	
+  "CR-SFPUC 60 kV":               "TRC0020017", //PE	
+  "CR-SFPUC 230 kV":              "TRC0020018", //PE	
+  "CR-Aerial Patrol PE":          "TRC0241111", //PE	
+  "COLUSA 1101":                  "0062021101", //SA	
+  "COLUSA 1103":                  "0062021103", //SA	
+  "COLUSA 1104":                  "0062021104", //SA	
+  "COLUSA 1105":                  "0062021105", //SA	
+  "WOODLAND 1101":                "0062031101", //SA	
+  "WOODLAND 1102":                "0062031102", //SA	
+  "WOODLAND 1103":                "0062031103", //SA	
+  "WOODLAND 1104":                "0062031104", //SA	
+  "WOODLAND 1105":                "0062031105", //SA	
+  "WOODLAND 1106":                "0062031106", //SA	
+  "WOODLAND 1107":                "0062031107", //SA	
+  "WOODLAND 1108":                "0062031108", //SA	
+  "WOODLAND 1109":                "0062031109", //SA	
+  "WOODLAND 1110":                "0062031110", //SA	
+  "WOODLAND 1111":                "0062031111", //SA	
+  "WOODLAND 1112":                "0062031112", //SA	
+  "WOODLAND 1113":                "0062031113", //SA	
+  "DAVIS 1102":                   "0062041102", //SA	
+  "DAVIS 1103":                   "0062041103", //SA	
+  "DAVIS 1104":                   "0062041104", //SA	
+  "DAVIS 1105":                   "0062041105", //SA	
+  "DAVIS 1106":                   "0062041106", //SA	
+  "DAVIS 1107":                   "0062041107", //SA	
+  "DAVIS 1108":                   "0062041108", //SA	
+  "DAVIS 1109":                   "0062041109", //SA	
+  "DAVIS 1110":                   "0062041110", //SA	
+  "DAVIS 1111":                   "0062041111", //SA	
+  "Davis 1112":                   "0062041112", //SA	
+  "WILLIAMS 1101":                "0062051101", //SA	
+  "WILLIAMS 1102":                "0062051102", //SA	
+  "DIXON 1101":                   "0062061101", //SA	
+  "DIXON 1102":                   "0062061102", //SA	
+  "DIXON 1103":                   "0062061103", //SA	
+  "DIXON 1104":                   "0062061104", //SA	
+  "COLUSA JUNCTION 1101":         "0062071101", //SA	
+  "ARBUCKLE 1101":                "0062081101", //SA	
+  "ARBUCKLE 1102":                "0062081102", //SA	
+  "ARBUCKLE 1103":                "0062081103", //SA	
+  "SUISUN 1101":                  "0062131101", //SA	
+  "SUISUN 1102":                  "0062131102", //SA	
+  "SUISUN 1103":                  "0062131103", //SA	
+  "SUISUN 1104":                  "0062131104", //SA	
+  "SUISUN 1105":                  "0062131105", //SA	
+  "SUISUN 1106":                  "0062131106", //SA	
+  "SUISUN 1107":                  "0062131107", //SA	
+  "SUISUN 1108":                  "0062131108", //SA	
+  "SUISUN 1109":                  "0062131109", //SA	
+  "SUISUN 1110":                  "0062131110", //SA	
+  "SUISUN 1111":                  "0062131111", //SA	
+  "SUISUN 1112":                  "0062131112", //SA	
+  "GRAND ISLAND 2221":            "0062462221", //SA	
+  "GRAND ISLAND 2222":            "0062462222", //SA	
+  "GRAND ISLAND 2223":            "0062462223", //SA	
+  "GRAND ISLAND 2224":            "0062462224", //SA	
+  "GRAND ISLAND 2225":            "0062462225", //SA	
+  "GRAND ISLAND 2226":            "0062462226", //SA	
+  "GRAND ISLAND 2227":            "0062462227", //SA	
+  "MERIDIAN 1101":                "0062541101", //SA	& SI 
+  "MERIDIAN 1102":                "0062541102", //SA	
+  "RIO VISTA 1101":               "0062601101", //SA	
+  "RYDE 0401":                    "0062620401", //SA	
+  "CORDELIA 1101":                "0062701101", //SA	
+  "CORDELIA 1102":                "0062701102", //SA	
+  "CORDELIA 1103":                "0062701103", //SA	
+  "CORDELIA 1104":                "0062701104", //SA	
+  "KNIGHTS LANDING 1101":         "0062721101", //SA	
+  "KNIGHTS LANDING 1102":         "0062721102", //SA	
+  "WILKINS SLOUGH 1101":          "0062771101", //SA	
+  "WILKINS SLOUGH 1102":          "0062771102", //SA	
+  "WILKINS SLOUGH 1103":          "0062771103", //SA	
+  "RICE 1101":                    "0062831101", //SA	
+  "RICE 1102":                    "0062831102", //SA	
+  "RICE 1103":                    "0062831103", //SA	
+  "MAXWELL 1101":                 "0062881101", //SA	
+  "MAXWELL 1102":                 "0062881102", //SA	
+  "MAXWELL 1103":                 "0062881103", //SA	
+  "CORTINA 1101":                 "0063121101", //SA	
+  "WEST SACRAMENTO 1104":         "0063131104", //SA	
+  "WEST SACRAMENTO 1105":         "0063131105", //SA	
+  "WEST SACRAMENTO 1106":         "0063131106", //SA	
+  "WEST SACRAMENTO 1107":         "0063131107", //SA	
+  "WEST SACRAMENTO 1108":         "0063131108", //SA	
+  "WEST SACRAMENTO 1109":         "0063131109", //SA	
+  "WEST SACRAMENTO 1110":         "0063131110", //SA	
+  "WEST SACRAMENTO 1111":         "0063131111", //SA	
+  "MADISON 1103":                 "0063171103", //SA	
+  "MADISON 1105":                 "0063171105", //SA	
+  "MADISON 2101":                 "0063172101", //SA	
+  "ZAMORA 1105":                  "0063191105", //SA	
+  "ZAMORA 1106":                  "0063191106", //SA	
+  "WINTERS 1101":                 "0063321101", //SA	
+  "WINTERS 1102":                 "0063321102", //SA	
+  "PLAINFIELD 1101":              "0063441101", //SA	
+  "PLAINFIELD 1102":              "0063441102", //SA	
+  "VACA DIXON 1101":              "0063591101", //SA	
+  "VACA DIXON 1103":              "0063591103", //SA	
+  "VACA DIXON 1104":              "0063591104", //SA	
+  "Vaca Dixon 1106":              "0063591106", //SA	
+  "VACAVILLE 1102":               "0063601102", //SA	
+  "VACAVILLE 1103":               "0063601103", //SA	
+  "VACAVILLE 1104":               "0063601104", //SA	
+  "VACAVILLE 1105":               "0063601105", //SA	
+  "VACAVILLE 1106":               "0063601106", //SA	
+  "VACAVILLE 1107":               "0063601107", //SA	
+  "VACAVILLE 1108":               "0063601108", //SA	
+  "VACAVILLE 1109":               "0063601109", //SA	
+  "VACAVILLE 1110":               "0063601110", //SA	
+  "VACAVILLE 1111":               "0063601111", //SA	
+  "VACAVILLE 1112":               "0063601112", //SA	
+  "DEEPWATER 1108":               "0063621108", //SA	
+  "DEEPWATER 1109":               "0063621109", //SA	
+  "PEABODY 2104":                 "0063642104", //SA	
+  "PEABODY 2105":                 "0063642105", //SA	
+  "PEABODY 2106":                 "0063642106", //SA	
+  "PEABODY 2107":                 "0063642107", //SA	
+  "PEABODY 2108":                 "0063642108", //SA	
+  "PEABODY 2113":                 "0063642113", //SA	
+  "PUTAH CREEK 1102":             "0063681102", //SA	
+  "PUTAH CREEK 1103":             "0063681103", //SA	
+  "JAMESON 1101":                 "0063801101", //SA	
+  "JAMESON 1102":                 "0063801102", //SA	
+  "JAMESON 1103":                 "0063801103", //SA	
+  "DUNNIGAN 1101":                "0063811101", //SA	
+  "I-5 (Woodland to Maxwell)":    "006HW00501", //SA	
+  "Hy 12 (Napa to Bouldin Is)":   "006HW01201", //SA	
+  "Hy 16 (Rusmey to Woodland)":   "006HW01601", //SA	
+  "Hy 20 (Walnut Rd to Tarke)":   "006HW02001", //SA	
+  "Hy 45 (4 Cnrs - Knights Ld)":  "006HW04501", //SA	
+  "Hy 80 (Napa to Hy 505)":       "006HW08001", //SA	
+  "Hy 80 (505 to W.Sac.)":        "006HW08002", //SA	
+  "Hy 84 (RioVista to W.Sac.)":   "006HW08401", //SA	
+  "Hwy 12-80 Dixon":              "006HW11301", //SA	
+  "Hy 113 (80 to Knights Land)":  "006HW11302", //SA	
+  "Hy 113 (Dixon to Hwy 12)":     "006HW11303", //SA	
+  "Hy 128 (505 to Napa Co.)":     "006HW12801", //SA	
+  "Hy 160 (Antioch Brdg-Rd142)":  "006HW16001", //SA	
+  "Hy 162 (4Cnrs - Aqua Frias)":  "006HW16201", //SA	
+  "Hy 220 (Ryde to Hy 84)":       "006HW22001", //SA	
+  "Hy 505 (Hy 80 to I-5)":        "006HW50501", //SA	
+  "Hy 680 (80 to Cyn Hills)":     "006HW68001", //SA	
+  "Orchards Yolo County":         "006OR00000", //SA	
+  "Orchards Colusa County":       "006OR00001", //SA	
+  "Orchards Solano County":       "006OR00002", //SA	
+  "Sac Duck Clubs":               "006OR00003", //SA	
+  "Sac Refuges":                  "006OR00004", //SA	
+  "Orchard":                      "006OR11301", //SA	
+  "CHALLENGE 1102":               "0103201102", //SA	& SI & NV
+  "HONCUT 1102-A":                "010321110A", //SA	& SI 
+  "HONCUT 1102-B":                "010321110B", //SA	& SI 
+  "MARYSVILLE 1102":              "0152011102", //SA	& SI
+  "MARYSVILLE 1103":              "0152011103", //SA	& SI
+  "MARYSVILLE 1104":              "0152011104", //SA	& SI
+  "MARYSVILLE 1105":              "0152011105", //SA	& SI
+  "MARYSVILLE 1106":              "0152011106", //SA	& SI
+  "MARYSVILLE 1107":              "0152011107", //SA	& SI
+  "BARRY 1101":                   "0152111101", //SA	& SI
+  "BARRY 1102":                   "0152111102", //SA	& SI	
+  "BARRY 1103":                   "0152111103", //SA 	& SI
+  "EAST NICOLAUS 1101":           "0152151101", //SA	& SI
+  "EAST NICOLAUS 1102":           "0152151102", //SA	& SI
+  "EAST NICOLAUS 1103":           "0152151103", //SA	& SI
+  "EAST MARYSVILLE 1105":         "0152331105", //SA	& SI
+  "EAST MARYSVILLE 1107":         "0152331107", //SA	& SI
+  "EAST MARYSVILLE 1108":         "0152331108", //SA	& SI
+  "WHEATLAND 1101":               "0152811101", //SA	& SI
+  "WHEATLAND 1102":               "0152811102", //SA	& SI
+  "HARTER 1102":                  "0152851102", //SA	& SI
+  "HARTER 1105":                  "0152851105", //SA	& SI
+  "HARTER 1106":                  "0152851106", //SA	& SI
+  "HARTER 1107":                  "0152851107", //SA	& SI
+  "OLIVEHURST 1101":              "0152901101", //SA	& SI
+  "OLIVEHURST 1102":              "0152901102", //SA	& SI
+  "OLIVEHURST 1103":              "0152901103", //SA	& SI
+  "OLIVEHURST 1104":              "0152901104", //SA	& SI
+  "BROWNS VALLEY 1101":           "0152921101", //SA	& SI
+  "LINCOLN 1102":                 "0153701102", //SA	& SI
+  "LINCOLN 1103":                 "0153701103", //SA	& SI
+  "LINCOLN 1105":                 "0153701105", //SA	& SI
+  "LINCOLN 1101-B":               "015370110B", //SA	& SI
+  "TUDOR 1101":                   "0153711101", //SA	& SI
+  "TUDOR 1102":                   "0153711102", //SA	& SI
+  "PLUMAS 1101":                  "0153731101", //SA	& SI
+  "PLUMAS 1102":                  "0153731102", //SA	& SI
+  "DOBBINS 1101":                 "0153741101", //SA	& SI
+  "PEASE 1101":                   "0153751101", //SA	& SI
+  "PEASE 1102":                   "0153751102", //SA	& SI
+  "PEASE 1103":                   "0153751103", //SA	& SI
+  "PEASE 1104":                   "0153751104", //SA	& SI
+  "CATLETT 1101":                 "0153761101", //SA	& SI
+  "CATLETT 1102":                 "0153761102", //SA	& SI
+  "LIVE OAK 1101":                "0153771101", //SA	& SI
+  "LIVE OAK 1102":                "0153771102", //SA	& NV & SI
+  "BOGUE 1103":                   "0153781103", //SA	& SI
+  "BOGUE 1104":                   "0153781104", //SA	& SI
+  "BOGUE 1105":                   "0153781105", //SA	& SI
+  "BOGUE 1106":                   "0153781106", //SA	& SI
+  "BOGUE 1107":                   "0153781107", //SA	& SI
+  "SMARTVILLE 1101":              "0153791101", //SA	& SI
+  "Hwy 20 (GV to Msvl)":          "015HW02001", //SA	& SI
+  "Hwy 20 (YC West Bndry)":       "015HW02002", //SA	& SI
+  "Hwy 65 (70 Split to Linc)":    "015HW06501", //SA	& SI
+  "Hwy 70 (Msvl South Bndry)":    "015HW07001", //SA	& SI
+  "Hwy 70 (Msvl North Bndry)":    "015HW07002", //SA	& SI
+  "Hwy 99 (YC South to Bndry":    "015HW09901", //SA	& SI
+  "Hwy 99 (YC North Bndry)":      "015HW09902", //SA	& SI
+  "Hwy 113 (99 South Bndry)":     "015HW11301", //SA	& SI
+  "Orchards":                     "015OR10001", //SA	& SI 
+  "Colgate Duck Club":            "015OR10002", //SA	& SI
+  "Colgate Summer Orchards":      "015OR10003", //SA	& SI
+  "Colgate Cycle Busters":        "015OR10004", //SA	& SI
+  "TRAN - SA 60Kv":               "TR00606001", //SA	
+  "TRAN - SA 70Kv":               "TR00607001", //SA	
+  "TRAN - SA 115Kv":              "TR00611501", //SA	
+  "TRAN - SA 230Kv":              "TR00623001", //SA	
+  "TRAN - SA 500Kv":              "TR00650001", //SA	
+  "CR-Rices Xing - Colgate PH SA":   "TRC0151006", //SA	
+  "CR-Butte Cnty-Nicolaus Sub SA":   "TRC0151007", //SA	
+  "CR-Butte Cnty-Rio Oso Sub SA":    "TRC0151008", //SA	
+  "CR-BEALE AFB":                 "TRC0151010", //SA	& SI 
+  "CR-Smartville":                "TRC0151011", //SA	& SI
+  "CR-Nicolaus":                  "TRC0151012", //SA	& SI 
+  "CR-Green Pease":               "TRC0151015", //SA	& SI 
+  "CR-Wheatland":                 "TRC0151016", //SA	& SI 
+  "CR-Rio Oso Orchards":          "TRC0151023", //SA	& SI
+  "CR-Nicolaus Orchards":         "TRC0151024", //SA	& SI
+  "CR-Yuba Sutter Orchards":      "TRC0151025", //SA	& SI
+  "CR-Halsey To Rio Oso":         "TRC0151028", //SA	& SI
+  "CR-Table Mtn Vaca":            "TRC0160055", //SA	
+  "CR-Delevan TM Vaca":           "TRC0160056", //SA	
+  "CR-Eagle Cortina Mendo":       "TRC0160057", //SA	
+  "CR-Rio Oso Nicolaus":          "TRC0160058", //SA	
+  "CR-Dixon Vaca":                "TRC0160059", //SA	
+  "CR-Palermo Bogue RO":          "TRC0160060", //SA	
+  "CR-Palermo Pease RO":          "TRC0160061", //SA	
+  "CR-RO West Sac":               "TRC0160062", //SA	
+  "CR-Poe Cresta RO":             "TRC0160063", //SA	
+  "CR-Pease RO Nic Bogue":        "TRC0160064", //SA	
+  "CR-Vaca Bahia Pkwy":           "TRC0160065", //SA	
+  "CR-Nic Smartville":            "TRC0160066", //SA	
+  "CR-Howe":                      "TRC0611001", //SA	
+  "CR-Folsom":                    "TRC0611002", //SA	
+  "CR-Vaca Sub":                  "TRC0611003", //SA	
+  "CR-CORDELIA":                  "TRC0611004", //SA	
+  "CR-Vaca Telsa":                "TRC0611005", //SA	
+  "CR-Glen Vaca":                 "TRC0611006", //SA	
+  "CR-Rio-Bend":                  "TRC0611007", //SA	
+  "CR-DAVIS-VACA":                "TRC0611008", //SA	
+  "CR-Woodland 115Kv":            "TRC0611009", //SA	
+  "CR-South Sac":                 "TRC0611010", //SA	
+  "CR-West Sac":                  "TRC0611011", //SA	
+  "CR-Aerial Patrol SA":            "TRC0611111", //SA	
+  "CR-Colusa - Cortina":          "TRC0611113", //SA	
+  "CR-Putah Creek":               "TRC0611114", //SA	
+  "CR-Colusa Almonds":            "TRC0611115", //SA	
+  "CR-Colusa Walnuts":            "TRC0611116", //SA	
+  "CR-Yolo Almonds":              "TRC0611117", //SA	
+  "CR-Yolo Walnuts":              "TRC0611118", //SA	
+  "CR-Sac Solano Almonds":        "TRC0611119", //SA	
+  "CR-Sac Solano Walnuts":        "TRC0611120", //SA	
+  "CR-Brighton 115kv":            "TRC0611121", //SA	
+  "CR-Rio Del Paso":              "TRC0611122", //SA	
+  "CR-Cortina Mendocino":         "TRC0611123", //SA	
+  "CR-Elk Grove to Grand Islnd":  "TRC0611124", //SA	
+  "CR-Transmission Almond":       "TRCOR06101", //SA	
+  "CR-Transmission Walnut":       "TRCOR06102", //SA	
+  "TRANSMISSION ORCHARD":         "TRCOR10001", //SA	& SI
+  "MISSION 0401":                 "0022010401", //SF	
+  "MISSION 0402":                 "0022010402", //SF	
+  "MISSION 1101":                 "0022011101", //SF	
+  "MISSION 1107":                 "0022011107", //SF	
+  "MISSION 1108":                 "0022011108", //SF	
+  "MISSION 1109":                 "0022011109", //SF	
+  "MISSION 1110":                 "0022011110", //SF	
+  "MISSION 1113":                 "0022011113", //SF	
+  "MISSION 1116":                 "0022011116", //SF	
+  "MISSION 1118":                 "0022011118", //SF	
+  "MISSION 1120":                 "0022011120", //SF	
+  "MISSION 1124":                 "0022011124", //SF	
+  "MISSION 1125":                 "0022011125", //SF	
+  "A 1101":                       "0022031101", //SF	
+  "A 1102":                       "0022031102", //SF	
+  "A 1103":                       "0022031103", //SF	
+  "A 1104":                       "0022031104", //SF	
+  "A 1105":                       "0022031105", //SF	
+  "A 1106":                       "0022031106", //SF	
+  "A 1107":                       "0022031107", //SF	
+  "A 1108":                       "0022031108", //SF	
+  "A 1109":                       "0022031109", //SF	
+  "A 1110":                       "0022031110", //SF	
+  "A 1111":                       "0022031111", //SF	
+  "A 1112":                       "0022031112", //SF	
+  "A 1113":                       "0022031113", //SF	
+  "A 1114":                       "0022031114", //SF	
+  "A 1115":                       "0022031115", //SF	
+  "A 1116":                       "0022031116", //SF	
+  "A 1117":                       "0022031117", //SF	
+  "A 1118":                       "0022031118", //SF	
+  "A 1119":                       "0022031119", //SF	
+  "SUBSTATION E 0401":            "0022070401", //SF	
+  "SUBSTATION E 0402":            "0022070402", //SF	
+  "SUBSTATION E 0403":            "0022070403", //SF	
+  "SUBSTATION E 0405":            "0022070405", //SF	
+  "SUBSTATION E 0406":            "0022070406", //SF	
+  "SUBSTATION E 0407":            "0022070407", //SF	
+  "SUBSTATION E 0408":            "0022070408", //SF	
+  "SUBSTATION E 0409":            "0022070409", //SF	
+  "SUBSTATION E 0410":            "0022070410", //SF	
+  "SUBSTATION E 1101":            "0022071101", //SF	
+  "SUBSTATION E 1103":            "0022071103", //SF	
+  "SUBSTATION E 1105":            "0022071105", //SF	
+  "SUBSTATION G 0401":            "0022090401", //SF	
+  "SUBSTATION G 0402":            "0022090402", //SF	
+  "SUBSTATION G 0403":            "0022090403", //SF	
+  "SUBSTATION G 0404":            "0022090404", //SF	
+  "SUBSTATION G 0405":            "0022090405", //SF	
+  "SUBSTATION G 0406":            "0022090406", //SF	
+  "SUBSTATION G 0407":            "0022090407", //SF	
+  "SUBSTATION G 0408":            "0022090408", //SF	
+  "SUBSTATION G 0409":            "0022090409", //SF	
+  "SUBSTATION G 0410":            "0022090410", //SF	
+  "SUBSTATION G 0411":            "0022090411", //SF	
+  "SUBSTATION G 0412":            "0022090412", //SF	
+  "SUBSTATION G 0413":            "0022090413", //SF	
+  "SUBSTATION G 0414":            "0022090414", //SF	
+  "SUBSTATION G 1101 SF":            "0022091101", //SF	
+  "SUBSTATION G 1102 SF":            "0022091102", //SF	
+  "SUBSTATION H 1110":            "0022101110", //SF	
+  "SUBSTATION H 1111":            "0022101111", //SF	
+  "SUBSTATION I 0409":            "0022110409", //SF	
+  "SUBSTATION I 1102":            "0022111102", //SF	
+  "SUBSTATION I 1103":            "0022111103", //SF	
+  "SUBSTATION K 0401":            "0022130401", //SF	
+  "SUBSTATION K 0402":            "0022130402", //SF	
+  "SUBSTATION K 0403":            "0022130403", //SF	
+  "SUBSTATION K 0404":            "0022130404", //SF	
+  "SUBSTATION K 0405":            "0022130405", //SF	
+  "SUBSTATION K 0406":            "0022130406", //SF	
+  "SUBSTATION K 0407":            "0022130407", //SF	
+  "SUBSTATION K 0408":            "0022130408", //SF	
+  "SUBSTATION K 0409":            "0022130409", //SF	
+  "SUBSTATION K 0410":            "0022130410", //SF	
+  "SUBSTATION K 0411":            "0022130411", //SF	
+  "SUBSTATION K 1101 SF":            "0022131101", //SF	
+  "SUBSTATION J 0402":            "0022220402", //SF	
+  "SUBSTATION J 0404":            "0022220404", //SF	
+  "SUBSTATION J 0406":            "0022220406", //SF	
+  "SUBSTATION J 0407":            "0022220407", //SF	
+  "SUBSTATION J 0409 SF":            "0022220409", //SF	
+  "SUBSTATION J 1101 SF":            "0022221101", //SF	
+  "SUBSTATION J 1102 SF":            "0022221102", //SF	
+  "SUBSTATION J 1105 SF":            "0022221105", //SF	
+  "SUBSTATION J 1106 SF":            "0022221106", //SF	
+  "SUBSTATION J 1107":            "0022221107", //SF	
+  "SUBSTATION L 0401 SF":            "0022260401", //SF	
+  "SUBSTATION L 0402":            "0022260402", //SF	
+  "SUBSTATION L 0403":            "0022260403", //SF	
+  "SUBSTATION L 0404":            "0022260404", //SF	
+  "SUBSTATION L 0405 SF":            "0022260405", //SF	
+  "SUBSTATION L 0406 SF":            "0022260406", //SF	
+  "SUBSTATION L 0407 SF":            "0022260407", //SF	
+  "SUBSTATION L 0408 SF":            "0022260408", //SF	
+  "SUBSTATION L 0409 SF":            "0022260409", //SF	
+  "SUBSTATION L 1101 SF":            "0022261101", //SF	
+  "SUBSTATION L 1102 SF":            "0022261102", //SF	
+  "SUBSTATION L 1103":            "0022261103", //SF	
+  "SUBSTATION M 0401":            "0022270401", //SF	
+  "SUBSTATION M 0402":            "0022270402", //SF	
+  "SUBSTATION M 0403":            "0022270403", //SF	
+  "SUBSTATION M 0404":            "0022270404", //SF	
+  "SUBSTATION M 0405":            "0022270405", //SF	
+  "SUBSTATION M 0406":            "0022270406", //SF	
+  "SUBSTATION N 0401":            "0022280401", //SF	
+  "SUBSTATION N 0402":            "0022280402", //SF	
+  "SUBSTATION N 0403":            "0022280403", //SF	
+  "SUBSTATION N 0404":            "0022280404", //SF	
+  "SUBSTATION N 0405":            "0022280405", //SF	
+  "SUBSTATION N 0406":            "0022280406", //SF	
+  "SUBSTATION N 0408":            "0022280408", //SF	
+  "SUBSTATION N 1101":            "0022281101", //SF	
+  "SUBSTATION N 1102":            "0022281102", //SF	
+  "HUNTERS POINT-COMMON 1101":    "0022331101", //SF	
+  "HUNTERS POINT-COMMON 1102":    "0022331102", //SF	
+  "HUNTERS POINT-COMMON 1103":    "0022331103", //SF	
+  "HUNTERS POINT-COMMON 1104":    "0022331104", //SF	
+  "HUNTERS POINT-COMMON 1105":    "0022331105", //SF	
+  "HUNTERS POINT-COMMON 1106":    "0022331106", //SF	
+  "HUNTERS POINT-COMMON 1109":    "0022331109", //SF	
+  "HUNTERS POINT-COMMON 1188":    "0022331188", //SF	
+  "HUNTERS POINT-COMMON 1243":    "0022331243", //SF	
+  "HUNTERS POINT-COMMON 1244":    "0022331244", //SF	
+  "HUNTERS POINT-COMMON 1245":    "0022331245", //SF	
+  "BEACH STREET 0401":            "0022340401", //SF	
+  "BEACH STREET 0402":            "0022340402", //SF	
+  "18TH STREET 0401":             "0022390401", //SF	
+  "18TH STREET 0402":             "0022390402", //SF	
+  "JUDAH 0401":                   "0022400401", //SF	
+  "JUDAH 0402":                   "0022400402", //SF	
+  "CASTRO 0401":                  "0022480401", //SF	
+  "CASTRO 0402":                  "0022480402", //SF	
+  "YOSEMITE 0401":                "0022490401", //SF	
+  "YOSEMITE 0402":                "0022490402", //SF	
+  "YOSEMITE 0403":                "0022490403", //SF	
+  "TARAVAL 0401":                 "0022500401", //SF	
+  "TARAVAL 0402":                 "0022500402", //SF	
+  "TARAVAL 0403":                 "0022500403", //SF	
+  "NORIEGA 0401":                 "0022510401", //SF	
+  "NORIEGA 0402":                 "0022510402", //SF	
+  "6TH AVENUE 0401":              "0022530401", //SF	
+  "6TH AVENUE 0402":              "0022530402", //SF	
+  "6TH AVENUE 0403":              "0022530403", //SF	
+  "21ST AVENUE 0401":             "0022550401", //SF	
+  "21ST AVENUE 0402":             "0022550402", //SF	
+  "21ST AVENUE 0403":             "0022550403", //SF	
+  "OCEAN AVENUE 0401":            "0022580401", //SF	
+  "OCEAN AVENUE 0402":            "0022580402", //SF	
+  "RANDOLPH 0402":                "0022590402", //SF	
+  "RANDOLPH 0403":                "0022590403", //SF	
+  "PORTOLA 0401":                 "0022610401", //SF	
+  "PORTOLA 0402":                 "0022610402", //SF	
+  "SILVER 0401":                  "0022670401", //SF	
+  "MARINA 0401":                  "0022780401", //SF	
+  "MARINA 0402":                  "0022780402", //SF	
+  "MARINA 0403":                  "0022780403", //SF	
+  "MARINA 0404":                  "0022780404", //SF	
+  "MARINA 0405":                  "0022780405", //SF	
+  "MARINA 0407":                  "0022780407", //SF	
+  "MARINA 0408":                  "0022780408", //SF	
+  "MARINA 1101":                  "0022781101", //SF	
+  "MARINA 1102":                  "0022781102", //SF	
+  "LARKIN 1101":                  "0022801101", //SF	
+  "LARKIN 1103":                  "0022801103", //SF	
+  "LARKIN 1107":                  "0022801107", //SF	
+  "LARKIN 1108":                  "0022801108", //SF	
+  "LARKIN 1109":                  "0022801109", //SF	
+  "LARKIN 1110":                  "0022801110", //SF	
+  "LARKIN 1111":                  "0022801111", //SF	
+  "LARKIN 1119":                  "0022801119", //SF	
+  "LARKIN 1120":                  "0022801120", //SF	
+  "LARKIN 1127":                  "0022801127", //SF	
+  "LARKIN 1128":                  "0022801128", //SF	
+  "LARKIN 1135":                  "0022801135", //SF	
+  "LARKIN 1136":                  "0022801136", //SF	
+  "LARKIN 1137":                  "0022801137", //SF	
+  "LARKIN 1138":                  "0022801138", //SF	
+  "EMBARCADERO 1112":             "0022871112", //SF	
+  "EMBARCADERO 1113":             "0022871113", //SF	
+  "EMBARCADERO 1115":             "0022871115", //SF	
+  "EMBARCADERO 1116":             "0022871116", //SF	
+  "EMBARCADERO 1118":             "0022871118", //SF	
+  "EMBARCADERO 1119":             "0022871119", //SF	
+  "EMBARCADERO 1120":             "0022871120", //SF	
+  "EMBARCADERO 1121":             "0022871121", //SF	
+  "EMBARCADERO 1122":             "0022871122", //SF	
+  "EMBARCADERO 1123":             "0022871123", //SF	
+  "GRASS VALLEY 1101":            "0152031101", //SI	
+  "GRASS VALLEY 1102":            "0152031102", //SI	
+  "GRASS VALLEY 1103":            "0152031103", //SI	
+  "GRASS VALLEY 1104":            "0152031104", //SI	
+  "ROCKLIN 1101":                 "0152061101", //SI	
+  "ROCKLIN 1102":                 "0152061102", //SI	
+  "ROCKLIN 1103":                 "0152061103", //SI	
+  "ROCKLIN 1104":                 "0152061104", //SI	
+  "ALLEGHANY 1101":               "0152101101", //SI	
+  "ALLEGHANY 1102":               "0152101102", //SI	
+  "ALLEGHANY 1101-A":             "015210110A", //SI	
+  "ALLEGHANY 1101-B":             "015210110B", //SI	
+  "ALLEGHANY 1101-C":             "015210110C", //SI	
+  "AUBURN 1101":                  "0152161101", //SI	
+  "AUBURN 1102":                  "0152161102", //SI	
+  "FORESTHILL 1101":              "0152181101", //SI	
+  "FORESTHILL 1102":              "0152181102", //SI	
+  "PIKE CITY 1101":               "0152201101", //SI	
+  "PIKE CITY 1102":               "0152201102", //SI	
+  "HALSEY 1101":                  "0152241101", //SI	
+  "HALSEY 1102":                  "0152241102", //SI	
+  "SPAULDING 1101":               "0152251101", //SI	
+  "DIAMOND SPRINGS 1103":         "0152261103", //SI	
+  "DIAMOND SPRINGS 1104":         "0152261104", //SI	
+  "DIAMOND SPRINGS 1106":         "0152261106", //SI	
+  "DIAMOND SPRINGS 1107":         "0152261107", //SI	
+  "WISE 1101":                    "0152271101", //SI	
+  "WISE 1102":                    "0152271102", //SI	
+  "WISE 1103":                    "0152271103", //SI	
+  "WISE 1101-A":                  "015227110A", //SI	
+  "WISE 1101-B":                  "015227110B", //SI	
+  "MOUNTAIN QUARRIES 2101":       "0152282101", //SI	
+  "MOUNTAIN QUARRIES 2101-A":     "015228210A", //SI	
+  "MOUNTAIN QUARRIES 2101-B":     "015228210B", //SI	
+  "TAMARACK 1101":                "0152291101", //SI	
+  "TAMARACK 1102":                "0152291102", //SI	
+  "BONNIE NOOK 1101":             "0152301101", //SI	
+  "BONNIE NOOK 1102":             "0152301102", //SI	
+  "DRUM 1101":                    "0152321101", //SI	
+  "SHADY GLEN 1101":              "0152431101", //SI	
+  "SHADY GLEN 1102":              "0152431102", //SI	
+  "PLEASANT GROVE 2103":          "0152442103", //SI	
+  "PLEASANT GROVE 2104":          "0152442104", //SI	
+  "PLEASANT GROVE 2107":          "0152442107", //SI	
+  "PLEASANT GROVE 2109":          "0152442109", //SI	
+  "PLACER 1101":                  "0152461101", //SI	
+  "PLACER 1102":                  "0152461102", //SI	
+  "PLACER 1103":                  "0152461103", //SI	
+  "PLACER 1104":                  "0152461104", //SI	
+  "COLUMBIA HILL 1101":           "0152471101", //SI	
+  "COLUMBIA HILL 1101-A":         "015247110A", //SI	
+  "COLUMBIA HILL 1101-B":         "015247110B", //SI	
+  "BRUNSWICK 1102":               "0152481102", //SI	
+  "BRUNSWICK 1103":               "0152481103", //SI	
+  "BRUNSWICK 1104":               "0152481104", //SI	
+  "BRUNSWICK 1105":               "0152481105", //SI	
+  "BRUNSWICK 1106":               "0152481106", //SI	
+  "BRUNSWICK 1107":               "0152481107", //SI	
+  "BRUNSWICK 1105-M":             "015248110M", //SI	
+  "BRUNSWICK 1105-N":             "015248110N", //SI	
+  "BRUNSWICK 1106-R":             "015248110R", //SI	
+  "BRUNSWICK 1106-S":             "015248110S", //SI	
+  "BRUNSWICK 1110":               "0152481110", //SI	
+  "WEIMAR 1101":                  "0152491101", //SI	
+  "WEIMAR 1102":                  "0152491102", //SI	
+  "FLINT 1102":                   "0152531102", //SI	
+  "PENRYN 1103":                  "0152561103", //SI	
+  "PENRYN 1104":                  "0152561104", //SI	
+  "HORSESHOE 1101":               "0152571101", //SI	
+  "HORSESHOE 1102":               "0152571102", //SI	
+  "HORSESHOE 1103":               "0152571103", //SI	
+  "HORSESHOE 1104":               "0152571104", //SI	
+  "HORSESHOE 1105":               "0152571105", //SI	
+  "HORSESHOE 1106":               "0152571106", //SI	
+  "DELMAR 1104":                  "0152581104", //SI	
+  "DELMAR 2105":                  "0152582105", //SI	
+  "DELMAR 2106":                  "0152582106", //SI	
+  "SUMMIT 1101":                  "0152591101", //SI	
+  "SUMMIT 1102":                  "0152591102", //SI	
+  "HIGGINS 1103":                 "0152691103", //SI	
+  "HIGGINS 1107":                 "0152691107", //SI	
+  "HIGGINS 1108":                 "0152691108", //SI	
+  "HIGGINS 1109":                 "0152691109", //SI	
+  "HIGGINS 1109-A":               "015269110A", //SI	
+  "HIGGINS 1109-B":               "015269110B", //SI	
+  "HIGGINS 1110":                 "0152691110", //SI	
+  "BELL 1107":                    "0152701107", //SI	
+  "BELL 1108":                    "0152701108", //SI	
+  "BELL 1109":                    "0152701109", //SI	
+  "BELL 1110":                    "0152701110", //SI	
+  "EL DORADO P H 2101":           "0152762101", //SI	
+  "EL DORADO P H 2102":           "0152762102", //SI	
+  "DEER CREEK PH 1101":           "0152DC1101", //SI	
+  "PLACERVILLE 1109":             "0153081109", //SI	
+  "PLACERVILLE 1110":             "0153081110", //SI	
+  "PLACERVILLE 1111":             "0153081111", //SI	
+  "PLACERVILLE 1112":             "0153081112", //SI	
+  "PLACERVILLE 2106-Eldrdo":      "0153082106", //SI	
+  "PLACERVILLE 2106-Grgtwn":      "015308210A", //SI	
+  "PLACERVILLE 2106-Grdnvly":     "015308210B", //SI	
+  "PLACERVILLE 2106-Grnwd":       "015308210C", //SI	
+  "NARROWS 2101":                 "0153132101", //SI	
+  "NARROWS 2102":                 "0153132102", //SI	
+  "NARROWS 2101-A":               "015313210A", //SI	
+  "NARROWS 2101-B":               "015313210B", //SI	
+  "OLETA (SACTO) 1101":           "0153541101", //SI	
+  "CLARKSVILLE 2103":             "0153612103", //SI	
+  "CLARKSVILLE 2104":             "0153612104", //SI	
+  "CLARKSVILLE 2109":             "0153612109", //SI	
+  "CLARKSVILLE 2110":             "0153612110", //SI	
+  "SHINGLE SPRINGS 1103":         "0153651103", //SI	
+  "SHINGLE SPRINGS 1104":         "0153651104", //SI	
+  "SHINGLE SPRINGS 2105":         "0153652105", //SI	
+  "SHINGLE SPRINGS 2106":         "0153652106", //SI	
+  "SHINGLE SPRINGS 2109":         "0153652109", //SI	
+  "APPLE HILL 1103":              "0153661103", //SI	
+  "APPLE HILL 1104":              "0153661104", //SI	
+  "APPLE HILL 2102-Seq 1":        "0153662102", //SI	
+  "APPLE HILL 2102-Seq 2":        "015366210A", //SI	
+  "APPLE HILL 2102-Seq 3":        "015366210B", //SI	
+  "LINCOLN 1101":                 "0153701101", //SI	
+  "LINCOLN 1101-A":               "015370110A", //SI	
+  "PEASE 1105":                   "0153751105", //SI	
+  "DOWNIEVILLE DIESEL 1101":      "0158001101", //SI	
+  "ECHO SUMMIT 1101":             "0158031101", //SI	
+  "Auburn-Folsom Rd":             "015HW00001", //SI	
+  "Hwy 20 (NC to I-80)":          "015HW02003", //SI	
+  "Hwy 49 (Bear Rvr to NC)":      "015HW04901", //SI	
+  "Hwy 49 (NC to Yuba Pass)":     "015HW04902", //SI	
+  "Hwy 49 (Auburn to Bear Rvr)":  "015HW04903", //SI	
+  "Hwy 49 (Auburn to Coloma)":    "015HW04904", //SI	
+  "Hwy 49 (Coloma to Pvlle)":     "015HW04905", //SI	
+  "Hwy 49 (D.S.to Almandor)":     "015HW04906", //SI	
+  "Hwy 50 (ElDo Hill to Pvlle)":  "015HW05001", //SI	
+  "Hwy 50 (Pvlle to Echo Sum)":   "015HW05002", //SI	
+  "I-80 (Rocklin to Auburn)":     "015HW08001", //SI	
+  "I-80 (Auburn to Donner Sm":    "015HW08002", //SI	
+  "Hwy 174 (GV to Bear Rvr)":     "015HW17401", //SI	
+  "Hwy 174 (B Rvr to Colfax)":    "015HW17402", //SI	
+  "Hw 193 (Linc to Brdg Bndry)":  "015HW19301", //SI	
+  "Hw 193 (Newcastle to Brdg":    "015HW19302", //SI	
+  "Hw 193 (Cool to Kelsey)":      "015HW19303", //SI	
+  "Hw 193 (Kelsey to Pvlle)":     "015HW19304", //SI	
+  "Hw 193 (Linc to E. Bndry)":    "015HW19305", //SI	
+  "COLGATE ORCHARD":              "015OR00001", //SI	
+  "EL DORADO - ORCHARDS":         "015OR10005", //SI	
+  "TRAN - SI 60Kv":               "TR01506001", //SI	
+  "TRAN - SI 70Kv":               "TR01507001", //SI	
+  "TRAN - SI 115Kv":              "TR01511501", //SI	
+  "TRAN - SI 230Kv":              "TR01523001", //SI	
+  "TRAN - SI 500Kv":              "TR01550001", //SI	
+  "CR-Middle Fork":               "TRC0151001", //SI	
+  "CR-Drum Summit":               "TRC0151002", //SI	
+  "CR-Drum Rio Oso #2":           "TRC0151003", //SI	
+  "CR-Spaulding Summit":          "TRC0151004", //SI	
+  "CR-MissouriGold":              "TRC0151005", //SI	
+  "CR-Rices Xing - Colgate PH SI":   "TRC0151006", //SI	
+  "CR-Butte Cnty-Nicolaus Sub SI":   "TRC0151007", //SI	
+  "CR-Butte Cnty-Rio Oso Sub SI":    "TRC0151008", //SI	
+  "CR-Atlantic":                  "TRC0151009", //SI	
+  "CR-Halsey to Steep Hollow":    "TRC0151013", //SI	
+  "CR-Steep Hollow to Drum":      "TRC0151014", //SI	
+  "CR-Colgate Nevada":            "TRC0151017", //SI	
+  "CR-El Apple Flat":             "TRC0151018", //SI	
+  "CR-Weimar":                    "TRC0151019", //SI	
+  "CR-Placer Atlantic":           "TRC0151020", //SI	
+  "CR-Halsey Bear":               "TRC0151021", //SI	
+  "CR-Bear Placer":               "TRC0151022", //SI	
+  "CR-Drum to Rollins":           "TRC0151026", //SI	
+  "CR-Brunswick":                 "TRC0151027", //SI	
+  "CR-Placer to Folsom":          "TRC0151029", //SI	
+  "CR-Aerial Patrol Sierra":      "TRC0611112", //SI	
+  "EVERGREEN 2101":               "0082012101", //SJ	
+  "EVERGREEN 2102":               "0082012102", //SJ	
+  "EVERGREEN 2103":               "0082012103", //SJ	
+  "EVERGREEN 2104":               "0082012104", //SJ	
+  "EVERGREEN 2105":               "0082012105", //SJ	
+  "BASCOM 0401":                  "0082100401", //SJ	
+  "MABURY 1101":                  "0082191101", //SJ	
+  "MABURY 1102":                  "0082191102", //SJ	
+  "MABURY 1103":                  "0082191103", //SJ	
+  "MABURY 1104":                  "0082191104", //SJ	
+  "SAN JOSE SUB A 0403":          "0082250403", //SJ	
+  "SAN JOSE SUB A 0404":          "0082250404", //SJ	
+  "SAN JOSE SUB A 0405":          "0082250405", //SJ	
+  "SAN JOSE SUB A 0407":          "0082250407", //SJ	
+  "SAN JOSE SUB A 0408":          "0082250408", //SJ	
+  "SAN JOSE SUB A 0410":          "0082250410", //SJ	
+  "SAN JOSE SUB A 1109":          "0082251109", //SJ	
+  "SAN JOSE SUB A 1110":          "0082251110", //SJ	
+  "SAN JOSE SUB A 1111":          "0082251111", //SJ	
+  "SAN JOSE SUB A 1112":          "0082251112", //SJ	
+  "SAN JOSE SUB B 0408":          "0082260408", //SJ	
+  "SAN JOSE SUB B 1101":          "0082261101", //SJ	
+  "SAN JOSE SUB B 1102":          "0082261102", //SJ	
+  "SAN JOSE SUB B 1104":          "0082261104", //SJ	
+  "SAN JOSE SUB B 1105":          "0082261105", //SJ	
+  "SAN JOSE SUB B 1106":          "0082261106", //SJ	
+  "SAN JOSE SUB B 1107":          "0082261107", //SJ	
+  "SAN JOSE SUB B 1108":          "0082261108", //SJ	
+  "SAN JOSE SUB B 1109":          "0082261109", //SJ	
+  "SAN JOSE SUB B 1110":          "0082261110", //SJ	
+  "SAN JOSE SUB B 1111":          "0082261111", //SJ	
+  "SAN JOSE SUB B 1112":          "0082261112", //SJ	
+  "SAN JOSE SUB B 1113":          "0082261113", //SJ	
+  "SAN JOSE SUB B 1114":          "0082261114", //SJ	
+  "SAN JOSE SUB B 1115":          "0082261115", //SJ	
+  "SAN JOSE SUB B 1116":          "0082261116", //SJ	
+  "SAN JOSE SUB B 1117":          "0082261117", //SJ	
+  "ALMADEN 1101":                 "0082311101", //SJ	
+  "ALMADEN 1102":                 "0082311102", //SJ	
+  "ALMADEN 1103":                 "0082311103", //SJ	
+  "ALMADEN 1110":                 "0082311110", //SJ	
+  "ALMADEN 1111":                 "0082311111", //SJ	
+  "RIVER OAKS 2101":              "0082342101", //SJ	
+  "RIVER OAKS 2102":              "0082342102", //SJ	
+  "RIVER OAKS 2106":              "0082342106", //SJ	
+  "RIVER OAKS 2107":              "0082342107", //SJ	
+  "RIVER OAKS 2108":              "0082342108", //SJ	
+  "NORTECH 2109":                 "0082462109", //SJ	
+  "NORTECH 2111":                 "0082462111", //SJ	
+  "SENTER 1104":                  "0082541104", //SJ	
+  "MILPITAS 1101":                "0082831101", //SJ	
+  "MILPITAS 1105":                "0082831105", //SJ	
+  "MILPITAS 1106":                "0082831106", //SJ	
+  "MILPITAS 1108":                "0082831108", //SJ	
+  "MILPITAS 1109":                "0082831109", //SJ	
+  "MILPITAS 2110":                "0082832110", //SJ	
+  "MILPITAS 2111":                "0082832111", //SJ	
+  "MILPITAS 2112":                "0082832112", //SJ	
+  "MILPITAS 2113":                "0082832113", //SJ	
+  "MILPITAS 2114":                "0082832114", //SJ	
+  "MILPITAS 2115":                "0082832115", //SJ	
+  "EL PATIO 1105":                "0082921105", //SJ
+  "EDENVALE 1101":                "0082951101", //SJ	
+  "EDENVALE 1102":                "0082951102", //SJ	
+  "EDENVALE 1103":                "0082951103", //SJ	
+  "EDENVALE 2106":                "0082952106", //SJ	
+  "EDENVALE 2107":                "0082952107", //SJ	
+  "EDENVALE 2108":                "0082952108", //SJ	
+  "EDENVALE 2109":                "0082952109", //SJ	
+  "EDENVALE 2110":                "0082952110", //SJ	
+  "RUCKER 0401":                  "0083100401", //SJ	
+  "LLAGAS 2101":                  "0083182101", //SJ	
+  "LLAGAS 2102":                  "0083182102", //SJ	
+  "LLAGAS 2103":                  "0083182103", //SJ	
+  "LLAGAS 2104":                  "0083182104", //SJ	
+  "LLAGAS 2105":                  "0083182105", //SJ	
+  "LLAGAS 2106":                  "0083182106", //SJ	
+  "LLAGAS 2107":                  "0083182107", //SJ	
+  "MORGAN HILL 2104":             "0083242104", //SJ	
+  "MORGAN HILL 2105":             "0083242105", //SJ	
+  "MORGAN HILL 2106":             "0083242106", //SJ	
+  "MORGAN HILL 2108":             "0083242108", //SJ	
+  "MORGAN HILL 2109":             "0083242109", //SJ	
+  "MORGAN HILL 2110":             "0083242110", //SJ	
+  "MORGAN HILL 2111":             "0083242111", //SJ	
+  "SAN MARTIN 0401":              "0083280401", //SJ	
+  "SWIFT 2102":                   "0083392102", //SJ	
+  "SWIFT 2106":                   "0083392106", //SJ	
+  "SWIFT 2107":                   "0083392107", //SJ	
+  "SWIFT 2108":                   "0083392108", //SJ	
+  "SWIFT 2109":                   "0083392109", //SJ	
+  "SWIFT 2110":                   "0083392110", //SJ	
+  "SWIFT 2111":                   "0083392111", //SJ	
+  "HICKS 1108":                   "0083431108", //SJ	
+  "HICKS 1110":                   "0083431110", //SJ	
+  "HICKS 1112":                   "0083431112", //SJ	
+  "HICKS 2101":                   "0083432101", //SJ	
+  "HICKS 2102":                   "0083432102", //SJ	
+  "HICKS 2105":                   "0083432105", //SJ	
+  "HICKS 2106":                   "0083432106", //SJ	
+  "HICKS 2110":                   "0083432110", //SJ	
+  "HICKS 2111":                   "0083432111", //SJ	
+  "MC KEE 1102":                  "0083531102", //SJ	
+  "MC KEE 1103":                  "0083531103", //SJ	
+  "MC KEE 1104":                  "0083531104", //SJ	
+  "MC KEE 1105":                  "0083531105", //SJ	
+  "MC KEE 1106":                  "0083531106", //SJ	
+  "MC KEE 1107":                  "0083531107", //SJ	
+  "MC KEE 1108":                  "0083531108", //SJ	
+  "MC KEE 1109":                  "0083531109", //SJ	
+  "MC KEE 1110":                  "0083531110", //SJ	
+  "MC KEE 1111":                  "0083531111", //SJ	
+  "MC KEE 1112":                  "0083531112", //SJ	
+  "STONE 1101":                   "0083701101", //SJ	
+  "STONE 1102":                   "0083701102", //SJ	
+  "STONE 1104":                   "0083701104", //SJ	
+  "STONE 1107":                   "0083701107", //SJ	
+  "STONE 1108":                   "0083701108", //SJ	
+  "STONE 1109":                   "0083701109", //SJ	
+  "STONE 1110":                   "0083701110", //SJ	
+  "MARKHAM 1101":                 "0083731101", //SJ	
+  "TRIMBLE 1101":                 "0083801101", //SJ	
+  "TRIMBLE 1103":                 "0083801103", //SJ	
+  "TRIMBLE 1104":                 "0083801104", //SJ	
+  "TRIMBLE 1105":                 "0083801105", //SJ	
+  "TRIMBLE 1106":                 "0083801106", //SJ	
+  "TRIMBLE 1107":                 "0083801107", //SJ	
+  "TRIMBLE 1108":                 "0083801108", //SJ	
+  "TRIMBLE 1109":                 "0083801109", //SJ	
+  "TRIMBLE 1110":                 "0083801110", //SJ	
+  "TRIMBLE 1111":                 "0083801111", //SJ	
+  "TRIMBLE 2114":                 "0083802114", //SJ	
+  "TRIMBLE 2115":                 "0083802115", //SJ	
+  "TRIMBLE 2116":                 "0083802116", //SJ	
+  "TRIMBLE 2117":                 "0083802117", //SJ	
+  "TRIMBLE 2118":                 "0083802118", //SJ	
+  "TRIMBLE 2119":                 "0083802119", //SJ	
+  "FMC 1101":                     "0083871101", //SJ	
+  "FMC 1102":                     "0083871102", //SJ	
+  "MONTAGUE 2101":                "0083892101", //SJ	
+  "MONTAGUE 2102":                "0083892102", //SJ	
+  "MONTAGUE 2103":                "0083892103", //SJ	
+  "MONTAGUE 2104":                "0083892104", //SJ	
+  "MONTAGUE 2105":                "0083892105", //SJ	
+  "MONTAGUE 2106":                "0083892106", //SJ	
+  "MONTAGUE 2107":                "0083892107", //SJ	
+  "MONTAGUE 2108":                "0083892108", //SJ	
+  "MONTAGUE 2109":                "0083892109", //SJ	
+  "Piercy 2109":                  "0083912109", //SJ	
+  "Piercy 2110":                  "0083912110", //SJ	
+  "Piercy 2111":                  "0083912111", //SJ	
+  "FRANKS 2101":                  "0088002101", //SJ	
+  "DIXON LANDING 2101 SJ":           "0088012101", //SJ	
+  "DIXON LANDING 2102 SJ":           "0088012102", //SJ	
+  "DIXON LANDING 2103 SJ":           "0088012103", //SJ	
+  "SANTA CLARA 1101":             "0088111101", //SJ	
+  "TRAN - SJ 60Kv":               "TR00806003", //SJ	
+  "TRAN - SJ 70Kv":               "TR00807003", //SJ	
+  "TRAN - SJ 115Kv":              "TR00811503", //SJ	
+  "TRAN - SJ 230Kv":              "TR00823003", //SJ	
+  "TRAN - SJ 500Kv":              "TR00850003", //SJ	
+  "CR-Los Esteros":               "TRC0040002", //SJ	
+  "CR-Lawerence":                 "TRC0040003", //SJ	
+  "CR-Westinghouse":              "TRC0040004", //SJ	
+  "CR-Monta Vista":               "TRC0040005", //SJ	
+  "CR-Evergreen":                 "TRC0040006", //SJ	
+  "CR-Gilroy":                    "TRC0040007", //SJ	
+  "CR-San Jose B":                "TRC0040008", //SJ	
+  "CR-Swift":                     "TRC0040009", //SJ	
+  "CR-Applied Materials":         "TRC0040010", //SJ	
+  "CR-Newark":                    "TRC0040011", //SJ	
+  "CR-Metcalf-El Patio":          "TRC0040012", //SJ	
+  "CR-Riparian":                  "TRC0040013", //SJ	
+  "CR-Milpitas":                  "TRC0040014", //SJ	
+  "CR-Stevens Creek North":       "TRC0040015", //SJ	
+  "CR-Stevens Creek South":       "TRC0040016", //SJ	
+  "CR-Mabury-Jennings 60 kV":     "TRC0040017", //SJ	
+  "CR-Lockheed 115 kV":           "TRC0040018", //SJ	
+  "CR-Markham-Stone 115 kV":      "TRC0040019", //SJ	
+  "CR-Metcalf-MontaVista 230kV":  "TRC0040020", //SJ	
+  
+  "CR-Monta Vista - Burns 60kV":  "TRC0040021", //SJ	
+  "CR-Agnew - Zanker 115 kV":     "TRC0040022", //SJ	
+  "CR-Monta Vista -Wolfe 115kV":  "TRC0040023", //SJ	
+  "CR-Evergreen-Los Gatos 60kV":  "TRC0040024", //SJ	
+  "CR-MossLandng-Metcalf 500kV":  "TRC0040025", //SJ	
+  "CR-Monta Vista-Cupertino":     "TRC0040026", //SJ	
+  "CR MV - LG / Campbell":        "TRC0040027", //SJ	
+  "CR-Monta Vista-Saratoga":      "TRC0040028", //SJ	
+  "CR-Monta Vista-San Jose":      "TRC0040029", //SJ	
+  "TIGER CREEK 0201":             "0161380201", //ST	
+  "LINDEN 1101":                  "0162071101", //ST	
+  "LINDEN 1102":                  "0162071102", //ST	
+  "LINDEN 1103":                  "0162071103", //ST	
+  "LINDEN 1104":                  "0162071104", //ST	
+  "NEW HOPE 1101":                "0162081101", //ST	
+  "NEW HOPE 1102":                "0162081102", //ST	
+  "MIDDLE RIVER 1101":            "0162091101", //ST	
+  "MIDDLE RIVER 1102":            "0162091102", //ST	
+  "MIDDLE RIVER 1103":            "0162091103", //ST	
+  "LODI 0401":                    "0162110401", //ST	
+  "LODI 0402":                    "0162110402", //ST	
+  "LODI 0403":                    "0162110403", //ST	
+  "LODI 0404":                    "0162110404", //ST	
+  "LODI 0405":                    "0162110405", //ST	
+  "LODI 1101":                    "0162111101", //ST	
+  "LODI 1102":                    "0162111102", //ST	
+  "ELECTRA 1101":                 "0162161101", //ST	
+  "ELECTRA 1102":                 "0162161102", //ST	
+  "CALAVERAS CEMENT 1101":        "0162211101", //ST	
+  "CALAVERAS CEMENT 1101-A":      "016221110A", //ST	
+  "CALAVERAS CEMENT 1101-B":      "016221110B", //ST	
+  "CALAVERAS CEMENT 1101-C":      "016221110C", //ST	
+  "COLONY 1101":                  "0162231101", //ST	
+  "COLONY 1102":                  "0162231102", //ST	
+  "MONARCH 0401":                 "0162300401", //ST	
+  "MONARCH 0402":                 "0162300402", //ST	
+  "MONARCH 0403":                 "0162300403", //ST	
+  "STOCKTON STATION A 0401":      "0162370401", //ST	
+  "STOCKTON STATION A 0402":      "0162370402", //ST	
+  "STOCKTON STATION A 0403":      "0162370403", //ST	
+  "STOCKTON STATION A 0404":      "0162370404", //ST	
+  "STOCKTON STATION A 0405":      "0162370405", //ST	
+  "STOCKTON STATION A 0406":      "0162370406", //ST	
+  "STOCKTON STATION A 0407":      "0162370407", //ST	
+  "STOCKTON STATION A 0408":      "0162370408", //ST	
+  "STOCKTON STATION A 0409":      "0162370409", //ST	
+  "STOCKTON STATION A 0410":      "0162370410", //ST	
+  "STOCKTON STATION A 0411":      "0162370411", //ST	
+  "STOCKTON STATION A 0412":      "0162370412", //ST	
+  "STOCKTON STATION A 1101":      "0162371101", //ST	
+  "STOCKTON STATION A 1102":      "0162371102", //ST	
+  "STOCKTON STATION A 1103":      "0162371103", //ST	
+  "STOCKTON STATION A 1104":      "0162371104", //ST	
+  "STOCKTON STATION A 1105":      "0162371105", //ST	
+  "STOCKTON STATION A 1106":      "0162371106", //ST	
+  "STOCKTON STATION A 1107":      "0162371107", //ST	
+  "STOCKTON STATION A 1108":      "0162371108", //ST	
+  "STOCKTON STATION A 1109":      "0162371109", //ST	
+  "STOCKTON STATION A 1110":      "0162371110", //ST	
+  "STAGG 1101":                   "0162421101", //ST	
+  "STAGG 1103":                   "0162421103", //ST	
+  "STAGG 1105":                   "0162421105", //ST	
+  "STAGG 1106":                   "0162421106", //ST	
+  "STAGG 2103":                   "0162422103", //ST	
+  "STAGG 2104":                   "0162422104", //ST	
+  "STAGG 2105":                   "0162422105", //ST	
+  "STAGG 2106":                   "0162422106", //ST	
+  "STAGG 2107":                   "0162422107", //ST	
+  "STAGG 2108":                   "0162422108", //ST	
+  "BANTA 1101":                   "0162471101", //ST	
+  "BANTA 1102":                   "0162471102", //ST	
+  "BANTA 1103":                   "0162471103", //ST	
+  "MANTECA 0401":                 "0162610401", //ST	
+  "MANTECA 0402":                 "0162610402", //ST	
+  "MANTECA 0403":                 "0162610403", //ST	
+  "MANTECA 1701":                 "0162611701", //ST	
+  "MANTECA 1702":                 "0162611702", //ST	
+  "MANTECA 1703":                 "0162611703", //ST	
+  "MANTECA 1704":                 "0162611704", //ST	
+  "MANTECA 1705":                 "0162611705", //ST	
+  "MANTECA 1706":                 "0162611706", //ST	
+  "MANTECA 1707":                 "0162611707", //ST	
+  "WESTLEY 1101":                 "0162671101", //ST	& YO
+  "WESTLEY 1103":                 "0162671103", //ST	& YO
+  "VIERRA 1701":                  "0162701701", //ST	
+  "VIERRA 1702":                  "0162701702", //ST	
+  "VIERRA 1703":                  "0162701703", //ST	
+  "Lammers 1101":                 "0162771101", //ST	
+  "Lammers 1102":                 "0162771102", //ST	
+  "Lammers 1103":                 "0162771103", //ST	
+  "Lammers 1105":                 "0162771105", //ST	
+  "Lammers 1107":                 "0162771107", //ST	
+  "STANISLAUS 1701":              "0162821701", //ST	& YO
+  "STANISLAUS 1702":              "0162821702", //ST	& YO
+  "STANISLAUS 1701 A":            "016282170A", //ST	
+  "STANISLAUS 1701 B":            "016282170B", //ST	
+  "STANISLAUS 1702 A":            "016282170Y", //ST	
+  "STANISLAUS 1702 B":            "016282170Z", //ST	
+  "TRACY 0402":                   "0162880402", //ST	
+  "TRACY 0405":                   "0162880405", //ST	
+  "TRACY 1102":                   "0162881102", //ST	
+  "TRACY 1103":                   "0162881103", //ST	
+  "TRACY 1104":                   "0162881104", //ST	
+  "TRACY 1105":                   "0162881105", //ST	
+  "TRACY 1106":                   "0162881106", //ST	
+  "TRACY 1107":                   "0162881107", //ST	
+  "TRACY 1109":                   "0162881109", //ST	
+  "TRACY 1110":                   "0162881110", //ST	
+  "TRACY 1111":                   "0162881111", //ST	
+  "TRACY 1112":                   "0162881112", //ST	
+  "VALLEY HOME 1701":             "0162981701", //ST	& YO
+  "VALLEY HOME 1702":             "0162981702", //ST	& YO
+  "CORRAL 1101":                  "0162991101", //ST	
+  "CORRAL 1102":                  "0162991102", //ST	
+  "CORRAL 1102 A":                "016299110Y", //ST	
+  "CORRAL 1102 B":                "016299110Z", //ST	
+  "MARTELL 1101":                 "0163011101", //ST	
+  "MARTELL 1102":                 "0163011102", //ST	
+  "MARTELL 1103":                 "0163011103", //ST	
+  "TERMINOUS 1102":               "0163021102", //ST	
+  "TERMINOUS 1103":               "0163021103", //ST	
+  "LATHROP 0402":                 "0163030402", //ST	
+  "CHANNEL 1101":                 "0163071101", //ST	
+  "CHANNEL 1102":                 "0163071102", //ST	
+  "ROUGH AND READY ISLA 1101":    "0163081101", //ST	
+  "ROUGH AND READY ISLA 1102":    "0163081102", //ST	
+  "CARBONA 1101":                 "0163091101", //ST	
+  "CARBONA 1102":                 "0163091102", //ST	
+  "CARBONA 1103":                 "0163091103", //ST	
+  "CARBONA 1104":                 "0163091104", //ST	
+  "COUNTRY CLUB 0401":            "0163120401", //ST	
+  "COUNTRY CLUB 0402":            "0163120402", //ST	
+  "COUNTRY CLUB 0403":            "0163120403", //ST	
+  "COUNTRY CLUB 1101":            "0163121101", //ST	
+  "COUNTRY CLUB 1102":            "0163121102", //ST	
+  "COUNTRY CLUB 1103":            "0163121103", //ST	
+  "COUNTRY CLUB 1104":            "0163121104", //ST	
+  "COUNTRY CLUB 1105":            "0163121105", //ST	
+  "COUNTRY CLUB 1106":            "0163121106", //ST	
+  "EAST STOCKTON 0401":           "0163130401", //ST	
+  "EAST STOCKTON 0402":           "0163130402", //ST	
+  "EAST STOCKTON 0403":           "0163130403", //ST	
+  "EAST STOCKTON 0404":           "0163130404", //ST	
+  "EAST STOCKTON 1101":           "0163131101", //ST	
+  "EAST STOCKTON 1102":           "0163131102", //ST	
+  "WATERLOO 1101":                "0163151101", //ST	
+  "WATERLOO 1102":                "0163151102", //ST	
+  "RIVERBANK 1711":               "0163191711", //ST	& YO
+  "RIVERBANK 1713":               "0163191713", //ST	& YO
+  "WEST POINT 1101":              "0163201101", //ST	
+  "WEST POINT 1102":              "0163201102", //ST	
+  "WEST POINT 1101-A":            "016320110A", //ST	
+  "WEST POINT 1101-B":            "016320110B", //ST	
+  "MORMON 1101":                  "0163211101", //ST	
+  "MORMON 1102":                  "0163211102", //ST	
+  "STOCKTON ACRES 0401":          "0163220401", //ST	
+  "STOCKTON ACRES 0402":          "0163220402", //ST	
+  "NORTH BRANCH 1101":            "0163231101", //ST	
+  "OAK PARK 0401":                "0163270401", //ST	
+  "OAK PARK 0402":                "0163270402", //ST	
+  "VICTOR 0401":                  "0163280401", //ST	
+  "VICTOR 1101":                  "0163281101", //ST	
+  "FRENCH CAMP 1101":             "0163291101", //ST	
+  "FRENCH CAMP 1102":             "0163291102", //ST	
+  "FRENCH CAMP 1103":             "0163291103", //ST	
+  "FRENCH CAMP 1104":             "0163291104", //ST	
+  "HAMMER 1101":                  "0163301101", //ST	
+  "HAMMER 1102":                  "0163301102", //ST	
+  "HAMMER 1103":                  "0163301103", //ST	
+  "HAMMER 1104":                  "0163301104", //ST	
+  "HAMMER 1105":                  "0163301105", //ST	
+  "HAMMER 1106":                  "0163301106", //ST	
+  "HAMMER 1107":                  "0163301107", //ST	
+  "HAMMER 1108":                  "0163301108", //ST	
+  "HAMMER 1109":                  "0163301109", //ST	
+  "HARDING 0401":                 "0163310401", //ST	
+  "HARDING 0402":                 "0163310402", //ST	
+  "HARDING 0403":                 "0163310403", //ST	
+  "HARDING 0404":                 "0163310404", //ST	
+  "HARDING 0405":                 "0163310405", //ST	
+  "HARDING 0406":                 "0163310406", //ST	
+  "CLAY 1101":                    "0163341101", //ST	
+  "CLAY 1102":                    "0163341102", //ST	
+  "FROGTOWN 1701":                "0163451701", //ST	
+  "FROGTOWN 1702":                "0163451702", //ST	& YO
+  "FROGTOWN 1701-A":              "016345170A", //ST	
+  "FROGTOWN 1701-B":              "016345170B", //ST	
+  "FROGTOWN 1702-A":              "016345170Y", //ST	
+  "FROGTOWN 1702-B":              "016345170Z", //ST	
+  "WEBER 1101":                   "0163481101", //ST	
+  "WEBER 1102":                   "0163481102", //ST	
+  "WEBER 1103":                   "0163481103", //ST	
+  "WEBER 1104":                   "0163481104", //ST	
+  "WEBER 1105":                   "0163481105", //ST	
+  "WEBER 1106":                   "0163481106", //ST	
+  "WEBER 1107":                   "0163481107", //ST	
+  "WEBER 1108":                   "0163481108", //ST	
+  "WEBER 1114":                   "0163481114", //ST	
+  "OLETA 1101":                   "0163541101", //ST	
+  "OLETA 1102":                   "0163541102", //ST	
+  "ALPINE 1101":                  "0163561101", //ST	
+  "AVENA 1701":                   "0163571701", //ST	& YO
+  "AVENA 1702":                   "0163571702", //ST	& YO
+  "WEST LANE 1101":               "0163621101", //ST	
+  "WEST LANE 1102":               "0163621102", //ST	
+  "WEST LANE 1103":               "0163621103", //ST	
+  "CHEROKEE 1101":                "0163651101", //ST	
+  "CHEROKEE 1102":                "0163651102", //ST	
+  "LOCKEFORD SUB 2101":           "0163682101", //ST	
+  "LOCKEFORD SUB 2102":           "0163682102", //ST	
+  "Salt Springs 1101":            "0163691101", //ST	
+  "SALT SPRINGS 2101":            "0163692101", //ST	
+  "SALT SPRINGS 2102":            "0163692102", //ST	
+  "METTLER 1109":                 "0163701109", //ST	
+  "METTLER 1110":                 "0163701110", //ST	
+  "MOSHER 2105":                  "0163722105", //ST	
+  "MOSHER 2107":                  "0163722107", //ST	
+  "MOSHER 2108":                  "0163722108", //ST	
+  "HERDLYN 1102 ST":                 "0163741102", //ST	
+  "HERDLYN 1103":                 "0163741103", //ST	
+  "PINE GROVE 1101":              "0163751101", //ST	
+  "PINE GROVE 1102":              "0163751102", //ST	
+  "PEORIA FLAT 1701":             "0163781701", //ST	& YO
+  "RIPON 1702":                   "0163801702", //ST	
+  "RIPON 1704":                   "0163801704", //ST	
+  "IONE 1101":                    "0163881101", //ST	
+  "EIGHT MILE 2101":              "0163912101", //ST	
+  "EIGHT MILE 2102":              "0163912102", //ST	
+  "EIGHT MILE 2103":              "0163912103", //ST	
+  "TOKAY SUB 1101":               "0168881101", //ST	
+  "Cannell 1101":                 "0169991101", //ST	
+  "ST HCP MBZ 1601":              "016HCP1601", //ST	
+  "ST HCP MBZ 1603":              "016HCP1603", //ST	
+  "ST HCP MBZ 1607":              "016HCP1607", //ST	
+  "State Hwy 26 - Jackson":       "016HW02601", //ST	
+  "Hwy 12 Pin Oaks":              "016HW1201 ", //ST	
+  "State Highway 88 -Jackson":    "016HW91101", //ST	
+  "TRAN - YO-ST 60Kv":            "TR01606001", //ST	
+  "TRAN - YO-ST 70Kv":            "TR01607001", //ST	
+  "TRAN - YO-ST 115Kv":           "TR01611501", //ST	
+  "TRAN - YO-ST 230Kv":           "TR01623001", //ST	
+  "TRAN - YO-ST 500Kv":           "TR01650001", //ST	
+  "CR-BELLOTA-WARNERVILLE":       "TRC0160001", //ST	
+  "CR-BELLOTA-RIVERBANK":         "TRC0160002", //ST	
+  "CR-STAN-MAN":                  "TRC0160003", //ST	
+  "CR-STOCKTON A-LOCKEFORD JCT":  "TRC0160005", //ST	
+  "CR-STOCKTON A-STOCKTON JCT":   "TRC0160006", //ST	
+  "CR-MELONES-WILSON":            "TRC0160007", //ST	
+  "CR-WILSON-GREGG":              "TRC0160008", //ST	
+  "CR-MELONES SW STATION":        "TRC0160009", //ST	
+  "CR-PANOCHE SOUTH":             "TRC0160010", //ST	
+  "CR-TIGER CREEK-VLY SPRINGS":   "TRC0160011", //ST	
+  "CR-VALLEY SPRINGS-BELLOTA":    "TRC0160012", //ST	
+  "CR-TESLA-LOS BANOS":           "TRC0160014", //ST	
+  "CR-CHOWCHILLA-KERKOFF":        "TRC0160015", //ST	
+  "CR-LOS BANOS-PANOCHE":         "TRC0160016", //ST	
+  "CR-BELLOTA-WEBER":             "TRC0160017", //ST	
+  "CR-WEBER-TESLA":               "TRC0160018", //ST	
+  "CR-LOS BANOS-SOUTH":           "TRC0160019", //ST	
+  "CR-TESLA-SALADO-MANTECA":      "TRC0160020", //ST	
+  "CR-TIGER CREEK-ELECTRA":       "TRC0160021", //ST	
+  "CR-ELECTRA-VALLEY SPRINGS":    "TRC0160022", //ST	
+  "CR-RIO OSO-LOCKFRD-BELLOTA":   "TRC0160023", //ST	
+  "CR-ELECTRA-BELLOTA":           "TRC0160024", //ST	
+  "CR-PANOCHE - Oro Loma":        "TRC0160025", //ST	
+  "CR-LOS BANOS-SAN LUIS PGP":    "TRC0160026", //ST	
+  "CR-WEBER-MORMON JCT":          "TRC0160027", //ST	
+  "CR-STAGG-TESLA":               "TRC0160028", //ST	
+  "CR-STAGG-COUNTRY CLUB":        "TRC0160029", //ST	
+  "CR-BORDEN-COPPERMINE ST":         "TRC0160030", //ST	
+  "CR-RANCHO SECO-BELLOTA":       "TRC0160031", //ST	
+  "CR-LOCKEFORD-LOCKEFORD JCT":   "TRC0160032", //ST	
+  "CR-TESLA-MANTECA":             "TRC0160033", //ST	
+  "CR-TESLA-KASSON":              "TRC0160034", //ST	
+  "CR-CARBONA #1":                "TRC0160035", //ST	
+  "CR-VIERRA-TRACY":              "TRC0160036", //ST	
+  "CR-HOWLAND RD JCT":            "TRC0160037", //ST	
+  "CR-WILSON-ATWATER":            "TRC0160038", //ST	
+  "CR-PANOCHE-ORO LOMA":          "TRC0160039", //ST	
+  "CR-VALLEY SPRINGS-MARTELL#2":  "TRC0160040", //ST	
+  "CR-LOS BANOS-CANAL-ORO LOMA ST":  "TRC0160041", //ST	
+  "CR-STOCKTON A-WEBER #1":       "TRC0160042", //ST	
+  "CR-STOCKTON A-WEBER #3":       "TRC0160043", //ST	
+  "CR-AEC TAPS":                  "TRC0160044", //ST	
+  "CR-GOLD HILL-STAGG":           "TRC0160045", //ST	
+  "CR-GOLD HILL-BELLOTA":         "TRC0160046", //ST	
+  "CR-WEBER #1":                  "TRC0160047", //ST	
+  "CR-Lockeford Lodi #2":         "TRC0160048", //ST	
+  "CR-Tesla Tracy Pumps":         "TRC0160049", //ST	
+  "CR-Coburn Panoche":            "TRC0160050", //ST	
+  "CR-Lockeford #1":              "TRC0160051", //ST	
+  "CR-Dairyland Mendota":         "TRC0160052", //ST	
+  "CR-Tesla Stockton Cogen Jct":     "TRC0160053", //ST	
+  "CR-ST A Lockeford Bellota":    "TRC0160054", //ST	
+  "CR-Aerial Patrol ST":            "TRC0161111", //ST	
+  "CR-ST HCP MBZ 1601":           "TRCHCP1601", //ST	
+  "CR-ST HCP MBZ 1602":           "TRCHCP1602", //ST	
+  "CR-ST HCP MBZ 1604":           "TRCHCP1604", //ST	
+  "CR-ST HCP MBZ 1605":           "TRCHCP1605", //ST	
+  "CR-ST HCP MBZ 1606":           "TRCHCP1606", //ST	
+  "WESTLEY 1102":                 "0162671102", //YO	
+  "NEWMAN 1101":                  "0162741101", //YO	
+  "NEWMAN 1102":                  "0162741102", //YO	
+  "NEWMAN 1103":                  "0162741103", //YO	
+  "SPRING GAP 1701":              "0162831701", //YO	
+  "PATTERSON RANCH CO. 1101":     "0162921101", //YO	
+  "PATTERSON RANCH CO. 1102":     "0162921102", //YO	
+  "GUSTINE 1101":                 "0163111101", //YO	
+  "GUSTINE 1102":                 "0163111102", //YO	
+  "PINECREST 0401":               "0163160401", //YO	
+  "RIVERBANK 1712":               "0163191712", //YO	
+  "RIVERBANK 1714":               "0163191714", //YO	
+  "RIVERBANK 1715":               "0163191715", //YO	
+  "RIVERBANK 1716":               "0163191716", //YO	
+  "TAR FLAT 0401":                "0163240401", //YO	
+  "TAR FLAT 0402":                "0163240402", //YO	
+  "CROWS LANDING 1101":           "0163251101", //YO	
+  "CROWS LANDING 1102":           "0163251102", //YO	
+  "CURTIS 1701":                  "0163351701", //YO	
+  "CURTIS 1702":                  "0163351702", //YO	
+  "CURTIS 1703":                  "0163351703", //YO	
+  "CURTIS 1704":                  "0163351704", //YO	
+  "CURTIS 1705":                  "0163351705", //YO	
+  "CURTIS 1701 A":                "016335170A", //YO	
+  "CURTIS 1701 B":                "016335170B", //YO	
+  "CURTIS 1702 A":                "016335170F", //YO	
+  "CURTIS 1702 B":                "016335170G", //YO	
+  "CURTIS 1703 A":                "016335170K", //YO	
+  "CURTIS 1703 B":                "016335170L", //YO	
+  "CURTIS 1704 A":                "016335170P", //YO	
+  "CURTIS 1704 B":                "016335170R", //YO	
+  "CURTIS 1704 C":                "016335170S", //YO	
+  "CURTIS 1704 D":                "016335170T", //YO	
+  "CURTIS 1704 E":                "016335170U", //YO	
+  "MIWUK SUB 1701":               "0163661701", //YO	
+  "MIWUK SUB 1702":               "0163661702", //YO	
+  "MIWUK SUB 1701 A":             "016366170A", //YO	
+  "MIWUK SUB 1701 B":             "016366170B", //YO	
+  "MIWUK SUB 1702 A":             "016366170Y", //YO	
+  "MIWUK SUB 1702 B":             "016366170Z", //YO	
+  "COTTLE 1701":                  "0163711701", //YO	
+  "COTTLE 1702":                  "0163711702", //YO	
+  "COTTLE 1703":                  "0163711703", //YO	
+  "COTTLE 1704":                  "0163711704", //YO	
+  "RACETRACK SUB 1703":           "0163761703", //YO	
+  "RACETRACK SUB 1704":           "0163761704", //YO	
+  "RACETRACK SUB 1703 A":         "016376170A", //YO	
+  "RACETRACK SUB 1703 B":         "016376170B", //YO	
+  "PEORIA FLAT 1704":             "0163781704", //YO	
+  "PEORIA FLAT 1701 A":           "016378170A", //YO	
+  "PEORIA FLAT 1701 B":           "016378170B", //YO	
+  "PEORIA FLAT 1701 C":           "016378170C", //YO	
+  "PEORIA FLAT 1704 A":           "016378170J", //YO	
+  "PEORIA FLAT 1704 B":           "016378170K", //YO	
+  "PEORIA FLAT 1704 C":           "016378170L", //YO	
+  "SALADO 1101":                  "0163811101", //YO	
+  "SALADO 1102":                  "0163811102", //YO	
+  "YO HCP MBZ 1701":              "017HCP1701", //YO	
+  "YO HCP MBZ 1702":              "017HCP1702", //YO	
+  "YO HCP MBZ 1703":              "017HCP1703", //YO	
+  "YO HCP MBZ 1704":              "017HCP1704", //YO	
+  "YO HCP MBZ 1705":              "017HCP1705", //YO	
+  "YO HCP MBZ 1706":              "017HCP1706", //YO	
+  "YO HCP MBZ 1707":              "017HCP1707", //YO	
+  "YO HCP MBZ 1708":              "017HCP1708", //YO	
+  "CANAL 1101":                   "0252091101", //YO	
+  "CANAL 1102":                   "0252091102", //YO	
+  "CANAL 1103":                   "0252091103", //YO	
+  "CANAL 1104":                   "0252091104", //YO	
+  "CANAL 1105":                   "0252091105", //YO	
+  "CANAL 1106":                   "0252091106", //YO	
+  "BEAR VALLEY 1101":             "0252191101", //YO	
+  "BEAR VALLEY 1105":             "0252191105", //YO	
+  "BEAR VALLEY 2101":             "0252192101", //YO	
+  "BEAR VALLEY 2105":             "0252192105", //YO	
+  "BEAR VALLEY 2105-A":           "025219210A", //YO	
+  "BEAR VALLEY 2105-B":           "025219210B", //YO	
+  "LIVINGSTON 1101":              "0252261101", //YO	
+  "LIVINGSTON 1102":              "0252261102", //YO	
+  "LIVINGSTON 1104":              "0252261104", //YO	
+  "LIVINGSTON 1105":              "0252261105", //YO	
+  "LIVINGSTON 1106":              "0252261106", //YO	
+  "MENDOTA 1101":                 "0252311101", //YO	
+  "MENDOTA 1102":                 "0252311102", //YO	
+  "MENDOTA 1103":                 "0252311103", //YO	
+  "DAIRYLAND 1102":               "0252421102", //YO	
+  "DAIRYLAND 1103":               "0252421103", //YO	
+  "DAIRYLAND 1105":               "0252421105", //YO	
+  "DAIRYLAND 1109":               "0252421109", //YO	
+  "EL NIDO 1101":                 "0252451101", //YO	
+  "EL NIDO 1102":                 "0252451102", //YO	
+  "EL NIDO 1103":                 "0252451103", //YO	
+  "EL NIDO 1104":                 "0252451104", //YO	
+  "POWER HOUSE NO 2 1103":        "0252521103", //YO	
+  "POWER HOUSE NO 3 1101":        "0252531101", //YO	
+  "POWER HOUSE NO 3 1102":        "0252531102", //YO	
+  "POWER HOUSE NO 3 1103":        "0252531103", //YO	
+  "POWER HOUSE NO 3 1102-A":      "025253110M", //YO	
+  "POWER HOUSE NO 3 1102-B":      "025253110N", //YO	
+  "INDIAN FLAT 1104":             "0252691104", //YO	
+  "WORLD COLOR PRESS 1101":       "0252751101", //YO	
+  "MADERA 1102":                  "0252761102", //YO	
+  "MADERA 1104":                  "0252761104", //YO	
+  "MADERA 1106":                  "0252761106", //YO	
+  "MADERA 1110":                  "0252761110", //YO	
+  "MADERA 1112":                  "0252761112", //YO	
+  "MADERA 1114":                  "0252761114", //YO	
+  "MADERA 1116":                  "0252761116", //YO	
+  "MERCED 1108":                  "0252801108", //YO	
+  "MERCED 1114":                  "0252801114", //YO	
+  "MERCED 1116":                  "0252801116", //YO	
+  "MERCED 2101":                  "0252802101", //YO	
+  "MERCED 2102":                  "0252802102", //YO	
+  "MERCED FALLS 1101":            "0252811101", //YO	
+  "MERCED FALLS 1102":            "0252811102", //YO	
+  "HAMMONDS 1101":                "0253401101", //YO	
+  "HAMMONDS 1102":                "0253401102", //YO	
+  "HAMMONDS 1104":                "0253401104", //YO	
+  "FIREBAUGH 1101":               "0253471101", //YO	
+  "FIREBAUGH 1102":               "0253471102", //YO	
+  "SANTA RITA 1102":              "0253541102", //YO	
+  "SANTA RITA 1105":              "0253541105", //YO	
+  "CHENEY 1101":                  "0253561101", //YO	
+  "CHENEY 1102":                  "0253561102", //YO	
+  "CHENEY 1103":                  "0253561103", //YO	
+  "CHENEY 1104":                  "0253561104", //YO	
+  "ATWATER 1102":                 "0253611102", //YO	
+  "ATWATER 1103":                 "0253611103", //YO	
+  "ATWATER 1104":                 "0253611104", //YO	
+  "ATWATER 1105":                 "0253611105", //YO	
+  "ATWATER 1106":                 "0253611106", //YO	
+  "ATWATER 1107":                 "0253611107", //YO	
+  "ATWATER 1108":                 "0253611108", //YO	
+  "EL CAPITAN 1102":              "0253881102", //YO	
+  "EL CAPITAN 1103":              "0253881103", //YO	
+  "EL CAPITAN 1104":              "0253881104", //YO	
+  "EL CAPITAN 1105":              "0253881105", //YO	
+  "EL CAPITAN 1106":              "0253881106", //YO	
+  "EL CAPITAN 2109":              "0253882109", //YO	
+  "EL CAPITAN 2110":              "0253882110", //YO	
+  "EL PECO 1101":                 "0253981101", //YO	
+  "EL PECO 1102":                 "0253981102", //YO	
+  "DOS PALOS 1101":               "0254041101", //YO	
+  "DOS PALOS 1102":               "0254041102", //YO	
+  "SANTA NELLA 1101":             "0254051101", //YO	
+  "SANTA NELLA 1102":             "0254051102", //YO	
+  "CHOW CHILLA 1103":             "0254101103", //YO	
+  "CHOW CHILLA 1104":             "0254101104", //YO	
+  "CHOW CHILLA 1105":             "0254101105", //YO	
+  "CHOW CHILLA 1106":             "0254101106", //YO	
+  "CASSIDY 1102":                 "0254271102", //YO	
+  "WILSON 1101":                  "0254301101", //YO	
+  "WILSON 1102":                  "0254301102", //YO	
+  "WILSON 1103":                  "0254301103", //YO	
+  "ORTIGA 1105":                  "0254311105", //YO	
+  "ORTIGA 1106":                  "0254311106", //YO	
+  "OAKHURST 1101":                "0254421101", //YO	
+  "OAKHURST 1102":                "0254421102", //YO	
+  "OAKHURST 1103":                "0254421103", //YO	
+  "OAKHURST 1103-A":              "025442110A", //YO	
+  "OAKHURST 1103-B":              "025442110B", //YO	
+  "OAKHURST 1101-A":              "025442110Y", //YO	
+  "OAKHURST 1101-B":              "025442110Z", //YO	
+  "COARSEGOLD SUB 2102":          "0254432102", //YO	
+  "COARSEGOLD SUB 2104":          "0254432104", //YO	
+  "MARIPOSA 2101":                "0254452101", //YO	
+  "MARIPOSA 2102":                "0254452102", //YO	
+  "MARIPOSA 2101-A":              "025445210A", //YO	
+  "MARIPOSA 2101-B":              "025445210B", //YO	
+  "MARIPOSA 2101-C":              "025445210C", //YO	
+  "MARIPOSA 2101-D":              "025445210D", //YO	
+  "MARIPOSA 2101-E":              "025445210E", //YO	
+  "MARIPOSA 2102-W":              "025445210W", //YO	
+  "MARIPOSA 2102-X":              "025445210X", //YO	
+  "MARIPOSA 2102-Y":              "025445210Y", //YO	
+  "MARIPOSA 2102-Z":              "025445210Z", //YO	
+  "NEWHALL 1109":                 "0254461109", //YO	
+  "NEWHALL 1111":                 "0254461111", //YO	
+  "STOREY 1104":                  "0254611104", //YO	
+  "STOREY 1105":                  "0254611105", //YO	
+  "STOREY 1106":                  "0254611106", //YO	
+  "STOREY 1107":                  "0254611107", //YO	
+  "STOREY 1108":                  "0254611108", //YO	
+  "STOREY 1109":                  "0254611109", //YO	
+  "WRIGHT 1109":                  "0254641109", //YO	
+  "CRESSEY 2103":                 "0254702103", //YO	
+  "CRESSEY 2104":                 "0254702104", //YO	
+  "BORDEN 1101":                  "0255121101", //YO	
+  "BORDEN 1102":                  "0255121102", //YO	
+  "SHARON 1101":                  "0255331101", //YO	
+  "LE GRAND 1104":                "0255361104", //YO	
+  "LE GRAND 1106":                "0255361106", //YO	
+  "LE GRAND 1110":                "0255361110", //YO	
+  "LE GRAND 1112":                "0255361112", //YO	
+  "ORO LOMA 1104":                "0255371104", //YO	
+  "ORO LOMA 1106":                "0255371106", //YO	
+  "ORO LOMA 1108":                "0255371108", //YO	
+  "ORO LOMA 1110":                "0255371110", //YO	
+  "ORO LOMA 1112":                "0255371112", //YO	
+  "ORO LOMA 1114":                "0255371114", //YO	
+  "BONITA 1101":                  "0255391101", //YO	
+  "BONITA 1102":                  "0255391102", //YO	
+  "BONITA 1103":                  "0255391103", //YO	
+  "BONITA 1104":                  "0255391104", //YO	
+  "CRANE VALLEY 1101":            "0258531101", //YO	
+  "SO. CAL. EDISON #2 1101":      "0258851101", //YO	
+  "SO. CAL. EDISON #3 1101":      "0258861101", //YO	
+  "TRAN - YO 60Kv":               "TR02506003", //YO	
+  "TRAN - YO 70Kv":               "TR02507003", //YO	
+  "CR-LOS BANOS-CANAL-ORO LOMA YO":  "TR02508000", //YO	
+  "CR-BORDEN-COPPERMINE YO":         "TR02508001", //YO	
+  "TRAN - YO 115Kv":              "TR02511503", //YO	
+  "TRAN - YO 230Kv":              "TR02523003", //YO	
+  "TRAN - YO 500Kv":              "TR02550003", //YO	
+};
+
+
 var transmison_circuit_codes = {
   CC: {
     60:  "TR00806001",
@@ -380,7 +4105,7 @@ var work_categories = {
   "rely_capital":   "YC", // Reliability-Capital       C
   "rely_local":     "YL", // Reliability - Local       NULL
   "rely_system":    "YS", // Reliability - System      NULL
-}
+};
 
 //Mike Morley Email:  This column has not been used in a very long time.  It used to indicate what kind of billing to use 
 //                    for the tree, but now the work complete file indicates how work will be billed.   Here are the values 
@@ -5307,6 +9032,7 @@ line_ids = sanitized;
 
 module.exports = {
   trim_codes: trim_codes, 
+  circuit_numbers: circuit_numbers,
   division_codes: division_codes, 
   priority_codes: priority_codes, 
   tree_record_status: tree_record_status,

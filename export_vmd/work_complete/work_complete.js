@@ -16,7 +16,7 @@ const js2xmlparser = require("js2xmlparser");
 
 const root_node = "TreeWorkComp";
 const vmd = require("dsp_shared/lib/pge_vmd_codes");
-
+const JPGImage = require('../work_packet/jpg_file.js');
 
 /* jshint maxlen: 180 */
 const TREE_WORK_COMP = {               // <TreeWorkComp>
@@ -68,7 +68,7 @@ const TREE_WORK_COMP = {               // <TreeWorkComp>
 
 // some date in july we move from sBillingCode = 'XX' to some other billing code
 
-var TreeWorkComplete = function(tree, trimmer) {
+var TreeWorkComplete = function(tree, trimmer, image, test_email) {
   this.statusFlags = TreeStates.fetchStatusFlags(tree.status);
   
 
@@ -77,7 +77,7 @@ var TreeWorkComplete = function(tree, trimmer) {
 
 
   this.work_complete.sWorkBy = trimmer.uniq_id +" : "+trimmer.first+" "+trimmer.last;
-  this.work_complete.dtWorkDate = tree.tc_complete_time;
+  this.work_complete.dtWorkDate = JSON.parse(JSON.stringify(tree.tc_complete_time));
   this.work_complete.bCompleted = this.statusFlags.status === "worked" ? 1 : 0;
   this.work_complete.sTreeCode = vmd.tree_types[tree.species];
   this.work_complete.sTrimCode = vmd.trim_codes[tree.trim_code];
@@ -86,7 +86,7 @@ var TreeWorkComplete = function(tree, trimmer) {
   this.work_complete.ExternalTreeID = tree.qsi_id || tree._id.toString();
   this.work_complete.ExternalWRID = tree.workorder_id;
   
-  if(_.contains([99]), tree.clearance) {
+  if(tree.clearance === null || tree.clearance === undefined || _.contains([99], tree.clearance)) {
     delete this.work_complete.nDistance;
   } else {
     this.work_complete.nDistance = tree.clearance.toFixed(2);
@@ -112,6 +112,19 @@ var TreeWorkComplete = function(tree, trimmer) {
   this.work_complete["ExternalWRParam-sContCode"] = vmd.company_codes[trimmer.company];
   
   this.work_complete["ExternalWRParam-sWorkCat"] = vmd.work_categories.routine;
+  
+  if(tree.tc_image && !image) {
+    console.error("TREE IMAGE MISSING: "+ tree.tc_image+" on tree: "+ tree._id);
+  }
+  if(image) {
+    var jpg = new JPGImage(image);
+    this.work_complete.TreeWorkCompFile = [jpg.getData()];
+  }
+  
+  if(test_email) {
+    this.packet.sEmailID = test_email;
+  }
+  
 };
 
 

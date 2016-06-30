@@ -165,8 +165,15 @@ TreeLocation.prototype.addTree = function(tree){
   
   assert(tree.get("line_type"), "Tree needs to have line type");
   if(line_type === "transmission") {  
+    var circuit = vmd.circuit_numbers[tree.get("pmd_name")];
+    if(!circuit) {
+      circuit = vmd.circuit_numbers[tree.get("pmd_name")+" "+div_code];
+    } 
+    if(!circuit) {
+      circuit = vmd.transmison_circuit_codes[div_code][voltage];
+    }
+    assert(circuit, "Missing VMD Circuit ID: "+tree.get("_id"));
     assert(vmd.transmison_circuit_codes[div_code], tree.get("_id"));
-    var circuit = vmd.transmison_circuit_codes[div_code][voltage];
     this.set("sCircuit", circuit);    
     this.set("sLineID", line_number);
   } else {
@@ -227,7 +234,7 @@ TreeLocation.prototype.setFromTree = function(key, value) {
 TreeLocation.prototype.validateRequired = function() {
   this._testValue("sAcctType", _.values(vmd.account_types));
   this._testValue("sDivCode", _.values(vmd.division_codes));
-  this._testValue("sCircuit", _.values(vmd.transmison_circuit_codes[this.get("sDivCode")]));
+  this._testValue("sCircuit", _.values(vmd.circuit_numbers));
   assert(this.get("sLineID"), "Location needs to have line_id");
   
 };
