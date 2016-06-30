@@ -5,7 +5,7 @@ BUILDPUBLIC = 52.10.186.152
 CHECK_NRPE = /usr/local/nagios/libexec/check_nrpe
 
 define CHECKMEM_COMMAND
-command[check_mem]=/usr/lib/nagios/plugins/check_mem  -f -w 20 -c 10
+command[check_mem]=/usr/local/nagios/libexec/check_mem  -f -w 20 -c 10
 endef
 
 define NRPESERVICE
@@ -28,7 +28,7 @@ endef
 export NRPESERVICE
 export CHECKMEM_COMMAND
 
-all: clean nagios_user install_plugins add_permission install_xinetd install_nrpe install_check_mem clean
+all: nagios_user install_plugins add_permission install_xinetd install_nrpe install_check_mem clean
 
 nagios_user:
 	/usr/sbin/useradd nagios || exit 0;
@@ -74,7 +74,7 @@ install_check_mem:
 	chmod +x check_mem && \
 	chown nagios.nagios check_mem && \
 	./check_mem -f -w 20 -c 10 && \
-	echo "$$CHECKMEM_COMMAND" >> /usr/local/nagios/etc/nrpe.cfg && \
+	grep -q -F "$$CHECKMEM_COMMAND" /usr/local/nagios/etc/nrpe.cfg || echo "$$CHECKMEM_COMMAND" >> /usr/local/nagios/etc/nrpe.cfg && \
 	service xinetd restart && sleep 5 
 
 clean:
