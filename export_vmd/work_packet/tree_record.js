@@ -142,6 +142,8 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   this.tree.line_voltage = this.line.voltage;
   this.tree.line_number = this.line.line_number;
   this.tree.line_type = this.line.type || 'transmission';
+  this.tree.vmd_circuit_num = this.project.vmd_circuit_num;
+
 
   this.tree.pmd_name = pmd.name;
     

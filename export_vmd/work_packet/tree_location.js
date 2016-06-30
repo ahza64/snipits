@@ -165,13 +165,7 @@ TreeLocation.prototype.addTree = function(tree){
   
   assert(tree.get("line_type"), "Tree needs to have line type");
   if(line_type === "transmission") {  
-    var circuit = vmd.circuit_numbers[tree.get("pmd_name")];
-    if(!circuit) {
-      circuit = vmd.circuit_numbers[tree.get("pmd_name")+" "+div_code];
-    } 
-    if(!circuit) {
-      circuit = vmd.transmison_circuit_codes[div_code][voltage];
-    }
+    var circuit = tree.get("vmd_circuit_num");
     assert(circuit, "Missing VMD Circuit ID: "+tree.get("_id"));
     assert(vmd.transmison_circuit_codes[div_code], tree.get("_id"));
     this.set("sCircuit", circuit);    

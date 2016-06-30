@@ -22,7 +22,7 @@ function *run(fix) {
     if(projects[pmd_num]) {
       var circuit_num = projects[pmd_num].CircuitNum;
       
-      if(!circuit_num.startsWith("VRC")) {
+      if(!circuit_num.startsWith("TRC")) {
         circuit_num = projects[pmd_num].VMD_CircuitNum;
       }
       if(pmd.vmd_circuit_num !== circuit_num) {        
