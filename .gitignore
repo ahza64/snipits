@@ -42,6 +42,5 @@ node_modules/*
 #dispatchr configs
 **/conf.d/*.json
 
-data
-!export_vmd/test/data
+/data
 pdf_generation_service/public/pdf/*
