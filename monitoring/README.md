@@ -16,7 +16,7 @@ $ cd services/monitoring/
 ### For The remote host 
 
 ```
-$ mv Makefile.remote ~/Makefile # for remote host
+$ cp Makefile.remote ~/Makefile # for remote host
 $ sudo make all
 # add security group for the remote host to monitor - nagios-server
 
@@ -26,7 +26,7 @@ $ sudo make all
 
 ```
 # for the nagios server or build.dispatchr.co
-$ mv Makefile.server ~/Makefile # for build server or nagios server
+$ cp Makefile.server ~/Makefile # for build server or nagios server
 $ sudo make all HOST=<host_name> # host name can be dev, stage, etc
 
 ```
