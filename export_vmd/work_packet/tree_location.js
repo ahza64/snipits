@@ -228,7 +228,7 @@ TreeLocation.prototype.setFromTree = function(key, value) {
 TreeLocation.prototype.validateRequired = function() {
   this._testValue("sAcctType", _.values(vmd.account_types));
   this._testValue("sDivCode", _.values(vmd.division_codes));
-  this._testValue("sCircuit", _.values(vmd.circuit_numbers));
+  //this._testValue("sCircuit", _.values(vmd.circuit_numbers));
   assert(this.get("sLineID"), "Location needs to have line_id");
   
 };

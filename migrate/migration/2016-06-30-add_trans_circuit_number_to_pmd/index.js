@@ -25,6 +25,9 @@ function *run(fix) {
       if(!circuit_num.startsWith("TRC")) {
         circuit_num = projects[pmd_num].VMD_CircuitNum;
       }
+      if(circuit_num === "NULL") {
+	circuit_num = null;
+      }
       if(pmd.vmd_circuit_num !== circuit_num) {        
         console.log("FOUND CIRCUIT NUM UPDATE", pmd.vmd_circuit_num, circuit_num);
         pmd.vmd_circuit_num = circuit_num;

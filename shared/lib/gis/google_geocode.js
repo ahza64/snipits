@@ -13,20 +13,17 @@ var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter, extra);
  * @param {Float} x coordinate (logitude)
  * @param {Floay} y coordinate (latitude)
  */
-function getAddress(x, y){
+function getAddress(x, y, error_count){
  return new Bpromise(function(resolve,reject){
    geocoder.reverse({lat: y, lon: x}, function (err, res) {
      if (err) {
-       console.log("REVERSE GEO CODE", err.message, res);
-       if(err[19] !== "Z"){
-         setTimeout(function () {
+       error_count = error_count + 1 || 1;
+       console.log("REVERSE GEO CODE", err.message, err.code, error_count, res);
+       setTimeout(function () {
              getAddress(x, y).then(function(result){
                resolve(result);
              });
-         }, 500);
-       } else{
-         reject(err);
-       }
+       }, 5000*error_count);
      }else {
        var address = res[0];
        address.county = address.administrativeLevels.level2long;		 

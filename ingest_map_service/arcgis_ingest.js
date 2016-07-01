@@ -101,11 +101,12 @@ function *run(service_name, force, block_create){
 
 
 function *ingestGroup(layer_group, service, base_url, force, block_create){
-  
+  console.log("check ingested", {name: layer_group.name, script: "arcgis_ingest", status: "complete"}) 
   var ingest = yield Ingest.findOne({name: layer_group.name, script: "arcgis_ingest", status: "complete"}).sort({date: -1});
   if(ingest && !force) {
     console.log("Layer group previously ingested", layer_group.name);
   } else {
+    console.log("Ingesting...", layer_group.name);
     ingest = yield Ingest.create({
       name: layer_group.name,
       status: "running",
