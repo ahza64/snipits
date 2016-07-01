@@ -1,0 +1,63 @@
+CNFG_LINE = cfg_file=/usr/local/nagios/etc/objects/$(HOST).cfg
+NAGIOS_CFG = /usr/local/nagios/etc/nagios.cfg 
+DEFINE_STRING = define
+
+define SERVICES
+$(DEFINE_STRING) host{
+        use linux-box ; Inherit default values from a template
+        host_name $(HOST).dispatchr.co ; The name we're giving to this server
+        alias $(HOST) meteor ; A longer name for the server
+        address $(HOST).dispatchr.co ; IP address of the server
+}
+
+$(DEFINE_STRING) service{
+        use generic-service
+        host_name $(HOST).dispatchr.co
+        service_description CPU Load
+        check_command check_nrpe!check_load
+}
+
+$(DEFINE_STRING) service{
+        use generic-service
+        host_name $(HOST).dispatchr.co
+        service_description Current Users
+        check_command check_nrpe!check_users
+}
+
+$(DEFINE_STRING) service{
+        use generic-service
+        host_name $(HOST).dispatchr.co
+        service_description /dev/hda1 Free Space
+        check_command check_nrpe!check_hda1
+}
+
+$(DEFINE_STRING) service{
+        use generic-service
+        host_name $(HOST).dispatchr.co
+        service_description Total Processes
+        check_command check_nrpe!check_total_procs
+}
+
+$(DEFINE_STRING) service{
+        use generic-service
+        host_name $(HOST).dispatchr.co
+        service_description Check RAM
+        check_command check_nrpe!check_mem
+}
+endef
+
+export SERVICES
+
+all: add_cfg_line add_cfg_file verify_cfg restart_nagios
+
+add_cfg_line:
+	grep -q -F '$(CNFG_LINE)' $(NAGIOS_CFG) || echo '$(CNFG_LINE)' >> $(NAGIOS_CFG)  
+
+add_cfg_file:
+	echo "$$SERVICES" > /usr/local/nagios/etc/objects/$(HOST).cfg
+
+verify_cfg:
+	/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+
+restart_nagios:
+	service nagios restart
