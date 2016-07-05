@@ -2,7 +2,6 @@
 
 var _ = require('underscore');
 var co = require('co');
-var BPromise = require("bluebird");
 
 var commands = {};
 var default_command = null;
@@ -58,7 +57,7 @@ function run() {
           console.log(result);
         }).catch(function(e){
           console.error(e);
-	  console.error( e.stack )
+          console.error( e.stack );
           process.exit(1);
         });
       } else {
