@@ -53,12 +53,14 @@ function run() {
     if(args) {
       if(commands[command].func.constructor.name === 'GeneratorFunction') {
         console.log("GOT GEN");
-        BPromise.resolve(
-          co(function*(){
-            var result = yield commands[command].func.apply(this, args);
-            console.log(result);
-          })
-        );
+        co(function*(){
+          var result = yield commands[command].func.apply(this, args);
+          console.log(result);
+        }).catch(function(e){
+          console.error(e);
+	  console.error( e.stack )
+          process.exit(1);
+        });
       } else {
         var result = commands[command].func.apply(this, args);        
         if(result){

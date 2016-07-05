@@ -275,6 +275,7 @@ TreeLocation.prototype.getLocationStatus = function(){
     var status = tree.getStatus();
     if(tree.hasRestrictions()){
       restrict = "restrictions";
+      console.log("restrictions", tree.get("_id"));
     } else {
       restrict = "no_restrictions";
     }
@@ -289,7 +290,7 @@ TreeLocation.prototype.getLocationStatus = function(){
   
   delete this.location.TreeLocRestrictions;
   if(final === "no_work_with_restrict" || final === "work_with_restrict") {
-    assert(this.restrictions && this.restrictions.length > 0, "with_restrict status code and no restrictions");
+    assert(this.restrictions && this.restrictions.length > 0, "with_restrict status code and no restrictions:"+this.get("ExternalLocID") );
     this.location.TreeLocRestrictions = [];
     for(i = 0; i < this.restrictions.length; i++) {
       this.location.TreeLocRestrictions.push(this.restrictions[i].getData());
@@ -310,6 +311,7 @@ TreeLocation.prototype.addRestriction = function(restrict) {
 
 TreeLocation.prototype.clearAlerts = function() {
   delete this.alerts;
+
   delete this.location.TreeLocAlerts;
 };
 

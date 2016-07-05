@@ -138,7 +138,7 @@ Restriction.createLocRestrictions = function(location) {
     
     
     var restrict_code = {
-      "raptor_nest": "nest_review",
+      "raptor nest": "nest_review",
       "riparian":    "quarantine",
       "other":       "quarantine",
       "velb":        "velb_removal"    

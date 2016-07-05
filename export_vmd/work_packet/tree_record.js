@@ -154,7 +154,7 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
   this.record.sNotification = this.getNotificationType();
   this.record.nDBH = tree.dbh;
   this.record.nHeight = Math.round(tree.height);
-  this.record.nClearance = tree.clearance;
+  this.record.nClearance = Math.min(99, tree.clearance);
   this.record.sTrimCode = vmd.trim_codes[tree.trim_code];
   this.record.sPCode = this.getPriorityCode();
   this.record.sComment = tree.comment || null;
@@ -199,6 +199,7 @@ TreeRecord.prototype.validateRequired = function() {
   this._testValue("sInspComp", _.values(vmd.company_codes));
   this._testValue("species", _.keys(vmd.tree_types));  
   this._testValue("sTreeCode", _.values(vmd.tree_types));  
+  assert(!this.get("nClearance") || this.get("nClearance") < 100, "nClearance is to large. "+this.get("nClearance"));
 };
 
 TreeRecord.prototype._testValue = function(key, acceptible) {
@@ -351,9 +352,11 @@ TreeRecord.prototype.getData = function(){
 
 
 TreeRecord.prototype.get = function(key) {
-  return this.record[key] || this.tree[key];
+  if(this.record[key] === undefined) {
+    return this.tree[key];
+  }
+  return this.record[key];
 };
-
 
 TreeRecord.prototype.formatDate = function(date) {
   // From Mike Morely:

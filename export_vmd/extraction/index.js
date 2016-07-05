@@ -173,7 +173,7 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
   console.log("QUERY", query);
   var aggregates = yield TreeModel.aggregate([{ $match: query }, 
     { $group: { 
-      _id: { pge_pmd_num: '$pge_pmd_num', pi_user_id: '$pi_user_id' }, 
+      _id: { pge_pmd_num: '$pge_pmd_num', pi_user_id: '$pi_user_id', division: '$division' }, 
       trees: { $push: "$$ROOT" }
     }}]).exec();
   var circuits = yield CircuitModel.find();
@@ -203,7 +203,7 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
     }
 
 
-    var filename = "vmd_export_"+pmd.pge_pmd_num + "_" + cuf.uniq_id + "_" +"_"+exportName+".WP";
+    var filename = "vmd_export_"+pmd.pge_pmd_num + "_" + cuf.uniq_id + "_" + aggr._id.division.replace(' ', '') + "_" +"_"+exportName+".WP";
     if(!fs.existsSync(export_dir)){
       fs.mkdir(export_dir);
     }
