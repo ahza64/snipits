@@ -20,7 +20,6 @@ const WorkorderSchema = new mongoose.Schema({
 
 WorkorderSchema.plugin(autoIncrement.plugin, { model: 'workorders', field: 'name', startAt: 1000, incrementBy: 10 });
 
-
 WorkorderSchema.statics.checkTreeCount = function() {
   var woTreeCount = WorkorderModel.aggregate([
       { $project: { count: { $size: '$tasks' }}},
@@ -32,6 +31,13 @@ WorkorderSchema.statics.checkTreeCount = function() {
   .then((counts) => checkTreeCount(counts));
 };
 
+WorkorderSchema.statics.updateTreesWithoutWorkorders = function(startDate, endDate) {
+  var startDate = startDate || new Date('2016-06-01');
+  var endDate = endDate || new Date();
+  return TreeModel.find({ created: { $gte: startDate, $lt: endDate }})
+  .then(trees => trees.map(tree => WorkorderModel.addToWorkorder({}, tree)));
+};
+
 WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
   var pmd = defaultValues.pge_pmd_num || tree.pge_pmd_num;
   var span_name = defaultValues.span_name || tree.span_name;
@@ -40,12 +46,36 @@ WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
   var streetNumber = tree.streetNumber;
   var zipcode = tree.zipcode;
 
-  return WorkorderModel.update({ uniq_id: pmd + span_name + streetNumber + streetName + city + zipcode }, { $push: { tasks: tree._id }})
-  .then(() => tree)
+  var uniq_id = pmd + span_name + streetNumber + streetName + city + zipcode;
+  return WorkorderModel.find({ uniq_id: uniq_id })
+  .then(wos => {
+    var wo = wos[0];
+    if(wo && wo.tasks.find(id => id.toString() === tree._id.toString())) {
+      return wo;
+    }
+
+    if(wo){
+      return WorkorderModel.update({ uniq_id: uniq_id }, { $push: { tasks: tree._id }});
+    } else {
+      var newWo = {
+        span_name: span_name,
+        pge_pmd_num: pmd,
+        tasks: [tree._id],
+        uniq_id: uniq_id,
+        city: city,
+        streetName: streetName,
+        streetNumber: streetNumber,
+        zipcode: zipcode
+      };
+
+      return new WorkorderModel(newWo).save();
+    }
+  })
+  .then(success => tree)
   .catch(err => {
     log.error(err);
     return tree;
-  });
+  })
 };
 
 WorkorderSchema.statics.generateWorkorders = function() {
