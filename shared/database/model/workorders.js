@@ -35,7 +35,7 @@ WorkorderSchema.statics.updateTreesWithoutWorkorders = function(startDate, endDa
   var startDate = startDate || new Date('2016-06-01');
   var endDate = endDate || new Date();
   return TreeModel.find({ created: { $gte: startDate, $lt: endDate }})
-  .then(trees => Promise.all(trees.map(tree => WorkorderModel.addToWorkorder({}, tree))));
+  .then(trees => trees.reduce(addToWorkorder, Promise.resolve()));
 };
 
 WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
@@ -124,6 +124,11 @@ function generateWorkorder(workorders) {
       return saved;
     });
   });
+}
+
+function addToWorkorder(promisedtree, tree) {
+  return promisedTree
+  .then(() => WorkorderModel.addToWorkorder({}, tree));
 }
 
 function checkTreeCount(counts) {
