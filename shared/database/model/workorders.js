@@ -28,14 +28,14 @@ WorkorderSchema.statics.checkTreeCount = function() {
 
   log.info('Verifying tree count');
   return Promise.all([woTreeCount.exec(), TreeModel.find().count()])
-  .then((counts) => checkTreeCount(counts));
+  .then((counts) => { return checkTreeCount(counts);});
 };
 
 WorkorderSchema.statics.updateTreesWithoutWorkorders = function(startDate, endDate) {
   var startDate = startDate || new Date('2016-06-01');
   var endDate = endDate || new Date();
   return TreeModel.find({ created: { $gte: startDate, $lt: endDate }})
-  .then(trees => trees.map(tree => WorkorderModel.addToWorkorder({}, tree)));
+  .then(trees => Promise.all(trees.map(tree => WorkorderModel.addToWorkorder({}, tree))));
 };
 
 WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
@@ -47,9 +47,9 @@ WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
   var zipcode = tree.zipcode;
 
   var uniq_id = pmd + span_name + streetNumber + streetName + city + zipcode;
-  return WorkorderModel.find({ uniq_id: uniq_id })
-  .then(wos => {
-    var wo = wos[0];
+  return WorkorderModel.findOne({ uniq_id: uniq_id })
+  .then(wo => {
+    // console.log("WO", wo);
     if(wo && wo.tasks.find(id => id.toString() === tree._id.toString())) {
       return wo;
     }
@@ -129,8 +129,9 @@ function generateWorkorder(workorders) {
 function checkTreeCount(counts) {
   var woTreeCount = counts[0][0].count;
   var treeCount = counts[1];
-  return woTreeCount !== treeCount ? log.error('Workorder tree count: #' + woTreeCount + ' doesn\'t match Tree count: #' + treeCount ) : 
+  woTreeCount !== treeCount ? log.error('Workorder tree count: #' + woTreeCount + ' doesn\'t match Tree count: #' + treeCount ) : 
                                      log.info('Tree counts match. Total number of trees: #' + treeCount);
+  return woTreeCount === treeCount;
 }
 
 const WorkorderModel = connection.model("workorders", WorkorderSchema);
