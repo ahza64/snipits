@@ -49,7 +49,6 @@ WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
   var uniq_id = pmd + span_name + streetNumber + streetName + city + zipcode;
   return WorkorderModel.findOne({ uniq_id: uniq_id })
   .then(wo => {
-    // console.log("WO", wo);
     if(wo && wo.tasks.find(id => id.toString() === tree._id.toString())) {
       return wo;
     }
@@ -126,9 +125,9 @@ function generateWorkorder(workorders) {
   });
 }
 
-function addToWorkorder(promisedtree, tree) {
+function addToWorkorder(promisedTree, tree) {
   return promisedTree
-  .then(() => WorkorderModel.addToWorkorder({}, tree));
+  .then(() => Promise.resolve(WorkorderModel.addToWorkorder({}, tree)));
 }
 
 function checkTreeCount(counts) {
