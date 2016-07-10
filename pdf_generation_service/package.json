@@ -15,6 +15,7 @@
     "express": "4.13.1",
     "html-pdf": "2.0.1",
     "jade": "1.11.0",
+    "json2csv": "^3.6.0",
     "lodash": "4.13.1",
     "mongoose": "4.4.19",
     "mongoose-timestamp": "0.5.0",
