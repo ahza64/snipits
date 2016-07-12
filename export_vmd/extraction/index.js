@@ -20,6 +20,7 @@ const Export = require("dsp_shared/database/model/export");
 
 
 const WorkComplete = require("../work_complete/work_complete");
+const WorkCompleteGroup = require("../work_complete/work_complete_group");
 
 
 var export_dir = "vmd_export";
@@ -31,9 +32,9 @@ function buildQuery(startDate, endDate, includeExported, treeIds, workComplete) 
   console.log("treeIds", treeIds);
   var query;
   if(workComplete) {
-    query = {tc_user_id: { $ne: null }, status: { $regex: /^[5]/}};
+    query = {tc_user_id: { $ne: null }, status: { $regex: "^[5]"}};
   } else {
-    query = {pi_user_id: { $ne: null }, status: { $regex: /^[245]/}};
+    query = {pi_user_id: { $ne: null }, status: { $regex: "^[245]"}};
   }
 
   var exported_field = 'exported';      
@@ -43,12 +44,9 @@ function buildQuery(startDate, endDate, includeExported, treeIds, workComplete) 
     date_field = "tc_complete_time";
   } 
   
-
   if(!includeExported) {
     query[exported_field] = null;
   }
-
-
 
   if(startDate) {
     query[date_field] = {$gte: startDate};
@@ -120,17 +118,46 @@ function *generateWorkComplete(startDate, endDate, includeExported, treeIds, exp
   var query = buildQuery(startDate, endDate, includeExported, treeIds, true);
   console.log("TREE QUERY", query);
   
-  var trees = yield TreeModel.find(query);
-
+  var aggregates = yield TreeModel.aggregate([{ $match: query }, 
+    { $group: { 
+      _id: { pge_pmd_num: '$pge_pmd_num', division: '$division' }, 
+      trees: { $push: "$$ROOT" }
+  }}]).exec();
+  
+  var tree_count_f = yield TreeModel.find(query).count();
   var cufs = yield CufModel.find({ work_type: 'tree_trim' });   
+  cufs = _.indexBy(cufs, cuf => cuf._id.toString());
+  
+  
+  
+  var export_warnings = 0;
+  var tree_count = 0;
+  for(var i = 0; i < aggregates.length; i++) {
+    var aggr = aggregates[i];
+    
+    var trees = aggr.trees;
+    var results = yield createGroups(trees, cufs, email);
+    export_warnings += results.warnings;
+    tree_count += results.tree_count;
+    writeGroups(results.groups, exportName);
+  }
+  console.log("tree coutns", tree_count, tree_count_f);
+  if(export_warnings) {
+    console.warn("Trees Not Exported via vmd_work_packet: ", export_warnings);
+  }
+}
+
+
+
+function *createGroups(trees, cufs, email) {
+  var groups = {};
+  var export_warnings = 0;
+  
   var images = yield AssetModel.find({ _id: { $in: _.map(trees, tree => tree.tc_image) } }, { data: 1 });
   var exports = yield Export.find({type: "vmd_work_packet", tree_id: {$in: _.map(trees, tree => tree._id)}});
-  
-  cufs = _.indexBy(cufs, cuf => cuf._id.toString());
   exports = _.indexBy(exports, exp => exp.tree_id.toString());
   images = _.indexBy(images, image => image._id.toString());
   
-  var export_warnings = 0;
   for(var i = 0; i < trees.length; i++) {
     var tree = trees[i];
     var image = null;
@@ -139,29 +166,48 @@ function *generateWorkComplete(startDate, endDate, includeExported, treeIds, exp
     }
     var cuf = cufs[tree.tc_user_id.toString()];    
     var exp = exports[tree._id.toString()];
-    
+  
+    assert(cuf.company, "Cuf Missing Company: "+cuf._id);
+  
     if(!exp) {
       if(!tree.exported) {
-        console.error("Tree Not Exported via vmd_work_packet", tree._id, tree.pi_complete_time, tree.tc_complete_time);
+        console.error("Tree Not Exported", tree._id, tree.pi_complete_time, tree.tc_complete_time);
       } else {
         export_warnings++;
       }
-    } else {
+    } else if(!tree.trim_code) {
+      console.error("Missing Trim Code", tree._id);
+    } else {      
+      console.log("Exporting", tree._id);
+
+      groups[cuf.company] = groups[cuf.company] || new WorkCompleteGroup();      
+      var group = groups[cuf.company];
+      
+      
       tree.workorder_id = exp.workorder_id;
-      var work_complete = new WorkComplete(tree, cuf, image, email);      
-      var filename = "vmd_export_"+tree._id.toString() + "_" + cuf.uniq_id + "_" +"_"+exportName+".WC";
-      if(!fs.existsSync(export_dir)){
-        fs.mkdir(export_dir);
-      }
-      console.log("Creating ", export_dir, filename);
-      fs.writeFile(export_dir+"/"+filename, work_complete.toXML());          
+      var work_complete = new WorkComplete(tree, cuf, image, email);
+      group.addWorkComplete(work_complete);      
     }    
   }
-  if(export_warnings) {
-    console.warn("Trees Not Exported via vmd_work_packet: ", export_warnings);
-  }
+  
+  return {groups: _.values(groups), warnings: export_warnings, tree_count: trees.length};
 }
 
+function writeGroups(groups, exportName) {  
+  for(var i = 0; i < groups.length; i++) {
+    var group = groups[i];
+    var filename = "vmd_export_"+ group.get('contractor')+ "_" + group.get('division')+ "_" + 
+                                group.get('pmd_num') + "_" +"_"+exportName+".WC";
+    console.log("file name", filename);
+    if(!fs.existsSync(export_dir)){
+      fs.mkdir(export_dir);
+    }      
+    var path = [export_dir, filename].join('/');
+    assert(!fs.existsSync(path), "file already exists");
+    console.log("Creating ", export_dir, filename);
+    fs.writeFile(path, group.toXML());
+  }
+}
 
 /**
  * @description generate workpacket export the the deired trees

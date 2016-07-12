@@ -147,7 +147,7 @@ TreeLocation.prototype.addTree = function(tree){
   this.trees.push(tree);
   //TODO: get and check location properties from trees.
   
-  var div_code = vmd.division_codes[tree.get("division")];
+  var div_code = vmd.division_codes[tree.get("pmd_division")];
   this.set("sDivCode", div_code);
   this.set("sInspComp", vmd.company_codes[tree.get("inspector_company")]);
   this.set("sInsp", tree.get("inspector"));

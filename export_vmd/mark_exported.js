@@ -20,18 +20,29 @@ function *run(folder, date, unset) {
   }
   console.log("DATE", date);
   
+  var export_types = ['vmd_work_packet', 'vmd_work_complete']; 
+  
+  for(var i = 0; i < export_types.length; i++) {
+    yield mark_complete(folder, date, unset, export_types[i]);
+  }
+}
+
+function *mark_complete(folder, date, unset, export_type) {
+  
+  var get_trees = {
+    vmd_work_packet: get_wp_trees,
+    vmd_work_complete: get_wc_trees
+  }[export_type];
+  var exported_field = {
+    vmd_work_packet: "exported",
+    vmd_work_complete: "exported_worked"    
+  }[export_type];
   
   var trees = yield get_trees(folder);
-
-
   var exported = date;
   if(unset) {
     exported = null;
   }
-  
-  var export_type = "vmd_work_packet";
-  
-  
   yield get_tree_id_objs(trees);
   for(var i = 0; i < trees.length; i++) {
     var tree_export = trees[i];
@@ -49,8 +60,11 @@ function *run(folder, date, unset) {
   
   var id_objs = _.map(trees, function(t){ return t.tree_id; });  
   console.log("OBJECT IDS", id_objs);
+  var set_query = {$set: {}};
+  set_query[exported_field] = exported;
+  
   var update = yield TreeModel.update({_id: {$in: id_objs}}, 
-        {$set: {exported: exported}}, {multi: true});
+    set_query, {multi: true});
   
   return update;
 }
@@ -87,15 +101,14 @@ function *get_tree_id_objs(trees) {
  * @description get trees from export
  * @param {String} folder Folder where the xml exports are
  */
-function *get_trees(folder) {
+function *get_wp_trees(folder) {  
   var files = yield fs.readdirAsync(folder);
   var trees = [];
   
   
   for(var i = 0; i < files.length; i++) {
     var file = files[i];
-    if(file.endsWith('WP')) {
-      
+    if(file.endsWith("WP")) {      
       file = yield fs.readFileAsync([folder, file].join('/'));
       var work_packet = yield xml2js.parseStringAsync(file);
       work_packet.TreeWorkPacket.TreeLoc.forEach(loc => {
@@ -111,6 +124,30 @@ function *get_trees(folder) {
   
 }
 
+/**
+ * @description get trees from export
+ * @param {String} folder Folder where the xml exports are
+ */
+function *get_wc_trees(folder) {  
+  var files = yield fs.readdirAsync(folder);
+  var trees = [];
+  
+  
+  for(var i = 0; i < files.length; i++) {
+    var file = files[i];
+    if(file.endsWith('WC')) {      
+      file = yield fs.readFileAsync([folder, file].join('/'));
+      var work_complete = yield xml2js.parseStringAsync(file);
+      var tree_id = work_complete.TreeWorkComp.ExternalTreeID[0];
+      var workorder_id = work_complete.TreeWorkComp.ExternalWRID[0];
+      assert(tree_id);
+      assert(workorder_id);
+      trees.push({export_tree_id: tree_id, workorder_id: workorder_id});
+    }
+  }
+  return trees;
+  
+}
 
 
 //baker module

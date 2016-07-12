@@ -146,15 +146,21 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
 
 
   this.tree.pmd_name = pmd.name;
+  this.tree.pmd_division = pmd.division;
     
   this.record = _.extend({}, TREE_RECORD);
   
   this.tree.species = this.tree.species || "unknown";
   this.record.sTreeCode = vmd.tree_types[tree.species];
   this.record.sNotification = this.getNotificationType();
-  this.record.nDBH = tree.dbh;
+  if(tree.dbh) {
+    this.record.nDBH = Math.min(99, tree.dbh.toFixed());
+  } 
+  
   this.record.nHeight = Math.round(tree.height);
-  this.record.nClearance = Math.min(99, tree.clearance);
+  if(tree.clearance) {
+    this.record.nClearance = Math.min(99, tree.clearance.toFixed());
+  }
   this.record.sTrimCode = vmd.trim_codes[tree.trim_code];
   this.record.sPCode = this.getPriorityCode();
   this.record.sComment = tree.comment || null;
@@ -200,6 +206,7 @@ TreeRecord.prototype.validateRequired = function() {
   this._testValue("species", _.keys(vmd.tree_types));  
   this._testValue("sTreeCode", _.values(vmd.tree_types));  
   assert(!this.get("nClearance") || this.get("nClearance") < 100, "nClearance is to large. "+this.get("nClearance"));
+  assert(!this.get("nDBH") || this.get("nDBH") < 100, "nDBH is to large. "+this.get("nDBH"));
 };
 
 TreeRecord.prototype._testValue = function(key, acceptible) {

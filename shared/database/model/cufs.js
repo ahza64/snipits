@@ -10,6 +10,7 @@ var cufSchema = new mongoose.Schema({
   user:{type:String, index: true},
   uniq_id:{type:String, index: true},
   project:[],
+  work_type: [],
   scuf:{type:String, index: true},
   phone_number:{type:String, index: true},
   status:{type:String, index: true},
