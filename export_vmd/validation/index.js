@@ -8,11 +8,10 @@ require('sugar');
 utils.connect(['meteor']);
 
 function *run() {
-  var valid = true;
-  var valid = yield validateMissingFields.checkAll();
-  valid = yield validateWorkorder.validateTreeWorkorders();
-  valid = yield validateTcUserId.checkValidTcCufs();
-  return valid
+  var fieldsExist = yield validateMissingFields.checkAll();
+  var correctTreesInWO = yield validateWorkorder.validateTreeWorkorders();
+  var correctTrimmers = yield validateTcUserId.checkValidTcCufs();
+  return fieldsExist && correctTreesInWO && correctTrimmers;
 }
 
 //baker module
@@ -22,3 +21,4 @@ if (require.main === module) {
   baker.run();
 }
 
+module.exports = { run: run };

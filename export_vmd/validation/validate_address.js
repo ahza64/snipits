@@ -5,7 +5,7 @@ var util = require('dsp_shared/lib/cmd_utils');
 util.connect(['meteor']);
 var TREE = require('dsp_shared/database/model/tree');
 
-function *checkIfMiss(attr) {
+function *checkIfExists(attr) {
   var res = {};
   var field = { _id: 1 };
   var query = {
@@ -21,37 +21,17 @@ function *checkIfMiss(attr) {
 
   console.log('Trees without ' + attr + ': ' + totalMissing);
 
-  return totalMissing === 0;
-}
-
-function *checkIfPmdNumMissing() {
-  return yield checkIfMiss('pge_pmd_num');
-}
-
-function *checkIfSpanNameMissing() {
-  return yield checkIfMiss('span_name');
-}
-
-function *checkIfCountyMissing () {
-  return yield checkIfMiss('county');
-}
-
-function *checkIfCityMissing () {
-  return yield checkIfMiss('city');
-}
-
-function *checkIfZipcodeMissing () {
-  return yield checkIfMiss('zipcode');
+  return totalMissing >= 0;
 }
 
 function *checkAll() {
-  var valid = yield checkIfMiss('county');
-  valid = yield checkIfMiss('city');
-  valid = yield checkIfMiss('zipcode');
-  valid = yield checkIfMiss('pge_pmd_num');
-  valid = yield checkIfMiss('span_name');
+  var validCounty = yield checkIfExists('county');
+  var validCity   = yield checkIfExists('city');
+  var validZip    = yield checkIfExists('zipcode');
+  var validPMD    = yield checkIfExists('pge_pmd_num');
+  var validSpan   = yield checkIfExists('span_name');
 
-  return valid;
+  return validCounty && validCity && validZip && validPMD && validSpan;
 }
 
 // export

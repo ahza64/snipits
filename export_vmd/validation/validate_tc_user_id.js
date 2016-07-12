@@ -12,7 +12,7 @@ function *checkValidTcCufs() {
 
   console.log('Trimmers that do not exist: ' + missingCufIds);
 
-  return missingCufIds.length === 0;
+  return missingCufIds.length !== 0;
 }
 
 module.exports = { checkValidTcCufs: checkValidTcCufs };

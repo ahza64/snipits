@@ -1,6 +1,9 @@
 TIMESTAMP=$(shell date +%Y-%m-%dT%H:%M:%S.000Z)
 FILE_TIMESTAMP=$(shell date +%Y-%m-%d_%H.%M.%S.000Z)
 
+data_validation:
+	node validation/index.js run
+
 work_packet_export:	
 	mkdir vmd_export/$(FILE_TIMESTAMP)
 	node extraction/index.js --exportName $(FILE_TIMESTAMP) --startDate "last_export" --endDate $(TIMESTAMP)
