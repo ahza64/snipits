@@ -6,6 +6,7 @@ const fs = require('fs');
 utils.connect(['meteor']);
 
 const assert = require('assert');
+const validation = require('../validation');
 const mongoose = require('mongoose');
 const TreeModel = require('dsp_shared/database/model/tree');
 const CircuitModel = require('dsp_shared/database/model/circuit');
@@ -74,6 +75,13 @@ function buildQuery(startDate, endDate, includeExported, treeIds, workComplete) 
  * @parms {String} email email address for test system to send errors 
  */
 function *run(startDate, endDate, includeExported, treeIds, exportName, email, workComplete, incrementTime) {
+  var dataIsValid = yield validation.run();
+  console.log(dataIsValid);
+  if(!dataIsValid) {
+    console.log('Validation Failed');
+    return;
+  }
+
   //sanitize input
   if(startDate === "last_export") {
     var export_dates = yield TreeModel.distinct("exported", {});

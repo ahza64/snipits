@@ -51,8 +51,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.json(err.message);
 });
-app.listen(8888, function () {
-  console.log('Listening on port 8888');
+app.listen(process.env.PDF_PORT, function () {
+  console.log('Listening on port ', process.env.PDF_PORT );
   mongoose.connect(process.env.MONGO_URL);
   var db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
