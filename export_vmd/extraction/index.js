@@ -74,14 +74,16 @@ function buildQuery(startDate, endDate, includeExported, treeIds, workComplete) 
  * @parms {Stirng} exportName sub directory to store export files
  * @parms {String} email email address for test system to send errors 
  */
-function *run(startDate, endDate, includeExported, treeIds, exportName, email, workComplete, incrementTime) {
-  var dataIsValid = yield validation.run();
-  console.log(dataIsValid);
-  if(!dataIsValid) {
-    console.log('Validation Failed');
-    return;
+function *run(startDate, endDate, includeExported, treeIds, exportName, email, workComplete, incrementTime, skipValidate) {
+  if(!skipValidate) {
+    var dataIsValid = yield validation.run();
+    console.log(dataIsValid);
+    if(!dataIsValid) {
+      console.log('Validation Failed');
+      return;
+    }
   }
-
+  
   //sanitize input
   if(startDate === "last_export") {
     var export_dates = yield TreeModel.distinct("exported", {});
@@ -163,11 +165,14 @@ function *createGroups(trees, cufs, email) {
   
   var images = yield AssetModel.find({ _id: { $in: _.map(trees, tree => tree.tc_image) } }, { data: 1 });
   var exports = yield Export.find({type: "vmd_work_packet", tree_id: {$in: _.map(trees, tree => tree._id)}});
+
   exports = _.indexBy(exports, exp => exp.tree_id.toString());
   images = _.indexBy(images, image => image._id.toString());
-  
+  console.log("IMAGES", _.map(trees, tree => tree.tc_image), _.keys(images));  
   for(var i = 0; i < trees.length; i++) {
     var tree = trees[i];
+    
+    console.log("tree.tc_image", tree.tc_image)
     var image = null;
     if(tree.tc_image) {
       image = images[tree.tc_image.toString()];
@@ -193,6 +198,7 @@ function *createGroups(trees, cufs, email) {
       
       
       tree.workorder_id = exp.workorder_id;
+      console.log("GOT IMAGE", tree.tc_image, image)
       var work_complete = new WorkComplete(tree, cuf, image, email);
       group.addWorkComplete(work_complete);      
     }    

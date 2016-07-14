@@ -14,7 +14,7 @@ var TREE = require('dsp_shared/database/model/tree');
  * @return {void}
  */
 function *updateAddress(field){
-  console.log("ADD COUNTY");
+  console.log("updateAddress", field);
   var conditions = {
     status: {$regex: /^[^06]/}, 
     project: 'transmission_2015', 

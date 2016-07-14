@@ -69,7 +69,7 @@ const TREE_WORK_COMP = {                  //<TreeWorkComp>
 // some date in july we move from sBillingCode = 'XX' to some other billing code
 
 var TreeWorkComplete = function(tree, trimmer, image, test_email) {
-  if(tree.tc_image && image) {
+  if(tree.tc_image && !image) {
     console.error("ERROR tree image missing", tree._id, tree.tc_image);
     throw new Error("tree image missing");
   }
