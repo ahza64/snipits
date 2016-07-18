@@ -132,7 +132,7 @@ function *generateWorkComplete(startDate, endDate, includeExported, treeIds, exp
     { $group: { 
       _id: { pge_pmd_num: '$pge_pmd_num', division: '$division' }, 
       trees: { $push: "$$ROOT" }
-  }}]).exec();
+  }}],{allowDiskUse:true}).exec();
   
   var tree_count_f = yield TreeModel.find(query).count();
   var cufs = yield CufModel.find({ work_type: 'tree_trim' });   
@@ -231,11 +231,13 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
   var cufs = yield CufModel.find({ work_type: 'tree_inspect' });
   
   console.log("QUERY", query);
-  var aggregates = yield TreeModel.aggregate([{ $match: query }, 
+  var aggregates = TreeModel.aggregate([{ $match: query }, 
     { $group: { 
       _id: { pge_pmd_num: '$pge_pmd_num', pi_user_id: '$pi_user_id', division: '$division' }, 
       trees: { $push: "$$ROOT" }
-    }}]).exec();
+    }}]);
+  aggregates.options = { allowDiskUse: true }; 
+  aggregates = yield aggregates.exec();
   var circuits = yield CircuitModel.find();
   var projects = yield PmdModel.find();
   var workorders = yield WorkorderModel.find({}, { uniq_id: 1, name: 1 });

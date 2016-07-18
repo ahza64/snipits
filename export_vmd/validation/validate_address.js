@@ -31,7 +31,11 @@ function *checkAll() {
   var validPMD    = yield checkIfExists('pge_pmd_num');
   var validSpan   = yield checkIfExists('span_name');
 
-  return validCounty && validCity && validZip && validPMD && validSpan;
+  return validCounty && 
+    validCity; // &&
+    // validZip &&
+    // validPMD &&
+    // validSpan;
 }
 
 // export

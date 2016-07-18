@@ -133,11 +133,12 @@ function *query_db(collection, dispatchr_field, options){
   	base_url = [host, service_path].join('/');
   	console.log("service url PATH", base_url);
   	service = yield http_get(base_url, base_params);
-  	console.log(">>>>>>>>>>>>>>>>>");
   	folder.services[s].layers_circuits = service;
   }
+  console.log("DOCS", docs_missing_field.length);
   for (var i = 0; i < docs_missing_field.length; i++) {
   	var doc_missing_field = docs_missing_field[i];
+    console.log("looking for service", doc_missing_field.circuit_name);
   	var circuit_found = false;
   	for(var g = 0; g < folder.services.length; g++){
   		service_path = ["arcgis/rest/services", folder.services[g].name, "MapServer"].join("/");
@@ -147,8 +148,9 @@ function *query_db(collection, dispatchr_field, options){
   			var layer_group = service_current[m];
   			if( layer_group.name.indexOf(doc_missing_field[nameField[collection]]) > -1 && 
   				layer_group.name.endsWith(fieldsDict[collection]) ){
-  				circuit_found = true;
-  				yield processLayer(base_url, collection, layer_group, doc_missing_field , push, qsi_field, dispatchr_field);
+            console.log("found folder", folder.services[g].name, layer_group.name);
+            circuit_found = true;
+            yield processLayer(base_url, collection, layer_group, doc_missing_field , push, qsi_field, dispatchr_field);
   			}
   		}
   	}
@@ -192,19 +194,21 @@ function *process_trees(layer, collection, trees, push, doc_missing_field, qsi_f
 
 	var trees_new = _.chain(trees.features).pluck('attributes').each(tree => { return tree;}).value();
 	var oldValue = doc_missing_field;
-	var newValue = trees_new;
+	var newValue = trees_new[0];
 	var set = {};
-	set[dispatchr_field] = newValue[0][qsi_field]; 
-	if(newValue[0][qsi_field]){
-		console.log(collection, ' will be updated , old: ',oldValue,  '  new value: ', newValue, 'set: ', set);
-	}
-	if(!newValue[0][qsi_field]){
-		invalid_lines.push({ id: layer.id, name: layer.name});
-	}
-	if(push && newValue[0][qsi_field]){
-		console.log(collection, ' updating , old: ',oldValue,  '  new value: ', newValue, 'set: ', set);
-    yield collection_model[collection].update({_id: oldValue._id }, { $set: set }).exec();
-	}
+  if(newValue) {
+    set[dispatchr_field] = newValue[qsi_field]; 
+    if(newValue[qsi_field]){
+		  console.log(collection, ' will be updated , old: ',oldValue,  '  new value: ', newValue, 'set: ', set);
+	  }
+  	if(!newValue[qsi_field]){
+  		invalid_lines.push({ id: layer.id, name: layer.name});
+  	}
+  	if(push && newValue[qsi_field]){
+  		console.log(collection, ' updating , old: ',oldValue,  '  new value: ', newValue, 'set: ', set);
+      yield collection_model[collection].update({_id: oldValue._id }, { $set: set }).exec();
+  	}
+  }
 }
 
 module.exports = run;

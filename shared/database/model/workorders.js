@@ -32,8 +32,8 @@ WorkorderSchema.statics.checkTreeCount = function() {
 };
 
 WorkorderSchema.statics.updateTreesWithoutWorkorders = function(startDate, endDate) {
-  var startDate = startDate || new Date('2016-06-01');
-  var endDate = endDate || new Date();
+  startDate = startDate || new Date('2016-05-01');
+  endDate = endDate || new Date();
   return TreeModel.find({ created: { $gte: startDate, $lt: endDate }})
   .then(trees => trees.reduce(addToWorkorder, Promise.resolve()));
 };
@@ -47,7 +47,17 @@ WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
   var zipcode = tree.zipcode;
 
   var uniq_id = pmd + span_name + streetNumber + streetName + city + zipcode;
-  return WorkorderModel.findOne({ uniq_id: uniq_id })
+  return WorkorderModel.findOne({ "tasks": tree._id })
+  .then(wo => {
+    if(wo === null) {
+      return WorkorderModel.findOne({uniq_id: uniq_id});
+    } else {
+      if(wo.uniq_id !== uniq_id) {
+        console.log("Tree workorder has uniq_id missmatch", tree);
+      }
+      return wo;
+    }  
+  })
   .then(wo => {
     if(wo && wo.tasks.find(id => id.toString() === tree._id.toString())) {
       return wo;
@@ -70,11 +80,11 @@ WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
       return new WorkorderModel(newWo).save();
     }
   })
-  .then(success => tree)
+  .then(() => tree)
   .catch(err => {
     log.error(err);
     return tree;
-  })
+  });
 };
 
 WorkorderSchema.statics.generateWorkorders = function() {
@@ -133,8 +143,11 @@ function addToWorkorder(promisedTree, tree) {
 function checkTreeCount(counts) {
   var woTreeCount = counts[0][0].count;
   var treeCount = counts[1];
-  woTreeCount !== treeCount ? log.error('Workorder tree count: #' + woTreeCount + ' doesn\'t match Tree count: #' + treeCount ) : 
-                                     log.info('Tree counts match. Total number of trees: #' + treeCount);
+  if(woTreeCount !== treeCount) { 
+    log.error('Workorder tree count: #' + woTreeCount + ' doesn\'t match Tree count: #' + treeCount );
+  } else {
+    log.info('Tree counts match. Total number of trees: #' + treeCount);
+  }
   return woTreeCount === treeCount;
 }
 
