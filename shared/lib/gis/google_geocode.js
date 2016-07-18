@@ -17,10 +17,11 @@ function getAddress(x, y, error_count){
  return new Bpromise(function(resolve,reject){
    geocoder.reverse({lat: y, lon: x}, function (err, res) {
      if (err) {
-       error_count = error_count + 1 || 1;
-       console.log("REVERSE GEO CODE", err.message, err.code, error_count, res);
+       error_count = error_count || 0;
+       error_count += 1;
+       console.log("REVERSE GEO CODE", err.message, err.code, x, y, error_count, res);
        setTimeout(function () {
-             getAddress(x, y).then(function(result){
+             getAddress(x, y, error_count).then(function(result){
                resolve(result);
              });
        }, 5000*error_count);
