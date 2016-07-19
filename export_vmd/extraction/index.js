@@ -277,6 +277,8 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
 function preprareTree(tree, workorders, circuits, cuf, incrementTime) {
   var uniq_id = tree.pge_pmd_num + tree.span_name + tree.streetNumber + tree.streetName + tree.city + tree.zipcode;
   var workorder = _.find(workorders, wo => wo.uniq_id === uniq_id);
+  assert(workorder, "Workorder Not found >> tree: "+tree._id+" >> "+ uniq_id);
+
   tree.pi = cuf;
   tree.circuit = _.find(circuits, circuit => circuit.name === tree.circuit_name);
   tree.workorder_id = 'WO-T-' + workorder.name;
