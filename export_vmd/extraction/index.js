@@ -128,11 +128,13 @@ function *generateWorkComplete(startDate, endDate, includeExported, treeIds, exp
   var query = buildQuery(startDate, endDate, includeExported, treeIds, true);
   console.log("TREE QUERY", query);
   
-  var aggregates = yield TreeModel.aggregate([{ $match: query }, 
+  var aggregates = TreeModel.aggregate([{ $match: query }, 
     { $group: { 
       _id: { pge_pmd_num: '$pge_pmd_num', division: '$division' }, 
       trees: { $push: "$$ROOT" }
-  }}],{allowDiskUse:true}).exec();
+  }}]);
+  aggregates.options = { allowDiskUse: true }; 
+  aggregates = yield aggregates.exec();
   
   var tree_count_f = yield TreeModel.find(query).count();
   var cufs = yield CufModel.find({ work_type: 'tree_trim' });   
@@ -143,6 +145,7 @@ function *generateWorkComplete(startDate, endDate, includeExported, treeIds, exp
   var export_warnings = 0;
   var tree_count = 0;
   for(var i = 0; i < aggregates.length; i++) {
+    console.log("Grouping ", i, "of", aggregates.length);
     var aggr = aggregates[i];
     
     var trees = aggr.trees;
@@ -168,11 +171,9 @@ function *createGroups(trees, cufs, email) {
 
   exports = _.indexBy(exports, exp => exp.tree_id.toString());
   images = _.indexBy(images, image => image._id.toString());
-  console.log("IMAGES", _.map(trees, tree => tree.tc_image), _.keys(images));  
+
   for(var i = 0; i < trees.length; i++) {
-    var tree = trees[i];
-    
-    console.log("tree.tc_image", tree.tc_image)
+    var tree = trees[i];  
     var image = null;
     if(tree.tc_image) {
       image = images[tree.tc_image.toString()];
@@ -180,6 +181,7 @@ function *createGroups(trees, cufs, email) {
     var cuf = cufs[tree.tc_user_id.toString()];    
     var exp = exports[tree._id.toString()];
   
+    assert(cuf, "Cuf Missing: "+tree.tc_user_id);
     assert(cuf.company, "Cuf Missing Company: "+cuf._id);
   
     if(!exp) {
@@ -191,14 +193,13 @@ function *createGroups(trees, cufs, email) {
     } else if(!tree.trim_code) {
       console.error("Missing Trim Code", tree._id);
     } else {      
-      console.log("Exporting", tree._id);
+
 
       groups[cuf.company] = groups[cuf.company] || new WorkCompleteGroup();      
       var group = groups[cuf.company];
       
       
       tree.workorder_id = exp.workorder_id;
-      console.log("GOT IMAGE", tree.tc_image, image)
       var work_complete = new WorkComplete(tree, cuf, image, email);
       group.addWorkComplete(work_complete);      
     }    
@@ -244,7 +245,7 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
 
   for(var i = 0; i < aggregates.length; i++) {
     var aggr = aggregates[i];
-    console.log("aggr", i);
+    console.log("Processing Packet", i, "of", aggregates.length);
 
     var pmd = _.find(projects, prj => prj.pge_pmd_num === aggr._id.pge_pmd_num);
     var packet = new WorkPacket(email);

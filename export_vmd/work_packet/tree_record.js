@@ -135,6 +135,10 @@ var TreeRecord = function(tree, inspector, line, pmd, image){
     console.error("TREE IMAGE MISSING: "+ tree.image+" on tree: "+ tree._id);
   }
   
+  if(!inspector) {
+    console.error("Missing inspector", tree._id, tree.pi_user_id);
+  }
+  
   this.statusFlags = TreeStates.fetchStatusFlags(tree.status);
   this.tree.inspector = inspector.uniq_id +" : "+inspector.first+" "+inspector.last;
   this.tree.inspector_company = inspector.company;
