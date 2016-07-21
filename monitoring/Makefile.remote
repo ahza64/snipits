@@ -8,6 +8,12 @@ define CHECKMEM_COMMAND
 command[check_mem]=/usr/local/nagios/libexec/check_mem  -f -w 20 -c 10
 endef
 
+
+define CHECKHTTP_COMMAND
+command[check_http]=/usr/local/nagios/libexec/check_http  -H localhost -S
+endef
+
+
 define NRPESERVICE
 service nrpe
 {
@@ -27,8 +33,9 @@ endef
 
 export NRPESERVICE
 export CHECKMEM_COMMAND
+export CHECKHTTP_COMMAND
 
-all: nagios_user install_plugins add_permission install_xinetd install_nrpe install_check_mem clean
+all: nagios_user install_plugins add_permission install_xinetd install_nrpe install_check_mem add_http clean
 
 nagios_user:
 	/usr/sbin/useradd nagios || exit 0;
@@ -61,7 +68,7 @@ install_nrpe:
 	$(MAKE) install-xinetd && \
 	mv /etc/xinetd.d/nrpe /etc/xinetd.d/nrpe.bak && \
 	echo "$$NRPESERVICE" > /etc/xinetd.d/nrpe && \
-	sed -i -e 's/\/dev\/hda1/\/dev\/xvda1/g' /usr/local/nagios/etc/nrpe.cfg && \
+	sed -i -e 's/\/dev\/hda1/\/dev\/xvda1 -p \/dev\/xvdf/g' /usr/local/nagios/etc/nrpe.cfg && \
 	service xinetd restart && sleep 5 && \
 	$(CHECK_NRPE) -H localhost
 
@@ -76,6 +83,10 @@ install_check_mem:
 	./check_mem -f -w 20 -c 10 && \
 	grep -q -F "$$CHECKMEM_COMMAND" /usr/local/nagios/etc/nrpe.cfg || echo "$$CHECKMEM_COMMAND" >> /usr/local/nagios/etc/nrpe.cfg && \
 	service xinetd restart && sleep 5 
+
+add_http:
+	grep -q -F "$$CHECKHTTP_COMMAND" /usr/local/nagios/etc/nrpe.cfg || echo "$$CHECKHTTP_COMMAND" >> /usr/local/nagios/etc/nrpe.cfg && \
+        service xinetd restart && sleep 5
 
 clean:
 	rm -rf ./nrpe* && \
