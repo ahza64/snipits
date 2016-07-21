@@ -10,7 +10,7 @@ endef
 
 
 define CHECKHTTP_COMMAND
-command[check_http]=/usr/local/nagios/libexec/check_http  -H localhost:80 -S
+command[check_http]=/usr/local/nagios/libexec/check_http  -H localhost -S
 endef
 
 
