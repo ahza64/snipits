@@ -41,21 +41,25 @@ function *stream(Model, query) {
       next_reject = null;
       this.resume();
     } else {
-      next = doc;
-    }
-          
-    _stream.on('error', function (err) {
-      // handle err
-      error = err;
-      if(next_reject) {
-        next_reject(err);
+      if(next) {
+        throw Error("Handler handled next to fast");
+      } else {
+        next = doc;
       }
-    });
+    }
+  });
+          
+  _stream.on('error', function (err) {
+    // handle err
+    error = err;
+    if(next_reject) {
+      next_reject(err);
+    }
+  });
 
-    _stream.on('close', function () {
-      // all done
-      done = true;
-    });
+  _stream.on('close', function () {
+    // all done
+    done = true;
   });
   
   while(!done) {

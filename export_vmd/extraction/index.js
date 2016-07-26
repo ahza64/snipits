@@ -25,6 +25,8 @@ const WorkCompleteGroup = require("../work_complete/work_complete_group");
 
 
 var export_dir = "vmd_export";
+var current_workorder_ids = {};
+
 
 function buildQuery(startDate, endDate, includeExported, treeIds, workComplete) {
   console.log("from", startDate);
@@ -167,7 +169,7 @@ function *createGroups(trees, cufs, email) {
   var export_warnings = 0;
   
   var images = yield AssetModel.find({ _id: { $in: _.map(trees, tree => tree.tc_image) } }, { data: 1 });
-  var exports = yield Export.find({type: "vmd_work_packet", tree_id: {$in: _.map(trees, tree => tree._id)}});
+  var exports = yield Export.find({type: {$in: ["csv_export", "vmd_work_packet"]}, tree_id: {$in: _.map(trees, tree => tree._id)}});
 
   exports = _.indexBy(exports, exp => exp.tree_id.toString());
   images = _.indexBy(images, image => image._id.toString());
@@ -312,6 +314,8 @@ function *checkLocation(wo_id, trees) {
   var query =  {workorder_id: {$regex: "^"+wo_id+"[A-Z]*"}};
   var exported_ids = yield Export.distinct("workorder_id", query);
 
+  current_workorder_ids[base_wo_id] = current_workorder_ids[base_wo_id] || [];
+  exported_ids = exported_ids.concat(current_workorder_ids[base_wo_id]);
   
   var suffix = "";
   if(exported_ids.length > 0) {    
@@ -329,6 +333,7 @@ function *checkLocation(wo_id, trees) {
                                           base_wo_id+" >> "+tree.workorder_id);
     tree.workorder_id = wo_id;                                
   }
+  current_workorder_ids[base_wo_id].push(wo_id);
   console.log("CHECK LOCATION", base_wo_id, wo_id);
 }
 

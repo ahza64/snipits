@@ -23,6 +23,7 @@
     "assert": "^1.4.1",
     "bluebird": "^3.4.0",
     "co": "^4.6.0",
+    "csv-parse": "^1.1.5",
     "google-auth-library": "^0.9.8",
     "googleapis": "^8.2.0",
     "js2xmlparser": "^1.0.0",
