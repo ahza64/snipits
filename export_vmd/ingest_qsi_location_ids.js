@@ -1,9 +1,10 @@
+/**
+ * @description This creates export entries for QSI ingested trees.
+ */
 var utils = require('dsp_shared/lib/cmd_utils');
 require("sugar");
-var parse = require('csv-parse');
+var streamCSV = require('dsp_shared/lib/stream_csv');
 var _ = require('underscore');
-var fs = require("fs");
-var BPromise = require("bluebird");
 utils.connect(["meteor"]);
 var Tree = require('dsp_shared/database/model/tree');
 var Export = require('dsp_shared/database/model/export');
@@ -66,72 +67,6 @@ function *run(file_path) {
 }
 
 
-function *streamCSV(file_path) {
-  console.log("streamCSV", file_path);
-  var parser = parse({columns: true});      
-  var input = fs.createReadStream(file_path);
-  input.pipe(parser);  
-  
-  
-  var done = false;
-  var next = null;
-  var error = null;
-  var next_resolve = null;
-  var next_reject = null;
-
-  parser.on('data', function(doc){  
-    this.pause();
-    if(next_resolve) {
-      next_resolve(doc);
-      next_resolve = null;
-      next_reject = null;
-      this.resume();
-    } else {
-      if(next) {
-        throw Error("Handler handled next to fast");
-      } else {
-        next = doc;
-      }
-    }
-  });
-          
-  parser.on('error', function (err) {
-    // handle err
-    error = err;
-    if(next_reject) {
-      next_reject(err);
-    }
-  });
-
-  parser.on('close', function () {
-    // all done
-    done = true;
-  });
-
-  parser.on('end', function () {
-    // all done
-    done = true;
-  });
-
-  
-  while(!done) {
-    yield new BPromise(function(resolve, reject) {      
-      if(error) {
-        reject(error);
-      } else if(next) {
-        resolve(next);
-        next = null;
-        parser.resume();
-      } else {
-        if(next_resolve) {
-          throw Error("Can not get next while still waiting for previous.");
-        }
-        next_resolve = resolve;
-        next_reject = reject;
-      }
-    });
-  }
-}
 
 
 

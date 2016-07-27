@@ -1,3 +1,6 @@
+/**
+ * @description This was created to merge csv for ID reconciliations with PG&E and QSI systems.
+ */
 var utils = require('dsp_shared/lib/cmd_utils');
 require("sugar");
 var parse = require('csv-parse');
@@ -37,7 +40,7 @@ function *run(qsi_file_path, pge_file_path, data_file_path) {
       exported_tree_id = exp.export_tree_id;
     }
     
-    console.error("Checking tree", count, exported_tree_id, exp.tree_id, exp.export_tree_id);
+    console.log("Checking tree", count, exported_tree_id, exp.tree_id, exp.export_tree_id);
     if(!data[exported_tree_id]) {
       console.error("Missing expected exported tree", exported_tree_id, exp.tree_id, exp.export_tree_id);
     }
