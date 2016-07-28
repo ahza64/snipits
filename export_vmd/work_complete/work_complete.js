@@ -92,7 +92,7 @@ var TreeWorkComplete = function(tree, trimmer, image, test_email) {
   this.work_complete.ExternalWRID = tree.workorder_id;
   
   if(tree.clearance !== null && tree.clearance !== undefined) {
-    this.work_complete.nDistance = tree.clearance.toFixed(2);
+    this.work_complete.nDistance = Math.min(99, tree.clearance.toFixed());
   }
 
   if(this.statusFlags.vehicle_type) {
