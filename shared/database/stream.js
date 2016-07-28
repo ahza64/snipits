@@ -62,7 +62,7 @@ function *stream(Model, query) {
     done = true;
   });
   
-  while(!done) {
+  while(!done || next) {
     yield new BPromse(function(resolve, reject) {      
       if(error) {
         reject(error);
