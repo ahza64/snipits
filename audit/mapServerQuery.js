@@ -6,11 +6,21 @@
  */
 
 var https = require('https');
+var fs = require('fs');
 var lodash = require('lodash');
 
+/**
+ * Allow for connecting to a server with a self-signed SSL certificate
+ * @type {String}
+ */
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const BASE_URL = 'https://esri.dispatchr.co:6443/arcgis/rest/services/TRANSMISSION_2015/';
+
+/**
+ * These are deliveries
+ * @type {Array}
+ */
 const MAP_SERVICES = [
   'SPRING_30_DELIVERY_1'
 ];
@@ -27,6 +37,14 @@ const FIELDS = [
   'PMD_NUM'
 ];
 
+/**
+ * The main query URL used to get individual trees.
+ *
+ * @param  {String}   service   The service (delivery) we want
+ * @param  {Integer}  layerID   Which layer within the service we want
+ * @param  {Integer}  objectID  Used to deal with paged responses
+ * @return {String}             A fully-formed query that returns JSON
+ */
 function constructQueryUrl(service, layerID, objectID) {
   var url = BASE_URL + service + '/MapServer/' + layerID + '/query?where=';
   url += 'OBJECTID>=' + objectID;
@@ -41,14 +59,20 @@ function constructServiceQueryUrl(service) {
   return BASE_URL + service + '/MapServer?f=pjson';
 }
 
-// TODO: Needs a termination clause
+/**
+ * Get all the trees within a given layer.
+ * Takes care of the paged responses by calling itself recursively.
+ *
+ * @param  {String}   service   The name of the service(delivery) we want
+ * @param  {Integer}  id        The id of the layer within the service we want
+ * @param  {Integer}  objectID  (Optional) Used to deal with paged responses.
+ * @param  {Array}    trees     (Optional) An array of previously found trees.
+ * @return {Array}              All the trees in this given layer
+ */
 function getLayer(service, id, objectID, trees) {
   var trees = trees || [];
+  var objectID = objectID || 1;
   var json = {};
-  // console.log('service: ' + service);
-  // console.log('id: ' + id);
-  // console.log('objectID: ' + objectID);
-  // console.log('trees: ' + trees);
   return getURL(constructQueryUrl(service, id, objectID))
   .then(res => {
     json = res;
@@ -56,7 +80,13 @@ function getLayer(service, id, objectID, trees) {
   }).then(fields => {
     trees = trees.concat(fields);
     return getMaxObjectID(json);
-  }).then(maxID => getLayer(service, id, maxID + 1, trees));
+  }).then(maxID => {
+    if (maxID) {
+      return getLayer(service, id, maxID + 1, trees)
+    } else {
+      return trees;
+    }
+  });
 }
 
 /**
@@ -67,19 +97,44 @@ function getLayer(service, id, objectID, trees) {
  * @return {[type]}                     [description]
  */
 function getLayers(service, layerIDs) {
-  var ObjectID = 1;
   var promises = [];
+  var finished = 0;
+  var total = layerIDs.length;
   layerIDs.forEach(id => {
     var p = new Promise((resolve, reject) => {
-      getLayer(service, id, ObjectID)
+      getLayer(service, id)
       .then(res => {
-        // console.log(res);
+        finished += 1;
+        console.log('Resolved layer ' + finished + '/' + total);
         resolve(res);
       });
     });
     promises.push(p);
   });
-  Promise.all(promises);
+  return Promise.all(promises).then(values => {
+    return {service: lodash.concat(values)};
+  });
+}
+
+/**
+ * Write to disk the trees within a given delivery
+ *
+ * @param  {Object}   obj   key -> delivery name, val -> trees
+ * @return {Void}
+ */
+function writeOutput(obj) {
+  console.log('Writing output');
+  var p = new Promise((resolve, reject) => {
+    var filename = Object.keys(obj)[0] + '.json';
+    fs.writeFile(filename, obj, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+  return p;
 }
 
 /**
@@ -89,14 +144,23 @@ function getLayers(service, layerIDs) {
  * @return {Integer}          The last objectID we got
  */
 function getMaxObjectID(json) {
-  return lodash.max(json.features.map(item => item.attributes.OBJECTID));
+  json = JSON.parse(json);
+  var p = new Promise((resolve, reject) => {
+    try {
+      var max = lodash.max(json.features.map(item => item.attributes.OBJECTID));
+      resolve(max);
+    } catch (e) {
+      reject(e);
+    }
+  });
+  return p;
 }
 
 /**
  * Given json, extract the fields we're interested in.
  *
  * @param  {String}   json      The json our server returned
- * @return {[type]}      [description]
+ * @return {Array}              An array of tree properties
  */
 function extractFields(json) {
   var data = [];
@@ -175,8 +239,8 @@ function main() {
     getLayerIDs(service)
     .then(extractLayerIDs)
     .then(layerIDs => getLayers(service, layerIDs))
-    .catch(err => console.error(err));
-    // .then(console.log('Done!'));
+    .then(writeOutput)
+    .catch(err => console.error(err.stack));
   });
 }
 
