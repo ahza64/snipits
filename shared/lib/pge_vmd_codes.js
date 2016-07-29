@@ -9030,6 +9030,65 @@ for(var line_name in line_ids) {
 line_ids = sanitized;
 
 
+var trim_code_to_billing_code = {
+  "BC": 		"BR", //	Br Rmv    
+  "BCS":		"BX", //	Br Rmv+Trt
+  "BT": 		"BT", //	Br Trim   
+  "CON":		"TR", //	C.Assist  
+  "F1A":		"A1", //	FP-Rmv1 A 
+  "F1B":		"B1", //	FP-Rmv1 B 
+  "F1C":		"C1", //	FS-R1A+Trt
+  "F1D":		"D1", //	FS-R1B+Trt
+  "F2A":		"A2", //	FP-Rmv2 A 
+  "F2B":		"B2", //	FP-Rmv2 B 
+  "F2C":		"C2", //	FS-R2A+Trt
+  "F2D":		"D2", //	FS-R2B+Trt
+  "F3A":		"A3", //	FP-Rmv3 A 
+  "F3B":		"B3", //	FP-Rmv3 B 
+  "F3C":		"C3", //	FS-R3A+Trt
+  "F3D":		"D3", //	FS-R3B+Trt
+  "F4A":		"A4", //	FP-Rmv4 A 
+  "F4B":		"B4", //	sTrimCode
+  "F4C":		"C4", //	FS-R4A+Trt
+  "F4D":		"D4", //	FS-R4B+Trt
+  "FAA":		"AA", //	FP-Trim A 
+  "FAB":		"BA", //	FP-Trim B 
+  "FBA":		"AB", //	FP-Major A
+  "FBB":		"BB", //	FP-Major B
+  "FOA":		"AO", //	FP-Ov A   
+  "FOB":		"BO", //	FP-Ov B   
+  "GRO":		"GO", //	TGR Only  
+  "GSD":		"TG", //	TGR+SD    
+  "GTD":		"TG", //	TGR+TD    
+  "GTO":		"TG", //	TGR+Top   
+  "HFH":		"TR", //	Final Ht  
+  "OV": 		"TR", //	Overhang  
+  "R1A":		"R1", //	Rmv 1-A   
+  "R1B":		"R1", //	Rmv 1-B   
+  "R1C":		"R1", //	Rmv1-A+Trt
+  "R1D":		"R1", //	Rmv1-B+Trt
+  "R2A":		"R2", //	Rmv 2-A   
+  "R2B":		"R2", //	Rmv 2-B   
+  "R2C":		"R2", //	Rmv2-A+Trt
+  "R2D":		"R2", //	Rmv2-B+Trt
+  "R3A":		"R3", //	Rmv 3-A   
+  "R3B":		"R3", //	Rmv 3-B   
+  "R3C":		"R3", //	Rmv3-A+Trt
+  "R3D":		"R3", //	Rmv3-B+Trt
+  "R4A":		"TM", //	Rmv 4-A   
+  "R4B":		"TM", //	Rmv 4-B   
+  "R4C":		"TM", //	Rmv4-A+Trt
+  "R4D":		"TM", //	Rmv4-B+Trt
+  "SD": 		"TR", //	Side      
+  "SEC":		"TR", //	Sec Strain
+  "SL": 		"TR", //	Slope     
+  "SWC":		"WC", //	S-Wrap Clb
+  "SWL":		"WL", //	S-Wrap Lft
+  "TD": 		"TR", //	TopDirecti
+  "TO": 		"TR", //	Top       
+  "TRT":		"NW", //	ReTreat   
+};
+
 module.exports = {
   trim_codes: trim_codes, 
   circuit_numbers: circuit_numbers,
@@ -9050,5 +9109,6 @@ module.exports = {
   work_type: work_type,
   restriction_codes: restriction_codes, 
   line_ids: line_ids,
-  work_categories: work_categories
+  work_categories: work_categories,
+  trim_code_to_billing_code: trim_code_to_billing_code
 };

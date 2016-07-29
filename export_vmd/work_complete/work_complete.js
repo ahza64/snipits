@@ -18,6 +18,10 @@ const root_node = "TreeWorkComp";
 const vmd = require("dsp_shared/lib/pge_vmd_codes");
 const JPGImage = require('../work_packet/jpg_file.js');
 
+require("sugar");
+const TIME_AND_MATERIALS_SWITCH_DATE = Date.create("Aug 1 2016 PST");
+console.log("TIME_AND_MATERIALS_SWITCH_DATE", TIME_AND_MATERIALS_SWITCH_DATE);
+
 /* jshint maxlen: 180 */
 const TREE_WORK_COMP = {                  //<TreeWorkComp>
   sWorkBy: null,                          //   **<sWorkBy>                      varchar(15)   Crew/Foreman info
@@ -100,9 +104,15 @@ var TreeWorkComplete = function(tree, trimmer, image, test_email) {
   } else {
     delete this.work_complete.sCrewType;
   }
+  
+  if(tree.tc_complete_time.isAfter(TIME_AND_MATERIALS_SWITCH_DATE)) {
+    assert(vmd.trim_code_to_billing_code[this.work_complete.sTrimCode]);
+    this.work_complete.sBillingCode = vmd.trim_code_to_billing_code[this.work_complete.sTrimCode];
+  } else {
+    this.work_complete.sBillingCode = "XX";
+  }
       
 
-  this.work_complete.sBillingCode = "XX";
   this.work_complete.iBillingRate = 0;
   
   this.work_complete["ExternalWRParam-sDivCode"] = vmd.division_codes[tree.division];
@@ -118,7 +128,6 @@ var TreeWorkComplete = function(tree, trimmer, image, test_email) {
   
   
   this.work_complete["ExternalWRParam-sContCode"] = vmd.company_codes[trimmer.company];
-  
   this.work_complete["ExternalWRParam-sWorkCat"] = vmd.work_categories.routine;
   
   if(tree.tc_image && !image) {
