@@ -13,13 +13,13 @@ var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
 var TOKEN_PATH = TOKEN_DIR + 'drive-nodejs-quickstart.json';
 
 var USERS = [
-              "anthony@dispatchr.co",
-              "ralph@dispatchr.co",
-              "MDMk@pge.com"
+              //"anthony@dispatchr.co",
+              //"ralph@dispatchr.co",
+              //"MDMk@pge.com"
             ];
 
 var TRANS_FOLDER_ID = "0B0FgvwdEVvTBdjNMWmxtUlB0QTQ";
-
+var EXPORT_FOLDER_ID = "0B0FgvwdEVvTBWE9XWlhlYlhKbjQ";
 
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');
@@ -39,7 +39,7 @@ if (require.main === module) {
           resource: {
             name: path.basename(fileName),
             mimeType: 'application/x-gzip',
-            parents: [TRANS_FOLDER_ID]
+            parents: [EXPORT_FOLDER_ID]
           },
           media: {
             mimeType: 'application/x-gzip',
