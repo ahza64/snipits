@@ -14,6 +14,12 @@ const BASE_URL = 'https://esri.dispatchr.co:6443/arcgis/rest/services/TRANSMISSI
 const MAP_SERVICES = [
   'SPRING_30_DELIVERY_1'
 ];
+
+/**
+ * We require TREEID to be first, as it's the most important and used to check
+ * validity of the query
+ * @type {Array}
+ */
 const FIELDS = [
   'TREEID',
   'LINE_NAME',
@@ -36,17 +42,21 @@ function constructServiceQueryUrl(service) {
 }
 
 // TODO: Needs a termination clause
-function getLayer(service, id, objectID) {
-  var trees = [];
+function getLayer(service, id, objectID, trees) {
+  var trees = trees || [];
   var json = {};
-  getURL(constructQueryUrl(service, id, ObjectID))
+  // console.log('service: ' + service);
+  // console.log('id: ' + id);
+  // console.log('objectID: ' + objectID);
+  // console.log('trees: ' + trees);
+  return getURL(constructQueryUrl(service, id, objectID))
   .then(res => {
     json = res;
     return extractFields(res);
   }).then(fields => {
-    trees.concat(fields);
+    trees = trees.concat(fields);
     return getMaxObjectID(json);
-  }).then(maxID => getLayer(service, id, maxID));
+  }).then(maxID => getLayer(service, id, maxID + 1, trees));
 }
 
 /**
@@ -58,22 +68,18 @@ function getLayer(service, id, objectID) {
  */
 function getLayers(service, layerIDs) {
   var ObjectID = 1;
+  var promises = [];
   layerIDs.forEach(id => {
-    getLayer(service, id, ObjectId);
-  });
-
-
-  var p = new Promise((resolve, reject) => {
-    layerIDs.forEach(id => {
-      var finished = false;
-      while (!finished) {
-        getURL(constructQueryUrl(service, id, ObjectID))
-        .then(extractFields)
-        .then(getMaxObjectID);
-      }
+    var p = new Promise((resolve, reject) => {
+      getLayer(service, id, ObjectID)
+      .then(res => {
+        // console.log(res);
+        resolve(res);
+      });
     });
+    promises.push(p);
   });
-  return p;
+  Promise.all(promises);
 }
 
 /**
@@ -89,15 +95,25 @@ function getMaxObjectID(json) {
 /**
  * Given json, extract the fields we're interested in.
  *
- * @param  {Object}   json      The json our server returned
+ * @param  {String}   json      The json our server returned
  * @return {[type]}      [description]
  */
 function extractFields(json) {
   var data = [];
-
+  json = JSON.parse(json);
   var p = new Promise((resolve, reject) => {
-    FIELDS.forEach(field => data.push(json[field]));
-    resolve(data);
+    if (Object.keys(json.fieldAliases).indexOf(FIELDS[0]) === -1) {
+      resolve([]);
+    } else {
+      json.features.forEach(feature => {
+        var tree = {};
+        FIELDS.forEach(field => {
+          tree[field] = feature.attributes[field] || null;
+        });
+        data.push(tree);
+      });
+      resolve(data);
+    }
   });
   return p;
 }
@@ -114,7 +130,7 @@ function getURL(url) {
     try {
       https.get(url, res => {
         res.on('data', chunk => data += chunk);
-        res.on('end', resolve(data));
+        res.on('end', () => resolve(data));
       });
     } catch (e) {
       reject(e);
@@ -138,12 +154,13 @@ function getLayerIDs(service) {
 /**
  * Given a response from the server, return a list of layer IDs
  *
- * @param  {Object}         json    What we got from calling getLayerIDs()
+ * @param  {String}         json    What we got from calling getLayerIDs()
  * @return {Array[Integer]}         An array of layer IDs
  */
 function extractLayerIDs(json) {
   var p = new Promise((resolve, reject) => {
     try {
+      json = JSON.parse(json);
       resolve(json.layers.map(item => item.id));
     } catch (e) {
       reject(e);
@@ -158,6 +175,9 @@ function main() {
     getLayerIDs(service)
     .then(extractLayerIDs)
     .then(layerIDs => getLayers(service, layerIDs))
-    .then(console.log('Done!'));
+    .catch(err => console.error(err));
+    // .then(console.log('Done!'));
   });
 }
+
+main();
