@@ -38,6 +38,30 @@ const FIELDS = [
 ];
 
 /**
+ * A default object that won't cause the entire batch to fail, but also won't
+ * factor into the final results.
+ *
+ * @type {Object}
+ */
+const DEFAULT_JSON = {
+  "fieldAliases": "foo",
+  "features": []
+};
+
+/**
+ * Called when a promise should reject with an error.
+ *
+ * @param  {Error}      err      The thrown error
+ * @param  {Function}   reject   The rejection function
+ * @return {Void}
+ */
+function rejectError(err, reject) {
+  console.error(err);
+  console.error(err.stack)
+  reject(err);
+}
+
+/**
  * The main query URL used to get individual trees.
  *
  * @param  {String}   service   The service (delivery) we want
@@ -112,7 +136,10 @@ function getLayers(service, layerIDs) {
     promises.push(p);
   });
   return Promise.all(promises).then(values => {
-    return {service: lodash.concat(values)};
+    return {
+      name: service,
+      trees: lodash.concat(values)
+    };
   });
 }
 
@@ -125,10 +152,10 @@ function getLayers(service, layerIDs) {
 function writeOutput(obj) {
   console.log('Writing output');
   var p = new Promise((resolve, reject) => {
-    var filename = Object.keys(obj)[0] + '.json';
-    fs.writeFile(filename, obj, (err) => {
+    var filename = obj.name + '.json';
+    fs.writeFile(filename, JSON.stringify(obj.trees), (err) => {
       if (err) {
-        reject(err);
+        rejectError(err, reject);
       } else {
         resolve();
       }
@@ -144,13 +171,12 @@ function writeOutput(obj) {
  * @return {Integer}          The last objectID we got
  */
 function getMaxObjectID(json) {
-  json = JSON.parse(json);
   var p = new Promise((resolve, reject) => {
     try {
       var max = lodash.max(json.features.map(item => item.attributes.OBJECTID));
       resolve(max);
     } catch (e) {
-      reject(e);
+      rejectError(e, reject);
     }
   });
   return p;
@@ -159,24 +185,27 @@ function getMaxObjectID(json) {
 /**
  * Given json, extract the fields we're interested in.
  *
- * @param  {String}   json      The json our server returned
+ * @param  {Object}   json      The json our server returned
  * @return {Array}              An array of tree properties
  */
 function extractFields(json) {
   var data = [];
-  json = JSON.parse(json);
   var p = new Promise((resolve, reject) => {
-    if (Object.keys(json.fieldAliases).indexOf(FIELDS[0]) === -1) {
-      resolve([]);
-    } else {
-      json.features.forEach(feature => {
-        var tree = {};
-        FIELDS.forEach(field => {
-          tree[field] = feature.attributes[field] || null;
+    try {
+      if (Object.keys(json.fieldAliases).indexOf(FIELDS[0]) === -1) {
+        resolve([]);
+      } else {
+        json.features.forEach(feature => {
+          var tree = {};
+          FIELDS.forEach(field => {
+            tree[field] = feature.attributes[field] || null;
+          });
+          data.push(tree);
         });
-        data.push(tree);
-      });
-      resolve(data);
+        resolve(data);
+      }
+    } catch (e) {
+      rejectError(e, reject);
     }
   });
   return p;
@@ -194,10 +223,20 @@ function getURL(url) {
     try {
       https.get(url, res => {
         res.on('data', chunk => data += chunk);
-        res.on('end', () => resolve(data));
+        res.on('end', () => {
+          data = JSON.parse(data);
+          // Because the ESRI server doesn't set an HTTP response code that
+          // is not >= 400, we need to instead parse the json and inspect it
+          // for the 'error' property.
+          if (data.error) {
+            resolve(DEFAULT_JSON);
+          } else {
+            resolve(data);
+          }
+        });
       });
     } catch (e) {
-      reject(e);
+      rejectError(e, reject);
     }
   });
   return p;
@@ -218,16 +257,15 @@ function getLayerIDs(service) {
 /**
  * Given a response from the server, return a list of layer IDs
  *
- * @param  {String}         json    What we got from calling getLayerIDs()
+ * @param  {Object}         json    What we got from calling getLayerIDs()
  * @return {Array[Integer]}         An array of layer IDs
  */
 function extractLayerIDs(json) {
   var p = new Promise((resolve, reject) => {
     try {
-      json = JSON.parse(json);
       resolve(json.layers.map(item => item.id));
     } catch (e) {
-      reject(e);
+      rejectError(e, reject);
     }
   });
   return p;
