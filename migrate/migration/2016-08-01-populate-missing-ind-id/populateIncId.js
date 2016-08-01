@@ -4,40 +4,45 @@ var utils = require('dsp_shared/lib/cmd_utils');
 utils.connect(['meteor']);
 const BPromise = require('bluebird');
 const TreeModel = require('dsp_shared/database/model/tree');
+const IdentityCounter = utils.getConnection('meteor').connection.model('IdentityCounter');
+const Stream = require('dsp_shared/database/stream')
+const co = require('co');
 
-function *fixIncTreeIds() {
-  var treeQuery = { inc_id: null, project: 'transmission_2015' };
+function *run() {
+  co(function*() {
 
-  return TreeModel.find(treeQuery)
-  .then(trees => {
-    return BPromise.all(trees.map(tree => {
-      console.log(tree._id);
-      return new BPromise((resolve, reject) => { 
-        TreeModel.nextCount((err, count) => {
+    var treeQuery = { inc_id: null, project: 'transmission_2015' };
+
+    for(var treeP of Stream(TreeModel, treeQuery)) {
+      var tree = yield treeP;
+      var incId = yield new Promise((resolve, reject) => {
+        return TreeModel.nextCount(function(err, count) {
           if(err) {
-            return reject(err);
+            reject(err);
           } else {
-            tree.inc_id = count;
-            return resolve(tree.save());
+            resolve(count)
           }
         });
       })
-    }))
-    .then((trees) => console.log())
-    .then(() => utils.closeConnections())
-    .catch(err => { console.error(err.stack); utils.closeConnections() });
-  })
-}
 
-function *run(){
-  try {
-    yield fixIncTreeIds();
-  } catch(err) {
-    console.error('Error Initializing Application', err.stack ? err.stack : err);
+      console.log(tree._id);
+      console.log(incId);
+
+      tree.inc_id = incId;
+
+      yield tree.save()
+      .then(() => updateCounter(tree))
+      .catch(err => console.error(err.stack))
+    }
 
     utils.closeConnections();
-    process.exit(1);
-  }
+  });
+}
+function updateCounter(tree){
+  return IdentityCounter.findOneAndUpdate(
+    { model: 'trees', field: 'inc_id', count: { $lt: tree['inc_id'] } },
+    { count: tree.inc_id }
+  );
 }
 
 if (require.main === module) {

@@ -19,6 +19,10 @@ function *waitForConnections(){
   }
 }
 
+function getConnection(connection_name) {
+  return connections[connection_name];
+}
+
 function connect(connection_names) {
   if(!connections) {
     if(!connection_names) {
@@ -118,13 +122,14 @@ function dumpAsCSV(row_data, tabs) {
 
 module.exports = {
   connect: connect,
+  getConnection: getConnection,
   closeConnections: closeConnections,
-	dumpAsCSV: dumpAsCSV,
-	withDb: withDb,
-	generatorWithDb: generatorWithDb,
+  dumpAsCSV: dumpAsCSV,
+  withDb: withDb,
+  generatorWithDb: generatorWithDb,
   bakerGen: bakerGen,
   bakerRun: function() {
     baker.run();
   }
-  
+
 };
