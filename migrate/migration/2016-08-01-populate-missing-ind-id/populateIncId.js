@@ -1,46 +1,46 @@
 #!/usr/bin/env node
-var _ = require('underscore');
+
 var utils = require('dsp_shared/lib/cmd_utils');
 utils.connect(['meteor']);
 const BPromise = require('bluebird');
 const TreeModel = require('dsp_shared/database/model/tree');
 const IdentityCounter = utils.getConnection('meteor').connection.model('IdentityCounter');
-const Stream = require('dsp_shared/database/stream')
-const co = require('co');
+const stream = require('dsp_shared/database/stream');
 
 function *run() {
-  co(function*() {
+  var treeQuery = { inc_id: null, project: 'transmission_2015' };
 
-    var treeQuery = { inc_id: null, project: 'transmission_2015' };
+  var count = yield TreeModel.find(treeQuery).count();
+  var i = 0;
+  for(var treeP of stream(TreeModel, treeQuery)) {
+    var tree = yield treeP;
+    i++;
+    console.log("TREE", i, "of", count, tree._id, tree.inc_id);
+    var incId = yield new BPromise((resolve, reject) => {
+      return TreeModel.nextCount(function(err, count) {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(count);
+        }
+      });
+    });
 
-    for(var treeP of Stream(TreeModel, treeQuery)) {
-      var tree = yield treeP;
-      var incId = yield new Promise((resolve, reject) => {
-        return TreeModel.nextCount(function(err, count) {
-          if(err) {
-            reject(err);
-          } else {
-            resolve(count)
-          }
-        });
-      })
+    console.log(tree._id);
+    console.log(incId);
 
-      console.log(tree._id);
-      console.log(incId);
+    tree.inc_id = incId;
 
-      tree.inc_id = incId;
+    yield tree.save()
+    .then(() => updateCounter(tree))
+    .catch(err => console.error(err.stack));
+  }
 
-      yield tree.save()
-      .then(() => updateCounter(tree))
-      .catch(err => console.error(err.stack))
-    }
-
-    utils.closeConnections();
-  });
+  utils.closeConnections();
 }
 function updateCounter(tree){
   return IdentityCounter.findOneAndUpdate(
-    { model: 'trees', field: 'inc_id', count: { $lt: tree['inc_id'] } },
+    { model: 'trees', field: 'inc_id', count: { $lt: tree.inc_id } },
     { count: tree.inc_id }
   );
 }
