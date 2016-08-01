@@ -112,7 +112,13 @@ var TreeWorkComplete = function(tree, trimmer, image, test_email) {
     this.work_complete.sBillingCode = "XX";
   }
       
-
+  if(tree.comments) {
+    var matches = tree.comments.match(/#([0-9]*)#/);
+    if(matches) {
+      this.work_complete.nQty = matches[1];
+    }
+  }
+  
   this.work_complete.iBillingRate = 0;
   
   this.work_complete["ExternalWRParam-sDivCode"] = vmd.division_codes[tree.division];
