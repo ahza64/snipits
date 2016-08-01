@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var connection = require('dsp_database/connections')('meteor');
+const autoIncrement = require('mongoose-auto-increment');
+autoIncrement.initialize(connection);
 
 var TreeStates = require('tree-status-codes');
 var treeSchema = new mongoose.Schema({
@@ -59,6 +61,8 @@ var treeSchema = new mongoose.Schema({
 });
 
 treeSchema.index({location: '2dsphere'});
+treeSchema.plugin(autoIncrement.plugin, { model: 'trees', field: 'inc_id' });
+
 var Tree = connection.model('Tree', treeSchema);
 
 

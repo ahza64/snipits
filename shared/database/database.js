@@ -1,5 +1,6 @@
 var log = require('log4js').getLogger('['+__filename+']');
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 require("dsp_lib/starts_with");
 
 
