@@ -23,7 +23,7 @@ var treeSchema = new mongoose.Schema({
   species: {type: String, default: "unknown"},
   span_name: String,
 
-
+  riparian: Boolean,
   //added things below
   inc_id: {type: Number, index: true},
   region: {type: String, index: true},

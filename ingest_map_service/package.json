@@ -32,5 +32,8 @@
     "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
     "underscore": "^1.8.3",
     "xml2js": "^0.4.16"
+  },
+  "devDependencies": {
+    "sugar": "^2.0.0"
   }
 }
