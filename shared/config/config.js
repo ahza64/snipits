@@ -4,7 +4,7 @@
 require("sugar");
 var fs  = require('fs');
 var _   = require('underscore');
-var dir = "conf.d";
+var dir = __dirname + "/../conf.d";
 
 var configs = (function() {
   // http://addyosmani.com/resources/essentialjsdesignpatterns/book/#singletonpatternjavascript
