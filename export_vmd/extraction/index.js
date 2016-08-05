@@ -88,7 +88,11 @@ function *run(startDate, endDate, includeExported, treeIds, exportName, email, w
   
   //sanitize input
   if(startDate === "last_export") {
-    var export_dates = yield TreeModel.distinct("exported", {});
+    var field = "exported";
+    if(workComplete) {
+      field = "exported_worked";
+    }
+    var export_dates = yield TreeModel.distinct(field, {});
     export_dates.sort(function(a,b){
       return b - a;
     });
