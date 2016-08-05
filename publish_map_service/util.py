@@ -1,10 +1,32 @@
-
+import crud
 import arcpy
 import os
+import re 
 
 config = {
     "root_dir": "d:/gis_data"
 }
+
+cache_line_name = None
+cache_line_id = None
+
+def lookup_grid_id(line_name):
+    global cache_line_name
+    global cache_line_id
+    line_name = sanitizeLineName(line_name)
+    if line_name == cache_line_name:
+        return cache_line_id
+    
+    grid = crud.list('circuit', name=line_name, parse_json=True)
+    if len(grid) == 0:
+        #TODO create grid
+        return None 
+    else:
+        grid = grid[0]
+    cache_line_name = grid['name']
+    cache_line_id = grid['_id']
+    return cache_line_id
+
 
 def FieldExist(featureclass, fieldname):
     fieldList = arcpy.ListFields(featureclass, fieldname)
