@@ -1,0 +1,26 @@
+{
+    "trees": ["velb"],
+    "results": {
+        "sInsp": "NOEMAIL : NO ONE",
+        "sStreetNum": "3925",
+        "sStreet" : "Power Inn Road",
+        "sCity": "West Sacram",
+        "iCityID": 2901,
+        "sCountyCode": "SA",
+        "sComments": null,
+        "sSourceDev": "000/005",
+        "sPoleNum": "000/005",
+        "sPoleNum2": "000/006",
+        "sTreeLocStatus": "CMP_WK_RE",
+        "sAcctType": "M",
+        "TreeLocRestrictions": [
+            {
+                "sRestrictionCode": "VR",
+                "bTreeRecsRestriction": 0,
+                "sUserID": "NOEMAIL : NO ONE",
+                "dtDateAdded": null              
+            }
+        ]
+        
+    }
+}

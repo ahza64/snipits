@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TreeWorkComp>
+	<sWorkBy>artemio.jasso@mtfent.com : Artemio Jasso</sWorkBy>
+	<dtWorkDate>2016-05-26T22:52:31.879Z</dtWorkDate>
+	<nQty>1</nQty>
+	<bCompleted>1</bCompleted>
+	<sTreeCode>OAKV</sTreeCode>
+	<sTrimCode>R2C</sTrimCode>
+	<sBillingCode>XX</sBillingCode>
+	<iBillingRate>0</iBillingRate>
+	<sComments></sComments>
+	<ExternalTreeID>E121713485N38530074</ExternalTreeID>
+	<ExternalWRID>WO-T-12345</ExternalWRID>
+	<ExternalWRParam-sDivCode>SA</ExternalWRParam-sDivCode>
+	<ExternalWRParam-sAcctType>M</ExternalWRParam-sAcctType>
+	<ExternalWRParam-sDT>T</ExternalWRParam-sDT>
+	<ExternalWRParam-sContCode>MFE</ExternalWRParam-sContCode>
+	<ExternalWRParam-sWorkCat>XX</ExternalWRParam-sWorkCat>
+	<ExternalWRParam-iProjNum>134330</ExternalWRParam-iProjNum>
+</TreeWorkComp>

@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- <TreeWorkComp> -->
+	<xs:element name="TreeWorkComp">
+		<xs:complexType>
+			<xs:all>
+				<!-- <iWRTreeRecsID>			int		**Required for internally created work, not required for external system -->
+				<xs:element name="iWRTreeRecsID">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sWorkReq>				varchar(11)	**Work request number - Required for internally created work, not required for external system -->
+				<xs:element name="sWorkReq">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="11"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sWorkBy>				varchar(15)	Crew/Foreman info -->
+				<xs:element name="sWorkBy">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="15"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <dtWorkDate>			datetime	*Date and time that the tree was worked -->
+				<xs:element name="dtWorkDate" type="xs:date"/>
+				<!-- <nQty>					numeric(5,2)	*Number of units trimmed (>0 and <1000) -->
+				<xs:element name="nQty">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:fractionDigits value="2"/>
+							<xs:totalDigits value="5"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <nManHours>				numeric(5,2)	Optional - Number of work hours (for time and material billing only) -->
+				<xs:element name="nManHours">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:fractionDigits value="2"/>
+							<xs:totalDigits value="5"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sTreeCode>				varchar(4)	Type of tree -->
+				<xs:element name="sTreeCode">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="4"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sTrimCode>				varchar(3)	Trim type -->
+				<xs:element name="sTrimCode">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sCrewType>				varchar(2)	Type of crew dispatched to tree (climb/lift truck) -->
+				<xs:element name="sCrewType">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <nDistance>				numeric(2,0)	Clearance obtained in ft -->
+				<xs:element name="nDistance">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:fractionDigits value="0"/>
+							<xs:totalDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <mCost>					money		Optional - Fixed price for work -->
+				<xs:element name="mCost">
+					<xs:simpleType>
+						<xs:restriction base="xs:decimal">
+							<xs:fractionDigits value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sWrkRptNum>			varchar(7)	Optional - Used by contractors to tag batch of work submitted.  Usually a date is entered here. -->
+				<xs:element name="sWrkRptNum">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="7"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <iWrkRptSeq>			tinyint		Optional - If multiple batches are submitted during a day, value can be incrimented.  Default [0] -->
+				<xs:element name="iWrkRptSeq">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="255"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sBillingCode>			varchar(2)	*Billing code determines price for unit of work -->
+				<xs:element name="sBillingCode">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <iBillingRate>			tinyint		Billing method (0=std, 1=overtime, 2=double, 7=time/material, 8=Non-Billable) -->
+				<xs:element name="iBillingRate">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0"/>
+							<xs:maxInclusive value="255"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <bCompleted>			bit		*[1] Indicates work was completed.  Contractors can submit work as not completed [0] -->
+				<xs:element name="bCompleted">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:pattern value="[0-1]"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sReason>				varchar(3)	Not used -->
+				<xs:element name="sReason">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sComments>				varchar(255)	Optional - billing notes to document unusual situations -->
+				<xs:element name="sComments">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="255"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <sBatchCode>			varchar(20)	Optional - Field used by contractors to find batches of work submitted to PG&E -->
+				<xs:element name="sBatchCode">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="20"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalTreeID>		varchar(50)	**Required for external system, not required for internally created work -->
+				<xs:element name="ExternalTreeID">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalWRID>			varchar(50)	Optional - Work Request/Work Order used by external system -->
+				<xs:element name="ExternalWRID">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalWRParam-sDivCode>			varchar(2)	**Required for external system, not required for internally created work -->
+				<xs:element name="ExternalWRParam-sDivCode">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalWRParam-sLocalOffice>		varchar(2)	**Required for external system, not required for internally created work -->
+				<xs:element name="ExternalWRParam-sLocalOffice">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalWRParam-sAcctType>			varchar(1)	**Required for external system, not required for internally created work -->
+				<xs:element name="ExternalWRParam-sAcctType">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalWRParam-sDT>				varchar(1)	**Required for external system, not required for internally created work -->
+				<xs:element name="ExternalWRParam-sDT">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="1"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalWRParam-sContCode>			varchar(3)	**Required for external system, not required for internally created work -->
+				<xs:element name="ExternalWRParam-sContCode">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="3"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalWRParam-sWorkCat>			varchar(2)	**Required for external system, not required for internally created work -->
+				<xs:element name="ExternalWRParam-sWorkCat">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="2"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalWRParam-sOrderNum>			varchar(10)	Optional for routine work, but should be populated for non-routine -->
+				<xs:element name="ExternalWRParam-sOrderNum">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="10"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <ExternalWRParam-iProjNum>			int		Optional, but should be populated for reporting -->
+				<xs:element name="ExternalWRParam-iProjNum">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<!-- <TreeWorkCompFile>				Note that section can be repeated for multiple files -->
+				<xs:element name="TreeWorkCompFile">
+					<xs:complexType>
+						<xs:all>
+							<!-- <iWRTreeRecsID>				int		*File will be associated with this tree record -->
+							<xs:element name="iWRTreeRecsID">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="2147483647"/>
+										<xs:minInclusive value="-2147483648"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sFileName> 				varchar(100)	*Should conform to windows file naming standards - no special chars such as ? , etc... -->
+							<xs:element name="sFileName">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="100"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<!-- <sFile> 					BLOB data stream	*No data limit -->
+							<xs:element name="blobsrc" type="xs:hexBinary"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

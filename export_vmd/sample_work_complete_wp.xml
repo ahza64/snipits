@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TreeWorkPacket>
+	<sAcctType>M</sAcctType>
+	<sRoleType>PI</sRoleType>
+	<sDT>T</sDT>
+	<sDivCode>SA</sDivCode>
+	<iProjID>134330</iProjID>
+	<bQC>0</bQC>
+	<bReadOnly>0</bReadOnly>
+	<sInspComp>ACR</sInspComp>
+	<sAssignedUser>SDSJ@pge.com : Sterling Smith</sAssignedUser>
+	<bObsolete>0</bObsolete>
+	<sWorkPacketStatus>CMP</sWorkPacketStatus>
+	<sTransmitStatus>CI</sTransmitStatus>
+	<sComments></sComments>
+	<bAdHoc>1</bAdHoc>
+	<sGenType>T0</sGenType>
+	<iPacketParent></iPacketParent>
+	<TreeLoc>
+		<iSSDRoute>10</iSSDRoute>
+		<iRouteNum>10</iRouteNum>
+		<sDivCode>SA</sDivCode>
+		<sCountyCode>SO</sCountyCode>
+		<sInspComp>ACR</sInspComp>
+		<sInsp>SDSJ@pge.com : Sterling Smith</sInsp>
+		<sCircuit>TR00607001</sCircuit>
+		<sLineID>10021</sLineID>
+		<sTagType>D</sTagType>
+		<sStreetNum>9410</sStreetNum>
+		<sStreet>Drummond Lane</sStreet>
+		<sCity>Davis</sCity>
+		<iCityID>698</iCityID>
+		<sComments></sComments>
+		<bCommAlert>0</bCommAlert>
+		<dtInspDate>2016-05-26T22:52:31.879Z</dtInspDate>
+		<sAcctType>M</sAcctType>
+		<sSourceDev>025/279</sSourceDev>
+		<sPoleNum>025/279</sPoleNum>
+		<sPoleNum2>025/280</sPoleNum2>
+		<sPriVolt>70</sPriVolt>
+		<sCustName></sCustName>
+		<sCustPhone></sCustPhone>
+		<bCustAtLoc>0</bCustAtLoc>
+		<sTreeLocStatus>CMP_WK_NR</sTreeLocStatus>
+		<ExternalLocID>WO-T-12345</ExternalLocID>
+		<bSRA></bSRA>
+		<sArea></sArea>
+		<TreeRecs>
+			<sTreeCode>OAKV</sTreeCode>
+			<sNotification>O</sNotification>
+			<nDBH>22</nDBH>
+			<nHeight>31</nHeight>
+			<nClearance>99</nClearance>
+			<nQty>1</nQty>
+			<sTrimCode>R2C</sTrimCode>
+			<sPCode>R</sPCode>
+			<sNextTrim>1</sNextTrim>
+			<sCrewType>CA</sCrewType>
+			<sWorkType></sWorkType>
+			<sComment></sComment>
+			<bUnderBuild>0</bUnderBuild>
+			<bTreeConn>0</bTreeConn>
+			<bTreeWire>0</bTreeWire>
+			<bInsfClear>0</bInsfClear>
+			<sAcctType>M</sAcctType>
+			<bNotifyPhon>0</bNotifyPhon>
+			<bNotifyPers>0</bNotifyPers>
+			<bNotifyDoor>1</bNotifyDoor>
+			<bNotifyPerm>0</bNotifyPerm>
+			<iTreeSort>1</iTreeSort>
+			<dtInspDate>2016-05-26T22:52:31.879Z</dtInspDate>
+			<dtNextTrimDate>2017-05-26T22:52:31.879Z</dtNextTrimDate>
+			<sInsp>SDSJ@pge.com : Sterling Smith</sInsp>
+			<sInspComp>ACR</sInspComp>
+			<bVELBArea>0</bVELBArea>
+			<ExternalTreeID>E121713485N38530074</ExternalTreeID>
+			<sTreeRecsStatus>OK</sTreeRecsStatus>
+			<nWireType>0</nWireType>
+			<TreeRecs_GPS>
+				<nLatitude>38.5300744042105</nLatitude>
+				<nLongitude>-121.71348545096</nLongitude>
+				<dtMobileCapture>2015-09-08T00:00:00.000Z</dtMobileCapture>
+			</TreeRecs_GPS>
+			<TreeRecsFile>
+				<sFileName>569eaaeb1cc8a3580ef91798.jpg</sFileName>
+				<sFile>/9j/4AAQSkZJRgABAQAAAQABAAD&lt;IMAGE TRUNCATED&gt;</sFile>
+			</TreeRecsFile>
+		</TreeRecs>
+		<TreeLoc_GPS>
+			<nLatitude>38.5300744042105</nLatitude>
+			<nLongitude>-121.71348545096</nLongitude>
+			<dtMobileCapture></dtMobileCapture>
+		</TreeLoc_GPS>
+	</TreeLoc>
+</TreeWorkPacket>

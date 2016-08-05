@@ -1,0 +1,28 @@
+{
+  "_id": "56cdd1b97202c34b557425c2",
+  "email": "ko.lineman1@gmail.com",
+  "__v": 0,
+  "first_name": "Kyle",
+  "host": "trans.dispatchr.co",
+  "last_name": "Oilar",
+  "status": "active",
+  "supervisor_email": "scott.avlakeotes@davey.com",
+  "tenant": "564ae07278b391d26af3ac42",
+  "vehicle": "56cdd1ba7202c34b557425c3",
+  "lastLogin": null,
+  "pulse": "2016-02-24T22:17:47.321Z",
+  "checksum": {
+    "workordersIdList": [],
+    "workordersNb": 0,
+    "planId": "56cdd1ba7202c34b557425c4",
+    "planUpdate": "2016-03-01T04:52:13.786Z",
+    "treeNb": 0,
+    "tilecacheNb": 0,
+    "deviceUid": "ee8cad66190b9b47",
+    "timestamp": 1456810891802
+  },
+  "updated": "2016-03-01T05:41:41.338Z",
+  "created": "2016-02-24T15:52:25.892Z",
+  "phone_number": "5303515542",
+  "password": "123"
+}

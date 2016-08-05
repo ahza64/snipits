@@ -1,0 +1,45 @@
+{
+  "name": "export_vmd",
+  "version": "1.0.0",
+  "description": "\"Creates xml exports to pge vmd system'",
+  "private": true,
+  "main": "export.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dispatchr/services/tree/master/export_vmd"
+  },
+  "keywords": [
+    "xml",
+    "exprot",
+    "vmd",
+    "pge"
+  ],
+  "author": "Gabriel Littman",
+  "license": "PRIVATE",
+  "dependencies": {
+    "assert": "^1.4.1",
+    "bluebird": "^3.4.0",
+    "co": "^4.6.0",
+    "csv-parse": "^1.1.5",
+    "google-auth-library": "^0.9.8",
+    "googleapis": "^8.2.0",
+    "js2xmlparser": "^1.0.0",
+    "libxml-xsd": "^0.5.2",
+    "moment": "^2.13.0",
+    "moment-timezone": "^0.5.4",
+    "mongoose": "^4.5.1",
+    "should": "^9.0.1",
+    "sugar": "^1.4.1",
+    "swig": "^1.4.2",
+    "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
+    "tzwhere": "^1.0.0",
+    "underscore": "^1.8.3",
+    "xml2js": "^0.4.16"
+  },
+  "devDependencies": {
+    "jsdoc-to-markdown": "^1.3.6"
+  }
+}

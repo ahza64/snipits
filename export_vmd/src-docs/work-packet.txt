@@ -1,0 +1,270 @@
+*******************************************************************************
+This document describes the Vegetation Management Data Exchange Format (VMDEF)
+file format, which can be used to import inspection data from external sources.
+
+08-28-2013	Initial Specification only contains basic objects to create a 
+		location record to be inspected by a CUF
+09-17-2014	Added sections for restrictions, alerts, and contacts
+09-03-2015	Changed file extenstion to .WP
+10-14-2015	Added <TreeLocFile> tag for location files (JPG, etc)
+		Added <TreeRecFile> tag for tree specific files (JPG, etc)
+*******************************************************************************
+File Structure and naming convention:
+The VMDEF file will be a text file containing standard XML tag data in a format
+described below.  The file should have the extension (.WP) and use a unique
+naming convention as it will be placed onto a file-share queue for automated
+import.
+
+Object Hiearchy:
+----------------
+<TreeWorkPacket>				Work Packet of locations to be inspected
+	<TreeLoc>   				Inspected Locations(s)
+		<TreeLoc_GPS>			GPS coordinates of location
+		<TreeLocAlerts>			Alerts for location
+		<TreeLocRestrictions>		Restrictions for location
+		<TreeLocContacts>		Customer Contact Records
+		<TreeLocFile>			File specific to location (JPG, etc)
+		<TreeRecs>   			Inspected Tree(s)
+			<TreeRecs_GPS>		GPS coordinates of tree
+			<TreeRecsAlerts>	Alerts for specfic tree
+			<TreeRecsRestrictions>	Restrictions for specific tree
+			<TreeRecFile>		File specific to tree (JPG, etc)
+			
+A work packet is a bundle of locations to be inspected.  Current practical
+limits on the number of locations per work packet is about 300-400 locations.
+Typical number of Tree records per location is about 1-16.  Note that a tree
+record can have a quantity between 1-999.  Trees of same species and size
+are grouped into a single tree record with a quatity greater than 1.  Decimal
+values of quantity indicate cubic yards of brush.  GPS coordinates are not
+initially required, however if not present the inspector will be forced to 
+collect GPS coordinates for each location.  Tree GPS coordinates are only
+required under certain circumstances.  There are other sub-object types not
+listed in this inital draft, since they will be collected by the VM mobile
+application in the field.
+
+To link to the source data from other systems such as WSI LiDAR data, a field
+was added at the location and tree level to link back to source data:<ExternalLocID> and <ExternalTreeID>. 
+To tag a batch of locations imported,
+you can insert a batch identifier in the work packet comments field.
+
+Object Definitions:
+-------------------
+* indicates required values
+[] indicates default values for LiDAR inspection data
+
+<TreeWorkPacket>
+	<sAcctType> varchar(1)*			[W], R, Y, Z (see list below)
+	<sRoleType> varchar(2)*			[PI], TT
+	<sDT> varchar(1)*			D, [T]
+	<sDivCode> varchar(2)*			User selected value (listed in appendix)
+	<iProjID> int				[NULL] or user supplied value
+	<bQC> bit*				[0], 1
+	<bReadOnly> bit*			[0], 1
+	<sInspComp> varchar(3)			[NULL] or user supplied value from list below
+	<sAssignedUser> varchar(50)		[NULL] or user supplied value
+	<sWorkPacketStatus> char(3)		[NEW], INP, CMP
+	<sTransmitStatus> char(2)		[CI], CO
+	<sComments> varchar(1024)		[NULL]  or user supplied value - **Recommend using import batch ID from external system
+	<bObsolete> bit*			[0], 1
+	<bAdHoc> bit				0, [1]
+	<sGenType> char(2)			[T0],TS,TR,C0,CS,CR
+	<iPacketParent>	int			[NULL]
+</TreeWorkPacket>
+
+<TreeLoc>
+	<iSSDRoute> int				*Default to 10			
+	<iRouteNum> int				*Increment locations by 10 starting at 10
+	<sDivCode> char(2)			*Valid DIV code below
+	<sCountyCode> char(2)			*Valid County Code below
+	<sInspComp> char(3) 			*[PGE] or select from list below
+	<sInsp> char(4)				[SYSA] or userid of inspector
+	<sArea> char(10)			[NULL]
+	<sCircuit> char(10)			*Circuit from list below
+	<sQuadMap> char(11)			[NULL]
+	<sMapType> char(1)			[NULL]
+	<sMapTypeNum> char(8)			[NULL]
+	<sTagType> char(1)			*[D] or select from list below
+	<sTagNum> char(10)			[NULL]
+	<sStreetNum> char(11)			*Use APN street number or [0]
+	<sStreet> char(26)			*Use APN street name or [NO ROAD]
+	<sDirections> varchar(70)				[NULL]
+	<sRACode1> char(2)				[NULL] or select from list below
+	<sRACode2> char(2)			[NULL] or select from list below
+	<sCity> char(11)			*First 11 char of city, or nearest city if in unicorporated county territory
+	<sSourceDev> char(8)			*Use Tower ID xxx/xxx
+	<sPriVolt> char(3)			Highest Line voltage on span or [NULL] if unknown
+	<sSConst> char(1)			[NULL]
+	<bSRA> bit				*SRA = 1 if state/federal fire responsibility area, else 0 for LRA
+	<sComments> char(255)			[NULL]
+	<bCommAlert> bit			*[0]
+	<sPCC> char(6)				[NULL]
+	<sMisc> char(5)				[NULL]
+	<sCustName> char(15)			Customer Name from APN or [NULL]
+	<sCustPhone> char(12)			Customer Phone from APN or [NULL]
+	<bCustAtLoc> bit			*[0]
+	<sLocalID> char(2)			[NULL]
+	<sPoleNum> char(9)			Tower Number or [NULL]
+	<sLineID> char(6)			Highest voltage Transmission Line on span
+	<dtInspDate> datetime			Inspection Date (flyover date)
+	<sRemNum> char(8)			[NULL]
+	<sAcctType> char(1)			[W], R, Y, Z or from list below
+	<sCustName2> char(15)			[NULL] or user entered
+	<sCustPhone2> char(12)			[NULL] or user entered
+	<sRACode3> char(2)			[NULL] or select from list below
+	<sRACode4> char(2)			[NULL] or select from list below
+	<sRACode5> char(2)			[NULL] or select from list below
+	<sRACode6> char(2)			[NULL] or select from list below
+	<bUnderBuild> bit			[0],1 - Not sure if it's possible to visually determine if there is distrubution under the trans line
+	<iPIRoute> int				Incrementing number in order of inspection (1,2,3,... etc)
+	<sXStreet> char(255)			[NULL] or Nearest cross street or NULL if none within 1 mile
+	<sAPN> char(50)				[NULL] or APN number
+	<sPoleNum2> char(9)			[NULL] or Next Tower Number in span (xxx/xxx)
+	<iEasement> int				[NULL]
+	<iSpanLength> int			[NULL] or Distance in ft. between tower 1 and tower 2
+	<iBioUnitsTrim> int			[NULL]
+	<iBioUnitsRemoval> int			[NULL]
+	<bVELBArea> bit				Location within Valley Elderberry protection zone = 1, else 0
+	<sTWADocNum> char(15)			[NULL]
+	<sTWAAgreement> char(4000)		[NULL]
+	<sTWASignedBy> char(50)			[NULL]
+	<gTWASignature> BLOB			[NULL]
+	<dtTWASignedDate> datetime		[NULL]
+	<iCityID> int				From city list below
+	<sTreeLocStatus> char(10)		[CMP_WK_NR], or value from list below
+	<bHCPArea> bit				[NULL]
+	<sHCPAreaName> char(50)			[NULL]
+	<bE10cActivity> bit			[NULL]
+	<iE10cAcreage> int			[NULL]
+	<bMBZ> bit				[NULL]
+	<sMBZID> char(8)			[NULL]
+	<sJointPoleUtility> char(60)		[NULL]
+	<dtPrevInspDate> datetime		[NULL]
+	<ExternalLocID> varchar(50)		Unique identifier of location from external source system
+</TreeLoc>
+		
+<TreeLoc_GPS>
+	<nLatitude> numeric(12, 9)		format:   39.736025000
+	<nLongitude> numeric(12, 9)		format: -121.859128000
+	<dtMobileCapture> datetime		Date/Time of flyover
+</TreeLoc_GPS>
+
+<TreeLocAlerts>
+	<iTreeLocID> int			*LocationID
+	<sRACode> char(2)			*Alert code from list below
+	<sUserID> varchar(50)			*[UserID]
+	<dtDateAdded> datetime			*[Inspection Date]
+</TreeLocAlerts>
+
+<TreeLocRestrictions>
+	<iTreeLocID> int 			*LocationID
+	<sRestrictionCode> char(2)		*Restriction code
+	<bTreeRecsRestriction> bit		IF related sLT value is L, then 0, else 1  (see Restrictions Table below)
+	<sUserID> varchar(50) 		*[UserID]
+	<dtDateAdded> datetime 		*[Inspection Date]
+</TreeLocRestrictions>
+
+<TreeLocContacts>
+	<sContactType> char(2)			*[R] Code indicating contact type (see list below)
+	<bPrimary> bit				*[1] Flag indicating if this is the primary contact for the location
+	<sComments> varchar(255)							
+	<sLastName> varchar(50)			*Last name of customer
+	<sFirstName> varchar(50)		
+	<sBusinessName> varchar(50)	
+	<sStreetNum> varchar(11)		Mailing address info
+	<sStreet> varchar(50)		
+	<sCity> varchar(30)	
+	<sState> char(2)	
+	<sZipcode> varchar(50)	
+	<sPhone> varchar(14)		
+	<sAltPhone> varchar(14)	
+	<sFax> varchar(14) 			
+	<sEmail> varchar(255)	
+</TreeLocContacts>
+
+<TreeLocFile>					Note that <TreeLocFile> section can be repeated for multiple files
+	<iTreeLocID> int			*File will be associated with this location
+	<sFileName> varchar(100)		*Should conform to windows file naming standards - no special chars such as ? , etc...
+	<sFile> BLOB data stream		*No data limit
+</TreeLocFile>
+
+<TreeRecs>
+	<sTreeCode> char(4)			[NULL] or user selected from list below
+	<sNotification> char(1)			*[N],O,C,H,R,Q
+	<nDBH> numeric(2, 0)			[NULL] or prescribed by CUF
+	<nHeight> numeric(3, 0)			Height in feet, rounded to integer value
+	<nClearance> numeric(2, 0)		[NULL] or prescribed by CUF
+	<nQty> numeric(5, 2)			[1] if listing single units of trees, or total quantity of trees of similar species/dbh/height
+	<sTrimCode> char(3)			[NULL] or user selected from list below
+	<nManHours> numeric(5, 2)		[NULL]
+	<sPCode> char(1)			[R]Routine, N(No Trim),H(HN-Imd),U(HN-Urg),X(Accelerate),I(Immediate) - Can we setup proximity rules to select priority
+	<sNextTrim> char(1)			[1],2,3 - Number of years until next inspection
+	<sCrewType> char(2)			[NULL]
+	<sWorkType> char(1)			[NULL]
+	<sPoleOwner> char(1)			[P]
+	<sComment> char(45)			[NULL] or user entered
+	<sOwnedBy> char(2)			[NULL] or landowner value entered by user from list below
+	<bUnderBuild> bit			*[0] Not sure if we can determine if there is underbuild
+	<bTreeConn> bit				*[0]
+	<bTreeWire> bit				*[0]
+	<bInsfClear> bit			*[0]
+	<sReason> char(2)			[NULL]
+	<sAcctType> char(1)			[W], R, Y, Z or from list below
+	<bNotifyPhon> bit			*[0] or user entered
+	<bNotifyPers> bit			*[0] or user entered
+	<bNotifyDoor> bit			*[1] or user entered
+	<bNotifyPerm> bit			*[0] or user entered
+	<iTreeSort> tinyint			*Tree number, Integer increasing from 1,2,3,...,255
+	<sWorkReq> char(11)			[NULL]
+	<iWRTreeRecsID> int			[NULL]
+	<dtNextTrimDate> datetime		[Default to one year from inspection date]
+	<sWrkRptNum> char(7)			[NULL]
+	<sPerformCont> char(7)			[NULL]
+	<dtInspDate> datetime			*Date of inspection/flyover
+	<sInspComp> char(3)			*[PGE] or value from inspection company list below
+	<sInsp> char(4)				[inspector id] or [sysa] if unknown inspector
+	<dTGR> datetime				[NULL]
+	<sMWSDocNum> char(6)			[NULL]
+	<sMWS>	char(1)				[N] - Not a MWS
+	<nProximity> tinyint			[NULL] or lateral distance in ft. to line
+	<dtTGRPriorLast> datetime		[NULL]
+	<dtTrimPriorLast> datetime		[NULL]
+	<nWireType> tinyint			[NULL]
+	<dtVisitedDate> datetime		Inspection Date
+	<sLineID2> char(6)			Secondary Line
+	<sMWSUserID> char(50)			[NULL]
+	<dtMWSSignedDate> datetime		[NULL]
+	<sRxComments> char(255)			[NULL] or user entered value
+	<bVELBArea> bit				[0]
+	<bMWS> bit				[0]
+	<sTreeRecsStatus> char(10)		[OPEN] or value from list below
+	<bJointPole> bit			[0]
+	<sJointPoleUtility> char(60)		[NULL]
+	<ExternalTreeID> varchar(50)		Unique identifier of tree from external source system
+</TreeRecs>
+			
+<TreeRecs_GPS>
+	<nLatitude> numeric(12, 9)		format:   39.736025000
+	<nLongitude> numeric(12, 9)		format: -121.859128000
+	<dtMobileCapture> datetime		Date/Time of flyover
+</TreeRecs_GPS>
+
+<TreeRecsAlerts>
+	<iTreeLocID> int			*LocationID
+	<sRACode> char(2)			*Alert code from list below
+	<sUserID> varchar(50)			*[UserID]
+	<dtDateAdded> datetime			*[Inspection Date]
+</TreeRecsAlerts>
+
+<TreeRecsRestrictions>
+	<iTreeLocID> int 			*LocationID
+	<sRestrictionCode> char(2)		*Restriction code
+	<bTreeRecsRestriction> bit		IF related sLT value is L, then 0, else 1  (see Restrictions Table below)
+	<sUserID> varchar(50) 			*[UserID]
+	<dtDateAdded> datetime 			*[Inspection Date]
+</TreeRecsRestrictions>
+
+<TreeRecFile>					Note that <TreeRecFile> section can be repeated for multiple files
+	<iTreeRecsID> int			*File will be associated with this tree
+	<sFileName> varchar(100)		*Should conform to windows file naming standards - no special chars such as ? , etc...
+	<sFile> BLOB data stream		*No data limit
+</TreeRecFile>

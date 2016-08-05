@@ -1,0 +1,151 @@
+{
+    "data":{
+        "_id" : "565426282895a53d2840f7c5",
+        "updated" : "2016-05-26T22:52:11.432Z",
+        "created" : "2016-01-05T19:59:41.276Z",
+        "inc_id" : 1447,
+        "pge_detection_type" : "VC1p_AF",
+        "dbh" : 22,
+        "height" : 30.9300003051758,
+        "clearance" : 99,
+        "image" : "56d076da3e5d76529d72ba29",
+        "trim_code" : "R2C",
+        "address" : "0 Drummond",
+        "pi_user_id" : "5654cfde2895a53d284117cd",
+        "pi_start_time" : "2016-05-26T22:52:21.311Z",
+        "qsi_id" : "E121713485N38530074",
+        "region" : "North",
+        "species" : "Valley oak",
+        "map_annotations" : [],
+        "type" : "tree",
+        "span_name" : "025/279-025/280",
+        "tc_complete_time" : "2016-05-26T22:52:31.879Z",
+        "pi_complete_time" : "2016-05-26T22:52:31.879Z",
+        "division" : "Sacramento",
+        "pge_pmd_num" : "134330",
+        "location" : {
+            "type" : "Point",
+            "coordinates" : [ 
+                -121.71348545096, 
+                38.5300744042105
+            ]
+        },
+        "status" : "5110000000000",
+        "zipcode" : "95618",
+        "state" : "CA",
+        "city" : "Davis",
+        "streetName" : "Drummond Lane",
+        "streetNumber" : "9410",
+        "circuit_name" : "BRIGHTON_DAVIS",
+        "project" : "transmission_2015",
+        "__v" : 0,
+        "assigned_user_id" : null,
+        "count" : 1,
+        "health" : 100,
+        "tc_start_time" : "2016-05-26T22:52:21.311Z",
+        "tc_user_id" : "571107161e104c03235ee798",
+        "county" : "Solano",
+        "gps_acq_date" : "2015-09-08T00:00:00.000Z",
+        "workorder_id": "WO-T-12345",        
+        "pi_user": {
+            "_id" : "5654cfde2895a53d284117cd",
+            "vehicle" : "5654cfde2895a53d284117cd",
+            "name" : "SterlingSmith",
+            "first" : "Sterling",
+            "last" : "Smith",
+            "user" : "5654db452895a53d28412019",
+            "uniq_id" : "SDSJ@pge.com",
+            "project" : [],
+            "workorder" : [],
+            "assigned_workorders" : [],
+            "data" : [],
+            "scuf" : "CRSW@pge.com",
+            "division_data" : [],
+            "phone_number" : "5302270102",
+            "status" : "deleted",
+            "trees_scheduled" : 0,
+            "scheduled_workorders" : [],
+            "scheduled_data" : [],
+            "work_type" : [ 
+                "tree_inspect"
+            ],
+            "trees_assigned" : 0.0,
+            "company": "ACRT"
+        }, 
+        "tc_user": {
+            "_id" : "571107161e104c03235ee798",
+            "vehicle" : "571107161e104c03235ee798",
+            "name" : "ArtemioJasso",
+            "first" : "Artemio",
+            "last" : "Jasso",
+            "user" : "571107161e104c03235ee797",
+            "uniq_id" : "artemio.jasso@mtfent.com",
+            "project" : [],
+            "scuf" : "andrew.lung@mtfent.com",
+            "phone_number" : [ 
+                "5309031800"
+            ],
+            "status" : "active",
+            "work_type" : [ "tree_trim" ],
+            "checksum" : null,
+            "location" : {
+                "coordinates" : [ 
+                    -120.81166867, 
+                    38.70167616
+                ],
+                "type" : "Point"
+            },
+            "company" : "Mountain F Enterprises"
+        },
+        "line":{
+            "_id" : "569a7f6c43962bfc3fe5a25f",
+            "name" : "BRIGHTON_DAVIS",
+            "line_number": "10021",
+            "division": "Sacramento",
+            "type": "transmission",
+            "voltage": "70",
+            "url" : "http://esri.dispatchr.co:6080/arcgis/rest/services/TRANS_2016/MapServer/125",
+            "project" : "transmission_2015",
+            "detected_count" : 81,
+            "total_count" : 815,
+            "inspected_count" : 9,
+            "listed_count" : 94,
+            "worked_count" : 0,
+            "allgood_count" : 631
+        }, 
+        "pmd": {
+            "_id" : "56aa0ff8398cf249f959c8c1",
+            "pge_pmd_num" : "134775",
+            "project" : "transmission_2015",
+            "division" : "Sacramento",
+            "name" : "CR-Brighton 115kv-NON-NERC",
+            "detected_count" : 188,
+            "allgood_count" : 136,
+            "inspected_count" : 9,
+            "listed_count" : 40,
+            "worked_count" : 0,
+            "total_count" : 373,
+            "plan_pi_complete" : "2015-12-10T00:00:00.000Z",
+            "type" : "System Maintenance",
+            "cufs" : [],
+            "nerc" : false,
+            "__v" : 1
+        }, 
+        "image": {
+            "_id" : "569eaaeb1cc8a3580ef91798",
+            "meta" : {
+                "workorder" : "565426262895a53d2840f73d",
+                "tree_index" : "10021_513",
+                "device_location" : ""
+            },
+            "__v" : 0,
+            "data" : "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD<IMAGE TRUNCATED>",
+            "ressourceType" : "task",
+            "ressourceId" : "10021_513",
+            "updated" : "2016-01-19T21:32:48.803Z",
+            "created" : "2016-01-19T21:32:48.803Z",
+            "description" : "task: 10021_513",
+            "contentType" : "image"
+        }
+    }
+}

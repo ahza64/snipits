@@ -1,0 +1,10 @@
+{
+    "locations": ["location1"],
+    "results": {
+        "sAcctType": "M",
+        "sDivCode": "SA",
+        "iProjID": "134775",
+        "sInspComp": "ACR",
+        "sAssignedUser": "SDSJ@pge.com : Sterling Smith"        
+    }
+}

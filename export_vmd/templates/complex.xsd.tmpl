@@ -1,0 +1,8 @@
+<!-- {% autoescape false %}{{line}}{% endautoescape %} -->
+<xs:element name="{{name}}">
+    <xs:complexType>
+		<xs:all>
+			{% autoescape false %}{{subdoc}}{% endautoescape %}
+		</xs:all>
+    </xs:complexType>        
+</xs:element>

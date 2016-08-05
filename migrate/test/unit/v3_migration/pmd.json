@@ -1,0 +1,15 @@
+{
+  "_id": "56a89372663eb9c107c63617",
+  "status": "ready",
+  "pge_pmd_num": "136472",
+  "name": "CR Mendocino-Cache Jct 2",
+  "division": "North Coast",
+  "work_type": "System Maintenance",
+  "division_code": "NC",
+  "updated": "2016-04-08T00:12:32.225Z",
+  "created": "2016-01-27T09:52:50.038Z",
+  "plan_trim_complete": "2016-02-26T00:00:00.000Z",
+  "plan_pi_complete": "2016-01-13T00:00:00.000Z",
+  "__v": 0,
+  "nerc": false
+}

@@ -30,7 +30,17 @@ node_modules/*
 .npm
 
 # Optional REPL history
-.node_repl_historyi
+.node_repl_history
 
 #python byte code
 *.pyc
+
+#npm node_modules
+**/node_modules/*
+!**/node_modules/dsp_*
+
+#dispatchr configs
+**/conf.d/*.json
+
+/data
+pdf_generation_service/public/pdf/*

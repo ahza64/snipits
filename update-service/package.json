@@ -1,0 +1,39 @@
+{
+  "name": "dispatchr-update-service",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.13.4",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.0",
+    "mongodb": "2.2.*",
+    "deep-freeze-strict": "^1.1.1",
+    "mongoose": "4.5.5",
+    "bluebird": "^2.9.34",
+    "lodash": "^3.10.1",
+
+    "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
+    "moment": "^2.13.0",
+    "moment-timezone": "^0.5.4",
+
+    "mockgoose": "6.0.3",
+    "sinon": "^1.15.4",
+    "sinon-as-promised": "^4.0.0",
+
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^2.2.0",
+    "gulp-nodemon": "^2.0.3",
+    "gulp-open": "^1.0.0",
+    "gulp-prompt": "^0.1.2",
+    "gulp-shell": "^0.4.2",
+    "gulp-util": "^3.0.7",
+    "yargs": "^4.3.1"
+  }
+}
