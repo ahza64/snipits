@@ -44,3 +44,6 @@ node_modules/*
 
 /data
 pdf_generation_service/public/pdf/*
+
+#outfile
+*qsi_ids
