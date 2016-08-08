@@ -276,8 +276,10 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
     if(!fs.existsSync(export_dir)){
       fs.mkdir(export_dir);
     }
-    console.log("Creating ", export_dir, filename);
-    fs.writeFile(export_dir+"/"+filename, packet.toXML());
+    var path = export_dir+"/"+filename;
+    console.log("Creating ", path);
+    assert(!fs.existsSync(path), "file already exists");
+    fs.writeFile(path, packet.toXML());
   }
 }
 
