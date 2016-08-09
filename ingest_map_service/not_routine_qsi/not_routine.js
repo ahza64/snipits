@@ -19,15 +19,17 @@ function write_to_file(qsi_id){
  * @param {string} dispatchr_field   field name for meteor schema
  * @yield {Array}}  retrun from mongo
  */
- function *run(push) {
-  push = push || false;
+ function *run() {
   fs.writeFile(__dirname + '/qsi_ids', '', () => console.log('done') );
   console.time('query');
   var trees = yield TreeV3.find({flagged_not_routine:true}).select('qsi_id').exec();
   console.log(trees.length);
   console.timeEnd('query');
-  trees.forEach( tree => write_to_file(tree.qsi_id) );
-
+  trees.forEach( tree => { 
+      if(tree.qsi_id){ 
+        write_to_file(tree.qsi_id); 
+      } 
+    });
 }
 
 
