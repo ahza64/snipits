@@ -42,6 +42,7 @@ function *co_iterator(handler) {
   co(function*(){
     yield handler(handleNext);
   }).then(function(){
+    console.log("GEN DONE HERE");
     done = true;
   }).catch(function(err){
     console.error(err);
@@ -50,7 +51,8 @@ function *co_iterator(handler) {
   });  
   
   
-  while(!done) {
+  while(!done || !next) {
+    console.log("GOT NEXT", done, next)
     yield new BPromise(function(resolve, reject) {      
       if(error) {
         reject(error);
@@ -67,6 +69,7 @@ function *co_iterator(handler) {
         next_reject = reject;
       }
     });
+    console.log("CONTINUE LOOP")
   }
 }
 
