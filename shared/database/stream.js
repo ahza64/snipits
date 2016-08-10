@@ -60,6 +60,9 @@ function *stream(Model, query) {
   _stream.on('close', function () {
     // all done
     done = true;
+    if(next_resolve) {
+      next_resolve(null);
+    }
   });
   
   while(!done || next) {
