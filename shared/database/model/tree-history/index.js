@@ -8,14 +8,11 @@ const DELETED = '---deleted---';
 const utils = require('dsp_lib/utils');
 
 historySchema.statics.recordTreeHistory = function(oldTree, newTree, user, queued) {
-    console.log(oldTree, newTree, utils, queued)
   var changes = diff(oldTree, utils.toJSON(newTree));
-  console.log('changes', changes);
   return TreeHistoryModel.create(changes, newTree, user, queued);
 };
 
 historySchema.statics.create = function(treeDiff, tree, user, queued) {
-  console.log(treeDiff)
   var eligibleChanges = _.filter(treeDiff, diff => IGNORE_FIELDS.indexOf(diff.path.join()) === -1);
   console.log("CHANGES", eligibleChanges);
   var treeHistory = {};
@@ -26,9 +23,11 @@ historySchema.statics.create = function(treeDiff, tree, user, queued) {
 
   if(Object.keys(treeHistory).length > 0) {
     return TreeHistoryPGModel.build(historyRecord).save()
-    .catch(err => console.error('TreeHistoryError PG ' + err))
     .then(() => TreeHistoryModel.collection.insertOne(historyRecord))
-    .catch(err => console.error('TreeHistoryError ' + err));
+    .catch(err => {
+      console.error('TreeHistoryError ' + err);
+      return Promise.reject(err);
+    });
   }
 };
 

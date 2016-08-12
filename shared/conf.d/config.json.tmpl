@@ -11,9 +11,31 @@
         ]
     },
      "meteor":{
+                "name":"meteor",
                 "mongo_db_host": "localhost",
-                "mongo_db_name": "dev_meteor",
-                "mongo_db_port": 27017,
-                "name":"meteor"
-    }
+                "mongo_db_name": "prod_meteor",
+                "mongo_db_port": 27017
+    },
+    "meteor_ro":{
+               "name":"meteor",
+               "mongo_db_host": "localhost",
+               "mongo_db_name": "prod_meteor",
+               "mongo_db_port": 27017
+   },    
+    "trans":{
+               "name":"trans",
+               "mongo_db_host": "localhost",
+               "mongo_db_name": "prod_trans",
+               "mongo_db_port": 27017
+   },
+   "postgres": {
+              "name":"postgres",
+              "type": "postgres",
+              "db_host": "localhost",
+              "db_port": 5432,              
+              "db_name": "prod_pg",
+              "db_user": "postgres",
+              "db_pass": "postgres"
+  }
+    
 }

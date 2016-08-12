@@ -25,12 +25,12 @@ function setConnection(con_name, con) {
 
 
 function createConnection(config) {
-  console.log("CREAGING CONNNECITON", config);
+  console.log("CREATING CONNNECITON", config);
   const POSTGRES_SERVER = config.db_host;
   const POSTGRES_DB = config.db_name;
   const POSTGRES_USER = config.db_user;
   const POSTGRES_PASS = config.db_pass;
-  const logger = config.logger ? console.log : false;
+  const logger = config.logger ? console.log : true;
 
   var db = getConnection(config.name, false);  
   if(!db) {
