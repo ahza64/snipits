@@ -40,7 +40,7 @@ map_line_name = {
     "COYOTE_SW_STA_METCALF": "COYOTE_METCALF"
 }
 
-def span_report(output_file, aggragation_file=None, lines=None, include_unworked=False):
+def span_report(output_file, aggragation_file=None, lines=None):
     print "CREATING SPAN REPORT"
     if not lines:
         lines = arcpy.ListFeatureClasses("*_Spans")
@@ -74,7 +74,7 @@ def span_report(output_file, aggragation_file=None, lines=None, include_unworked
 
     for group in groups:
         print "group", group
-        if("SPRING_30" in group or "TRANS_70" in group):
+        if("SPRING_30" in group or group.endswith("TRANS_70_DELIVERY")):
             arcpy.env.workspace = egdb+"/"+group  
             classes = arcpy.ListFeatureClasses()
             for feature_name in classes:
@@ -116,7 +116,7 @@ def span_report(output_file, aggragation_file=None, lines=None, include_unworked
                     # DeleteIfFieldExist(line, "SHAPE_LEN_MI")
                     # arcpy.AddField_management(line, "SHAPE_LEN_MI", "DOUBLE")
                     # arcpy.CalculateField_management(line, "SHAPE_LEN_MI", "!SHAPE.LENGTH@MILES!", "PYTHON")
-                    agg = {"WORKED_MILES": 0, "NO_WORK_MILES": 0, "UNWORKED_MILES": 0}
+                    agg = {"WORKED_MILES": 0, "NO_WORK_MILES": 0, "UNWORKED_MILES": 0, "NO_TREE_MILES": 0}
                     for row in arcpy.SearchCursor(feature_name):
                         agg["LINE_NAME"] = row.LINE_NAME
                         agg["VOLTAGE"] = row.VOLTAGE
@@ -132,24 +132,27 @@ def span_report(output_file, aggragation_file=None, lines=None, include_unworked
                         csv_row = dict(LINE_NAME= row.LINE_NAME, LINE_NBR= row.LINE_NBR, SPAN_NAME= span_name, SPAN_LEN_MI=span_len ,
                                 NO_WORK=allgood, WORKED=worked, UNWORKED=unworked, VOLTAGE=row.VOLTAGE)
                         print "  ", csv_row 
-                        if(unworked == 0 or include_unworked):
-                            writer.writerow(csv_row)
+                        writer.writerow(csv_row)
 
-                        if(unworked == 0 and worked == 0):
-                            agg["NO_WORK_MILES"] += span_len 
-                        elif (unworked == 0):
-                            agg["WORKED_MILES"] += span_len 
-                        else:
+                        if(unworked == 0 and worked == 0 and allgood == 0):
+                            agg["NO_TREE_MILES"] += span_len 
+                        elif (unworked != 0 ):
                             agg["UNWORKED_MILES"] += span_len 
+                        elif (worked != 0):
+                            agg["WORKED_MILES"] += span_len 
+                        elif (allgood != 0):
+                            agg["NO_WORK_MILES"] += span_len
+
                     aggragations[agg["LINE_NAME"]] = agg
                     csvfile.flush()    
 
     total_worked = 0
     total_unwworked = 0
     total_no_work = 0    
+    total_no_tree = 0
 
     csvfile = open(aggragation_file,'wb') 
-    fieldnames = ['LINE_NAME', 'VOLTAGE', 'NO_WORK_MILES', 'WORKED_MILES', 'UNWORKED_MILES']
+    fieldnames = ['LINE_NAME', 'VOLTAGE', 'NO_WORK_MILES', 'WORKED_MILES', 'UNWORKED_MILES', 'NO_TREE_MILES']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
 
@@ -159,12 +162,14 @@ def span_report(output_file, aggragation_file=None, lines=None, include_unworked
         total_worked += aggragations[line]["WORKED_MILES"]
         total_unwworked += aggragations[line]["UNWORKED_MILES"]
         total_no_work += aggragations[line]["NO_WORK_MILES"]
+        total_no_tree += aggragations[line]["NO_TREE_MILES"]
         writer.writerow(aggragations[line])
         csvfile.flush()
 
     print "WORKED_MILES", total_worked
     print "UNWORKED_MILES", total_unwworked
     print "NO_WORK_MILES", total_no_work
+    print "NO_TREE_MILES", total_no_tree
 
 
 def countTrees(trees):
