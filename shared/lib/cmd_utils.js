@@ -6,7 +6,7 @@ var co = require('co');
 var timer = require('co-timer');
 var config = require('dsp_config/config').get();	
 var BPromise = require('bluebird');
-
+var utils = require('./utils');
 var baker = require('./baker');
 
 var connections = null;
@@ -33,7 +33,13 @@ function connect(connection_names) {
 
       var name = connection_names[i];
       if(!connections[name]) {
-        connections[name] = require('dsp_database/database')(config[name]);
+        var db_type = config[name].type || "mongo";
+        if(db_type === "mongo") {
+          connections[name] = require('dsp_database/database')(config[name]);
+        } else if(db_type === "postgres") {
+          connections[name] = require('dsp_database/sequelize')(config[name]);
+        }
+        
       }      
     }
   }
@@ -44,7 +50,7 @@ function closeConnections() {
   for(var name in connections) {
     if(connections.hasOwnProperty(name)) {
       console.log("CLOSING", name);
-      connections[name].connection.close();
+          connections[name].connection.close();
     }
   }
 }
@@ -120,7 +126,7 @@ function dumpAsCSV(row_data, tabs) {
   return rows.join("\n");
 }
 
-module.exports = {
+module.exports = _.extend(utils, {
   connect: connect,
   getConnection: getConnection,
   closeConnections: closeConnections,
@@ -132,4 +138,4 @@ module.exports = {
     baker.run();
   }
 
-};
+});

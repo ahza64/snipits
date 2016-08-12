@@ -1,4 +1,6 @@
-
+/**
+ * This is just a singleton that is holding global connecitons to databases
+ */
 
 
 var connections = {};
@@ -13,7 +15,7 @@ module.exports = function(con_name, con, verbose) {
 		console.error("NO CONNECTION FOUND", con_name);		
 	}
 	return connections[con_name];
-}
+};
 
 
 

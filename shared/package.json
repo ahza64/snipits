@@ -9,6 +9,7 @@
     "co": "^4.6.0",
     "co-timer": "0.0.1",
     "csv-parse": "^1.1.1",
+    "deep-diff": "^0.3.4",
     "log4js": "https://github.com/gabe0x02/log4js-node.git",
     "log4js-json-layout": "https://github.com/gabe0x02/log4js-json-layout.git",
     "log4js-node-mongodb": "^1.0.0",
@@ -16,7 +17,10 @@
     "mongoose": "^4.4.19",
     "mongoose-auto-increment": "^5.0.1",
     "node-geocoder": "^3.11.0",
+    "pg": "^6.1.0",
+    "pg-native": "^1.10.0",
     "restler": "^3.4.0",
+    "sequelize": "^3.24.0",
     "sugar": "^1.4.1",
     "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
     "underscore": "^1.8.3"
