@@ -51,7 +51,7 @@ function *mark_complete(folder, date, unset, export_type) {
         
     var exp = yield Export.findOne({tree_id: tree_export.tree_id, type: export_type});
     if(!unset) {
-      assert(exp===null, "Tree already exported");
+      assert(exp===null, "Tree already exported: "+ tree_export.tree_id);
       yield Export.create(tree_export);
     } else {
       yield Export.remove({type: export_type, tree_id: tree_export.tree_id});      

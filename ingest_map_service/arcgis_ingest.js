@@ -304,6 +304,7 @@ var pmd_projects = {};
 function *getPMD(pge_pmd_num) {
   if(!pmd_projects[pge_pmd_num]) {
     pmd_projects[pge_pmd_num] = yield PMD.findOne({pge_pmd_num: pge_pmd_num});
+    
   }
   //still don't have it... lookin PMD.csv
   if(!pmd_projects[pge_pmd_num]) {
@@ -318,6 +319,7 @@ function *getPMD(pge_pmd_num) {
  * @param {String} pge_pmd_num PMD number  
  */
 function *generatePMD(pge_pmd_num){
+  console.log("CREATING PMD", pge_pmd_num);
   var pmds = yield readPMDCSV("PMD.csv");
   var pmd = pmds[pge_pmd_num];
   assert(pmd, "Can not create project for pmd number: "+pge_pmd_num);
