@@ -51,7 +51,7 @@ function *mark_complete(folder, date, unset, export_type) {
         
     var exp = yield Export.findOne({tree_id: tree_export.tree_id, type: export_type});
     if(!unset) {
-      assert(exp===null, "Tree already exported");
+      assert(exp===null, "Tree already exported: "+ tree_export.tree_id);
       yield Export.create(tree_export);
     } else {
       yield Export.remove({type: export_type, tree_id: tree_export.tree_id});      
@@ -137,12 +137,14 @@ function *get_wc_trees(folder) {
     var file = files[i];
     if(file.endsWith('WC')) {      
       file = yield fs.readFileAsync([folder, file].join('/'));
-      var work_complete = yield xml2js.parseStringAsync(file);
-      var tree_id = work_complete.TreeWorkComp.ExternalTreeID[0];
-      var workorder_id = work_complete.TreeWorkComp.ExternalWRID[0];
-      assert(tree_id);
-      assert(workorder_id);
-      trees.push({export_tree_id: tree_id, workorder_id: workorder_id});
+      var work_batch = yield xml2js.parseStringAsync(file); 
+      work_batch.WCBatch.TreeWorkComp.forEach(work_complete =>{
+        var tree_id = work_complete.ExternalTreeID[0];
+        var workorder_id = work_complete.ExternalWRID[0];
+        assert(tree_id);
+        assert(workorder_id);
+        trees.push({export_tree_id: tree_id, workorder_id: workorder_id});
+      });
     }
   }
   return trees;

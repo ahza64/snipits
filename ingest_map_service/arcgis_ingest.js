@@ -24,6 +24,10 @@ var Ingest = require('dsp_shared/database/model/ingest');
 
 var dsp_project = "transmission_2015";
 
+var trees_ingested = 0;
+var trees_ignored = 0;
+var total_trees = 0;
+
 var detection_priorities = {
   VC1c_URGENT: 1,
   VC1c_AF: 2,
@@ -86,7 +90,7 @@ function *run(service_name, force, block_create){
       console.log("service url PATH", base_url);
  
       service = yield http_get(base_url, base_params);
-      for(var i = 0 ; i < service.layers.length; i++) {
+      for(var i = 0; i < service.layers.length; i++) {
         var layer_group = service.layers[i];
         if(layer_group.subLayerIds && layer_group.parentLayerId === -1) {
           var ingest = yield ingestGroup(layer_group, service, base_url, force, block_create);
@@ -101,7 +105,7 @@ function *run(service_name, force, block_create){
 
 
 function *ingestGroup(layer_group, service, base_url, force, block_create){
-  console.log("check ingested", {name: layer_group.name, script: "arcgis_ingest", status: "complete"}) 
+  console.log("check ingested", {name: layer_group.name, script: "arcgis_ingest", status: "complete"});
   var ingest = yield Ingest.findOne({name: layer_group.name, script: "arcgis_ingest", status: "complete"}).sort({date: -1});
   if(ingest && !force) {
     console.log("Layer group previously ingested", layer_group.name);
@@ -124,6 +128,7 @@ function *ingestGroup(layer_group, service, base_url, force, block_create){
       }else if(layer.name.endsWith("Spans")) {
         yield processSpansLayer(base_url, layer);
       } 
+      console.log("ingested", trees_ingested, "ignored", trees_ignored, "total", total_trees);
     }
   
     ingest.status = "complete";
@@ -193,7 +198,7 @@ function *processSpansLayer(base_url, layer) {
       yield doc.save();
       console.log("Updated Line", line.name);
     }
-  }
+  }  
 }
 
 /**
@@ -237,6 +242,7 @@ function *processTrees(trees, block_create) {
   // console.log("Block Create", block_create);
   tree_docs = _.indexBy(tree_docs, "qsi_id");
   for(var i = 0; i < trees.length; i++) {
+    total_trees++;
     var doc = tree_docs[trees[i].attributes.TREEID];
     
     if(doc) {
@@ -252,10 +258,11 @@ function *processTrees(trees, block_create) {
 
     if(block_create && !address) {
       //ingore address
-      address = {}
+      address = {};
     }
     var tree = yield translateTree(trees[i], address);
     if(shouldIngest(tree)){
+      trees_ingested++;
       try{
         if(!doc) {
           if(!block_create) {
@@ -282,6 +289,8 @@ function *processTrees(trees, block_create) {
         console.error("ERROR", e.message);
         throw(e);
       }
+    } else {
+      trees_ignored++;
     }
   }
 }
@@ -295,6 +304,7 @@ var pmd_projects = {};
 function *getPMD(pge_pmd_num) {
   if(!pmd_projects[pge_pmd_num]) {
     pmd_projects[pge_pmd_num] = yield PMD.findOne({pge_pmd_num: pge_pmd_num});
+    
   }
   //still don't have it... lookin PMD.csv
   if(!pmd_projects[pge_pmd_num]) {
@@ -309,8 +319,10 @@ function *getPMD(pge_pmd_num) {
  * @param {String} pge_pmd_num PMD number  
  */
 function *generatePMD(pge_pmd_num){
+  console.log("CREATING PMD", pge_pmd_num);
   var pmds = yield readPMDCSV("PMD.csv");
   var pmd = pmds[pge_pmd_num];
+  assert(pmd, "Can not create project for pmd number: "+pge_pmd_num);
   return yield PMD.create(pmd);
 }
 
