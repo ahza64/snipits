@@ -38,22 +38,47 @@ WorkorderSchema.statics.updateTreesWithoutWorkorders = function(startDate, endDa
   .then(trees => trees.reduce(addToWorkorder, Promise.resolve()));
 };
 
-WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
+WorkorderSchema.statics.buildWorkorder = function(tree, defaultValues) {
+  defaultValues = defaultValues || {};
   var pmd = defaultValues.pge_pmd_num || tree.pge_pmd_num;
   var span_name = defaultValues.span_name || tree.span_name;
   var city = tree.city;
   var streetName = tree.streetName;
   var streetNumber = tree.streetNumber;
   var zipcode = tree.zipcode;
-
+  
   var uniq_id = pmd + span_name + streetNumber + streetName + city + zipcode;
+  
+  var newWo = {
+    span_name: span_name,
+    pge_pmd_num: pmd,
+    tasks: [],
+    uniq_id: uniq_id,
+    city: city,
+    streetName: streetName,
+    streetNumber: streetNumber,
+    zipcode: zipcode
+  };
+  return newWo;
+};
+
+
+WorkorderSchema.statics.getUniqId = function(tree_or_workorder, defaultValues) {
+  var wo = WorkorderModel.buildWorkorder(tree_or_workorder, defaultValues);
+  return wo.uniq_id;
+};
+
+
+WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
+
+  var uniq_id = WorkorderModel.getUniqId(tree, defaultValues);
   return WorkorderModel.findOne({ "tasks": tree._id })
   .then(wo => {
     if(wo === null) {
       return WorkorderModel.findOne({uniq_id: uniq_id});
     } else {
       if(wo.uniq_id !== uniq_id) {
-        console.log("Tree workorder has uniq_id missmatch", tree);
+        console.log("Tree work order has uniq_id missmatch", tree._id, uniq_id);
       }
       return wo;
     }  
@@ -66,17 +91,9 @@ WorkorderSchema.statics.addToWorkorder = function(defaultValues, tree) {
     if(wo){
       return WorkorderModel.update({ uniq_id: uniq_id }, { $push: { tasks: tree._id }});
     } else {
-      var newWo = {
-        span_name: span_name,
-        pge_pmd_num: pmd,
-        tasks: [tree._id],
-        uniq_id: uniq_id,
-        city: city,
-        streetName: streetName,
-        streetNumber: streetNumber,
-        zipcode: zipcode
-      };
 
+      var newWo = WorkorderModel.buildWorkorder(tree, defaultValues);
+      newWo.tasks.push(tree._id);
       return new WorkorderModel(newWo).save();
     }
   })
@@ -110,23 +127,8 @@ WorkorderSchema.statics.generateWorkorders = function() {
 function generateWorkorder(workorders) {
   log.debug("generateWorkorder", workorders.length);
   return workorders.map(wo => {
-    var pmd = wo._id.pge_pmd_num;
-    var span_name = wo._id.span_name;
-    var city = wo._id.city;
-    var streetName = wo._id.streetName;
-    var streetNumber = wo._id.streetNumber;
-    var zipcode = wo._id.zipcode;
-    var uniq_id = pmd + span_name + streetNumber + streetName + city + zipcode;
-    wo = {
-      span_name: span_name,
-      pge_pmd_num: pmd,
-      tasks: wo.tasks,
-      uniq_id: uniq_id,
-      city: city,
-      streetName: streetName,
-      streetNumber: streetNumber,
-      zipcode: zipcode
-    };
+    var newWo = WorkorderModel.buildWorkorder(wo._id);//wo._id is aggrigation
+    newWo.tasks = wo.tasks;
     console.log("SAVING WO", wo.uniq_id);
     return new WorkorderModel(wo).save().then(function(saved){
       log.debug("WORKORDER SAVED", wo.uniq_id);

@@ -1,4 +1,5 @@
 var BPromse = require("bluebird");
+var assert = require('assert');
 /**
  * {@code
  *     if (require.main === module) {
@@ -26,7 +27,8 @@ var BPromse = require("bluebird");
  * @param {Object} query a mongo query    
  */
 function *stream(Model, query) {
-  console.log("stream_gen", Model, query);
+  // console.log("stream_gen", Model.name, query);
+  assert(Model, "NO MODEL for stream");
   var done = false;
   var next = null;
   var error = null;
