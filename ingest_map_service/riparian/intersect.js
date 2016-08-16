@@ -43,7 +43,7 @@ var http_get = esri_util.http_get;
   "f": "pjson"
 };
 
-  var trees = yield TreeV3.find({status:/^1/}).select('location').limit(100).exec();
+  var trees = yield TreeV3.find({status:/^1/}).select('location').exec();
   console.time('query');
   for (var i = 0; i < trees.length; i++) {
   	var tree = trees[i];
@@ -55,7 +55,7 @@ var http_get = esri_util.http_get;
   	console.log("service url PATH", base_url);
   	var service = yield http_get(base_url, base_params);
   	console.log(">>>>>>>>>>>>>>>>>", service.features.length);
-  	if(service.features.length > 1){
+  	if(service.features.length > 0){
   		console.log(' FOUND IN RIPERIAN ZONE');
   		if(push){
   			yield TreeV3.update({ _id: tree._id },{ $set: { riparian: true } });
