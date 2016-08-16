@@ -5,6 +5,19 @@ var TreeV3 = require("dsp_shared/database/model/tree");
 var esri_util = require("dsp_shared/lib/gis/esri_util");
 var http_get = esri_util.http_get;
 
+String.prototype.replaceAt=function(index, character) {
+    character = character.toString();
+    return this.substr(0, index) + character + this.substr(index+character.length);
+};
+
+const ENV_INDEX = 12;
+
+const NONE        = 0;
+const RIPARIAN    = 1;
+// const VELB        = 2;
+// const RAPTOR_NEST = 3;
+// const OTHER       = 4;
+
 
 /**
  * run runs the script to correct the qsi_field values
@@ -43,7 +56,7 @@ var http_get = esri_util.http_get;
   "f": "pjson"
 };
 
-  var trees = yield TreeV3.find({status:/^1/}).select('location').exec();
+  var trees = yield TreeV3.find({status:/^1/}).select('location status').exec();
   console.time('query');  
   for (var i = 0; i < trees.length; i++) {
     if(i%100 === 0) {
@@ -55,16 +68,17 @@ var http_get = esri_util.http_get;
   	var service_path = ["/arcgis/rest/services", 'PGE_RIPARIAN', "MapServer", 0,"query"].join("/");
   	var base_url = [host, service_path].join('/');
   	var service = yield http_get(base_url, base_params);
+    var status = tree.status;        
   	if(service.features.length > 0){
   		console.log(' FOUND IN RIPERIAN ZONE', tree._id, geometry);
-  		if(push){
-  			yield TreeV3.update({ _id: tree._id },{ $set: { riparian: true } });
-  		}
+      status = status.replaceAt(ENV_INDEX, RIPARIAN);//set as reparian
   	} else {
-  		if(push){
-  			yield TreeV3.update({ _id: tree._id },{ $set: { riparian: false } });
-  		}
+      status = status.replaceAt(ENV_INDEX, NONE);//unset flag
   	}
+		if(push){        
+			yield TreeV3.update({ _id: tree._id },{$set: {status: status}, $unset: { riparian: "" } });
+		}
+    
   }
   	console.timeEnd('query');
 
