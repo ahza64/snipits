@@ -44,24 +44,23 @@ var http_get = esri_util.http_get;
 };
 
   var trees = yield TreeV3.find({status:/^1/}).select('location').exec();
-  console.time('query');
+  console.time('query');  
   for (var i = 0; i < trees.length; i++) {
+    if(i%100 === 0) {
+      console.log("Checking Trees: ", i, "of", trees.length);
+    }
   	var tree = trees[i];
   	var geometry = tree.location.coordinates[0].toString() + "," + tree.location.coordinates[1].toString();
-  	console.log(geometry);
   	base_params.geometry = geometry;
   	var service_path = ["/arcgis/rest/services", 'PGE_RIPARIAN', "MapServer", 0,"query"].join("/");
   	var base_url = [host, service_path].join('/');
-  	console.log("service url PATH", base_url);
   	var service = yield http_get(base_url, base_params);
-  	console.log(">>>>>>>>>>>>>>>>>", service.features.length);
   	if(service.features.length > 0){
-  		console.log(' FOUND IN RIPERIAN ZONE');
+  		console.log(' FOUND IN RIPERIAN ZONE', tree._id, geometry);
   		if(push){
   			yield TreeV3.update({ _id: tree._id },{ $set: { riparian: true } });
   		}
   	} else {
-  		console.log('NOT FOUND IN RIPERIAN ZONE');
   		if(push){
   			yield TreeV3.update({ _id: tree._id },{ $set: { riparian: false } });
   		}
