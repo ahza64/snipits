@@ -57,7 +57,8 @@ const RIPARIAN    = 1;
 };
 
   var trees = yield TreeV3.find({status:/^1/}).select('location status').exec();
-  console.time('query');  
+  console.time('query'); 
+  var riparian_count = 0; 
   for (var i = 0; i < trees.length; i++) {
     if(i%100 === 0) {
       console.log("Checking Trees: ", i, "of", trees.length);
@@ -68,19 +69,20 @@ const RIPARIAN    = 1;
   	var service_path = ["/arcgis/rest/services", 'PGE_RIPARIAN', "MapServer", 0,"query"].join("/");
   	var base_url = [host, service_path].join('/');
   	var service = yield http_get(base_url, base_params);
-    var status = tree.status;        
+        var status = tree.status;        
   	if(service.features.length > 0){
-  		console.log(' FOUND IN RIPERIAN ZONE', tree._id, geometry);
-      status = status.replaceAt(ENV_INDEX, RIPARIAN);//set as reparian
+          riparian_count++;
+          console.log(' FOUND IN RIPERIAN ZONE', tree._id, geometry, riparian_count);
+          status = status.replaceAt(ENV_INDEX, RIPARIAN);//set as reparian
   	} else {
-      status = status.replaceAt(ENV_INDEX, NONE);//unset flag
+          status = status.replaceAt(ENV_INDEX, NONE);//unset flag
   	}
-		if(push){        
-			yield TreeV3.update({ _id: tree._id },{$set: {status: status}, $unset: { riparian: "" } });
-		}
+	if(push){        
+	  yield TreeV3.update({ _id: tree._id },{$set: {status: status}, $unset: { riparian: "" } });
+	}
     
   }
-  	console.timeEnd('query');
+  console.timeEnd('query');
 
 }
 
