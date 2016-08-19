@@ -10,7 +10,7 @@ var mount = require('koa-mount');
 var koa = require('koa');
 var cors = require('koa-cors');
 
-require('dsp_shared/database/database')(config.database);
+require('dsp_shared/database/database')(config.meteor);
 var whitelist = config.corsWhitelist;
 var corsOptions = {
   origin: function(origin, callback){
