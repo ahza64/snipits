@@ -23,7 +23,6 @@ var corsOptions = {
 	credentials: true
 };
 var app = koa();
-var PMD = require('dsp_shared/database/model/pmd');
 
 // middleware
 // app.use(cors(corsOptions));

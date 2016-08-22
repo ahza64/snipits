@@ -14,7 +14,8 @@ var cufSchema = new mongoose.Schema({
   scuf:{type:String, index: true},
   phone_number:{type:String, index: true},
   status:{type:String, index: true},
-  company: {type: String}
+  company: {type: String},
+  workorder: []
 });
 
 module.exports = connection.model('CUFS', cufSchema);

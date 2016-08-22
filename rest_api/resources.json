@@ -30,5 +30,12 @@
       "read_only": true,
       "accepted_filters": ["uniq_id", "scuf"]
     }
+  },
+  "mapfeatures": {
+    "name": "mapfeatures",
+    "options": {
+      "model": "mapfeatures",
+      "read_only": true
+    }
   }
 }
