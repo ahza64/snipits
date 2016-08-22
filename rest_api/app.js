@@ -2,6 +2,7 @@
 * Module dependencies.
 * @fileOverview app.js
 */
+var _ = require('underscore');
 var config = require('dsp_shared/config/config').get();
 var log = require('log4js').getLogger('['+__filename+']');
 var logger = require('koa-logger');
@@ -9,7 +10,8 @@ var compress = require('koa-compress');
 var mount = require('koa-mount');
 var koa = require('koa');
 var cors = require('koa-cors');
-
+var resources = require('./resources.json');
+var requestId = require('koa-request-id');
 require('dsp_shared/database/database')(config.meteor);
 var whitelist = config.corsWhitelist;
 var corsOptions = {
@@ -21,25 +23,32 @@ var corsOptions = {
 	credentials: true
 };
 var app = koa();
+var PMD = require('dsp_shared/database/model/pmd');
 
 // middleware
 // app.use(cors(corsOptions));
 app.use(logger());
 app.use(compress());
+app.use(requestId());
 
-var crud_routes = require('./crud_route');
+//envelope middle ware
+app.use(function *(next){
+  yield next;
+  this.body = {
+    envelope:{
+      request_id: this.id,
+      request_url: this.request.url,
+      method: this.request.method,
+      doc_count: this.body.length + '/' + this.doc_count,
+      project_doc_count: this.projectDoc_count
+    },
+    data: this.body
+  }
+});
 
-app.use(mount('/api/v3',"tree",    {read_only: true})));
-app.use(mount('/api/v3',"circuit", {read_only: true})));
-app.use(mount('/api/v3',"user",     {model: "cuf", methods: ["GET", "PUT"]})));
-
-console.log("Mounting API V3");
-var resources = ["tree", "circuit", "pmd"];
-for(var i = 0; i < resources.length; i++) {
-  
-}
-
-
+_.each(resources, function(resource){
+  app.use(mount('/api/v3',require('./crud_route')(resource.name, resource.options)));
+});
 
 //This is runnable as a stand alone server
 if (require.main === module) {
@@ -51,7 +60,7 @@ if (require.main === module) {
         server = http.createServer(app.callback()).listen(80);
         log.info('Starting server on port 80');
     } else {
-        var server = require('http').Server(app.callback()); 
+        var server = require('http').Server(app.callback());
         server.listen(config.api_port);
     }
     if(config.api_port < 1024 && !config.run_as_root) {

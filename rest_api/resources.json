@@ -1,0 +1,34 @@
+{
+  "tree": {
+    "name": "tree",
+    "options": {
+      "model": "tree",
+      "read_only": true,
+      "accepted_filters": ["pge_pmd_num", "division", "circuit_name", "region", "project"]
+    }
+  },
+  "pmd": {
+    "name": "pmd",
+    "options": {
+      "model": "pmd",
+      "read_only": true,
+      "accepted_filters": ["pge_pmd_num", "division", "project"]
+    }
+  },
+  "line": {
+    "name": "circuit",
+    "options": {
+      "model": "circuit",
+      "read_only": true,
+      "accepted_filters": ["project"]
+    }
+  },
+  "user": {
+    "name": "user",
+    "options": {
+      "model": "cufs",
+      "read_only": true,
+      "accepted_filters": ["uniq_id", "scuf"]
+    }
+  }
+}

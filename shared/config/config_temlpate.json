@@ -3,7 +3,7 @@
     "postgres_db_port": 5432,
     "postgres_db_user": "dispatchr",
     "postgres_db_pass": "password",
-    "postgres_db_name": "dev_dispatchr_sts",    
+    "postgres_db_name": "dev_dispatchr_sts",
     "api_port": 3000,
     "api_host": "localhost",
     "user_login": true,
@@ -32,7 +32,7 @@
     },
      "meteor":{
                 "mongo_db_host": "localhost",
-                "mongo_db_name": "prod_meteor",
+                "mongo_db_name": "prod_local",
                 "mongo_db_port": 27017,
                 "name":"meteor"
     },

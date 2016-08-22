@@ -18,9 +18,8 @@ var koa = require('koa');
 var _ = require('underscore');
 var router = require('koa-router');
 var config = require('dsp_shared/config/config').get();
-console.log("COFNIG", config);
+var project = 'transmission_2015';
 // var bodyParser = require('koa-body-parser');
-var accepted_filters = config.accepted_filters || [];
 
 /*
 
@@ -33,18 +32,20 @@ var accepted_filters = config.accepted_filters || [];
 		@param - patch function - function(id, data)
 */
 module.exports = function crud(resource, options) {
+  var accepted_filters = options.accepted_filters || [];
 
-  var Model = require('dsp_shared/database/model/'+resource);
+  var  Model = require('dsp_shared/database/model/'+ options.model);
+
   var crud_opts = require('./crud_op')(Model);
 
 	var app = router();
 
   var read_only = options.read_only || false;
-  
   // app.crud_opts = crud_opts;
 
-	//remove underscores from url
-	var res_url = '/'+resource.replace(/_/g, '');
+  //remove underscores from url
+
+  var res_url = '/' + resource.replace(/_/g, '');
   console.log("res_url", res_url);
 
   function handleCRUDError(e, app, result) {
@@ -55,11 +56,11 @@ module.exports = function crud(resource, options) {
                 error_msgs.push(e.errors[i].message);
             }
         }
-        app.throw(error_msgs.join('; '), 400);                
+        app.throw(error_msgs.join('; '), 400);
     } else if(e.name === 'MongoError' && e.code === 16755) {
       log.error("Bad Geospaial Data", result);
-      app.throw("Bad Geospaial Data", 400);        
-    } else if(e.name === 'MongoError' && e.code === 11000) {              
+      app.throw("Bad Geospaial Data", 400);
+    } else if(e.name === 'MongoError' && e.code === 11000) {
       app.throw("ERROR: Duplicate key: "+e.toString(), 409);
     } else if(e.message === "Can not update host") {
       app.throw(e.message, 400);
@@ -69,7 +70,7 @@ module.exports = function crud(resource, options) {
   }
 
 	//Create
-	app.post(res_url, function *(){        
+	app.post(res_url, function *(){
         log.info("POST", res_url, this.params, this.request.query);
         // log.info("POST", res_url, this.params, this.request.query, this.request.body);
         var result = null;
@@ -77,29 +78,29 @@ module.exports = function crud(resource, options) {
         if(read_only) {
           throw(resource+" is read only", 400);
         }
-        
+
         try {
              // console.log("CREATING FROM POST", resource, this.request.body);
-             result = yield crud_opts.create(this.request.body);             
+             result = yield crud_opts.create(this.request.body);
              result = yield crud_opts.read(result._id);
              this.body = result;
              this.status = 201;
         } catch (e){
-          handleCRUDError(e, this, result);            
+          handleCRUDError(e, this, result);
         }
 	});
-  
+
   function *get_req(id, response) {
 
     var data;
     try {
       if(id===undefined || id === null) {
         console.log("get", id, response.request.query);
-        var offset = response.request.query.offset || 0; 
+        var offset = response.request.query.offset || 0;
         var len = response.request.query.length;  // Need to manage this on the client we can't always get all of them
         var select = response.request.query.select;
         var order = response.request.query.order;
-        
+
         if(len) {
           len = parseInt(len);
         }
@@ -115,7 +116,7 @@ module.exports = function crud(resource, options) {
             }
           }
         }
-        
+
         //filters
         var filter = {};
         for(var i = 0; i < accepted_filters.length; i++) {
@@ -126,30 +127,30 @@ module.exports = function crud(resource, options) {
             if(typeof filter[key] === 'string' && filter[key].indexOf('|') !== -1) {
               filter[key] = filter[key].split('|');
             }
-          }       
+          }
         }
 
         data = yield crud_opts.list(offset, len, filter, select, order, true);
       } else {
-        data = yield crud_opts.read(id, response.query);      
+        data = yield crud_opts.read(id, response.query);
       }
       if(data) {
         response.body = data;
       } else {
         response.throw("Resource Not Found", 404);
-      }          
-    } catch (e){    
+      }
+    } catch (e){
       if(e.name === "CastError" && e.path === '_id') {
         response.throw("Bad Resource ID", 400);
       } else if(e.message.startsWith("Bad Query Parameter")){
         response.throw(e.message, 400);
       } else if(e.message === "Resource Not Found" ){
         response.throw("Resource Not Found", 404);
-      }  
+      }
       else {
         console.warn('Unhandled Error', e.message);
       }
-    }    
+    }
   }
 
 	//Read-One
@@ -164,6 +165,9 @@ module.exports = function crud(resource, options) {
 
 	//Read-List
 	app.get(res_url, function *(){
+      this.doc_count = yield Model.find({}).count();
+      this.projectDoc_count = yield Model.find({project: project}).count();
+      console.log(this.doc_count);
       yield get_req(undefined, this);
 	});
   //Head list
@@ -171,7 +175,7 @@ module.exports = function crud(resource, options) {
       yield get_req(undefined, this);
 	});
 
-  
+
 
 	//Update-Save
 	app.put(res_url+'/:id', function *overWrite(){
@@ -180,10 +184,10 @@ module.exports = function crud(resource, options) {
     if(read_only) {
       throw(resource+" is read only", 400);
     }
-    
-    
-		var id = this.params.id;      
-		this.body = yield crud_opts.update(id, this.request.body);		
+
+
+		var id = this.params.id;
+		this.body = yield crud_opts.update(id, this.request.body);
 	});
 
 	//Update-Patch
@@ -193,18 +197,18 @@ module.exports = function crud(resource, options) {
     if(read_only) {
       throw(resource+" is read only", 400);
     }
-    
+
     try {
-  		var id = this.params.id;       
+  		var id = this.params.id;
   		var result = yield crud_opts.patch(id, this.request.body, this.header['content-type']);
-  		if( result ) { 
-  			this.body = result; 
-  		} else { 
-  			this.status = 404; 
+  		if( result ) {
+  			this.body = result;
+  		} else {
+  			this.status = 404;
   		}
     } catch (e){
-      handleCRUDError(e, this, result);            
-    }    
+      handleCRUDError(e, this, result);
+    }
 	});
 
 	//Delete (remove)
@@ -213,7 +217,7 @@ module.exports = function crud(resource, options) {
     if(read_only) {
       throw(resource+" is read only", 400);
     }
-    
+
 		var id = this.params.id;
 		var result = yield crud_opts.delete(id);
         if( result ) { this.body = result; }
