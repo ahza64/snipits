@@ -18,7 +18,6 @@ var koa = require('koa');
 var _ = require('underscore');
 var router = require('koa-router');
 var config = require('dsp_shared/config/config').get();
-var project = 'transmission_2015';
 // var bodyParser = require('koa-body-parser');
 
 /*
@@ -129,8 +128,8 @@ module.exports = function crud(resource, options) {
             }
           }
         }
-
         data = yield crud_opts.list(offset, len, filter, select, order, true);
+        data.doc_count = yield Model.find(filter).count();
       } else {
         data = yield crud_opts.read(id, response.query);
       }
@@ -165,9 +164,6 @@ module.exports = function crud(resource, options) {
 
 	//Read-List
 	app.get(res_url, function *(){
-      this.doc_count = yield Model.find({}).count();
-      this.projectDoc_count = yield Model.find({project: project}).count();
-      console.log(this.doc_count);
       yield get_req(undefined, this);
 	});
   //Head list
