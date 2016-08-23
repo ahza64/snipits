@@ -13,6 +13,10 @@
 		standard response codes for failures
 
 **/
+/**
+* @overview This file handles the routes for a resource
+  it implements the standard CRUD operations
+**/
 var log = require('log4js').getLogger('['+__filename +']');
 var koa = require('koa');
 var _ = require('underscore');
@@ -39,14 +43,21 @@ module.exports = function crud(resource, options) {
 	var app = router();
 
   var read_only = options.read_only || false;
+
   // app.crud_opts = crud_opts;
 
   //remove underscores from url
 
   var res_url = '/' + resource.replace(/_/g, '');
   console.log("res_url", res_url);
-
-  function handleCRUDError(e, app, result) {
+  /**
+  *this function handles CRUD erors
+  * @param {Error} error_msg
+  * @param {App} application in use
+  * @param {Object} result
+  * @throws {Error} e
+  */
+   function handleCRUDError(e, app, result) {
     var error_msgs = [];
     if( e.name === 'ValidationError' ) {
         for( var i in e.errors ) {
@@ -70,6 +81,7 @@ module.exports = function crud(resource, options) {
 	//Create
 	app.post(res_url, function *(){
         log.info("POST", res_url, this.params, this.request.query);
+        log.info("request body", this.request.body)
         // log.info("POST", res_url, this.params, this.request.query, this.request.body);
         var result = null;
 
@@ -87,11 +99,25 @@ module.exports = function crud(resource, options) {
           handleCRUDError(e, this, result);
         }
 	});
+<<<<<<< e3541c4d86be13b542c39e119356b7513881600d
 
   function *get_req(id, response) {
+=======
+>>>>>>> DENG2-1645 :: client tree package for mobile
 
+/**
+* @param {String} id - the _id of the particular resource
+* @param {Object} response - the response to the request
+* used primarily for GET method
+* This generator yields result which is the datum or data
+* that matches the query and/or id parameter
+* @return {Query} data - a mongoose query
+*/
+
+  function *get_req(id, response) {
     var data;
     try {
+      var query = response.request.query;
       if(id===undefined || id === null) {
         console.log("get", id, response.request.query);
         var offset = response.request.query.offset || 0;
@@ -106,8 +132,8 @@ module.exports = function crud(resource, options) {
           offset = parseInt(offset);
         }
         var all_queries = ["offset", "length", "select", "order"].concat(accepted_filters);
-        for(var q in response.request.query) {
-          if(response.request.query.hasOwnProperty(q)) {
+        for(var q in query) {
+          if(query.hasOwnProperty(q)) {
             log.debug('querie', q, all_queries, accepted_filters);
             if(!_.contains(all_queries, q)) {
               response.throw("Bad Query Parameter: "+q, 400);
@@ -119,9 +145,9 @@ module.exports = function crud(resource, options) {
         var filter = {};
         for(var i = 0; i < accepted_filters.length; i++) {
           var key = accepted_filters[i];
-          if(response.request.query[key] !== undefined) {
+          if(query[key] !== undefined) {
             filter = filter || {};
-            filter[key] = response.request.query[key];
+            filter[key] = query[key];
             if(typeof filter[key] === 'string' && filter[key].indexOf('|') !== -1) {
               filter[key] = filter[key].split('|');
             }
@@ -156,17 +182,29 @@ module.exports = function crud(resource, options) {
     }
   }
 
-	//Read-One
+/**
+* @param {String} res_url = resource + (optional) id parameter
+* @param {function} generator that resolves request
+* GET request gets the resource with the target id
+**/
 	app.get(res_url+'/:id', function *() {
     yield get_req(this.params.id, this);
+    console.log("options", options);
 	});
-	//Head
-	app.head(res_url+'/:id', function *() {
+  /**
+  * @param {String} res_url = resource + (optional) id parameter
+  * @param {function} generator that resolves request
+  * HEAD request obtains headers
+  **/
+  	app.head(res_url+'/:id', function *() {
       yield get_req(this.params.id, this);
 	});
 
 
-	//Read-List
+/**
+* @param {String} name of resource
+* @return {Object} resource(s)
+*/
 	app.get(res_url, function *(){
       yield get_req(undefined, this);
 	});
@@ -177,23 +215,28 @@ module.exports = function crud(resource, options) {
 
 
 
-	//Update-Save
-	app.put(res_url+'/:id', function *overWrite(){
-    log.info("PUT", res_url, this.params, this.request.query);
-    // log.info("PUT", res_url, this.params, this.request.query, this.request.body);
+/**
+* @param {String} res_url = resource + id parameter
+* @param {function} generator
+* PUT request overwrites the Object with the corresponding id
+*/
+  	app.put(res_url+'/:id', function *overWrite(){
+    log.info("PUT", res_url, this.params, this.request.query, this.request.body);
     if(read_only) {
       throw(resource+" is read only", 400);
     }
-
 
 		var id = this.params.id;
 		this.body = yield crud_opts.update(id, this.request.body);
 	});
 
-	//Update-Patch
+/**
+* @param {String} res_url = resource + id parameter
+* @param {function} generator
+* PATCH request updates fields in a particular Object
+*/
 	app.patch(res_url+'/:id', function *() {
-    log.info("PATCH", res_url, this.params.id, this.request.query);
-    // log.info("PATCH", res_url, this.params.id, this.request.query, this.request.body);
+    log.info("PATCH", res_url, this.params.id, this.request.query, this.request.body);
     if(read_only) {
       throw(resource+" is read only", 400);
     }
@@ -211,7 +254,11 @@ module.exports = function crud(resource, options) {
     }
 	});
 
-	//Delete (remove)
+/**
+* @param {String} res_url = resource + id parameter
+* @param {function} generator
+* DELETE request removes the object from the database
+*/
 	app.delete(res_url+'/:id', function *() {
     log.info("DELETE", res_url, this.request.params);
     if(read_only) {

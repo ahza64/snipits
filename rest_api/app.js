@@ -46,6 +46,8 @@ app.use(function *(next){
   };
 });
 
+app.use(mount('/api/v3', require('./route/package')));
+
 //mount each resource
 _.each(resources, function(resource){
   app.use(mount('/api/v3',require('./crud_route')(resource.name, resource.options)));
