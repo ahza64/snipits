@@ -1,11 +1,10 @@
 var BPromse = require("bluebird");
-var assert = require('assert');
 /**
  * {@code
  *     if (require.main === module) {
  *       co(function*() {
  *         var count = 0;
- *         var tree_stream = stream(Tree, {});
+ *         var tree_stream = stream(streamable);
  *         for(var tree of tree_stream) {
  *           tree = yield tree;
  *           console.log("tree", tree._id, count);
@@ -26,20 +25,14 @@ var assert = require('assert');
  * @param {Object} Model The model object to run the query
  * @param {Object} query a mongo query    
  */
-function *stream(Model, query, sort) {
-  // console.log("stream_gen", Model.name, query);
-  assert(Model, "NO MODEL for stream");
+function *stream(streamable) {
   var done = false;
-  var next = null;
+  var next; //= undefined;
   var error = null;
   var next_resolve = null;
   var next_reject = null;
-  var cursor = Model.find(query);
-  if(sort) {
-    cursor = cursor.sort(sort);
-  }
-  var _stream = cursor.stream();
-  _stream.on('data', function(doc){  
+  var _stream = streamable;
+  _stream.on('data', function(doc){ 
     this.pause();
     if(next_resolve) {
       next_resolve(doc);
@@ -47,7 +40,7 @@ function *stream(Model, query, sort) {
       next_reject = null;
       this.resume();
     } else {
-      if(next) {
+      if(next !== undefined) {
         throw Error("Handler handled next to fast");
       } else {
         next = doc;
@@ -62,22 +55,29 @@ function *stream(Model, query, sort) {
       next_reject(err);
     }
   });
-
   _stream.on('close', function () {
     // all done
     done = true;
     if(next_resolve) {
-      next_resolve(null);
+      next_resolve();
     }
   });
+  _stream.on('end', function () {
+    // all done
+    done = true;
+    if(next_resolve) {
+      next_resolve();
+    }
+  });
+
   
-  while(!done || next) {
+  while(!done || next !== undefined) {
     yield new BPromse(function(resolve, reject) {      
       if(error) {
         reject(error);
-      } else if(next) {
+      } else if(next !== undefined) {
         resolve(next);
-        next = null;
+        next = undefined;
         _stream.resume();
       } else {
         if(next_resolve) {

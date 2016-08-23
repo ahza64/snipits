@@ -2,15 +2,19 @@ const TreeStates = require('tree-status-codes');
 const migrate_util = require('dsp_migrate/util');
 const _ = require('underscore');
 
-var util = require('dsp_tool/util');
-var User = require('dsp_model/user');
-var Grid = require('dsp_model/grid');
-var PMD = require('dsp_model/pmd');
+var util = require('dsp_shared/lib/cmd_utils');
+var User = require('dsp_shared/database/model/trans/user');
+var Grid = require('dsp_shared/database/model/trans/grid');
+var PMD = require('dsp_shared/database/model/pmd');
 
 
-var TreeV2 = require('dsp_model/tree');
-var TreeSchema = require('dsp_model/treeschema'); //missnomer for trees in first circut city system
-var TreeV3 = require('dsp_model/meteor_v3/tree'); //updated tree schema
+var TreeV2 = require('dsp_shared/database/model/trans/tree');
+var TreeSchema = require('dsp_shared/database/treeschema'); //missnomer for trees in first circut city system
+var TreeV3 = require('dsp_shared/database/model/tree'); //updated tree schema
+
+
+var Cuf = require('dsp_shared/database/model/cufs'); //v3 mobile app user
+
 var assert = require('assert');
 var cache = {};
 
@@ -21,7 +25,7 @@ const regions = {
   "North Coast": "North",
   "North Valley": "North",
   "East Bay":	"South",
-  "Mission ":	"South",
+  "Mission":	"South",
   "Kern":	"South",
   "Los Padres":	"South",
   "Peninsula":	"South",
@@ -115,6 +119,7 @@ function calculateStatus(tree){
 
 
 function getTreeStatus(mobileTree) {
+  console.log("getTreeStatus", mobileTree);
   /* jshint maxcomplexity:15 */
   if(mobileTree.status === 'newTree') { 
     mobileTree.status = "ready";
@@ -142,15 +147,15 @@ function getTreeStatus(mobileTree) {
       mobileTree.status = "not_ready";
     }    
   }
-  
+  mobileTree.properties = mobileTree.properties || {};
   var status = mobileTree.properties.statusCode || mobileTree.status || 'left';
   if(mobileTree.type === "zone") {
     status = 'span_zone';
   }
   
-  if(status === 'left' && _.contains(["VC3c", "VC3p", "VC2p"], mobileTree.qsi_priority)) {
-    status = 'detection_ignored';
-  }
+  // if(status === 'left' && _.contains(["VC3c", "VC3p", "VC2p"], mobileTree.qsi_priority)) {
+  //   status = 'detection_ignored';
+  // }
   return status;
 }
 
@@ -177,15 +182,22 @@ function flattenTreeFlags(mobileTree){
 
 
 function *getCircuit(tree) {
-  var grid = yield lookupResource(Grid, {_id: tree.grid}, 'grids', tree.grid);
-  //all trees should have a grid
-  assert(grid, "could not find grid for tree: "+tree._id);
-  return grid;
+  if(tree.grid) {
+    var grid = yield lookupResource(Grid, {_id: tree.grid}, 'grids', tree.grid);
+    //all trees should have a grid
+    assert(grid, "could not find grid for tree: "+tree._id+" : "+tree.grid);
+    
+    return grid;
+  }
+  return {};
 }
 
 function *getProject(tree) {
-  var pmd = yield lookupResource(PMD, {pge_pmd_num: tree.pge_pmd_num}, 'pmds', tree.pge_pmd_num);
-  return pmd;
+  if(tree.pge_pmd_num) {
+    var pmd = yield lookupResource(PMD, {pge_pmd_num: tree.pge_pmd_num}, 'pmds', tree.pge_pmd_num);
+    return pmd;
+  }
+  return {};
 }
 
 function *lookupResource(Model, query, cache_name, cache_key) {
@@ -211,7 +223,18 @@ function *lookupUserId(tree, key)  {
     if(!user) {
       console.error("can not find user", key, user_id);
     }
-    return user.vehicle; //cuf id is vehicle id in v3
+    
+    if(user.vehicle) {
+      var cuf = yield Cuf.findOne({_id: user.vehicle});
+    } else {
+      cuf = yield Cuf.findOne({_id: user._id.toString()});
+    }
+    
+    if(cuf) {
+      return cuf._id;
+    } else {
+      console.log("STILL NO CUF FOUND FOR USER", user);
+    }
   }
   return null;
 }

@@ -209,7 +209,7 @@ module.exports = function crud(resource, options) {
 
 	//Delete (remove)
 	app.delete(res_url+'/:id', function *() {
-    log.info("DELTE", res_url, this.request.params);
+    log.info("DELETE", res_url, this.request.params);
     if(read_only) {
       throw(resource+" is read only", 400);
     }

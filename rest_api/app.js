@@ -10,7 +10,7 @@ var mount = require('koa-mount');
 var koa = require('koa');
 var cors = require('koa-cors');
 
-require('dsp_shared/database/database')(config.database);
+require('dsp_shared/database/database')(config.meteor);
 var whitelist = config.corsWhitelist;
 var corsOptions = {
   origin: function(origin, callback){
@@ -27,11 +27,16 @@ var app = koa();
 app.use(logger());
 app.use(compress());
 
+var crud_routes = require('./crud_route');
+
+app.use(mount('/api/v3',"tree",    {read_only: true})));
+app.use(mount('/api/v3',"circuit", {read_only: true})));
+app.use(mount('/api/v3',"user",     {model: "cuf", methods: ["GET", "PUT"]})));
 
 console.log("Mounting API V3");
 var resources = ["tree", "circuit", "pmd"];
 for(var i = 0; i < resources.length; i++) {
-  app.use(mount('/api/v3',require('./crud_route')(resources[i], {read_only: true})));
+  
 }
 
 
