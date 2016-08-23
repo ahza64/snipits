@@ -51,7 +51,6 @@ function run() {
     var args = assembleArgument(argv, commands[command]);
     if(args) {
       if(commands[command].func.constructor.name === 'GeneratorFunction') {
-        console.log("GOT GEN");
         co(function*(){
           var result = yield commands[command].func.apply(this, args);
           console.log(result);

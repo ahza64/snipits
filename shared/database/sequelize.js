@@ -30,7 +30,7 @@ function createConnection(config) {
   const POSTGRES_DB = config.db_name;
   const POSTGRES_USER = config.db_user;
   const POSTGRES_PASS = config.db_pass;
-  const logger = config.logger ? console.log : true;
+  const logger = config.logger ? console.log : false;
 
   var db = getConnection(config.name, false);  
   if(!db) {
