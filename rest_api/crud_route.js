@@ -21,7 +21,6 @@ var config = require('dsp_shared/config/config').get();
 // var bodyParser = require('koa-body-parser');
 
 /*
-
 		@param - string resource name
 		@param - create function - function(data)
 		@param - read function - function(id)
@@ -129,7 +128,12 @@ module.exports = function crud(resource, options) {
           }
         }
         data = yield crud_opts.list(offset, len, filter, select, order, true);
-        data.doc_count = yield Model.find(filter).count();
+        if(response.dsp_env) {
+          offset = offset || 0;
+          response.dsp_env.total = yield Model.find(filter).count();
+          response.dsp_env.offset = Math.min(offset, response.dsp_env.total);
+          response.dsp_env.length = data.length;
+        }
       } else {
         data = yield crud_opts.read(id, response.query);
       }

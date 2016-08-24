@@ -32,20 +32,18 @@ app.use(requestId());
 
 //envelope middleware
 app.use(function *(next){
+  this.dsp_env = {
+    request_id: this.id,
+    request_url: this.request.url,
+    host: this.request.header.host,
+    method: this.request.method
+  };
   yield next;
   console.log(this.request);
   this.body = {
-    envelope:{
-      request_id: this.id,
-      request_url: this.request.url,
-      host: this.request.header.host,
-      method: this.request.method,
-      doc_count: this.body.doc_count,
-      length: this.body.length,
-      project_doc_count: this.projectDoc_count
-    },
+    envelope: this.dsp_env,
     data: this.body
-  }
+  };
 });
 
 //mount each resource
