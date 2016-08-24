@@ -38,7 +38,6 @@ module.exports = function(Model) {
     * @return {Object} data
     */
     crud_opts.create = function *create(data) {
-        log.info("CREATE", Model.modelName, data);
         // log.info("CREATE", Model.modelName, data);
         // log.debug("model.crud.create", data);
         yield Model.co_emitter.emit('dsp_creating', data);

@@ -114,11 +114,11 @@ module.exports = function crud(resource, options) {
     try {
       var query = response.request.query;
       if(id===undefined || id === null) {
-        console.log("get", id, response.request.query);
-        var offset = response.request.query.offset || 0;
-        var len = response.request.query.length;  // Need to manage this on the client we can't always get all of them
-        var select = response.request.query.select;
-        var order = response.request.query.order;
+        console.log("get", id, query);
+        var offset = query.offset || 0;
+        var len = query.length;  // Need to manage this on the client we can't always get all of them
+        var select = query.select;
+        var order = query.order;
 
         if(len) {
           len = parseInt(len);
