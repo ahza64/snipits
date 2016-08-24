@@ -1,3 +1,7 @@
+/**
+* @fileOverview package for mobile client
+*/
+
 var config = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.meteor);
 var router = require('koa-router')();
@@ -24,11 +28,8 @@ router.get('/client/workr/n1/package/:id', function*() {
             });
         }
     }
-    var workorder_count = cufInfo.workorders.count();
-    var cufWO_count = cuf.workorder.count();
-    console.log(workorder_count, cufWO_count);
     this.body = cufInfo;
 });
 app.use(router.routes());
-
+app.listen(3000);
 module.exports = app;
