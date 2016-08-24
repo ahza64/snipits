@@ -46,6 +46,9 @@ app.use(function *(next){
   };
 });
 
+//mount package resource for mobile client
+app.use(mount('/api/v3', require('./route/package')));
+
 //mount each resource
 _.each(resources, function(resource){
   app.use(mount('/api/v3',require('./crud_route')(resource.name, resource.options)));
