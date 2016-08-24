@@ -1,35 +1,56 @@
 /**
 * @fileOverview package for mobile client
 */
-
-var config = require('dsp_shared/config/config').get();
-require('dsp_shared/database/database')(config.meteor);
-var router = require('koa-router')();
+if (require.main === module) {
+  var config = require('dsp_shared/config/config').get();
+  require('dsp_shared/database/database')(config.meteor);
+}
 var koa = require('koa');
-var cufs = require('dsp_shared/database/model/cufs');
-var trees = require('dsp_shared/database/model/tree');
+var router = require('koa-router')();
+var Cuf = require('dsp_shared/database/model/cufs');
+var Tree = require('dsp_shared/database/model/tree');
 var app = koa();
-const assert = require('assert');
+var _ = require("underscore");
 
-router.get('/client/workr/n1/package/:id', function*() {
-    var cufID = this.params.id;
-    var cuf = yield cufs.findOne({
+//Things to test
+// cuf_id must exist
+
+// Eventually need to get cuf_id from login
+
+router.get('/client/workr/n1/package', function*() {
+    console.log("query-----------------", this.request.query);
+    var cufID = this.request.query.cuf_id;
+    // var offset = this.request.query.offset;
+    // var length = this.request.query.length;
+    var cuf = yield Cuf.findOne({
         _id: cufID
     });
-    var cufInfo = {};
-    cufInfo.trees = {};
-    cufInfo.workorders = [];
-    for (var i = 0; i < cuf.workorder.length; ++i) {
-        cufInfo.workorders.push(cuf.workorder[i]);
-        for (var j = 0; j < cuf.workorder[i].tasks.length; ++j) {
-            var treeid = cuf.workorder[i].tasks[j];
-            cufInfo.trees[treeid] = yield trees.findOne({
-                _id: treeid
-            });
-        }
+    this.body = {
+      workorders: cuf.workorder,
+    };
+
+    //handle query.length query.offset into workorders
+    var workorders = this.body.workorders;
+
+    // workorders = workorders.slice(offset, length);
+
+    var tree_ids = [];
+    for (var i = 0; i < workorders.length; ++i) {
+        tree_ids = tree_ids.concat(workorders[i].tasks);
     }
-    this.body = cufInfo;
+
+    //optimizaton - make one db request for trees
+    var trees = yield Tree.find({_id: {$in: tree_ids}});
+    this.body = {
+      workorders: workorders,
+      trees: _.indexBy(trees, tree => tree._id.toString())
+    };
+
 });
+
 app.use(router.routes());
-app.listen(3000);
 module.exports = app;
+
+if (require.main === module) {
+  app.listen(3000);
+}

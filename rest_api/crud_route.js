@@ -99,11 +99,6 @@ module.exports = function crud(resource, options) {
           handleCRUDError(e, this, result);
         }
 	});
-<<<<<<< e3541c4d86be13b542c39e119356b7513881600d
-
-  function *get_req(id, response) {
-=======
->>>>>>> DENG2-1645 :: client tree package for mobile
 
 /**
 * @param {String} id - the _id of the particular resource
