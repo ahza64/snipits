@@ -37,5 +37,13 @@
       "model": "mapfeatures",
       "read_only": true
     }
+  },
+  "divisions": {
+    "name" : "divisions",
+    "options" : {
+      "model" : "divisions",
+      "read_only" : true,
+      "accepted_filters" : ["project", "division", "pge_pmd_num" ]
+    }
   }
 }
