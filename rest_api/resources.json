@@ -37,5 +37,13 @@
       "model": "mapfeatures",
       "read_only": true
     }
+  },
+  "mapAnnotations": {
+    "name": "mapannotations",
+    "options": {
+      "model": "map_annotations",
+      "read_only": true,
+      "accepted_filters": ["tree_id", "deleted", "esri_graphics"]
+    }
   }
 }
