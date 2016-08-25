@@ -1,12 +1,11 @@
-console.log('running...')
-var fix_circuit = require('./fake_project_name');
+var fix_circuit = require('./fake_circuit_name');
 var utils = require('dsp_shared/lib/cmd_utils');
 utils.connect(['meteor']);
 
 function *run(push){
 	push = push || false;
-	
-	yield fix_circuit( 'project', 'name', push);
+	console.log('CAUTION: DO NOT PUSH ON PRODUCTION DATA!!!');
+	yield fix_circuit( 'tree', 'circuit_name', push);
 }
 
 if (require.main === module) {
