@@ -18,19 +18,15 @@ var _ = require("underscore");
 // Eventually need to get cuf_id from login
 
 router.get('/client/workr/n1/package', function*() {
-    console.log("query-----------------", this.request.query);
     var cufID = this.request.query.cuf_id;
     // var offset = this.request.query.offset;
     // var length = this.request.query.length;
     var cuf = yield Cuf.findOne({
         _id: cufID
     });
-    this.body = {
-      workorders: cuf.workorder,
-    };
 
     //handle query.length query.offset into workorders
-    var workorders = this.body.workorders;
+    var workorders = cuf.workorder;
 
     // workorders = workorders.slice(offset, length);
 
@@ -41,6 +37,8 @@ router.get('/client/workr/n1/package', function*() {
 
     //optimizaton - make one db request for trees
     var trees = yield Tree.find({_id: {$in: tree_ids}});
+    this.dsp_env.workorders = workorders.length;
+    this.dsp_env.trees = trees.length;
     this.body = {
       workorders: workorders,
       trees: _.indexBy(trees, tree => tree._id.toString())

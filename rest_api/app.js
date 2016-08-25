@@ -46,13 +46,14 @@ app.use(function *(next){
   };
 });
 
-//mount package resource for mobile client
-app.use(mount('/api/v3', require('./route/package')));
-
 //mount each resource
 _.each(resources, function(resource){
   app.use(mount('/api/v3',require('./crud_route')(resource.name, resource.options)));
 });
+
+//mount other resources
+app.use(mount('/api/v3', require('./route/package')));
+app.use(mount('/api/v3', require('./route/version')));
 
 //This is runnable as a stand alone server
 if (require.main === module) {
