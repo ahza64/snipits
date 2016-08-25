@@ -9,8 +9,9 @@ var koa = require('koa');
 var router = require('koa-router')();
 var Cuf = require('dsp_shared/database/model/cufs');
 var Tree = require('dsp_shared/database/model/tree');
-var app = koa();
+var MapFeature = require('dsp_shared/database/model/mapfeatures');
 var _ = require("underscore");
+var app = koa();
 
 //Things to test
 // cuf_id must exist
@@ -27,21 +28,25 @@ router.get('/client/workr/n1/package', function*() {
 
     //handle query.length query.offset into workorders
     var workorders = cuf.workorder;
-
-    // workorders = workorders.slice(offset, length);
-
+    var map_features =[];
     var tree_ids = [];
     for (var i = 0; i < workorders.length; ++i) {
-        tree_ids = tree_ids.concat(workorders[i].tasks);
+        var workorder = workorders[i];
+        tree_ids = tree_ids.concat(workorder.tasks);
+        var features = yield MapFeature.findNear(workorder.location, 0.25, 'miles', { type: "alert" });
+        console.log(features.length);
+        map_features = map_features.concat(features);
     }
 
     //optimizaton - make one db request for trees
     var trees = yield Tree.find({_id: {$in: tree_ids}});
     this.dsp_env.workorders = workorders.length;
     this.dsp_env.trees = trees.length;
+    this.dsp_env.map_features = map_features.length;
     this.body = {
       workorders: workorders,
-      trees: _.indexBy(trees, tree => tree._id.toString())
+      trees: _.indexBy(trees, tree => tree._id.toString()),
+      map_features: map_features
     };
 
 });
