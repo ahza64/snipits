@@ -50,8 +50,15 @@ router.get('/workr/package', function*() {
     this.dsp_env.workorders = workorders.length;
     this.dsp_env.trees = trees.length;
     this.dsp_env.map_features = map_features.length;
+
+    var userObject = {
+      _id: cuf._id,
+      first: cuf.first,
+      last: cuf.last,
+    }
+
     this.body = {
-      workorders: workorders,
+      workorders: userObject,
       trees: _.indexBy(trees, tree => tree._id.toString()),
       user: cuf,
       map_features: map_features
