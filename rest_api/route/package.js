@@ -18,13 +18,21 @@ var app = koa();
 
 // Eventually need to get cuf_id from login
 
-router.get('/client/workr/n1/package', function*() {
+router.get('/workr/package', function*() {
     var cufID = this.request.query.cuf_id;
+    var cufEmail = this.request.query.email;
     // var offset = this.request.query.offset;
     // var length = this.request.query.length;
-    var cuf = yield Cuf.findOne({
-        _id: cufID
-    });
+    var cuf = {};
+    if(cufID){
+      cuf = yield Cuf.findOne({
+          _id: cufID
+      });
+    } else if(cufEmail){
+      cuf = yield Cuf.findOne({
+          uniq_id: cufEmail
+      });
+    }
 
     //handle query.length query.offset into workorders
     var workorders = cuf.workorder;
@@ -34,10 +42,9 @@ router.get('/client/workr/n1/package', function*() {
         var workorder = workorders[i];
         tree_ids = tree_ids.concat(workorder.tasks);
         var features = yield MapFeature.findNear(workorder.location, 0.25, 'miles', { type: "alert" });
-        console.log(features.length);
         map_features = map_features.concat(features);
     }
-
+    
     //optimizaton - make one db request for trees
     var trees = yield Tree.find({_id: {$in: tree_ids}});
     this.dsp_env.workorders = workorders.length;
