@@ -1,9 +1,9 @@
 /**
- * @fileOverview package for mobile client
- */
+* @fileOverview package for mobile client
+*/
 if (require.main === module) {
-    var config = require('dsp_shared/config/config').get();
-    require('dsp_shared/database/database')(config.meteor);
+  var config = require('dsp_shared/config/config').get();
+  require('dsp_shared/database/database')(config.meteor);
 }
 var koa = require('koa');
 var router = require('koa-router')();
@@ -59,8 +59,8 @@ router.get('/client/workr/n1/package', function*() {
     this.dsp_env.length = numberOfTrees;
     this.dsp_env.offset = offset;
     this.body = {
-        workorders: workorders,
-        trees: _.indexBy(trees, tree => tree._id.toString())
+      workorders: workorders,
+      trees: _.indexBy(trees, tree => tree._id.toString())
     };
 });
 
@@ -68,5 +68,5 @@ app.use(router.routes());
 module.exports = app;
 
 if (require.main === module) {
-    app.listen(3000);
+  app.listen(3000);
 }
