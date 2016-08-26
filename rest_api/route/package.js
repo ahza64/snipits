@@ -58,9 +58,9 @@ router.get('/workr/package', function*() {
     }
 
     this.body = {
-      workorders: userObject,
+      workorders: workorders,
       trees: _.indexBy(trees, tree => tree._id.toString()),
-      user: cuf,
+      user: userObject,
       map_features: map_features
     };
 
