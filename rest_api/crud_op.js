@@ -239,7 +239,7 @@ module.exports = function(Model) {
     */
     crud_opts.patch = function *patch(id, data, content_type) {
         //log.info("PATCH", Model.modelName, id, content_type);
-        log.info("crudops PATCH", Model.modelName, id, data, content_type);
+        //log.info("crudops PATCH", Model.modelName, id, data, content_type);
         var doc = yield crud_opts.read(id);
         if( !doc ) {
           console.error("couldn't find data to patch",Model.modelName, id, data);
