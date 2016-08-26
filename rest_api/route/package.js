@@ -44,7 +44,7 @@ router.get('/workr/package', function*() {
         var features = yield MapFeature.findNear(workorder.location, 0.25, 'miles', { type: "alert" });
         map_features = map_features.concat(features);
     }
-    
+
     //optimizaton - make one db request for trees
     var trees = yield Tree.find({_id: {$in: tree_ids}});
     this.dsp_env.workorders = workorders.length;
@@ -53,6 +53,7 @@ router.get('/workr/package', function*() {
     this.body = {
       workorders: workorders,
       trees: _.indexBy(trees, tree => tree._id.toString()),
+      user: cuf,
       map_features: map_features
     };
 
