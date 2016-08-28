@@ -11,7 +11,7 @@ var bodyParser = require('koa-bodyparser');
 function *get_req(id, response) {
   var data;
   try {
-    if(id === undefined) {
+    if(id===undefined) {
       var offset = response.request.query.offset || 0;
       var len = response.request.query.length || 100; // Need to manage this on the client we can't always get all of them
 
@@ -19,7 +19,7 @@ function *get_req(id, response) {
     } else {
       data = yield crud_opts.read(id, response.query);
     }
-  }catch (e){      
+  } catch (e){
     if(e.name === "CastError" && e.path === '_id') {
       response.throw("Bad Resource ID", 400);
     } else {
@@ -30,7 +30,7 @@ function *get_req(id, response) {
     response.body = data;
   } else {
     response.throw("Resource Not Found", 404);
-  }
+  }     
 }
 router.get('/asset/:id.jpg', function*() {
   yield get_req(this.params.id, this);
