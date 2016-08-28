@@ -1,18 +1,17 @@
 var config = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.meteor);
 var koa = require('koa');
-var router = require('koa-router')();
-
+var app = koa();
 require('dsp_shared/lib/starts_with');
+var router = require('koa-router');
 var Asset = require('dsp_shared/database/model/assets');
 var crud_opts = require('../crud_op')(Asset);
 var bodyParser = require('koa-bodyparser');
-var app = koa();
 
-function* get_req(id, response) {
+function *get_req(id, response) {
   var data;
   try {
-    if (id === undefined) {
+    if(id === undefined) {
       var offset = response.request.query.offset || 0;
       var len = response.request.query.length || 100; // Need to manage this on the client we can't always get all of them
 
@@ -20,14 +19,14 @@ function* get_req(id, response) {
     } else {
       data = yield crud_opts.read(id, response.query);
     }
-  } catch (e) {
-    if (e.name === "CastError" && e.path === '_id') {
+  }catch (e){      
+    if(e.name === "CastError" && e.path === '_id') {
       response.throw("Bad Resource ID", 400);
     } else {
       console.warn('Unhandled Error', e);
     }
   }
-  if (data) {
+  if(data) {
     response.body = data;
   } else {
     response.throw("Resource Not Found", 404);
@@ -36,7 +35,7 @@ function* get_req(id, response) {
 router.get('/asset/:id.jpg', function*() {
   yield get_req(this.params.id, this);
 
-  if (this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
+  if(this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
     this.body = new Buffer(this.body.data.substring("data:image/jpeg;base64".length), "base64");
     this.type = "image/jpeg";
   }
@@ -44,7 +43,7 @@ router.get('/asset/:id.jpg', function*() {
 router.get('/asset/:id.jpeg', function*() {
   yield get_req(this.params.id, this);
 
-  if (this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
+  if(this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
     this.body = new Buffer(this.body.data.substring("data:image/jpeg;base64".length), "base64");
     this.type = "image/jpeg";
   }
@@ -58,7 +57,7 @@ router.post('/asset', function*(next) {
     result = yield crud_opts.read(result._id);
     this.body = result;
     this.status = 200;
-  } catch (e) {
+  } catch(e) {
     throw ('not work', 500);
   }
   yield next;
@@ -69,7 +68,7 @@ app.use(router.routes());
 module.exports = app;
 
 //This is runnable as a stand alone server
-if (require.main === module) {
+if(require.main === module) {
   app.use(bodyParser());
   var logger = require('koa-logger');
   app.use(logger());
