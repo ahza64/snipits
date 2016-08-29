@@ -12,8 +12,15 @@ var koa = require('koa');
 var cors = require('koa-cors');
 var resources = require('./resources.json');
 var requestId = require('koa-request-id');
+var session = require('koa-session');
+var request_log = require('log4js').getLogger('request');
 require('dsp_shared/database/database')(config.meteor);
 var whitelist = config.corsWhitelist;
+var login = require('./auth/auth');
+
+var app = koa();
+
+
 var corsOptions = {
   origin: function(origin, callback){
     var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
@@ -22,7 +29,7 @@ var corsOptions = {
 	methods: ['GET', 'PUT', 'POST', 'PATCH'],
 	credentials: true
 };
-var app = koa();
+
 
 // middleware
 // app.use(cors(corsOptions));
@@ -46,11 +53,44 @@ app.use(function *(next){
   };
 });
 
+// sessions
+app.keys = ['dispatchr_cookie::ius45jbipsdhip42oj59g'];
+app.use(session({ key: 'dispatchr:sess' }, app));
+
+app.use(mount('/api/v3', login));
+
+// Don't require login but include it
+app.use(function*(next) {
+  if(this.isAuthenticated()) {
+    this.user = this.passport.user;
+  }
+  yield next;
+});
+
+// app.use(function*(next){
+//   var ip;
+//   if(this.request.connection) {
+//     ip = this.request.connection.remoteAddress;
+//   }
+//
+//   var log_me = {
+//     method: this.method,
+//     host: this.request.host,
+//     url: this.originalUrl,
+//     body: this.request.body,
+//     user: yield Promise.resolve(this.user),
+//     user_ip: ip,
+//     "user-agent": this.request.header['user-agent']
+//   };
+//   request_log.info(JSON.stringify(log_me));
+//
+//   yield next;
+// });
+
 //mount each resource
 _.each(resources, function(resource){
   app.use(mount('/api/v3',require('./crud_route')(resource.name, resource.options)));
 });
-
 //mount other resources
 app.use(mount('/api/v3', require('./route/package')));
 app.use(mount('/api/v3', require('./route/version')));
