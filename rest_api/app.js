@@ -17,9 +17,10 @@ var request_log = require('log4js').getLogger('request');
 require('dsp_shared/database/database')(config.meteor);
 var whitelist = config.corsWhitelist;
 var login = require('./auth/auth');
+var bodyParser = require('koa-body-parser');
+
 
 var app = koa();
-
 
 var corsOptions = {
   origin: function(origin, callback){
@@ -33,6 +34,7 @@ var corsOptions = {
 
 // middleware
 // app.use(cors(corsOptions));
+app.use(bodyParser());
 app.use(logger());
 app.use(compress());
 app.use(requestId());
@@ -67,25 +69,25 @@ app.use(function*(next) {
   yield next;
 });
 
-// app.use(function*(next){
-//   var ip;
-//   if(this.request.connection) {
-//     ip = this.request.connection.remoteAddress;
-//   }
-//
-//   var log_me = {
-//     method: this.method,
-//     host: this.request.host,
-//     url: this.originalUrl,
-//     body: this.request.body,
-//     user: yield Promise.resolve(this.user),
-//     user_ip: ip,
-//     "user-agent": this.request.header['user-agent']
-//   };
-//   request_log.info(JSON.stringify(log_me));
-//
-//   yield next;
-// });
+app.use(function*(next){
+  var ip;
+  if(this.request.connection) {
+    ip = this.request.connection.remoteAddress;
+  }
+
+  var log_me = {
+    method: this.method,
+    host: this.request.host,
+    url: this.originalUrl,
+    body: this.request.body,
+    user: yield Promise.resolve(this.user),
+    user_ip: ip,
+    "user-agent": this.request.header['user-agent']
+  };
+  request_log.info(JSON.stringify(log_me));
+
+  yield next;
+});
 
 //mount each resource
 _.each(resources, function(resource){

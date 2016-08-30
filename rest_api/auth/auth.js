@@ -1,12 +1,11 @@
 const log = require('log4js').getLogger('['+__filename+']');
 const koa = require('koa');
 const router = require('koa-router')();
-const session = require('koa-session');
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('dsp_shared/database/model/cufs');
-const app = koa();
 
+const app = koa();
 
 passport.serializeUser(function(user, done) {
   done(null, user._id.toString());
@@ -28,7 +27,10 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
       done(null, false);
     }
     if(user) {
-      User.comparePassword(password, function(error, isMatch){
+      user.comparePassword(password, function(error, isMatch){
+        if(error) {
+          log.error('Error:', error);
+        }
         if(isMatch) {
           log.info('GOT USER', user);
           return done(null, user);
@@ -46,8 +48,8 @@ app.use(passport.session());
 
 router.post('/login',
   passport.authenticate('local', {}),
-  function *(){
-    console.log('IN THE POST METHOD');
+  function *() {
+    console.log('IN THE POST METHOD', this.request.body);
     log.info("USER LOG IN", this.passport.user["email"], this.host, this.hostname, "https://"+this.host+"/login");
 
     this.status = 200;
@@ -62,5 +64,4 @@ router.get('/logout',function (){
 });
 
 app.use(router.routes());
-
 module.exports = app;
