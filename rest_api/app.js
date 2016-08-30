@@ -59,6 +59,7 @@ app.use(function *(next){
 app.keys = ['dispatchr_cookie::ius45jbipsdhip42oj59g'];
 app.use(session({ key: 'dispatchr:sess' }, app));
 
+//Mount the login endpoint first
 app.use(mount('/api/v3', login));
 
 // Don't require login but include it
