@@ -16,24 +16,14 @@ var app = koa();
 //Things to test
 // cuf_id must exist
 
-// Eventually need to get cuf_id from login
-
 router.get('/workr/package', function*() {
-    var cufID = this.request.query.cuf_id;
-    var cufEmail = this.request.query.email;
+    var cufID = this.req.user._id;
     // var offset = this.request.query.offset;
     // var length = this.request.query.length;
-    var cuf = {};
-    if(cufID){
-      cuf = yield Cuf.findOne({
+    var cuf = yield Cuf.findOne({
           _id: cufID
       });
-    } else if(cufEmail){
-      cuf = yield Cuf.findOne({
-          uniq_id: cufEmail
-      });
-    }
-
+    
     //handle query.length query.offset into workorders
     var workorders = cuf.workorder;
     var map_features =[];
@@ -55,7 +45,7 @@ router.get('/workr/package', function*() {
       _id: cuf._id,
       first: cuf.first,
       last: cuf.last,
-    }
+    };
 
     this.body = {
       workorders: workorders,
