@@ -1,3 +1,4 @@
+var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
 var connection = require('dsp_database/connections')('meteor');
 
@@ -15,7 +16,24 @@ var cufSchema = new mongoose.Schema({
   phone_number:{type:String, index: true},
   status:{type:String, index: true},
   company: {type: String},
-  workorder: []
+  workorder: [],
+  password: String
 });
 
-module.exports = connection.model('CUFS', cufSchema);
+cufSchema.methods.comparePassword = function(candidatePassword, cb) {
+  //get a user object with password here
+  Cuf.findOne({ _id: this._id }).select({ password: 1 }).exec(function(err, passwordUser){
+    if (err) {
+      console.log('error:', err);
+      return cb(err);
+    }
+    bcrypt.compare(candidatePassword, passwordUser.password, function(err, isMatch) {
+      if (err) { return cb(err); }
+      cb(null, isMatch);
+    });
+  });
+};
+
+const Cuf = connection.model('CUFS', cufSchema);
+
+module.exports = Cuf;
