@@ -3,7 +3,7 @@ require('dsp_shared/database/database')(config.meteor);
 var koa = require('koa');
 var app = koa();
 require('dsp_shared/lib/starts_with');
-var router = require('koa-router');
+var router = require('koa-router')();
 var Asset = require('dsp_shared/database/model/assets');
 var crud_opts = require('../crud_op')(Asset);
 var bodyParser = require('koa-bodyparser');
@@ -30,7 +30,7 @@ function *get_req(id, response) {
     response.body = data;
   } else {
     response.throw("Resource Not Found", 404);
-  }     
+  }
 }
 router.get('/asset/:id.jpg', function*() {
   yield get_req(this.params.id, this);
