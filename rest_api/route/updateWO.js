@@ -3,7 +3,7 @@ var router = require('koa-router')();
 var koa = require('koa');
 var app = koa();
 
-router.post('/wo/:woId/add/:treeId', function (){
+router.post('/workorder/:woId/trees/:treeId', function (){
   var woId = this.params.woId;
   var userId = this.req.user._id;
   var treeId = this.params.treeId;
@@ -12,7 +12,7 @@ router.post('/wo/:woId/add/:treeId', function (){
   });
 });
 
-router.post('/wo/:woId/remove/:treeId', function (){
+router.delete('/workorder/:woId/trees/:treeId', function (){
   var woId = this.params.woId;
   var userId = this.req.user._id;
   var treeId = this.params.treeId;
