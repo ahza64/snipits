@@ -49,10 +49,12 @@ app.use(function *(next){
   };
   yield next;
   console.log(this.request);
-  this.body = {
-    envelope: this.dsp_env,
-    data: this.body
-  };
+  if (this.request.url.split('/')[3] !== 'asset') {
+    this.body = {
+      envelope: this.dsp_env,
+      data: this.body
+    };
+  }
 });
 
 // sessions

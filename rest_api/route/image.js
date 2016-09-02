@@ -32,6 +32,11 @@ function *get_req(id, response) {
     response.throw("Resource Not Found", 404);
   }
 }
+
+/**
+* @param { String } id - user id
+*/
+
 router.get('/asset/:id.jpg', function*() {
   yield get_req(this.params.id, this);
 
@@ -40,6 +45,7 @@ router.get('/asset/:id.jpg', function*() {
     this.type = "image/jpeg";
   }
 });
+
 router.get('/asset/:id.jpeg', function*() {
   yield get_req(this.params.id, this);
 
@@ -62,6 +68,18 @@ router.post('/asset', function*(next) {
   }
   yield next;
 });
+
+router.get('/asset/:id', function*() {
+  yield get_req(this.params.id, this);
+
+  if(this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
+    var imgStr = this.body.data.substring("data:image/jpeg;base64".length);
+    var buf = new Buffer(imgStr, 'base64');
+    this.type = "image/jpeg";
+    this.body = buf;
+  }
+});
+
 
 app.use(router.routes());
 
