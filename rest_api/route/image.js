@@ -5,7 +5,11 @@ var app = koa();
 require('dsp_shared/lib/starts_with');
 var router = require('koa-router')();
 var Asset = require('dsp_shared/database/model/assets');
-var crud_opts = require('../crud_op')(Asset);
+var Tree = require('dsp_shared/database/model/tree');
+
+var crud_opts_asset = require('../crud_op')(Asset);
+var crud_opts_tree = require('../crud_op')(Tree);
+
 var bodyParser = require('koa-bodyparser');
 
 function *get_req(id, response) {
@@ -56,12 +60,16 @@ router.get('/asset/:id.jpeg', function*() {
 });
 
 //Add if(read_only)
-router.post('/asset', function*(next) {
+router.post('/asset/:treeId', function*(next) {
   var result = null;
+  var updateTree = null;
+  var treeId = this.params.treeId;
   try {
-    result = yield crud_opts.create(this.request.body);
-    result = yield crud_opts.read(result._id);
-    this.body = result;
+    result = yield crud_opts_asset.create(this.request.body);
+    result = yield crud_opts_asset.read(result._id);
+    console.log('TREE ID>>>>>>>>>>>>>>>>', treeId);
+    updateTree = yield crud_opts_tree.patch(treeId, {"image": result._id}, this.header['content-type'])
+    this.body = updateTree;
     this.status = 200;
   } catch(e) {
     throw ('not work', 500);
