@@ -23,7 +23,7 @@ router.get('/workr/package', function*() {
     var cuf = yield Cuf.findOne({
           _id: cufID
       });
-    
+
     //handle query.length query.offset into workorders
     var workorders = cuf.workorder;
     var map_features =[];
@@ -53,7 +53,6 @@ router.get('/workr/package', function*() {
       user: userObject,
       map_features: map_features
     };
-
 });
 
 app.use(router.routes());

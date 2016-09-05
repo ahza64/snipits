@@ -19,9 +19,9 @@ function *get_req(id, response) {
       var offset = response.request.query.offset || 0;
       var len = response.request.query.length || 100; // Need to manage this on the client we can't always get all of them
 
-      data = yield crud_opts.list(offset, len, undefined, response.request.query.select);
+      data = yield crud_opts_asset.list(offset, len, undefined, response.request.query.select);
     } else {
-      data = yield crud_opts.read(id, response.query);
+      data = yield crud_opts_asset.read(id, response.query);
     }
   } catch (e){
     if(e.name === "CastError" && e.path === '_id') {
