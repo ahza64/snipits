@@ -64,11 +64,12 @@ router.post('/asset/:treeId', function*(next) {
   var result = null;
   var updateTree = null;
   var treeId = this.params.treeId;
+  var update = {};
   try {
     result = yield crud_opts_asset.create(this.request.body);
     result = yield crud_opts_asset.read(result._id);
-    console.log('TREE ID>>>>>>>>>>>>>>>>', treeId);
-    updateTree = yield crud_opts_tree.patch(treeId, {"image": result._id}, this.header['content-type'])
+    update.image = result._id;
+    updateTree = yield crud_opts_tree.patch(treeId, update, this.header['content-type'])
     this.body = updateTree;
     this.status = 200;
   } catch(e) {
