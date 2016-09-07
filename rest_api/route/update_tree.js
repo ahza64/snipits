@@ -1,6 +1,6 @@
 /**
  * @fileOverview Route to add,edit update tree and workorder
- */ 
+ */
 
 var Cuf = require('dsp_shared/database/model/cufs');
 var router = require('koa-router')();
@@ -18,9 +18,10 @@ router.post('/workorder/:woId/trees', function *(){
   try {
     result = yield crud_opts.create(treeObj);
     result = yield crud_opts.read(result._id);
+    console.log('PUSHING THIS ID', result._id.toString());
     this.body = result;
 
-    Cuf.update({_id: userId, 'workorder._id': woId}, {'$addToSet': {'workorder.$.tasks': result._id._str}}, function(err, data){
+    Cuf.update({_id: userId, 'workorder._id': woId}, {'$push': {'workorder.$.tasks': result._id.toString()}}, function(err, data){
       if(err) { console.log(err); }
       else {
         console.log('Tree ' + result._id + ' added and Workorder ' + woId + ' updated', data);
