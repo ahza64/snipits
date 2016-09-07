@@ -53,7 +53,6 @@ router.get('/workr/package', function*() {
       user: userObject,
       map_features: map_features
     };
-
 });
 
 app.use(router.routes());
