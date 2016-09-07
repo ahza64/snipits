@@ -60,16 +60,19 @@ router.get('/asset/:id.jpeg', function*() {
 });
 
 //Add if(read_only)
-router.post('/asset/:treeId', function*(next) {
+router.post('/asset', function*(next) {
   var result = null;
   var updateTree = null;
-  var treeId = this.params.treeId;
+  var treeId;
+  var imageType;
   var update = {};
   try {
     result = yield crud_opts_asset.create(this.request.body);
     result = yield crud_opts_asset.read(result._id);
-    update.image = result._id;
-    updateTree = yield crud_opts_tree.patch(treeId, update, this.header['content-type'])
+    treeId = result.ressourceId;
+    imageType = result.meta.imageType;
+    update[imageType] = result._id;
+    updateTree = yield crud_opts_tree.patch(treeId, update, this.header['content-type']);
     this.body = updateTree;
     this.status = 200;
   } catch(e) {
