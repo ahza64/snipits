@@ -3,7 +3,7 @@
     "name": "tree",
     "options": {
       "model": "tree",
-      "read_only": true,
+      "read_only": false,
       "accepted_filters": ["pge_pmd_num", "division", "circuit_name", "region", "project"]
     }
   },
