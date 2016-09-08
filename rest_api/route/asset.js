@@ -73,7 +73,7 @@ router.post('/asset', function*(next) {
     imageType = result.meta.imageType;
     update[imageType] = result._id;
     updateTree = yield crud_opts_tree.patch(treeId, update, this.header['content-type']);
-    this.body = updateTree;
+    this.body = {_id:result._id};
     this.status = 200;
   } catch(e) {
     throw ('not work', 500);
