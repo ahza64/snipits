@@ -5,6 +5,7 @@ if (require.main === module) {
   var config = require('dsp_shared/config/config').get();
   require('dsp_shared/database/database')(config.meteor);
 }
+const MIN_DISTANCE = 0.125; //in miles
 var koa = require('koa');
 var router = require('koa-router')();
 var Cuf = require('dsp_shared/database/model/cufs');
@@ -31,7 +32,7 @@ router.get('/workr/package', function*() {
     for (var i = 0; i < workorders.length; ++i) {
         var workorder = workorders[i];
         tree_ids = tree_ids.concat(workorder.tasks);
-        var features = yield MapFeature.findNear(workorder.location, 0.25, 'miles', { type: "alert" });
+        var features = yield MapFeature.findNear(workorder.location, MIN_DISTANCE, 'miles', { type: "alert" });
         map_features = map_features.concat(features);
     }
 
