@@ -46,12 +46,13 @@ router.get('/workr/package', function*() {
       _id: cuf._id,
       first: cuf.first,
       last: cuf.last,
+      work_type: cuf.work_type[0]
     };
 
     this.body = {
+      user: userObject,
       workorders: workorders,
       trees: trees,
-      user: userObject,
       map_features: map_features
     };
 });
