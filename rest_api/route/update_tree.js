@@ -6,6 +6,7 @@ var Cuf = require('dsp_shared/database/model/cufs');
 var router = require('koa-router')();
 var koa = require('koa');
 var Tree = require('dsp_shared/database/model/tree');
+var geocode = require('dsp_shared/lib/gis/google_geocode');
 var crud_opts = require('../crud_op')(Tree);
 var app = koa();
 
@@ -14,8 +15,17 @@ router.post('/workorder/:woId/tree', function *(){
   var userId = this.req.user._id;
   var treeObj = this.request.body;
   var result = null;
-
+  var addressObj = null;
   try {
+    if(treeObj.location){
+      addressObj = yield geocode.getAddress(treeObj.location.coordinates[0], treeObj.location.coordinates[1]);
+      treeObj.streetName = addressObj.streetName;
+      treeObj.streetNumber = addressObj.streetNumber;
+      treeObj.zipcode = addressObj.zipcode;
+      treeObj.state = addressObj.administrativeLevels.level1short;
+      treeObj.city = addressObj.city;
+      treeObj.county = addressObj.administrativeLevels.level2long;
+    }
     result = yield crud_opts.create(treeObj);
     result = yield crud_opts.read(result._id);
     console.log('PUSHING THIS ID', result._id.toString());
