@@ -70,18 +70,11 @@ router.post('/asset', function*(next) {
     result = yield crud_opts_asset.create(this.request.body);
     result = yield crud_opts_asset.read(result._id);
     treeId = result.ressourceId;
-    console.log("result", result, "treeid", treeId);
-    console.log("A----");
     var tree = yield Tree.findOne({_id : treeId});
-    console.log(tree);
     imageType = result.meta.imageType;
     update[imageType] = result._id;
-    console.log("B----");
     updateTree = yield crud_opts_tree.patch(treeId, update, this.header['content-type']);
-    console.log("C----");
-    console.log(updateTree);
     yield TreeHistory.recordTreeHistory(tree, updateTree, this.req.user);
-    console.log("D----");
     this.body = {_id:result._id};
     this.status = 200;
   } catch(e) {

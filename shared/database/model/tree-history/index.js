@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 
 historySchema.statics.recordTreeHistory = function(oldTree, newTree, user, queued) {
   var changes = diff(utils.toJSON(oldTree), utils.toJSON(newTree));
-  console.log("CHANGES", changes);
+  //console.log("CHANGES", changes);
   return TreeHistoryModel.create(changes, newTree, user, queued);
 };
 
