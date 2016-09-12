@@ -9,7 +9,7 @@ var Tree = require('dsp_shared/database/model/tree');
 var crud_opts = require('../crud_op')(Tree);
 var app = koa();
 
-router.post('/workorder/:woId/trees', function *(){
+router.post('/workorder/:woId/tree', function *(){
   var woId = this.params.woId;
   var userId = this.req.user._id;
   var treeObj = this.request.body;
@@ -32,7 +32,7 @@ router.post('/workorder/:woId/trees', function *(){
   }
 });
 
-router.patch('/workorder/:woId/trees/:treeId', function *(){
+router.patch('/workorder/:woId/tree/:treeId', function *(){
   var treeId = this.params.treeId;
   var treeUpdates = this.request.body;
 
@@ -47,7 +47,7 @@ router.patch('/workorder/:woId/trees/:treeId', function *(){
   }
 });
 
-router.delete('/workorder/:woId/trees/:treeId', function *(){
+router.delete('/workorder/:woId/tree/:treeId', function *(){
   var woId = this.params.woId;
   var treeId = this.params.treeId;
   var userId = this.req.user._id;
