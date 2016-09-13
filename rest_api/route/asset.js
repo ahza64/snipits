@@ -6,9 +6,9 @@ require('dsp_shared/lib/starts_with');
 var router = require('koa-router')();
 var Asset = require('dsp_shared/database/model/assets');
 var Tree = require('dsp_shared/database/model/tree');
-
 var crud_opts_asset = require('../crud_op')(Asset);
 var crud_opts_tree = require('../crud_op')(Tree);
+var TreeHistory = require('dsp_shared/database/model/tree-history');
 
 var bodyParser = require('koa-bodyparser');
 
@@ -70,9 +70,11 @@ router.post('/asset', function*(next) {
     result = yield crud_opts_asset.create(this.request.body);
     result = yield crud_opts_asset.read(result._id);
     treeId = result.ressourceId;
+    var tree = yield Tree.findOne({_id : treeId});
     imageType = result.meta.imageType;
     update[imageType] = result._id;
     updateTree = yield crud_opts_tree.patch(treeId, update, this.header['content-type']);
+    yield TreeHistory.recordTreeHistory(tree, updateTree, this.req.user);
     this.body = {_id:result._id};
     this.status = 200;
   } catch(e) {

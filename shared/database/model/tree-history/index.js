@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 
 historySchema.statics.recordTreeHistory = function(oldTree, newTree, user, queued) {
   var changes = diff(utils.toJSON(oldTree), utils.toJSON(newTree));
-  // console.log("CHANGES", changes);
+  //console.log("CHANGES", changes);
   return TreeHistoryModel.create(changes, newTree, user, queued);
 };
 
@@ -35,10 +35,10 @@ historySchema.statics.create = function(treeDiff, tree, user, queued) {
 
 historySchema.statics.buildVersion = function(type, id, date) {
   return TreeHistoryModel.find({
-                                  object_type: type, 
-                                  object_id: id, 
+                                  object_type: type,
+                                  object_id: id,
                                   $or: [
-                                    {request_created: {$lt: date}}, 
+                                    {request_created: {$lt: date}},
                                     {created: {$lt: date}}
                                   ]
                               }).sort({request_created: 1, created: 1})
@@ -54,13 +54,13 @@ historySchema.statics.buildVersion = function(type, id, date) {
       }
       return 0;
     });
-    
+
     //reconstitue
     var result = {};
     for(var i = 0; i < histories.length; i++) {
       _.extend(result, histories[i].action_value);
     }
-    
+
   });
 };
 

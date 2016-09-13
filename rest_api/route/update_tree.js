@@ -9,6 +9,7 @@ var Tree = require('dsp_shared/database/model/tree');
 var geocode = require('dsp_shared/lib/gis/google_geocode');
 var crud_opts = require('../crud_op')(Tree);
 var app = koa();
+var TreeHistory = require('dsp_shared/database/model/tree-history');
 
 router.post('/workorder/:woId/tree', function *(){
   var woId = this.params.woId;
@@ -28,6 +29,7 @@ router.post('/workorder/:woId/tree', function *(){
     }
     result = yield crud_opts.create(treeObj);
     result = yield crud_opts.read(result._id);
+    yield TreeHistory.recordTreeHistory({}, result, this.req.user);
     console.log('PUSHING THIS ID', result._id.toString());
     this.body = result;
 
@@ -40,21 +42,26 @@ router.post('/workorder/:woId/tree', function *(){
   } catch(e) {
     throw ('Tree not added', 500);
   }
+
+  return result;
 });
 
 router.patch('/workorder/:woId/tree/:treeId', function *(){
   var treeId = this.params.treeId;
   var treeUpdates = this.request.body;
-
   var result = null;
 
   try {
+    var tree = yield Tree.findOne({_id:treeId});
     result = yield crud_opts.patch(treeId, treeUpdates, this.header['content-type']);
+    yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
     this.body = result;
     this.dsp_env.msg = 'Tree Successfully Edited';
   } catch(e) {
     throw ('Tree not added', 500);
   }
+
+  return result;
 });
 
 router.delete('/workorder/:woId/tree/:treeId', function *(){
@@ -66,7 +73,9 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
   var result = null;
 
   try {
+    var tree = yield Tree.findOne({_id:treeId});
     result = yield crud_opts.patch(treeId, treeUpdates, this.header['content-type']);
+    yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
     this.body = result;
     Cuf.update({_id: userId, 'workorder._id': woId}, {'$pull': {'workorder.$.tasks': treeId}}, function(err, data){
       if(err) { console.log(err); }
@@ -78,6 +87,7 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
     console.log(e);
     throw('Failed to delete', 500);
   }
+  return result;
 });
 
 app.use(router.routes());
