@@ -27,14 +27,16 @@ function getAddress(x, y, error_count){
        }, 5000*error_count);
      }else {
        var address = res[0];
-       address.county = address.administrativeLevels.level2long;		 
+       address.county = address.administrativeLevels.level2long;
        address.state = address.administrativeLevels.level1short;
        address.streetName = address.streetName;
-       if(address.county) {		 
-         if(address.county.endsWith("County")) {		 
-           address.county = address.county.substring(0, address.county.length - " County".length);		 
-         }		 
-       }       
+       address.streetNumber = address.streetNumber;
+       address.zipcode = address.zipcode;
+       if(address.county) {
+         if(address.county.endsWith("County")) {
+           address.county = address.county.substring(0, address.county.length - " County".length);
+         }
+       }
        resolve(address);
      }
    });
