@@ -70,11 +70,10 @@ router.post('/asset', function*(next) {
   var imageType;
   var update = {};
   try {
-    tree = yield Tree.find({_id:treeId});
     result = yield crud_opts_asset.create(this.request.body);
     result = yield crud_opts_asset.read(result._id);
     treeId = result.ressourceId;
-    var tree = yield Tree.findOne({_id : treeId});
+    tree = yield Tree.findOne({_id:treeId});
     imageType = result.meta.imageType;
     update[imageType] = result._id;
     updateTree = yield crud_opts_tree.patch(treeId, update, this.header['content-type']);
