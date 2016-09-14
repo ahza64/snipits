@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "webserver": "node api/src/server.js",
+    "dev-web": "nodemon api/src/server.js",
     "build": "node_modules/.bin/webpack",
     "dev": "node_modules/.bin/webpack-dev-server"
   },
@@ -15,6 +16,7 @@
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-react": "^6.11.1",
+    "co": "^4.6.0",
     "css-loader": "^0.25.0",
     "html-webpack-plugin": "^2.22.0",
     "isomorphic-fetch": "^2.2.1",

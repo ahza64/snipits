@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from './login.jsx';
+import Login from './login/login.jsx';
 
 require('../../styles/body.scss');
 
