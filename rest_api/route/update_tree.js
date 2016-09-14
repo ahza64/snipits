@@ -6,12 +6,22 @@ var Cuf = require('dsp_shared/database/model/cufs');
 var router = require('koa-router')();
 var koa = require('koa');
 var Tree = require('dsp_shared/database/model/tree');
+var Pmd = require('dsp_shared/database/model/pmd');
 var geocode = require('dsp_shared/lib/gis/google_geocode');
 var crud_opts = require('../crud_op')(Tree);
 var _ = require('underscore');
 var app = koa();
 var TreeHistory = require('dsp_shared/database/model/tree-history');
 
+
+/**
+ * addMissingFields - add missing fields to a newly added tree
+ *
+ * @param  {Object} treeObj
+ * @param  {String} woId
+ * @param  {Object} user
+ * @return {Object}
+ */
 function *addMissingFields(treeObj, woId, user) {
   var tree = null;
   var workOrder = _.find(user.workorder, wo => {
@@ -19,18 +29,28 @@ function *addMissingFields(treeObj, woId, user) {
       return wo;
     }
   });
+  var pmd = yield Pmd.findOne({pge_pmd_num: workOrder.pge_pmd_num});
   var treeId = workOrder.tasks[0];
   tree = yield crud_opts.read(treeId);
-  treeObj.pge_pmd_num = workOrder.pge_pmd_num || tree.pge_pmd_num;
-  treeObj.span_name = workOrder.span_name || tree.span_name;
-  treeObj.division = workOrder.division || tree.division;
-  treeObj.region = workOrder.region || tree.region;
+  treeObj.pge_pmd_num = workOrder.pge_pmd_num || pmd.pge_pmd_num;
+  treeObj.span_name = workOrder.span_name || pmd.span_name;
+  treeObj.division = workOrder.division || pmd.division;
+  treeObj.region = workOrder.region || pmd.region;
   treeObj.circuit_name = workOrder.circuit_name || tree.circuit_name;
   return treeObj;
 }
 
-function *getAddress(treeObj, x, y) {
-  var addressObj = yield geocode.getAddress(x, y);
+
+/**
+ * getAddress - get geocoded address
+ *
+ * @param  {Object} treeObj
+ * @param  {Number} x
+ * @param  {Number} y
+ * @return {Object}
+ */
+function *setAddress(treeObj) {
+  var addressObj = yield geocode.getAddress(treeObj.location.coordinates[0], treeObj.location.coordinates[1]);
   treeObj.streetName = addressObj.streetName;
   treeObj.streetNumber = addressObj.streetNumber;
   treeObj.zipcode = addressObj.zipcode;
@@ -43,38 +63,115 @@ function *getAddress(treeObj, x, y) {
 
 
 /**
+ * addNewTree - adds a new tree to the Tree collection
+ *
+ * @param  {Object} treeObj
+ * @param  {String} woId
+ * @param  {Object} user
+ * @return {Object}
+ */
+function *addNewTree(treeObj, woId, user){
+  var result = null;
+  var newTreeObj = yield addMissingFields(treeObj, woId, user);
+  result = yield crud_opts.create(newTreeObj);
+  result = yield crud_opts.read(result._id);
+  return result;
+}
+
+
+/**
+ * updateTree - updates existing tree
+ *
+ * @param  {type} treeId
+ * @param  {type} treeUpdates
+ * @return {Object}
+ */
+function *updateTree(treeId, treeUpdates, instance){
+  return yield crud_opts.patch(treeId, treeUpdates, instance.header['content-type']);
+}
+
+
+/**
+ * addTreeToWorkorder - add newly added tree to current workorder
+ *
+ * @param  {type} userId
+ * @param  {type} woId
+ * @param  {type} treeId
+ * @return {type}
+ */
+function *addTreeToWorkorder(userId, woId, treeId){
+  try {
+    var data = yield Cuf.update({_id: userId, 'workorder._id': woId}, {'$push': {'workorder.$.tasks': treeId}});
+    console.log('Tree ' + treeId + ' added and Workorder ' + woId + ' updated', data);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+
+/**
+ * removeTreeFromWorkorder - remove tree from workorder
+ *
+ * @param  {String} userId
+ * @param  {String} woId
+ * @param  {String} treeId
+ * @return {void}
+ */
+function *removeTreeFromWorkorder(userId, woId, treeId){
+  try {
+    var data = yield Cuf.update({_id: userId, 'workorder._id': woId}, {'$pull': {'workorder.$.tasks': treeId}});
+    console.log('Tree' + treeId + 'removed and Workorder' + woId + 'updated', data);
+  } catch (err){
+    console.error(err);
+  }
+}
+
+/**
+ * checkLocation - get tree counts at the same location
+ *
+ * @param  {Object} location
+ * @return {Number}
+ */
+function *checkLocation(location){
+  return yield Tree.find({'location.coordinates': location}).count();
+}
+
+/**
  * Route for adding a new tree
  *
  * @return {type}  description
  */
 router.post('/workorder/:woId/tree', function *(){
   var woId = this.params.woId;
-  var userId = this.req.user._id;
+  var user = this.req.user;
+  var userId = user._id;
   var treeObj = this.request.body;
   var treeDone = treeObj.assignment_complete;
   var result = null;
   try {
-    treeObj = yield getAddress(treeObj, treeObj.location.coordinates[0], treeObj.location.coordinates[1]);
 
-    //if tree is marked as done
-    if(treeDone) {
-      treeObj = yield addMissingFields(treeObj, woId, this.req.user);
-      result = yield crud_opts.create(treeObj);
-      result = yield crud_opts.read(result._id);
-      this.body = result;
-    } else {
-      result = yield crud_opts.create(treeObj);
-      result = yield crud_opts.read(result._id);
-      console.log('PUSHING THIS ID', result._id.toString());
-      this.body = result;
-      Cuf.update({_id: userId, 'workorder._id': woId}, {'$push': {'workorder.$.tasks': result._id.toString()}}, function(err, data){
-        if(err) { console.log(err); }
-        else {
-          console.log('Tree ' + result._id + ' added and Workorder ' + woId + ' updated', data);
-        }
-      });
+    //check if a tree exists at the same location
+    var duplicateTree = yield checkLocation(treeObj.location.coordinates);
+    if(duplicateTree > 0){
+      throw ('Duplicate Tree at this location', 400);
+    }
+    //get address from google reverse geocode
+    treeObj = yield setAddress(treeObj);
+
+    //if new tree is marked as done
+    result = yield addNewTree(treeObj, woId, user);
+    this.body = result;
+
+    if(!treeDone) {
+      yield addTreeToWorkorder(userId, woId, result._id.toString());
     }
   } catch(e) {
+    if(e === 400) {
+      this.dsp_env.msg = 'DUPLICATE TREE AT THIS LOCATION';
+      this.dsp_env.status = 400;
+    } else {
+      this.dsp_env.msg = 'TREE NOT ADDED';
+    }
     throw ('Tree not added', 500);
   }
 
@@ -95,23 +192,19 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
   var result = null;
 
   try {
+    //if existing tree is marked as done
     if(treeDone) {
       treeUpdates.assigned_user_id = null;
-      result = yield crud_opts.patch(treeId, treeUpdates, this.header['content-type']);
-      Cuf.update({_id: userId, 'workorder._id': woId}, {'$pull': {'workorder.$.tasks': treeId}}, function(err, data){
-        if(err) { console.log(err); }
-        else {
-          console.log('Tree' + treeId + 'removed and Workorder' + woId + 'updated', data);
-        }
-      });
-      this.body = result;
+      result = yield updateTree(treeId, treeUpdates, this);
+      yield removeTreeFromWorkorder(userId, woId, treeId);
       this.dsp_env.msg = 'Tree Successfully Completed';
     } else {
-      result = yield crud_opts.patch(treeId, treeUpdates, this.header['content-type']);
-      this.body = result;
-      this.dsp_env.msg = 'Tree Successfully Edited';
+      result = yield updateTree(treeId, treeUpdates, this);
+      this.dsp_env.msg = 'Tree Successfully Updated';
     }
+    this.body = result;
   } catch(e) {
+    console.log(e.message);
     throw ('Tree not updated', 500);
   }
 
