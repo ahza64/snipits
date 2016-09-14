@@ -6,6 +6,7 @@ var Cuf = require('dsp_shared/database/model/cufs');
 var router = require('koa-router')();
 var koa = require('koa');
 var Tree = require('dsp_shared/database/model/tree');
+var TreeHistory = require('dsp_shared/database/model/tree-history');
 var Pmd = require('dsp_shared/database/model/pmd');
 var geocode = require('dsp_shared/lib/gis/google_geocode');
 var crud_opts = require('../crud_op')(Tree);
@@ -165,6 +166,7 @@ router.post('/workorder/:woId/tree', function *(){
     if(!treeDone) {
       yield addTreeToWorkorder(userId, woId, result._id.toString());
     }
+    yield TreeHistory.recordTreeHistory({}, result, user);
   } catch(e) {
     if(e === 400) {
       this.dsp_env.msg = 'DUPLICATE TREE AT THIS LOCATION';
@@ -190,8 +192,8 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
   var treeUpdates = this.request.body;
   var treeDone = treeUpdates.assignment_complete;
   var result = null;
-
   try {
+    var tree = yield Tree.findOne({_id:treeId});
     //if existing tree is marked as done
     if(treeDone) {
       treeUpdates.assigned_user_id = null;
@@ -203,6 +205,7 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
       this.dsp_env.msg = 'Tree Successfully Updated';
     }
     this.body = result;
+    yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
   } catch(e) {
     console.log(e.message);
     throw ('Tree not updated', 500);
@@ -235,6 +238,7 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
         console.log('Tree' + treeId + 'removed and Workorder' + woId + 'updated', data);
       }
     });
+    yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
   } catch(e) {
     console.log(e);
     throw('Failed to delete', 500);
