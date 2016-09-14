@@ -174,7 +174,6 @@ router.post('/workorder/:woId/tree', function *(){
     } else {
       this.dsp_env.msg = 'TREE NOT ADDED';
     }
-    throw ('Tree not added', 500);
   }
 
   return result;
@@ -208,7 +207,7 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
     yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
   } catch(e) {
     console.log(e.message);
-    throw ('Tree not updated', 500);
+    this.dsp_env.error = e.message;
   }
 
   return result;
@@ -240,8 +239,8 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
     });
     yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
   } catch(e) {
-    console.log(e);
-    throw('Failed to delete', 500);
+    console.log(e.message);
+    this.dsp_env.error = e.message;
   }
   return result;
 });

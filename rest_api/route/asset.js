@@ -82,7 +82,10 @@ router.post('/asset', function*(next) {
     this.status = 200;
     yield TreeHistory.recordTreeHistory(tree, updateTree, this.req.user);
   } catch(e) {
-    throw ('not work', 500);
+    console.log('Exception:', e.message);
+    this.dsp_env.msg = 'Error';
+    this.dsp_env.error = e.message;
+    this.status = 500;
   }
   yield next;
 });
