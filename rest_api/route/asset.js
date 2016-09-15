@@ -77,7 +77,6 @@ router.post('/asset', function*(next) {
     imageType = result.meta.imageType;
     update[imageType] = result._id;
     updateTree = yield crud_opts_tree.patch(treeId, update, this.header['content-type']);
-    yield TreeHistory.recordTreeHistory(tree, updateTree, this.req.user);
     this.body = {_id:result._id};
     this.status = 200;
     yield TreeHistory.recordTreeHistory(tree, updateTree, this.req.user);
