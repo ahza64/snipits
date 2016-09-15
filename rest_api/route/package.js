@@ -17,9 +17,7 @@ var app = koa();
 //Things to test
 // cuf_id must exist
 function* extractCircuitNamesFromWO(workorder) {
-  console.log('----------->>>>>>>w', workorder);
   var treesInWO = yield Tree.find({_id: {$in: workorder.tasks}});
-  console.log('----------->>>>>>>t', treesInWO);
   var circuitNamesInWO = yield treesInWO.map(function (x) {
     return x.circuit_name;
   });
