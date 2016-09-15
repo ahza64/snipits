@@ -1,0 +1,260 @@
+/**
+* @fileoverview tests the GET /workr/package route
+* 1 login
+* 2 get mongo info
+* 3 get api/package info
+* 4 compare mongo info w/ api info
+* 5 logout
+* @author Hasnain Haider 9/1/16
+*/
+
+/**
+* URL to mongo database
+* @var {String} MONGO_URL
+* @const
+* @defaultvalue mongodb://localhost:27017/dev_local
+
+* Base URL to the server
+* @var {String} BASE_URL
+* @const
+* @defaultvalue http://localhost:3000/api/v3
+*/
+const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
+const LOGIN_URL = '/login';
+const LOGOUT_URL= '/logout';
+const RES_URL   = '/tree';
+var   chai      = require('chai');
+var   should    = chai.should();
+var   expect    = chai.expect;
+var   assert    = chai.assert;
+var   config    = require('dsp_shared/conf.d/config');
+require('dsp_shared/database/database')(config.meteor);
+var   request   = require('supertest');
+var   _         = require('underscore');
+var   server    = request.agent(BASE_URL);
+var   resources = require('../resources');
+var   Cuf       = require('dsp_shared/database/model/cufs');
+var   Tree      = require('dsp_shared/database/model/tree');
+
+chai.use(require('chai-http'));
+
+/**
+* @global
+
+* The information we wish to update on
+  the tree
+  @var {Object} edittedData
+
+* Properties for the new tree
+* @var {Object} postData
+
+* Query to submit on GET /trees
+* @var {String} treeQuery
+
+* The user who is currently logged in
+* @var {Object} cuf
+
+* User email and password used to
+  authenticate user
+* @var {Object} user_credentials
+*/
+var offset =  0; // Math.floor(Math.random() * 10) + 1;
+var randLength = Math.floor(Math.random() * 10) + 1;
+
+var treeQuery = '?' +'length=' + randLength + '&offset=' + offset;
+var newTreeId;
+var postData = {
+  'species' : 'arugula',
+  'address' : '123 abc st.',
+  'height'  : 71.75
+};
+
+var edittedData = {
+  'species' : 'editted',
+  'height'  : 1000
+};
+var cuf;
+var user_credentials = {
+  email : "kcmb@pge.com",
+  password: "2094951517"
+};
+
+/**
+* Main test for api/v3/workr/package
+
+* gets (1) tree ids (2) workorder ids
+
+* from mongo then the api. Compares mongo and api counterparts
+
+* @param {String} description
+
+* @return {Void}
+*/
+
+describe('Tree Api Test', function () {
+/**
+* Login using user credentials
+* get cuf from login
+
+* @param {Function} done
+* @return {Void}
+*/
+  it('should login', function (done) {
+    server
+    .post(LOGIN_URL)
+    .set('content-type', 'application/json')
+    .send(user_credentials)
+    .end(function (error, response) {
+      expect(error).to.be.null;
+      response.should.have.status(200);
+      var text = JSON.parse(response.text);
+      console.log("searching for user with id : " + text.data._id );
+
+      Cuf.findOne({_id : text.data._id}, function (err, res) {
+        expect(err).to.be.null;
+        cuf = res;
+        if(err) {
+          console.error(err);
+        } else {
+          console.log("Found ", cuf.first + ' ' + cuf.last);
+        }
+        done();
+      });
+    });
+  });
+
+/**Tree
+Route: /api/v3/tree
+Methods: GET, POST, PUT
+Collection: trees
+
+Add
+edit
+delete
+
+First try GET
+*/
+
+/**
+* extracting lists from mongo database
+* @return {Void}
+*/
+  it('make query to resource route', function (done) {
+    console.log('Checking ' + RES_URL + treeQuery);
+    server
+    .get(RES_URL + treeQuery)
+    .set('content-type', 'application/json')
+    .end(function (error, response) {
+      response.should.have.status(200);
+      expect(error).to.be.null;
+      var text = JSON.parse(response.text);
+      var apiTrees = text.data.map(x => x._id);
+      assert.lengthOf(apiTrees, randLength, 'There should be ' + randLength + ' results');
+      done();
+    });
+  });
+
+/**
+* GETs package route. extracts info.
+* @return {Void}
+*/
+
+/**
+* GETs package route. Compare data collected via API
+* against the data collected from API
+* @return {Void}
+*/
+  it('should add a new tree',function (done) {
+    server
+    .post(RES_URL)
+    .set('content-type', 'application/json')
+    .send(postData)
+    .end(function (err, res) {
+      expect(err).to.be.null;
+      this.response.should.have.status(201);
+      var text = JSON.parse(res.text);
+
+      newTreeId = text.data._id
+      done();
+    })
+  });
+
+
+  it('should check the newly created tree',function (done) {
+    server
+    .get(RES_URL + '/' + newTreeId)
+    .set('content-type', 'application/json')
+    .end(function (err, res) {
+      expect(err).to.be.null;
+      this.response.should.have.status(200);
+      Tree.findOne({_id : newTreeId}, function (err,res) {
+        expect(err).to.be.null;
+        console.log('Checking new tree has correct properties... ');
+        console.log('ID', newTreeId);
+        for(field in postData)
+        {
+          console.log('field :', field);
+          console.log(postData[field], ' is equal to ', res[field]);
+          expect(postData[field]).to.equal(res[field]);
+        }
+        done();
+      });
+
+    })
+  });
+/**
+* GETs package route. Compare data collected via API
+* against the data collected from API
+* @return {Void}
+*/
+
+  it('should patch and update a resource', function (done) {
+    server
+    .patch(RES_URL + '/' + newTreeId)
+    .set('content-type', 'application/json')
+    .send(edittedData)
+    .end(function (err, res) {
+      expect(err).to.be.null;
+      done();
+    })
+  });
+
+//id remains the same
+  it('should check the updated resource',function (done) {
+    server
+    .get(RES_URL + '/' + newTreeId)
+    .set('content-type', 'application/json')
+    .end(function (err, res) {
+      expect(err).to.be.null;
+      this.response.should.have.status(200);
+
+      var tree = Tree.findOne({_id : newTreeId}, function (err,res) {
+        expect(err).to.be.null;
+        console.log('Checking editted resource has correct properties... ');
+        console.log('ID: ', newTreeId);
+        for(field in edittedData)
+        {
+          console.log("field", field);
+          console.log(edittedData[field], ' is equal to ', res[field]);
+          expect(edittedData[field]).to.equal(res[field]);
+        }
+        done();
+      });
+
+    })
+  });
+
+/**
+* Logout
+* @return {Void}
+*/
+  it('should logout', function () {
+    server
+    .get(LOGOUT_URL)
+      .end(function (error, response) {
+        console.log("Attempting logout...");
+        expect(error).to.be.null;
+        response.should.have.status(200);
+      });
+  });
+});
