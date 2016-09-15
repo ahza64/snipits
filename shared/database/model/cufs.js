@@ -17,7 +17,8 @@ var cufSchema = new mongoose.Schema({
   status:{type:String, index: true},
   company: {type: String},
   workorder: [],
-  password: String
+  password: String,
+  last_sent_at: {type: Date}
 });
 
 cufSchema.methods.comparePassword = function(candidatePassword, cb) {

@@ -49,7 +49,11 @@ router.get('/workr/package', function*() {
       work_type: cuf.work_type[0]
     };
 
+    //timestamp for last time the assignment changed
+    var lastUpdated = cuf.last_sent_at;
+
     this.body = {
+      updated: lastUpdated,
       user: userObject,
       workorders: workorders,
       trees: trees,
