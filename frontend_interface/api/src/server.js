@@ -1,8 +1,9 @@
 // Modules
 const koa = require('koa');
 const mount = require('koa-mount');
-var bodyParser = require('koa-body-parser');
-var session = require('koa-session');
+const bodyParser = require('koa-body-parser');
+const session = require('koa-session');
+const cors = require('kcors');
 
 // Config
 const config = require('dsp_shared/config/config').get();
@@ -16,11 +17,12 @@ require('dsp_shared/database/database')(config.platform);
 // Middleware
 app.keys = ['dispatchr_cookie::ius45jbipsdhip42oj59g'];
 app.use(session({ key: 'dispatchr:sess' }, app));
+app.use(cors({
+  origin: 'http://localhost:8080',
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 app.use(bodyParser());
-app.use(function* (next) {
-  this.body = 'This is dispatchr web service api server';
-  yield next;
-});
 
 // Routes
 app.use(mount('/', require('./auth')));
@@ -30,8 +32,9 @@ app.use(function*(next) {
     yield next;
   } else {
     this.throw(401);
-  }  
+  }
 });
+app.use(mount('/', require('./upload')));
 
 // Port
 app.listen(3000);

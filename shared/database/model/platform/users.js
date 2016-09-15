@@ -7,7 +7,8 @@ var userSchema = new mongoose.Schema({
   name: String,
   email: String,
   user_id: String,
-  password: String
+  password: String,
+  role: String
 });
 
 userSchema.methods.passwordMatch = co.wrap(function* (candidatePassword, cb) {

@@ -14,6 +14,16 @@ const app = koa();
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function(id, done) {
+  Users.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
 passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
   Users.findOne({ email: email }, function(err, user) {
     if (err) {
@@ -30,23 +40,17 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
   });
 }));
 
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
-
 // Router
-router.post('/login', passport.authenticate('local', {}), function () {
+router.post('/login', passport.authenticate('local', {}), function*() {
   this.body = this.passport.user;
+  console.log('response login: ', this.body);
+});
+
+router.get('/logout', function*(next) {
+  this.logout();
+  this.body = 'ok';
 });
 
 app.use(router.routes());
 
 module.exports = app;
-
-if (require.main === module) {
-  app.listen(3000);
-}

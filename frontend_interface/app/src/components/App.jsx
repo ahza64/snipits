@@ -1,11 +1,21 @@
+// Modules
 import React from 'react';
+import { Link } from 'react-router';
 import Login from './login/login.jsx';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
-require('../../styles/body.scss');
+// Styles
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+require('../../styles/app.scss');
+
+injectTapEventPlugin();
 
 export default class App extends React.Component {
   render() {
-    return <Login />;
+    return (
+      <MuiThemeProvider>
+        {this.props.children}
+      </MuiThemeProvider>
+    );
   };
 }
-
