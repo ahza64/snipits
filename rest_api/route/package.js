@@ -16,7 +16,15 @@ var app = koa();
 
 //Things to test
 // cuf_id must exist
-
+function* extractCircuitNamesFromWO(workorder) {
+  console.log('----------->>>>>>>w', workorder);
+  var treesInWO = yield Tree.find({_id: {$in: workorder.tasks}});
+  console.log('----------->>>>>>>t', treesInWO);
+  var circuitNamesInWO = yield treesInWO.map(function (x) {
+    return x.circuit_name;
+  });
+  return yield _.uniq(circuitNamesInWO);
+}
 router.get('/workr/package', function*() {
     var cufID = this.req.user._id;
     // var offset = this.request.query.offset;
@@ -34,6 +42,7 @@ router.get('/workr/package', function*() {
         tree_ids = tree_ids.concat(workorder.tasks);
         var features = yield MapFeature.findNear(workorder.location, MIN_DISTANCE, 'miles', { type: "alert" });
         map_features = map_features.concat(features);
+        workorder.circuit_names = yield extractCircuitNamesFromWO(workorder);
     }
 
     //optimizaton - make one db request for trees
