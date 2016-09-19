@@ -208,6 +208,7 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
   } catch(e) {
     console.log(e.message);
     this.dsp_env.error = e.message;
+    this.dsp_env.status = 500;
   }
 
   return result;
@@ -241,6 +242,7 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
   } catch(e) {
     console.log(e.message);
     this.dsp_env.error = e.message;
+    this.dsp_env.status = 500;
   }
   return result;
 });
