@@ -54,6 +54,7 @@ var workorderId;
 var newTreeId;
 var userWorkorderIds;
 var userTreeIds;
+var edittedTree = otherTrees.edittedTree;
 
 /**
 *route/update_tree.js Test
@@ -153,7 +154,7 @@ describe('Tree Api Test', function () {
     server
     .patch('/workorder/' + workorderId + TREE_URL + '/' + newTreeId)
     .set('content-type', 'application/json')
-    .send(otherTrees.edittedTree)
+    .send(edittedTree)
     .end(function (error, response) {
       response.should.have.status(200);
       expect(error).to.be.null;

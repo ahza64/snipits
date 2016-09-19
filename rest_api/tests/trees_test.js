@@ -27,16 +27,15 @@ var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
 var   assert    = chai.assert;
-var   user      = require('./resourcesuser')
+var   user      = require('./resources/user');
 var   config    = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.meteor);
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   otherTrees= request('./resourcessample_trees');
+var   otherTrees= request('./resources/sample_trees');
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
-
 chai.use(require('chai-http'));
 
 /**
@@ -100,7 +99,7 @@ describe('Tree Api Test', function () {
         if(err) {
           console.error(err);
         } else {
-          console.log("Found ", cuf.first + ' ' + cuf.last);
+          console.log("Found ", res.first + ' ' + res.last);
         }
         done();
       });
