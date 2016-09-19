@@ -1,10 +1,5 @@
 /**
-* @fileoverview tests the GET /workr/package route
-* 1 login
-* 2 get mongo info
-* 3 get api/package info
-* 4 compare mongo info w/ api info
-* 5 logout
+* @fileoverview Tests routes of update_tree.js
 * @author Hasnain Haider 9/1/16
 */
 
@@ -24,8 +19,9 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
-var config = require('dsp_shared/config/config').get();
+var   config    = require('dsp_shared/config/config').get();
 var   chai      = require('chai');
+var   user      = require('./res/user')
 var   should    = chai.should();
 var   expect    = chai.expect;
 var   request   = require('supertest');
@@ -74,8 +70,8 @@ var newTree = {
   "location": {
     "type": "Point",
     "coordinates": [
-      -121.87237029654763,
-      37.585251756643494
+      -121 + Math.random(),
+      37 + Math.random()
     ]
   },
   "division": "Millbrae",
@@ -100,12 +96,7 @@ var workorderId;
 var newTreeId;
 var userWorkorderIds;
 var userTreeIds;
-
 var cuf;
-var user_credentials = {
-  email : "kcmb@pge.com",
-  password: "2094951517"
-};
 
 /**
 *route/update_tree.js Test
@@ -132,7 +123,7 @@ describe('Tree Api Test', function () {
     server
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
-    .send(user_credentials)
+    .send(user)
     .end(function (error, response) {
       expect(error).to.be.null;
       response.should.have.status(200);

@@ -31,6 +31,7 @@ var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
+
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 chai.use(require('chai-http'));
@@ -65,14 +66,6 @@ var apiWorkorders;
 var userTrees;
 var userWorkrders;
 var cuf;
-var user_credentials = {
-  email : "kcmb@pge.com",
-  password: "2094951517"
-};
-var user= {
-  first :'Kerry',
-  last : 'Monnie'
-};
 
 /**
 * Main test for api/v3/workr/package

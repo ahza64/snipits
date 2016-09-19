@@ -27,7 +27,8 @@ var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var config = require('dsp_shared/config/config').get();
+var   config    = require('dsp_shared/config/config').get();
+var   user      = require('./res/user')
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Asset     = require('dsp_shared/database/model/assets');
@@ -37,20 +38,12 @@ chai.use(require('chai-http'));
 * @global
 * The user who is currently logged in
 * @var {Object} cuf
-
-* User email and password used to
-  authenticate user
-* @var {Object} user_credentials
 */
 
 var randomAssetId;
 var newAssetId;
 var newAssetData = require('./res/sample_img');
 var cuf;
-var user_credentials = {
-  email : "kcmb@pge.com",
-  password: "2094951517"
-};
 const MIN_FILE_SIZE = 3000;
 
 /**
@@ -75,7 +68,7 @@ describe('Asset Api Test', function () {
     server
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
-    .send(user_credentials)
+    .send(user)
     .end(function (error, response) {
       expect(error).to.be.null;
       response.should.have.status(200);

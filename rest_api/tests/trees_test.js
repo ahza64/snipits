@@ -27,7 +27,8 @@ var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
 var   assert    = chai.assert;
-var config = require('dsp_shared/config/config').get();
+var   user      = require('./res/user')
+var   config    = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.meteor);
 var   request   = require('supertest');
 var   _         = require('underscore');
@@ -68,17 +69,11 @@ var postData = {
   'address' : '123 abc st.',
   'height'  : 71.75
 };
-
 var edittedData = {
   'species' : 'editted',
   'height'  : 1000
 };
 var cuf;
-var user_credentials = {
-  email : "kcmb@pge.com",
-  password: "2094951517"
-};
-
 /**
 * Main test for api/v3/workr/package
 
@@ -103,7 +98,7 @@ describe('Tree Api Test', function () {
     server
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
-    .send(user_credentials)
+    .send(user)
     .end(function (error, response) {
       expect(error).to.be.null;
       response.should.have.status(200);
