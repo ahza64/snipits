@@ -12,6 +12,7 @@
     "csv-parse": "^1.1.1",
     "deep-diff": "^0.3.4",
     "fast-json-patch": "^1.0.0",
+    "json2csv": "^3.6.3",
     "koa-bodyparser": "^2.2.0",
     "koa-session": "^3.3.1",
     "log4js": "https://github.com/gabe0x02/log4js-node.git",

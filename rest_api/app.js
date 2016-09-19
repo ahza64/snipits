@@ -69,8 +69,11 @@ app.use(mount('/api/v3', login));
 app.use(function*(next) {
   if(this.isAuthenticated()) {
     this.user = this.passport.user;
+    yield next;
+  } else {
+    this.dsp_env.msg = 'Not Authenticated.!!';
+    this.dsp_env.status = 400;
   }
-  yield next;
 });
 
 app.use(function*(next){

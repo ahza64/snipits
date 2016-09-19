@@ -90,13 +90,20 @@ router.post('/asset', function*(next) {
 });
 
 router.get('/asset/:id', function*() {
-  yield get_req(this.params.id, this);
+  try {
+    yield get_req(this.params.id, this);
 
-  if(this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
-    var imgStr = this.body.data.substring("data:image/jpeg;base64".length);
-    var buf = new Buffer(imgStr, 'base64');
-    this.type = "image/jpeg";
-    this.body = buf;
+    if(this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
+      var imgStr = this.body.data.substring("data:image/jpeg;base64".length);
+      var buf = new Buffer(imgStr, 'base64');
+      this.type = "image/jpeg";
+      this.body = buf;
+    }
+  } catch(e) {
+    console.log('Exception: ', e.message);
+    this.dsp_env.msg = 'Error';
+    this.dsp_env.error = e.message;
+    this.status = 500;
   }
 });
 
