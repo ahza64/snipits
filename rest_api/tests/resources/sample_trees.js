@@ -70,7 +70,7 @@ module.exports = {
   randomTreeGen: randomTreeGen,
   newTree: newTree,
   edittedTree : edittedTree,
-  completePatch = {
+  completePatch : {
     "assignment_complete" : true
   },
   postData : postData,
