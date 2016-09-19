@@ -31,7 +31,7 @@ var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-
+var   user      = request('../resources/user');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 chai.use(require('chai-http'));
@@ -160,11 +160,8 @@ describe('Package Api Test', function () {
 * against the data collected from API
 * @return {Void}
 */
+
   it('should compare package lists with db lists',function () {
-    // for(var i in apiTrees){
-    //   console.log('--->',apiTrees[i], userTrees[i]);
-    //   expect(apiTrees[i]).to.equal(userTrees[i]);
-    // }
     console.log("Comparing package tree      array against database...");
     expect(apiTrees).to.deep.equal(userTrees);
     console.log("Comparing package workorder array against database...");
@@ -184,4 +181,5 @@ describe('Package Api Test', function () {
         response.should.have.status(200);
       });
   });
+
 });

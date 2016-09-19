@@ -1,15 +1,15 @@
 /***/
 /**
-* @fileoverview tests the GET /workr/package route
+* @fileoverview tests the assignment_complete field
+  of update_tree.js
 
 * @author Hasnain Haider 9/1/16
 */
 
 /**
-* URL to mongo database
-* @var {String} MONGO_URL
-* @const
-* @defaultvalue mongodb://localhost:27017/dev_local
+* Contains sample data a user would use to
+  update a tree(s)
+* @var {Object} otherTrees
 
 * Base URL to the server
 * @var {String} BASE_URL
@@ -21,8 +21,8 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
-var   user      = require('./res/user')
-var config      = require('dsp_shared/config/config').get();
+var   user      = require('./resources/user')
+var   config    = require('dsp_shared/config/config').get();
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
@@ -30,57 +30,37 @@ var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
+var   otherTrees= require('./resources/sample_trees');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
-
 chai.use(require('chai-http'));
 
+/**
+* The (random) workorder of the user that
+  that we will be modifying
+* @var randomWO
+
+* A random tree to insert
+* @var {Object} randomTree1
+* Its ID
+* @var {String} randomTree1_id
+
+
+* A random tree to insert
+* @var {Object} randomTree2
+* Its ID
+* @var {String} randomTree2_id
+
+*/
+
 var randomWO = Math.floor(Math.random() * 100);
-
-function randomTreeGen() {
-  var randomLongitude = -47 + Math.random();
-  var randomLattitude = -22 + Math.random();
-  var height = Math.random() * 100;
-  var health = Math.random() * 100;
-  var pge_pmd_num = Math.floor(Math.random() * (100000));
-
-  var newTree = {
-    "circuit_name": "EcoBoost",
-    "pge_pmd_num": pge_pmd_num,
-    "location": {
-      "type": "Point",
-      "coordinates": [
-        randomLongitude,
-        randomLattitude
-      ]
-    },
-    "height": height,
-    "health": health,
-    "species": "cow",
-    "map_annotations": [],
-    "type": "tree",
-    "status" : 30000009
-  };
-  return newTree;
-}
-var randomTree1 = randomTreeGen();
-var randomTree1_id;
-var randomTree2 = randomTreeGen();
-var randomTree2_id;
+var randomTree1 = otherTrees.randomTreeGen();
+var randomTree2 = otherTrees.randomTreeGen();
 randomTree2.assignment_complete = true;
-
-var completePatch = {
-  "assignment_complete" : true
-};
-
+var randomTree1_id;
+var randomTree2_id;
 var workorderId;
-
-var cuf;
-var user_credentials = {
-  email : "kcmb@pge.com",
-  password: "2094951517"
-};
 
 describe('Tree Api Test', function () {
 /**
@@ -103,14 +83,13 @@ describe('Tree Api Test', function () {
 
       Cuf.findOne({_id : text.data._id}, function (err, res) {
         expect(err).to.be.null;
-        cuf = res;
         if(err) {
           console.error(err);
         } else {
-          console.log("Found ", cuf.first + ' ' + cuf.last);
+          console.log("Found ", res.first + ' ' + res.last);
         }
-        expect(cuf.workorder).to.not.be.empty;
-        var userWorkorderIds = _.pluck(cuf.workorder, '_id');
+        expect(res.workorder).to.not.be.empty;
+        var userWorkorderIds = _.pluck(res.workorder, '_id');
         randomWO   %= userWorkorderIds.length;
         workorderId = userWorkorderIds[randomWO];
         done();
@@ -174,7 +153,7 @@ describe('Tree Api Test', function () {
     server
     .patch('/workorder/' + workorderId + TREE_URL + '/' + randomTree1_id)
     .set('content-type', 'application/json')
-    .send(completePatch)
+    .send(otherTrees.completePatch)
     .end(function (error, response) {
       response.should.have.status(200);
       expect(error).to.be.null;

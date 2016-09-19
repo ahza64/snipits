@@ -27,13 +27,13 @@ var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
 var   assert    = chai.assert;
-var   user      = require('./res/user')
+var   user      = require('./resourcesuser')
 var   config    = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.meteor);
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   resources = require('../resources');
+var   otherTrees= request('./resourcessample_trees');
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
 
@@ -52,9 +52,6 @@ chai.use(require('chai-http'));
 * Query to submit on GET /trees
 * @var {String} treeQuery
 
-* The user who is currently logged in
-* @var {Object} cuf
-
 * User email and password used to
   authenticate user
 * @var {Object} user_credentials
@@ -64,16 +61,9 @@ var randLength = Math.floor(Math.random() * 10) + 1;
 
 var treeQuery = '?' +'length=' + randLength + '&offset=' + offset;
 var newTreeId;
-var postData = {
-  'species' : 'arugula',
-  'address' : '123 abc st.',
-  'height'  : 71.75
-};
-var edittedData = {
-  'species' : 'editted',
-  'height'  : 1000
-};
-var cuf;
+var edittedData = otherTrees.edittedData;
+var postData = otherTrees.postData;
+
 /**
 * Main test for api/v3/workr/package
 
@@ -107,7 +97,6 @@ describe('Tree Api Test', function () {
 
       Cuf.findOne({_id : text.data._id}, function (err, res) {
         expect(err).to.be.null;
-        cuf = res;
         if(err) {
           console.error(err);
         } else {
@@ -134,6 +123,7 @@ First try GET
 * extracting lists from mongo database
 * @return {Void}
 */
+
   it('make query to resource route', function (done) {
     console.log('Checking ' + RES_URL + treeQuery);
     server

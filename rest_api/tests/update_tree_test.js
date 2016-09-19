@@ -1,18 +1,17 @@
 /**
 * @fileoverview Tests routes of update_tree.js
-* @author Hasnain Haider 9/1/16
+* @author Hasnain Haider
 */
 
 /**
-* URL to mongo database
-* @var {String} MONGO_URL
-* @const
-* @defaultvalue mongodb://localhost:27017/dev_local
-
 * Base URL to the server
 * @var {String} BASE_URL
 * @const
 * @defaultvalue http://localhost:3000/api/v3
+
+* Contains sample data a user would use to
+  update a tree(s)
+* @var {Object} otherTrees
 */
 const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const LOGIN_URL = '/login';
@@ -21,12 +20,13 @@ const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
 var   config    = require('dsp_shared/config/config').get();
 var   chai      = require('chai');
-var   user      = require('./res/user')
+var   user      = require('./resources/user')
 var   should    = chai.should();
 var   expect    = chai.expect;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
+var   otherTrees= require('./resources/sample_trees');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 chai.use(require('chai-http'));
@@ -36,12 +36,6 @@ chai.use(require('chai-http'));
 * A random Number between 0-10000 that is assigned to the
   tree
 * @var {Number} incId
-
-* The new tree object we wish to insert
-* @var {Array} newTree
-
-* Properties to edit in the new tree.
-* @var {Array} edittedTree
 
 * The id of the workorder of the tree we are manipulating
 * @var {String} workorderId
@@ -54,49 +48,12 @@ chai.use(require('chai-http'));
 
 * List of all trees' ids in all user workorders
 * @var {Array} userTreeIds
-
-* The cuf who's logged in
-* @var {Object} cuf
-
-* User email and password used to authenticate
-* @var {Object} user_credentials-
 */
-var incId = Math.floor(Math.random()*100000);
 var randomWO = Math.floor(Math.random()*100);
-var newTree = {
-  "circuit_name": "EcoBoost",
-  "pge_pmd_num": "911",
-  "pge_detection_type": "VC1p_AF",
-  "location": {
-    "type": "Point",
-    "coordinates": [
-      -121 + Math.random(),
-      37 + Math.random()
-    ]
-  },
-  "division": "Millbrae",
-  "project": "transmission_2015",
-  "streetName": "Interstate 101",
-  "city": "Millbrae",
-  "county": "San Mateo",
-  "count": 1,
-  "dbh": null,
-  "height": 29.09000015,
-  "health": 100,
-  "species": "unknown",
-  "map_annotations": [],
-  "type": "tree",
-  "status" : 99999
-};
-var edittedTree = {
-  "species" : "is editted",
-  "inc_id"  : incId
-};
 var workorderId;
 var newTreeId;
 var userWorkorderIds;
 var userTreeIds;
-var cuf;
 
 /**
 *route/update_tree.js Test
@@ -133,15 +90,14 @@ describe('Tree Api Test', function () {
       Cuf.findOne({_id : text.data._id}, function (err, res) {
         expect(err).to.be.null;
         res.should.not.be.null;
-        cuf = res;
         if(err) {
           console.error(err);
         } else {
-          console.log("Found ", cuf.first + ' ' + cuf.last);
+          console.log("Found ", res.first + ' ' + res.last);
         }
-        expect(cuf.workorder).to.not.be.empty;
-        userWorkorderIds = _.pluck(cuf.workorder, '_id');
-        userTreeIds = _.flatten(_.pluck(cuf.workorder, 'tasks'));
+        expect(res.workorder).to.not.be.empty;
+        userWorkorderIds = _.pluck(res.workorder, '_id');
+        userTreeIds = _.flatten(_.pluck(res.workorder, 'tasks'));
         randomWO   %= userWorkorderIds.length;
         workorderId = userWorkorderIds[randomWO];
         done();
@@ -158,14 +114,14 @@ describe('Tree Api Test', function () {
     server
     .post('/workorder/' + workorderId + TREE_URL)
     .set('content-type', 'application/json')
-    .send(newTree)
+    .send(otherTrees.newTree)
     .end(function (error, response) {
       response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       newTreeId = text.data._id;
       console.log(text.data);
-      console.log("new---------->>>>", newTreeId);
+      console.log("new Tree_id---------->>>>", newTreeId);
       done();
     });
   });
@@ -197,7 +153,7 @@ describe('Tree Api Test', function () {
     server
     .patch('/workorder/' + workorderId + TREE_URL + '/' + newTreeId)
     .set('content-type', 'application/json')
-    .send(edittedTree)
+    .send(otherTrees.edittedTree)
     .end(function (error, response) {
       response.should.have.status(200);
       expect(error).to.be.null;
@@ -230,11 +186,8 @@ describe('Tree Api Test', function () {
     });
   });
 
-
-
   it('should delete dat tree', function (done) {
     console.log('deleting tree ' + newTreeId, 'in workorder ' + workorderId);
-    // console.log('/workorder/' + workorderId + '/trees/' + newTreeId);
     server
     .delete('/workorder/' + workorderId + TREE_URL + '/' + newTreeId)
     .send({'status' : '0511231'})
@@ -271,5 +224,4 @@ describe('Tree Api Test', function () {
         response.should.have.status(200);
       });
   });
-
 });

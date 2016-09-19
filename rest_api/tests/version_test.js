@@ -1,18 +1,14 @@
 /**
 * @fileoverview tests the GET /route/version.js
-* @author Hasnain Haider 9/1/16
+* @author Hasnain Haider 
 */
 
 /**
-* URL to mongo database
-* @var {String} MONGO_URL
-* @const
-* @defaultvalue mongodb://localhost:27017/dev_local
-
 * Base URL to the server
 * @var {String} BASE_URL
 * @const
 * @defaultvalue http://localhost:3000/api/v3
+
 */
 const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const LOGIN_URL = '/login';
@@ -21,17 +17,16 @@ var   config    = require('dsp_shared/config/config').get();
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
-var   user      = require('./res/user');
+var   user      = require('./resources/user');
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   mongo_clients = require('./res/version_mongo_clients');
+var   mongo_clients = require('./resources/version_mongo_clients');
 require('dsp_shared/database/database')(config.meteor);
 chai.use(require('chai-http'));
 
 /**
-* @param {String} description
-
+* @param  {String} description
 * @return {Void}
 */
 
