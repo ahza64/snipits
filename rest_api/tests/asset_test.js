@@ -27,7 +27,7 @@ var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   config    = require('dsp_shared/conf.d/config');
+var config = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Asset     = require('dsp_shared/database/model/assets');
@@ -216,12 +216,6 @@ describe('Asset Api Test', function () {
         done();
       });
     });
-/**
-
-*/
-  // it('should compare package lists with db lists',function () {
-  //   console.log("C\nC");
-  // });
 
 /**
 * Logout

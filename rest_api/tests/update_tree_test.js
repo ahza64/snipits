@@ -24,11 +24,10 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
-var config      = require('dsp_shared/conf.d/config');
+var config = require('dsp_shared/config/config').get();
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
-var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
@@ -51,7 +50,7 @@ chai.use(require('chai-http'));
 * The id of the workorder of the tree we are manipulating
 * @var {String} workorderId
 
-* The id assigned to the tree we insert. id of newTree
+* The id assigned to the tree we insert.
 * @var {String} newTreeId
 
 * Array of all of the ids of all the workorders a user has
@@ -142,6 +141,7 @@ describe('Tree Api Test', function () {
 
       Cuf.findOne({_id : text.data._id}, function (err, res) {
         expect(err).to.be.null;
+        res.should.not.be.null;
         cuf = res;
         if(err) {
           console.error(err);
@@ -192,7 +192,7 @@ describe('Tree Api Test', function () {
       response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
-      assert(_.contains(text.data.workorders[randomWO].tasks, newTreeId));
+      text.data.workorders[randomWO].tasks.should.contain(newTreeId);
       done();
     });
   });
@@ -233,7 +233,7 @@ describe('Tree Api Test', function () {
       for (field in edittedTree) {
         console.log("Checking ", field);
         console.log(edittedTree[field],"===", targetTree[field]);
-        assert(edittedTree[field] === targetTree[field]);
+        expect(edittedTree[field]).to.deep.equal(targetTree[field]);
       }
       done();
     });
@@ -263,7 +263,7 @@ describe('Tree Api Test', function () {
       var text = JSON.parse(response.text);
       var packageTreeIds = _.pluck(text.data.trees, '_id');
       console.log('Checking if tree deleted from package...');
-      assert(!_.contains(packageTreeIds, newTreeId));
+      packageTreeIds.should.not.contain(newTreeId);
       done();
     });
   });

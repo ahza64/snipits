@@ -19,16 +19,14 @@ const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const CLIENT_URL= '/client';
-var   config    = require('dsp_shared/conf.d/config');
+var   config    = require('dsp_shared/config/config').get();
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
-var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
 require('dsp_shared/database/database')(config.meteor);
-var   Client    = require('dsp_shared/database/model/client');
 chai.use(require('chai-http'));
 
 /**
@@ -84,10 +82,6 @@ describe('version test', function () {
       response.should.have.status(200);
       done();
     });
-    // Client.find({}).then(function (doc) {
-    //   clients = doc;
-    //   done();
-    // });
   });
 
   it('should test all mongo_clients', function () {

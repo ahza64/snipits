@@ -22,7 +22,7 @@ const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
 
-var   config    = require('dsp_shared/conf.d/config');
+var config = require('dsp_shared/config/config').get();
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;

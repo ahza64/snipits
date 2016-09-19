@@ -23,7 +23,7 @@ const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const PACK_URL  = '/workr/package';
 const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
-var   config    = require('dsp_shared/conf.d/config');
+var   config    = require('dsp_shared/config/config').get();
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
@@ -69,6 +69,10 @@ var user_credentials = {
   email : "kcmb@pge.com",
   password: "2094951517"
 };
+var user= {
+  first :'Kerry',
+  last : 'Monnie'
+};
 
 /**
 * Main test for api/v3/workr/package
@@ -90,6 +94,17 @@ describe('Package Api Test', function () {
 * @param {Function} done
 * @return {Void}
 */
+
+  it('should login incorrectly ', function () {
+    server
+    .post(LOGIN_URL)
+    .set('content-type', 'application/json')
+    .send({email:Math.random(), password: Math.random()})
+    .end(function (error, response) {
+      response.should.not.have.status(200);
+    });
+  });
+
   it('should login and find cuf', function (done) {
     server
     .post(LOGIN_URL)
@@ -109,6 +124,7 @@ describe('Package Api Test', function () {
         } else {
           console.log("Found ", cuf.first + ' ' + cuf.last);
         }
+        expect(res.first + res.last).to.equal(user.first + user.last);
         done();
       });
     });
@@ -152,10 +168,14 @@ describe('Package Api Test', function () {
 * @return {Void}
 */
   it('should compare package lists with db lists',function () {
+    // for(var i in apiTrees){
+    //   console.log('--->',apiTrees[i], userTrees[i]);
+    //   expect(apiTrees[i]).to.equal(userTrees[i]);
+    // }
     console.log("Comparing package tree      array against database...");
-    assert(_.isEqual(apiTrees, userTrees));
+    expect(apiTrees).to.deep.equal(userTrees);
     console.log("Comparing package workorder array against database...");
-    assert(_.isEqual(apiWorkorders, userWorkrders));
+    expect(apiWorkorders).to.deep.equal(userWorkrders);
   });
 
 /**

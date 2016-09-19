@@ -27,7 +27,7 @@ var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
 var   assert    = chai.assert;
-var   config    = require('dsp_shared/conf.d/config');
+var config = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.meteor);
 var   request   = require('supertest');
 var   _         = require('underscore');
@@ -154,10 +154,6 @@ First try GET
     });
   });
 
-/**
-* GETs package route. extracts info.
-* @return {Void}
-*/
 
 /**
 * GETs package route. Compare data collected via API
@@ -179,6 +175,10 @@ First try GET
     })
   });
 
+/**
+* check resource url for new tree
+* @return {Void}
+*/
 
   it('should check the newly created tree',function (done) {
     server
@@ -203,8 +203,7 @@ First try GET
     })
   });
 /**
-* GETs package route. Compare data collected via API
-* against the data collected from API
+* GETs resource route.
 * @return {Void}
 */
 
@@ -215,8 +214,9 @@ First try GET
     .send(edittedData)
     .end(function (err, res) {
       expect(err).to.be.null;
+      expect(res).to.not.be.null;
       done();
-    })
+    });
   });
 
 //id remains the same
