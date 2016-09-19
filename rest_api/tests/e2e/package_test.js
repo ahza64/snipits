@@ -31,7 +31,7 @@ var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   user      = request('../resources/user');
+var   user      = require('../resources/user');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 chai.use(require('chai-http'));
@@ -102,7 +102,7 @@ describe('Package Api Test', function () {
     server
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
-    .send(user_credentials)
+    .send(user)
     .end(function (error, response) {
       expect(error).to.be.null;
       response.should.have.status(200);
