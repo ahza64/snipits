@@ -24,14 +24,10 @@ function* extractCircuitNamesFromWO(workorder) {
   return yield _.uniq(circuitNamesInWO);
 }
 router.get('/workr/package', function*() {
-    var cufID = this.req.user._id;
-    // var offset = this.request.query.offset;
-    // var length = this.request.query.length;
-    var cuf = yield Cuf.findOne({
-          _id: cufID
-      });
 
-    //handle query.length query.offset into workorders
+  try{
+
+    var cuf = this.req.user;
     var workorders = cuf.workorder;
     var map_features =[];
     var tree_ids = [];
@@ -66,6 +62,12 @@ router.get('/workr/package', function*() {
       trees: trees,
       map_features: map_features
     };
+  } catch(e) {
+    console.log('Exception: ', e.message);
+    this.dsp_env.msg = 'Error';
+    this.dsp_env.error = e.message;
+    this.status = 500;
+  }
 });
 
 app.use(router.routes());
