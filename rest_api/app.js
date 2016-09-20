@@ -58,6 +58,9 @@ app.use(function *(next){
   }
 });
 
+// No authentication required for these routes
+app.use(mount('/api/v3', require('./route/version')));
+
 // sessions
 app.keys = ['dispatchr_cookie::ius45jbipsdhip42oj59g'];
 app.use(session({ key: 'dispatchr:sess' }, app));
@@ -102,7 +105,6 @@ _.each(resources, function(resource){
 });
 //mount other resources
 app.use(mount('/api/v3', require('./route/package')));
-app.use(mount('/api/v3', require('./route/version')));
 app.use(mount('/api/v3', require('./route/asset')));
 app.use(mount('/api/v3', require('./route/update_tree')));
 
