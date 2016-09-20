@@ -10,6 +10,7 @@ import Navbar from 'react-bootstrap/lib/Navbar';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
+import smLogo from '../../../styles/assets/sm-logo.png';
 import '../../../styles/logo.scss';
 import '../../../styles/navbar.scss';
 
@@ -58,7 +59,7 @@ export default class DefaultNavbar extends React.Component {
         <Navbar.Header>
           <Navbar.Brand>
             <a href='#'>
-              <img className='sm-logo' src={ require('../../../styles/assets/sm-logo.png') } />
+              <img className='sm-logo' src={ smLogo } />
             </a>
           </Navbar.Brand>
           <Navbar.Toggle />

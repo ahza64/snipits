@@ -10,6 +10,8 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
+import smLogo from '../../../styles/assets/sm-logo.png';
+import '../../../styles/logo.scss';
 const loginContainerStyle = {
   'borderRadius': 2,
   'height': 250,
@@ -17,6 +19,7 @@ const loginContainerStyle = {
   'marginTop': 200,
   'textAlign': 'center',
   'display': 'inline-block',
+  'padding': 25
 };
 
 export default class Login extends React.Component {
@@ -71,7 +74,7 @@ export default class Login extends React.Component {
         <Col xs={12} sm={10} md={4} lg={4} >
           <Paper style={loginContainerStyle} zDepth={2} rounded={false}>
             <div>
-              <h3>Dispatchr Ingestion System</h3>
+              <img className='sm-logo' src={ smLogo } />
               <div>
                 Username: 
                 <TextField value={ this.state.email } onChange={ this.handleLoginEmail } hintText='Email Address'/>
