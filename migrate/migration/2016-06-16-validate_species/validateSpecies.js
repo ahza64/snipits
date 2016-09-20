@@ -7,7 +7,7 @@ util.connect(["meteor"]);
 var TREE = require('dsp_shared/database/model/tree');
 
 function *fixBadSpecies() {
-  var updated = yield TREE.update({species: "Montaray Pin"}, {species: "Monterey Pine"});
+  var updated = yield TREE.update({species: "Montaray Pin"}, {species: "Monterey Pine"}, {multi: true});
   console.log("Fixed Montaray Pin", updated);
 }
 
