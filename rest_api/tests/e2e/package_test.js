@@ -23,7 +23,7 @@ const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const PACK_URL  = '/workr/package';
 const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
-var   config    = require('dsp_shared/conf.d/config');
+var   config    = require('dsp_shared/config/config').get();
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
@@ -31,6 +31,7 @@ var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
+var   user      = require('../resources/user');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 chai.use(require('chai-http'));
@@ -65,10 +66,6 @@ var apiWorkorders;
 var userTrees;
 var userWorkrders;
 var cuf;
-var user_credentials = {
-  email : "kcmb@pge.com",
-  password: "2094951517"
-};
 
 /**
 * Main test for api/v3/workr/package
@@ -90,11 +87,22 @@ describe('Package Api Test', function () {
 * @param {Function} done
 * @return {Void}
 */
+
+  it('should login incorrectly ', function () {
+    server
+    .post(LOGIN_URL)
+    .set('content-type', 'application/json')
+    .send({email:Math.random(), password: Math.random()})
+    .end(function (error, response) {
+      response.should.not.have.status(200);
+    });
+  });
+
   it('should login and find cuf', function (done) {
     server
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
-    .send(user_credentials)
+    .send(user)
     .end(function (error, response) {
       expect(error).to.be.null;
       response.should.have.status(200);
@@ -109,6 +117,7 @@ describe('Package Api Test', function () {
         } else {
           console.log("Found ", cuf.first + ' ' + cuf.last);
         }
+        expect(res.first + res.last).to.equal(user.first + user.last);
         done();
       });
     });
@@ -151,11 +160,12 @@ describe('Package Api Test', function () {
 * against the data collected from API
 * @return {Void}
 */
+
   it('should compare package lists with db lists',function () {
     console.log("Comparing package tree      array against database...");
-    assert(_.isEqual(apiTrees, userTrees));
+    expect(apiTrees).to.deep.equal(userTrees);
     console.log("Comparing package workorder array against database...");
-    assert(_.isEqual(apiWorkorders, userWorkrders));
+    expect(apiWorkorders).to.deep.equal(userWorkrders);
   });
 
 /**
@@ -171,4 +181,5 @@ describe('Package Api Test', function () {
         response.should.have.status(200);
       });
   });
+
 });

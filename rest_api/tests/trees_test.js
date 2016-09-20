@@ -27,15 +27,15 @@ var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
 var   assert    = chai.assert;
-var   config    = require('dsp_shared/conf.d/config');
+var   user      = require('./resources/user');
+var   config    = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.meteor);
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   resources = require('../resources');
+var   otherTrees= request('./resources/sample_trees');
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
-
 chai.use(require('chai-http'));
 
 /**
@@ -51,9 +51,6 @@ chai.use(require('chai-http'));
 * Query to submit on GET /trees
 * @var {String} treeQuery
 
-* The user who is currently logged in
-* @var {Object} cuf
-
 * User email and password used to
   authenticate user
 * @var {Object} user_credentials
@@ -63,21 +60,8 @@ var randLength = Math.floor(Math.random() * 10) + 1;
 
 var treeQuery = '?' +'length=' + randLength + '&offset=' + offset;
 var newTreeId;
-var postData = {
-  'species' : 'arugula',
-  'address' : '123 abc st.',
-  'height'  : 71.75
-};
-
-var edittedData = {
-  'species' : 'editted',
-  'height'  : 1000
-};
-var cuf;
-var user_credentials = {
-  email : "kcmb@pge.com",
-  password: "2094951517"
-};
+var edittedData = otherTrees.edittedData;
+var postData = otherTrees.postData;
 
 /**
 * Main test for api/v3/workr/package
@@ -103,7 +87,7 @@ describe('Tree Api Test', function () {
     server
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
-    .send(user_credentials)
+    .send(user)
     .end(function (error, response) {
       expect(error).to.be.null;
       response.should.have.status(200);
@@ -112,11 +96,10 @@ describe('Tree Api Test', function () {
 
       Cuf.findOne({_id : text.data._id}, function (err, res) {
         expect(err).to.be.null;
-        cuf = res;
         if(err) {
           console.error(err);
         } else {
-          console.log("Found ", cuf.first + ' ' + cuf.last);
+          console.log("Found ", res.first + ' ' + res.last);
         }
         done();
       });
@@ -139,6 +122,7 @@ First try GET
 * extracting lists from mongo database
 * @return {Void}
 */
+
   it('make query to resource route', function (done) {
     console.log('Checking ' + RES_URL + treeQuery);
     server
@@ -154,10 +138,6 @@ First try GET
     });
   });
 
-/**
-* GETs package route. extracts info.
-* @return {Void}
-*/
 
 /**
 * GETs package route. Compare data collected via API
@@ -179,6 +159,10 @@ First try GET
     })
   });
 
+/**
+* check resource url for new tree
+* @return {Void}
+*/
 
   it('should check the newly created tree',function (done) {
     server
@@ -203,8 +187,7 @@ First try GET
     })
   });
 /**
-* GETs package route. Compare data collected via API
-* against the data collected from API
+* GETs resource route.
 * @return {Void}
 */
 
@@ -215,8 +198,9 @@ First try GET
     .send(edittedData)
     .end(function (err, res) {
       expect(err).to.be.null;
+      expect(res).to.not.be.null;
       done();
-    })
+    });
   });
 
 //id remains the same

@@ -91,7 +91,6 @@ function *updateTree(treeId, treeUpdates, instance){
   return yield crud_opts.patch(treeId, treeUpdates, instance.header['content-type']);
 }
 
-
 /**
  * addTreeToWorkorder - add newly added tree to current workorder
  *
@@ -108,7 +107,6 @@ function *addTreeToWorkorder(userId, woId, treeId){
     console.log(err);
   }
 }
-
 
 /**
  * removeTreeFromWorkorder - remove tree from workorder
@@ -175,7 +173,6 @@ router.post('/workorder/:woId/tree', function *(){
       this.dsp_env.msg = 'TREE NOT ADDED';
     }
   }
-
   return result;
 });
 
