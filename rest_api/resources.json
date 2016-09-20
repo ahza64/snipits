@@ -32,7 +32,6 @@
       "model": "cufs",
       "read_only": true,
       "accepted_filters": ["uniq_id", "scuf"],
-      "excluded_fields": ["workorder"],
       "excluded_fields": ["__v", "workorder", "project", "assigned_workorders", "division_data", "scheduled_workorders", "scheduled_data", "password", "checksum"]
     }
   },
