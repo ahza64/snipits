@@ -19,6 +19,11 @@ module.exports = {
       {
         test: /\.scss$/,
         loaders: ['style', 'css', 'sass']
+      },
+      { 
+        test: /\.(png|jpg)$/, 
+        loader: 'url-loader?limit=20000',
+        include: path.resolve(ROOT_PATH, 'app/styles/assets') 
       }
     ]
   },

@@ -10,6 +10,8 @@ import Navbar from 'react-bootstrap/lib/Navbar';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
+import '../../../styles/logo.scss';
+import '../../../styles/navbar.scss';
 
 export default class DefaultNavbar extends React.Component {
   constructor() {
@@ -55,7 +57,9 @@ export default class DefaultNavbar extends React.Component {
       <Navbar>
         <Navbar.Header>
           <Navbar.Brand>
-            <a href='#'>Dispatchr Ingestion System</a>
+            <a href='#'>
+              <img className='sm-logo' src={ require('../../../styles/assets/sm-logo.png') } />
+            </a>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
