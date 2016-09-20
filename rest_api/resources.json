@@ -4,7 +4,8 @@
     "options": {
       "model": "tree",
       "read_only": false,
-      "accepted_filters": ["pge_pmd_num", "division", "circuit_name", "region", "project"]
+      "accepted_filters": ["pge_pmd_num", "division", "circuit_name", "region", "project"],
+      "excluded_fields": ["__v"]
     }
   },
   "pmd": {
@@ -12,7 +13,8 @@
     "options": {
       "model": "pmd",
       "read_only": true,
-      "accepted_filters": ["pge_pmd_num", "division", "project"]
+      "accepted_filters": ["pge_pmd_num", "division", "project"],
+      "excluded_fields": ["__v"]
     }
   },
   "line": {
@@ -20,7 +22,8 @@
     "options": {
       "model": "circuit",
       "read_only": true,
-      "accepted_filters": ["project"]
+      "accepted_filters": ["project"],
+      "excluded_fields": ["__v"]
     }
   },
   "user": {
@@ -28,14 +31,17 @@
     "options": {
       "model": "cufs",
       "read_only": true,
-      "accepted_filters": ["uniq_id", "scuf"]
+      "accepted_filters": ["uniq_id", "scuf"],
+      "excluded_fields": ["workorder"],
+      "excluded_fields": ["__v", "workorder", "project", "assigned_workorders", "division_data", "scheduled_workorders", "scheduled_data", "password", "checksum"]
     }
   },
   "mapfeatures": {
     "name": "mapfeatures",
     "options": {
       "model": "mapfeatures",
-      "read_only": true
+      "read_only": true,
+      "excluded_fields": ["__v"]
     }
   },
   "divisions": {
@@ -43,7 +49,8 @@
     "options" : {
       "model" : "divisions",
       "read_only" : true,
-      "accepted_filters" : ["project", "division", "pge_pmd_num" ]
+      "accepted_filters" : ["project", "division", "pge_pmd_num" ],
+      "excluded_fields": ["__v"]
     }
   }
 }

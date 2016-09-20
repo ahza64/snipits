@@ -35,7 +35,13 @@ var config = require('dsp_shared/config/config').get();
 */
 module.exports = function crud(resource, options) {
   var accepted_filters = options.accepted_filters || [];
+  var excluded_fields =  options.excluded_fields;
 
+  // create object of excluded fields to be sent to select query
+  var excluded = {};
+  _.each(excluded_fields, field => {
+    excluded[field] = 0;
+  });
   var  Model = require('dsp_shared/database/model/'+ options.model);
 
   var crud_opts = require('./crud_op')(Model);
@@ -117,7 +123,7 @@ module.exports = function crud(resource, options) {
         console.log("get", id, query);
         var offset = query.offset || 0;
         var len = query.length;  // Need to manage this on the client we can't always get all of them
-        var select = query.select;
+        var select = query.select || excluded;
         var order = query.order;
 
         if(len) {
