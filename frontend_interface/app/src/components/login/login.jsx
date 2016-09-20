@@ -11,10 +11,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 const loginContainerStyle = {
-  'border-radius': 2,
+  'borderRadius': 2,
   'height': 250,
   'width': 400,
-  'margin': 20,
+  'marginTop': 200,
   'textAlign': 'center',
   'display': 'inline-block',
 };
@@ -59,7 +59,7 @@ export default class Login extends React.Component {
           type: 'LOGIN',
           user: res.body
         });
-        browserHistory.push('/main');
+        browserHistory.push('/upload');
       }
     });
   }
@@ -71,7 +71,7 @@ export default class Login extends React.Component {
         <Col xs={12} sm={10} md={4} lg={4} >
           <Paper style={loginContainerStyle} zDepth={2} rounded={false}>
             <div>
-              <h3>Dispatchr Injestion System</h3>
+              <h3>Dispatchr Ingestion System</h3>
               <div>
                 Username: 
                 <TextField value={ this.state.email } onChange={ this.handleLoginEmail } hintText='Email Address'/>

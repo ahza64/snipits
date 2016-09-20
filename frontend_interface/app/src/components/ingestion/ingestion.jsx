@@ -1,24 +1,24 @@
 // Modules
 import React from 'react';
+import { browserHistory } from 'react-router';
 
 // Components
 import DefaultNavbar from '../navbar/DefaultNavbar';
-import UploadZone from '../upload/uploadZone';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 
-export default class Main extends React.Component {
+export default class Ingestion extends React.Component {
   constructor() {
-    super();    
+    super();
   }
 
   render() {
     return (
       <div>
         <Row><DefaultNavbar /></Row>
-        <Row><UploadZone /></Row>
+        <Row><h2>This is Ingestion</h2></Row>
       </div>
     );
   }
