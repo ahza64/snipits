@@ -6,12 +6,19 @@ var _ = require('underscore');
 util.connect(["meteor"]);
 var TREE = require('dsp_shared/database/model/tree');
 
-function *getBadSpecies(){
+function *fixBadSpecies() {
+  var updated = yield TREE.update({species: "Montaray Pin"}, {species: "Monterey Pine"});
+  console.log("Fixed Montaray Pin", updated);
+}
+
+function *getBadSpecies(fix){
+  if(fix) {
+    yield fixBadSpecies();
+  }
   var originalSpecies = vmd.tree_types;
   var correctSpecies = Object.keys(originalSpecies);
   var badSpecies = [];
   var species = yield TREE.distinct('species', {});
-
   _.each(species, function(specie){
     if(!_.contains(correctSpecies, specie)){
       badSpecies.push(specie);
