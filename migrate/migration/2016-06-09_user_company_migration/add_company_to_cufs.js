@@ -4,7 +4,7 @@ var fs = require('fs');
 var pathlib = require('path');
 
 // connect to database and schema
-util.connect(["meteor"])
+util.connect(["meteor"]);
 var CUF = require('dsp_shared/database/model/cufs');
 var USERS = require('dsp_shared/database/model/users');
 
@@ -14,41 +14,32 @@ var USERS = require('dsp_shared/database/model/users');
  * @param  {String} csvFile - csv file
  * @return {void}
  */
-function addCompanyToCufs(csvFile) {
-  path = pathlib.dirname(__filename);
-  csv().from.stream(fs.createReadStream(path+'/' + csvFile)).to.array(function(data){
-    var users =[]
-    for(var i=0; i<data.length;i++){
-      if(data[i][5].indexOf('ManagR') > -1 || data[i][5].indexOf('PlanR') > -1){
-        var obj = {};
-        obj.name = data[i][0];
-        obj.email = data[i][1];
-        obj.workType = data[i][2];
-        obj.type = data[i][3];
-        obj.company = data[i][4];
-        obj.ccUser = data[i][5];
-        users.push(obj);
+function *addCompanyToCufs(csvFile) {
+  var path = pathlib.dirname(__filename);
+  var users = yield new Promise(function(resolve){
+    csv().from.stream(fs.createReadStream(path+'/' + csvFile)).to.array(function(data){
+      var results =[];
+      for(var i=0; i<data.length;i++){
+        if(data[i][5].indexOf('ManagR') > -1 || data[i][5].indexOf('PlanR') > -1){
+          var obj = {};
+          obj.name = data[i][0];
+          obj.email = data[i][1];
+          obj.workType = data[i][2];
+          obj.type = data[i][3];
+          obj.company = data[i][4];
+          obj.ccUser = data[i][5];
+          results.push(obj);
+        }
       }
-    }
-    for(var j=0; j<users.length; j++){
-      USERS.findOne({'emails.address': users[j].email}, function(err, user_docs){
-        if(err){
-          console.error(err);
-        }
-        else{
-          var set_company = user_docs.profile.company;
-          CUF.update({scuf: user_docs.emails[0].address}, {company: set_company}, {multi:true}, function(err, cuf){
-            if(err){
-              console.error(err);
-            }
-            else{
-              console.log('Company field added for '+ user_docs.profile.name + '\'s Crew', cuf);
-            }
-          });
-        }
-      });
-    }
+      resolve(results);
+    });
   });
+  for(var j=0; j<users.length; j++){
+    var user_docs = yield USERS.findOne({'emails.address': users[j].email});
+    var set_company = user_docs.profile.company;
+    var cuf = yield CUF.update({scuf: user_docs.emails[0].address}, {company: set_company}, {multi:true});
+    console.log('Company field added for '+ user_docs.profile.name + '\'s Crew', cuf);
+  }
 }
 
 /**
@@ -78,9 +69,9 @@ function cufsWithNoCompany(callback){
 //baker module
 if (require.main === module) {
   var baker = require("dsp_shared/lib/baker");
-  baker.command(addCompanyToCufs);
+  util.bakerGen(addCompanyToCufs);
   baker.command(cufsWithNoCompany);
   baker.run();
 }
 
-module.exports = {cufsWithNoCompany};
+module.exports = {cufsWithNoCompany: cufsWithNoCompany, addCompanyToCufs: addCompanyToCufs};
