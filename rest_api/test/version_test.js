@@ -30,7 +30,7 @@ chai.use(require('chai-http'));
 * @return {Void}
 */
 
-describe('version test', function () {
+describe('=============Version Test=============', function () {
 /**
 * Login using user credentials. get cuf from login
 

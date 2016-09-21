@@ -62,7 +62,7 @@ var randomTree1_id;
 var randomTree2_id;
 var workorderId;
 
-describe('Tree Api Test', function () {
+describe('======= Api v3 update tree assignment_complete Test ======= ', function () {
 /**
 * Login using user credentials. get cuf from login
 

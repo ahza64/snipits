@@ -75,7 +75,7 @@ var postData = otherTrees.postData;
 * @return {Void}
 */
 
-describe('Tree Api Test', function () {
+describe('=========== Tree resource Test =============', function () {
 /**
 * Login using user credentials
 * get cuf from login

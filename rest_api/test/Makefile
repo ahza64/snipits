@@ -6,3 +6,7 @@ run_tests:
 	for file in ./*.js; do \
 		mocha $$file; \
 	done
+	for file in ./e2e/*.js; do \
+		mocha $$file; \
+	done
+	

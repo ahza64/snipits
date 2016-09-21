@@ -75,7 +75,7 @@ var package_updated;
 * @return {Void}
 */
 
-describe('========= Package Api Test ========', function () {
+describe('============ Package Api Test ===========', function () {
 /**
 * Login using user credentials
 * get cuf from login
@@ -148,7 +148,7 @@ describe('========= Package Api Test ========', function () {
           if(db_circuits.length === responseWorkorders.length){done();}
         });
       }
-      
+
     });
   })
 

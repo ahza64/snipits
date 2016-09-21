@@ -55,7 +55,7 @@ POST /asset
 
 */
 
-describe('Asset Api Test', function () {
+describe('============= Asset Api Test =============', function () {
 /**
 * Login using user credentials
 * get cuf from login

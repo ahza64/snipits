@@ -44,7 +44,7 @@ var newAssetData = require('./resources/sample_asset');
 /**
 * Test for asset route
 */
-describe('Asset Api Test', function () {
+describe('=============== Asset Api Test Part 1 =================', function () {
 /**
 * Login using user credentials
 * get cuf from login
