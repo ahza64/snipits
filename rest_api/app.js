@@ -12,7 +12,8 @@ var koa = require('koa');
 var cors = require('koa-cors');
 var resources = require('./resources.json');
 var requestId = require('koa-request-id');
-require('dsp_shared/database/database')(config.meteor);
+require('dsp_shared/database/database')(config.meteor_ro);
+
 var whitelist = config.corsWhitelist;
 var corsOptions = {
   origin: function(origin, callback){
