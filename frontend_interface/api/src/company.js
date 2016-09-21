@@ -6,11 +6,11 @@ const router = require('koa-router')();
 const app = koa();
 
 // Collection
-const Companies = require('dsp_shared/database/model/platform/companies');
+const Companies = require('../model/tables').companies;
 
 // Get all companies
 router.get('/company', function*() {
-  var companies = yield Companies.find();
+  var companies = yield Companies.findAll({ raw: true });
   console.log('Get all companies: ', companies);
   this.body = companies;
 });
@@ -18,7 +18,16 @@ router.get('/company', function*() {
 // Create a company
 router.post('/company', function*() {
   var company = this.request.body;
-  yield Companies.update(company, { $setOnInsert: company }, { upsert: true });
+  var exists = yield Companies.count({
+    where: { company: company.company },
+    raw: true
+  });
+  if (exists) {
+    this.body = true;
+    return;
+  }
+  
+  yield Companies.create(company);
   this.body = true;
 });
 

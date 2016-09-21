@@ -25,11 +25,13 @@ export default class CompanyList extends React.Component {
     this.setState({ selectedIndex: idx });
   }
 
-  getCompany(event) {
+  getCompany() {
+    var idx = this.state.selectedIndex;
+    var selectedCompany = this.state.companies[idx].name;
     var action = {
       type: 'ADDCOMPANY',
       user: {
-        company: event.target.innerText
+        company: selectedCompany
       }
     };
     userCreateRedux.dispatch(action);
@@ -50,7 +52,7 @@ export default class CompanyList extends React.Component {
         <Subheader>Select the company</Subheader>
         { 
           this.state.companies.map((com, idx) => {
-            return (<ListItem key={ idx } value={ idx } primaryText={ com.company } onClick={ this.getCompany } />);
+            return (<ListItem key={ idx } value={ idx } primaryText={ com.name } onClick={ this.getCompany } />);
           })
         }
       </SelectableList>

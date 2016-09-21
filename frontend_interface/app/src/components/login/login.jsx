@@ -62,7 +62,6 @@ export default class Login extends React.Component {
           type: 'LOGIN',
           user: res.body
         });
-        console.log('-> ', res.body);
         browserHistory.push('/upload');
       }
     });

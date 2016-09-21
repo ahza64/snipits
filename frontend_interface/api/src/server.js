@@ -4,15 +4,15 @@ const mount = require('koa-mount');
 const bodyParser = require('koa-body-parser');
 const session = require('koa-session');
 const cors = require('kcors');
-
-// Config
-const config = require('dsp_shared/config/config').get();
+const models = require('../model/tables');
 
 // App
 const app = koa();
 
 // Database
-require('dsp_shared/database/database')(config.platform);
+models.sequelize.sync().then(function() {
+  console.log('Database Connected');
+});
 
 // Middleware
 app.keys = ['dispatchr_cookie::ius45jbipsdhip42oj59g'];

@@ -5,7 +5,8 @@ const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 // Collection
-const Users = require('dsp_shared/database/model/platform/users');
+const Users = require('../model/tables').users;
+const Companies = require('../model/tables').companies;
 
 // App
 const app = koa();
@@ -15,28 +16,33 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
-  done(null, user._id);
+  done(null, user);
 });
 
-passport.deserializeUser(function(id, done) {
-  Users.findById(id, function(err, user) {
-    done(err, user);
+passport.deserializeUser(function(user, done) {
+  Users.findOne({
+    where: { id: user.id },
+    raw: true
+  }).then(user => {
+    done(null, user);
+  }).catch(err => {
+    done(err, false);
   });
 });
 
 passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
-  Users.findOne({ email: email }, function(err, user) {
-    if (err) {
-      done(err, false);
+  Users.findOne({
+    where: { email: email }, 
+    raw: true,
+    include: [Companies]
+  }).then(user => {
+    if (user.password === password) {
+      done(null, user);
     } else {
-      user.passwordMatch(password, function(err, isMatch) {
-        if(isMatch){
-          return done(err, user);
-        } else {
-          return done(err, false);
-        }
-      });
+      done(null, false);
     }
+  }).catch(err => {
+    done(err, false);
   });
 }));
 
@@ -46,9 +52,9 @@ router.post('/login', passport.authenticate('local', {}), function*() {
   console.log('response login: ', this.body);
 });
 
-router.get('/logout', function*(next) {
+router.get('/logout', function*() {
   this.logout();
-  this.body = 'ok';
+  this.body = true;
 });
 
 app.use(router.routes());
