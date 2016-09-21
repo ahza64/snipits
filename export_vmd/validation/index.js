@@ -19,7 +19,8 @@ function *run() {
 function *fixes() {
   yield require("dsp_migration/2016-06-16-validate_species/validateSpecies").getBadSpecies(true);
   yield require("dsp_migration/2016-06-09_user_company_migration/migrate_all")();
-  yield require("dsp_migration/2016-09-20-add_pi_to_tc_added_tree/add_pi_data")();
+  yield require("dsp_migration/2016-09-20-fix_tree_source/tree_source")(true);
+  yield require("dsp_migration/2016-09-20-add_pi_to_tc_added_tree/add_pi_data")(true);
 }
 
 //baker module
