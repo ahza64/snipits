@@ -47,8 +47,6 @@ router.get('/workr/package', function*() {
     var map_features =[];
     var tree_ids = [];
 
-
-
     for (var i = 0; i < workorders.length; ++i) {
         var workorder = workorders[i];
         tree_ids = tree_ids.concat(workorder.tasks);
@@ -84,7 +82,7 @@ router.get('/workr/package', function*() {
     console.log('Exception: ', e.message);
     this.dsp_env.msg = 'Error';
     this.dsp_env.error = e.message;
-    this.status = 500;
+    this.dsp_env.status = 500;
   }
 });
 

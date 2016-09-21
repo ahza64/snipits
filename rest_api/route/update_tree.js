@@ -207,7 +207,6 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
     this.dsp_env.error = e.message;
     this.dsp_env.status = 500;
   }
-
   return result;
 });
 
