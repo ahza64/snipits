@@ -28,12 +28,11 @@ var   should    = chai.should();
 var   expect    = chai.expect;
 var   assert    = chai.assert;
 var   user      = require('./resources/user');
-var   config    = require('dsp_shared/config/config').get();
+var   config    = require('dsp_shared/config/config').get({log4js : false});
 require('dsp_shared/database/database')(config.meteor);
 var   request   = require('supertest');
-var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   otherTrees= request('./resources/sample_trees');
+var   treeData= request('./resources/sample_trees');
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
 chai.use(require('chai-http'));
@@ -60,8 +59,8 @@ var randLength = Math.floor(Math.random() * 10) + 1;
 
 var treeQuery = '?' +'length=' + randLength + '&offset=' + offset;
 var newTreeId;
-var edittedData = otherTrees.edittedData;
-var postData = otherTrees.postData;
+var edittedData = treeData.edittedData;
+var postData = treeData.postData;
 
 /**
 * Main test for api/v3/workr/package
@@ -75,7 +74,7 @@ var postData = otherTrees.postData;
 * @return {Void}
 */
 
-describe('Tree Api Test', function () {
+describe('=========== Tree resource Test =============', function () {
 /**
 * Login using user credentials
 * get cuf from login
@@ -88,9 +87,9 @@ describe('Tree Api Test', function () {
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
     .send(user)
+    .expect(200)
     .end(function (error, response) {
       expect(error).to.be.null;
-      response.should.have.status(200);
       var text = JSON.parse(response.text);
       console.log("searching for user with id : " + text.data._id );
 
@@ -128,8 +127,8 @@ First try GET
     server
     .get(RES_URL + treeQuery)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       var apiTrees = text.data.map(x => x._id);
@@ -149,9 +148,9 @@ First try GET
     .post(RES_URL)
     .set('content-type', 'application/json')
     .send(postData)
+    .expect(201)
     .end(function (err, res) {
       expect(err).to.be.null;
-      this.response.should.have.status(201);
       var text = JSON.parse(res.text);
 
       newTreeId = text.data._id
@@ -168,9 +167,9 @@ First try GET
     server
     .get(RES_URL + '/' + newTreeId)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (err, res) {
       expect(err).to.be.null;
-      this.response.should.have.status(200);
       Tree.findOne({_id : newTreeId}, function (err,res) {
         expect(err).to.be.null;
         console.log('Checking new tree has correct properties... ');
@@ -196,6 +195,7 @@ First try GET
     .patch(RES_URL + '/' + newTreeId)
     .set('content-type', 'application/json')
     .send(edittedData)
+    .expect(200)
     .end(function (err, res) {
       expect(err).to.be.null;
       expect(res).to.not.be.null;
@@ -208,10 +208,9 @@ First try GET
     server
     .get(RES_URL + '/' + newTreeId)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (err, res) {
       expect(err).to.be.null;
-      this.response.should.have.status(200);
-
       var tree = Tree.findOne({_id : newTreeId}, function (err,res) {
         expect(err).to.be.null;
         console.log('Checking editted resource has correct properties... ');
@@ -235,10 +234,10 @@ First try GET
   it('should logout', function () {
     server
     .get(LOGOUT_URL)
-      .end(function (error, response) {
-        console.log("Attempting logout...");
-        expect(error).to.be.null;
-        response.should.have.status(200);
-      });
+    .expect(200)
+    .end(function (error, response) {
+      console.log("Attempting logout...");
+      expect(error).to.be.null;
+    });
   });
 });
