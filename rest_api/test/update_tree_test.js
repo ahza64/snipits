@@ -117,8 +117,8 @@ describe('=============update_tree Test================', function () {
     .post('/workorder/' + workorderId + TREE_URL)
     .set('content-type', 'application/json')
     .send(treeData.newTree)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       newTreeId = text.data._id;
@@ -137,8 +137,8 @@ describe('=============update_tree Test================', function () {
     server
     .get(PACK_URL)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       text.data.workorders[randomWO].tasks.should.contain(newTreeId);

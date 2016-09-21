@@ -42,9 +42,9 @@ describe('=============Version Test=============', function () {
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
     .send(user)
+    .expect(200)
     .end(function (error, response) {
       expect(error).to.be.null;
-      response.should.have.status(200);
       done();
     });
   });
@@ -59,8 +59,8 @@ describe('=============Version Test=============', function () {
           var mongo_client = client;
           server
           .get(CLIENT_URL + query)
+          .expect(200)
           .then(function (response) {
-            response.should.have.status(200);
             var text = JSON.parse(response.text);
             var api_client = text.data[0];
 

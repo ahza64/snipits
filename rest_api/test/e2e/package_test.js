@@ -208,7 +208,6 @@ describe('============ Package Api Test ===========', function () {
     .end(function (error, response) {
       console.log("Attempting logout...");
       expect(error).to.be.null;
-      response.should.have.status(200);
     });
   });
 

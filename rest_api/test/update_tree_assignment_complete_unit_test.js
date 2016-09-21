@@ -74,9 +74,9 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
     .send(user)
+    .expect(200)
     .end(function (error, response) {
       expect(error).to.be.null;
-      response.should.have.status(200);
       var text = JSON.parse(response.text);
       console.log("searching for user with id : " + text.data._id );
 
@@ -107,8 +107,8 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
     .post('/workorder/' + workorderId + TREE_URL)
     .set('content-type', 'application/json')
     .send(randomTree1)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       randomTree1_id = text.data._id;
@@ -126,8 +126,8 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
     server
     .get(PACK_URL)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       console.log(text.data.workorders[randomWO].tasks, " should contain", randomTree1_id);
@@ -153,8 +153,8 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
     .patch('/workorder/' + workorderId + TREE_URL + '/' + randomTree1_id)
     .set('content-type', 'application/json')
     .send(treeData.completePatch)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       console.log("tree1 set to Completed");
       done();
@@ -168,8 +168,8 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
     server
     .get(PACK_URL)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       console.log("Checking workorder " + workorderId + " for Tree " + randomTree1_id);
@@ -184,8 +184,8 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
     server
     .post('/workorder/' + workorderId + TREE_URL + '/' )
     .send(randomTree2)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       randomTree2_id = text.data._id;
@@ -197,12 +197,12 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
   it('should check package for tree 2', function (done) {
     server
     .get(PACK_URL)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       var packageTreeIds = _.pluck(text.data.trees, '_id');
-      console.log('Checking if tree removed from package and WO...');
+      console.log('Checking if tree removed from package and workorder : ' + workorderId);
 
       console.log(packageTreeIds, "should NOT contain" , randomTree2_id);
       packageTreeIds.should.not.contain(randomTree2_id);
@@ -227,11 +227,11 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
   it('should logout', function () {
     server
     .get(LOGOUT_URL)
-      .end(function (error, response) {
-        console.log("Attempting logout...");
-        expect(error).to.be.null;
-        response.should.have.status(200);
-      });
+    .expect(200)
+    .end(function (error, response) {
+      console.log("Attempting logout...");
+      expect(error).to.be.null;
+    });
   });
 
 });

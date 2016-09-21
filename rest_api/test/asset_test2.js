@@ -41,14 +41,21 @@ chai.use(require('chai-http'));
 
 /**
 * @global
-* The user who is currently logged in
-* @var {Object} cuf
+
+* The ID of the workorder to be editted
+* @var {String} workorderId
+
+* All the types of assets
+* @var {Array} asset_types
+
+* The object that will store the IDs of
+  the newly posted assets
+* @var {Object} asset_typeIds
+
+* The id assigned to the tree we insert.
+* @var {String} newTreeId
 */
-var targetTreeId;
-var workorder;
 var workorderId;
-var newAssetId;
-var newAssetData = require('./resources/sample_asset');
 var asset_types  = ['image', 'tc_image', 'ntw_image'];
 var asset_typeIds = {};
 var newTreeId;
@@ -57,7 +64,7 @@ var sample_asset = require('./resources/sample_asset');
 /**
 * Test for asset route
 */
-describe('=============== Asset Api Test Part 1 =================', function () {
+describe('=============== Asset Api Test Part 2 =================', function () {
 /**
 * Login using user credentials
 * get cuf from login
@@ -88,7 +95,11 @@ describe('=============== Asset Api Test Part 1 =================', function () 
       });
     });
   });
-
+/**
+* fetch a random workorder to add to
+* @param {Function} done
+* @return {Void}
+*/
   it('should find a random workorder to edit', function (done) {
     server
     .get(PACK_URL)
@@ -99,13 +110,19 @@ describe('=============== Asset Api Test Part 1 =================', function () 
       var text = JSON.parse(response.text);
       var workorders = text.data.workorders;
       var randomWorkorder = Math.floor(Math.random() * workorders.length);
-      workorder = workorders[randomWorkorder];
+      var workorder = workorders[randomWorkorder];
       workorderId = workorder._id;
       done();
     });
   });
 
+/**
+* Add tree to a workorder
+* @param {Function} done
+* @return {Void}
+*/
   it('should add a tree to random workorder', function (done) {
+    this.timeout(4000);
     console.log('Adding to workorder :', workorderId);
     server
     .post('/workorder/' + workorderId + TREE_URL)
@@ -115,7 +132,6 @@ describe('=============== Asset Api Test Part 1 =================', function () 
     .end(function (error, response) {
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
-      console.log(text.data);
       newTreeId = text.data._id;
       console.log("new Tree _id ---------->>>>", newTreeId);
       sample_asset.ressourceId = newTreeId;
@@ -130,7 +146,7 @@ describe('=============== Asset Api Test Part 1 =================', function () 
 * @return {Void}
 */
   it('should add all types of assets', function (done) {
-    this.timeout(7000);
+    this.timeout(6000);
     async.forEach(asset_types, function (asset_type, callback) {
       sample_asset.meta.imageType = asset_type;
       //console.log(sample_asset);
@@ -155,15 +171,19 @@ describe('=============== Asset Api Test Part 1 =================', function () 
   });
 
   it('should find if tree is updated', function (done) {
+    this.timeout(4000);
     Tree.findOne({_id : newTreeId},function (err, res) {
-      console.log(res);
       if(err)
         console.error(err);
       async.forEach(asset_types, function (asset_type, callback) {
-            console.log(asset_typeIds[asset_type], 'should equal', res[asset_type].toString());
-            expect(asset_typeIds[asset_type]).to.equal(res[asset_type].toString());
-            callback();
-      }, function (err) {done();});
+        console.log("Checking tree for correct " + asset_type + "...");
+        console.log("tree field", asset_type, " :"  + res[asset_type] );
+        expect(asset_typeIds[asset_type]).to.equal(res[asset_type].toString());
+        callback();
+      }, function (err) {
+        console.log(res);
+        done();
+      });
     })
   });
 
@@ -178,7 +198,6 @@ describe('=============== Asset Api Test Part 1 =================', function () 
     .end(function (error, response) {
       console.log("Attempting logout...");
       expect(error).to.be.null;
-      response.should.have.status(200);
     });
   });
 });

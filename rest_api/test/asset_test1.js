@@ -29,8 +29,20 @@ chai.use(require('chai-http'));
 
 /**
 * @global
-* The user who is currently logged in
-* @var {Object} cuf
+
+* The information of the user we login
+  as
+* @var {Object} user
+
+* a random tree to add asset(s)  to
+* @var {String} targetTreeId
+
+* The ID assigned to the newly posted
+  asset
+* @var {String} newAssetId
+
+* The data the new asset will have
+* @var {Object} newAssetData
 */
 var targetTreeId;
 var newAssetId;
@@ -38,6 +50,9 @@ var newAssetData = require('./resources/sample_asset');
 
 /**
 * Test for asset route
+
+* @param {String} description of describe test
+* @param {Function} Test the function Holds the main test
 */
 describe('=============== Asset Api Test Part 1 =================', function () {
 /**
@@ -103,7 +118,7 @@ describe('=============== Asset Api Test Part 1 =================', function () 
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       newAssetId = text._id;
-      console.log("added new asset with id: ", newAssetId._id);
+      console.log("added new asset with id: ", newAssetId);
       done();
     })
   });
@@ -144,7 +159,6 @@ describe('=============== Asset Api Test Part 1 =================', function () 
     .end(function (error, response) {
       console.log("Attempting logout...");
       expect(error).to.be.null;
-      response.should.have.status(200);
     });
   });
 });
