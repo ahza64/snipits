@@ -66,12 +66,12 @@ export default class DefaultNavbar extends React.Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight>
-            <NavDropdown eventKey={3} title='Menu' id='basic-nav-dropdown'>
-              <MenuItem eventKey={3.1} onClick={ this.goToUpload }>Upload</MenuItem>
-              <MenuItem eventKey={3.2} onClick={ this.goToIngestion }>Ingestion</MenuItem>
-              <MenuItem eventKey={3.3} onClick={ this.goToAdmin }>Admin</MenuItem>
+            <NavDropdown eventKey={1} title='Menu' id='basic-nav-dropdown'>
+              <MenuItem eventKey={1.1} onClick={ this.goToUpload }>Upload</MenuItem>
+              <MenuItem eventKey={1.2} onClick={ this.goToIngestion }>Ingestion</MenuItem>
+              <MenuItem eventKey={1.3} onClick={ this.goToAdmin }>Admin</MenuItem>
               <MenuItem divider />
-              <MenuItem eventKey={3.3} onClick={ this.handleLogout }>Logout</MenuItem>
+              <MenuItem eventKey={1.4} onClick={ this.handleLogout }>Logout</MenuItem>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

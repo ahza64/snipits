@@ -9,12 +9,15 @@ import FlatButton from 'material-ui/FlatButton';
 import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
 const stepperContainerStyle = {width: '100%', maxWidth: 900, margin: 'auto'};
 const contentStyle = {margin: '0 16px'};
-const buttonContainerStyle = {marginTop: 12};
+const buttonContainerStyle = {
+  marginTop: 12,
+  textAlign: 'center'
+};
 const backButtonStyle = { marginRight: 12 };
 
 // Components
-import CompanyCreation from './companyCreation';
-import UserCreation from './userCreation';
+import CompanyCreation from './company/companyCreation';
+import UserCreation from './user/userCreation';
 import InfoConfirm from './infoConfirm';
 
 export default class Creation extends React.Component {
@@ -90,11 +93,13 @@ export default class Creation extends React.Component {
               </p>
             ) : (
               <div>
-                { this.getStepContent(stepIndex) }
-                <div style={ buttonContainerStyle }>
-                  <FlatButton label='Back' disabled={ stepIndex === 0 } onClick={ this.handlePrev } style={ backButtonStyle } />
-                  <RaisedButton label={ stepIndex === 2 ? 'Finish' : 'Next' } primary={ true } onClick={ this.handleNext } />
-                </div>
+                <Row>{ this.getStepContent(stepIndex) }</Row>
+                <Row>
+                  <div style={ buttonContainerStyle }>
+                    <FlatButton label='Back' disabled={ stepIndex === 0 } onClick={ this.handlePrev } style={ backButtonStyle } />
+                    <RaisedButton label={ stepIndex === 2 ? 'Finish' : 'Next' } primary={ true } onClick={ this.handleNext } />
+                  </div>
+                </Row>
               </div>
             )}
           </div>

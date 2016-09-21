@@ -35,6 +35,7 @@ app.use(function*(next) {
   }
 });
 app.use(mount('/', require('./upload')));
+app.use(mount('/', require('./company')));
 
 // Port
 app.listen(3000);
