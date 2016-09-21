@@ -16,10 +16,17 @@ function *run() {
   return fieldsExist && correctTreesInWO && correctTrimmers && correctUsers;
 }
 
+function *fixes() {
+  yield require("dsp_migration/2016-06-16-validate_species/validateSpecies").getBadSpecies(true);
+  yield require("dsp_migration/2016-06-09_user_company_migration/migrate_all")();
+  yield require("dsp_migration/2016-09-20-add_pi_to_tc_added_tree/add_pi_data")();
+}
+
 //baker module
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');
   utils.bakerGen(run, { opts: 'params', default: true });
+  utils.bakerGen(fixes);
   baker.run();
 }
 
