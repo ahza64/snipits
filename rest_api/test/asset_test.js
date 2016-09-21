@@ -43,7 +43,6 @@ chai.use(require('chai-http'));
 var randomAssetId;
 var newAssetId;
 var newAssetData = require('./resources/sample_img');
-var cuf;
 const MIN_FILE_SIZE = 3000;
 
 /**

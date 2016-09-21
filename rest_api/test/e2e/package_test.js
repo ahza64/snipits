@@ -84,16 +84,6 @@ describe('========= Package Api Test ========', function () {
 * @return {Void}
 */
 
-  it('should login incorrectly ', function () {
-    server
-    .post(LOGIN_URL)
-    .set('content-type', 'application/json')
-    .send({email:Math.random(), password: Math.random()})
-    .end(function (error, response) {
-      response.should.not.have.status(200);
-    });
-  });
-
   it('should login and find the cuf logged in', function (done) {
     server
     .post(LOGIN_URL)
@@ -125,14 +115,14 @@ describe('========= Package Api Test ========', function () {
 * Extracting lists from mongo database
 * @return {Void}
 */
-  it('should extract trees and workorders from db', function () {
+  it('should extract trees, workorders, from db', function () {
     userTrees     = _.flatten(_.pluck((cuf.workorder), 'tasks')).sort();
     userWorkorders = _.pluck(cuf.workorder, '_id').sort();
     console.log("retrieved " + userTrees.length + " tree ids from DB");
     console.log("retrieved " + userWorkorders.length + " workorder ids from DB");
   });
 
-  it('should extract circuit_names from mongo then package API', function (done) {
+  it('should extract circuit_names, timestamps from mongo then package API', function (done) {
     this.timeout(5000);
     server
     .get(PACK_URL)
@@ -143,8 +133,8 @@ describe('========= Package Api Test ========', function () {
       var text = JSON.parse(response.text);
       var responseWorkorders = text.data.workorders;
       package_updated = new Date(text.data.updated);
-
       package_circuits = _.pluck(responseWorkorders, 'circuit_names');
+
       for (var i = 0; i < responseWorkorders.length; i++) {
         var workorder = responseWorkorders[i];
         Tree.find({
@@ -158,17 +148,8 @@ describe('========= Package Api Test ========', function () {
           if(db_circuits.length === responseWorkorders.length){done();}
         });
       }
+      
     });
-  })
-
-  it('should commpare circuit names', function () {
-    console.log ("found :" ,db_circuits.length, "circuit_names from db,", package_circuits.length, "circuit_names from package api");
-    expect(db_circuits).to.deep.equal(package_circuits);
-  })
-
-  it('should verify updated time', function () {
-    console.log('User last_sent_at :', last_sent_at.getTime(),"\"updated\" field in package :", package_updated.getTime() );
-    last_sent_at.getTime().should.equal(package_updated.getTime());
   })
 
 /**
@@ -205,6 +186,17 @@ describe('========= Package Api Test ========', function () {
     console.log("Comparing package workorder array against database...");
     expect(apiWorkorders).to.deep.equal(userWorkorders);
   });
+
+  it('should commpare circuit names', function () {
+    console.log ("found :" ,db_circuits.length, "circuit_names from db,", package_circuits.length, "circuit_names from package api");
+    expect(db_circuits).to.deep.equal(package_circuits);
+  })
+
+  it('should verify updated time', function () {
+    console.log('User last_sent_at :', last_sent_at.toUTCString(),"\"updated\" field in package :", package_updated.toUTCString() );
+    last_sent_at.getTime().should.equal(package_updated.getTime());
+  })
+
 
 /**
 * Logout
