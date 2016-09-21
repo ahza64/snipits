@@ -31,9 +31,8 @@ var   user      = require('./resources/user');
 var   config    = require('dsp_shared/config/config').get({log4js : false});
 require('dsp_shared/database/database')(config.meteor);
 var   request   = require('supertest');
-var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   otherTrees= request('./resources/sample_trees');
+var   treeData= request('./resources/sample_trees');
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
 chai.use(require('chai-http'));
@@ -60,8 +59,8 @@ var randLength = Math.floor(Math.random() * 10) + 1;
 
 var treeQuery = '?' +'length=' + randLength + '&offset=' + offset;
 var newTreeId;
-var edittedData = otherTrees.edittedData;
-var postData = otherTrees.postData;
+var edittedData = treeData.edittedData;
+var postData = treeData.postData;
 
 /**
 * Main test for api/v3/workr/package

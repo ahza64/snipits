@@ -9,7 +9,7 @@
 /**
 * Contains sample data a user would use to
   update a tree(s)
-* @var {Object} otherTrees
+* @var {Object} treeData
 
 * Base URL to the server
 * @var {String} BASE_URL
@@ -26,11 +26,10 @@ var   config    = require('dsp_shared/config/config').get({log4js : false});
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
-var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   otherTrees= require('./resources/sample_trees');
+var   treeData= require('./resources/sample_trees');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
@@ -54,9 +53,9 @@ chai.use(require('chai-http'));
 
 */
 
-var randomWO = Math.floor(Math.random() * 100);
-var randomTree1 = otherTrees.randomTreeGen();
-var randomTree2 = otherTrees.randomTreeGen();
+var randomWO;
+var randomTree1 = treeData.randomTreeGen();
+var randomTree2 = treeData.randomTreeGen();
 randomTree2.assignment_complete = true;
 var randomTree1_id;
 var randomTree2_id;
@@ -90,7 +89,7 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
         }
         expect(res.workorder).to.not.be.empty;
         var userWorkorderIds = _.pluck(res.workorder, '_id');
-        randomWO   %= userWorkorderIds.length;
+        randomWO    = Math.floor(Math.random() * userWorkorderIds.length);
         workorderId = userWorkorderIds[randomWO];
         done();
       });
@@ -153,7 +152,7 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
     server
     .patch('/workorder/' + workorderId + TREE_URL + '/' + randomTree1_id)
     .set('content-type', 'application/json')
-    .send(otherTrees.completePatch)
+    .send(treeData.completePatch)
     .end(function (error, response) {
       response.should.have.status(200);
       expect(error).to.be.null;

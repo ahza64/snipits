@@ -29,7 +29,6 @@ var   user      = require('../resources/user');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
-
 chai.use(require('chai-http'));
 
 /**
