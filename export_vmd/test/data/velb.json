@@ -7,7 +7,7 @@
     "city" : "West Sacramento",
     "county": "Sacramento",
     "division": "Sacramento",    
-    "pge_pmd_num": "135399",
+    "pge_pmd_num": "135355",
     "streetName" : "Power Inn Road",
     "streetNumber" : "3925",
     "circuit_name" : "BRIGHTON_DAVIS",    
@@ -29,10 +29,18 @@
       "company": "WECI"
     },
     "pmd": {
-        "_id" : "56aa0ff8398cf249f959c8c1",
-        "pge_pmd_num" : "135399",
-        "type" : "System Maintenance"
-    }        
+        "_id" : "56aa101c398cf249f959c8fc",
+        "pge_pmd_num" : "135355",
+        "project" : "transmission_2015",
+        "division" : "Kern",
+        "name" : "CR Aerial Patrol 2",
+        "plan_pi_complete" : "2016-06-30T00:00:00.000Z",
+        "type" : "System Maintenance",
+        "nerc" : false,
+        "plan_tc_complete" : "2016-08-11T00:00:00.000Z",
+        "vmd_circuit_num" : "TRC0251111",
+        "region" : "South"
+    } 
   },
   "results": {
       "sTreeCode": "ASH",

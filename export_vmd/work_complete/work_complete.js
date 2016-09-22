@@ -105,6 +105,11 @@ var TreeWorkComplete = function(tree, trimmer, image, test_email) {
     delete this.work_complete.sCrewType;
   }
   
+
+  if(typeof tree.tc_complete_time === "string") {
+    tree.tc_complete_time = Date.create(tree.tc_complete_time);
+    assert(tree.tc_complete_time.isValid(), "Invalid tc complete date");
+  }
   if(tree.tc_complete_time.isAfter(TIME_AND_MATERIALS_SWITCH_DATE)) {
     assert(vmd.trim_code_to_billing_code[this.work_complete.sTrimCode]);
     this.work_complete.sBillingCode = vmd.trim_code_to_billing_code[this.work_complete.sTrimCode];
@@ -119,7 +124,14 @@ var TreeWorkComplete = function(tree, trimmer, image, test_email) {
     }
   }
   
-  this.work_complete.iBillingRate = 0;
+  this.work_complete.iBillingRate = {
+    null: 0,
+    undefined: 0,
+    standard: 0,
+    overtime: 1
+  }[tree.tc_overtime];
+  
+  assert(this.work_complete.iBillingRate !== undefined, "Unknown overtime code");
   
   this.work_complete["ExternalWRParam-sDivCode"] = vmd.division_codes[tree.division];
 

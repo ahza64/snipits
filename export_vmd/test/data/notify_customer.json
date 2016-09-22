@@ -29,7 +29,9 @@
     "pmd": {
         "_id" : "56aa0ff8398cf249f959c8c1",
         "pge_pmd_num" : "135399",
-        "type" : "System Maintenance"
+        "type" : "System Maintenance",
+        "division" : "Sacramento",
+        "vmd_circuit_num" : "TRC0251111"        
     }        
   },
   "results": {

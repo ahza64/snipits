@@ -22,7 +22,7 @@ describe("tree location tests", function(){
 
 
 function createTest(loc_name, loc) {
-  it("can create locaiton for trees: "+loc_name, function(){
+  it("can create location for trees: "+loc_name, function(){
     var treeLocation = loadLocation(loc);
     
     test_util.testResults(loc.results, "tree_location", loc_name, treeLocation.location);

@@ -98,7 +98,8 @@
         "type" : "System Maintenance",
         "cufs" : [],
         "nerc" : false,
-        "__v" : 1
+        "__v" : 1,
+        "vmd_circuit_num": "TR00607001"
     }, 
     "image": {
         "_id" : "569eaaeb1cc8a3580ef91798",

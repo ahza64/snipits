@@ -167,7 +167,7 @@ TreeLocation.prototype.addTree = function(tree){
   if(line_type === "transmission") {  
     var circuit = tree.get("vmd_circuit_num");
     assert(circuit, "Missing VMD Circuit ID: "+tree.get("_id"));
-    assert(vmd.transmison_circuit_codes[div_code], tree.get("_id"));
+    assert(vmd.transmison_circuit_codes[div_code], "PMD Missing division: "+tree.get("pge_pmd_num"));
     this.set("sCircuit", circuit);    
     this.set("sLineID", line_number);
   } else {
@@ -275,7 +275,6 @@ TreeLocation.prototype.getLocationStatus = function(){
     var status = tree.getStatus();
     if(tree.hasRestrictions()){
       restrict = "restrictions";
-      console.log("restrictions", tree.get("_id"));
     } else {
       restrict = "no_restrictions";
     }
