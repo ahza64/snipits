@@ -8,7 +8,7 @@ if (require.main === module) {
 const MIN_DISTANCE = 0.125; //in miles
 var koa = require('koa');
 var router = require('koa-router')();
-var USER = require('dsp_shared/database/model/cufs');
+var User = require('dsp_shared/database/model/cufs');
 var Tree = require('dsp_shared/database/model/tree');
 var MapFeature = require('dsp_shared/database/model/mapfeatures');
 var _ = require("underscore");
@@ -42,7 +42,7 @@ router.get('/workr/package', function*() {
     });
 
     var userId = this.passport.user._id;
-    var user = yield USER.findOne({_id: userId}).select(user_exclude);
+    var user = yield User.findOne({_id: userId}).select(user_exclude);
     var workorders = user.workorder;
     var map_features =[];
     var tree_ids = [];
