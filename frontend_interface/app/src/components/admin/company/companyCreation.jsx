@@ -57,7 +57,7 @@ export default class CompanyCreation extends React.Component {
   }
 
   createCompany() {
-    var newCompany = { company: this.state.newCompany };
+    var newCompany = { name: this.state.newCompany };
 
     request
     .post('http://localhost:3000/company')

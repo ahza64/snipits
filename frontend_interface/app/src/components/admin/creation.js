@@ -1,5 +1,6 @@
 // Modules
 import React from 'react';
+import * as request from 'superagent';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -18,7 +19,8 @@ const backButtonStyle = { marginRight: 12 };
 // Components
 import CompanyCreation from './company/companyCreation';
 import UserCreation from './user/userCreation';
-import InfoConfirm from './infoConfirm';
+import InfoConfirm from './user/infoConfirm';
+import userCreateRedux from '../../reduxes/userCreation';
 
 export default class Creation extends React.Component {
   constructor() {
@@ -39,6 +41,22 @@ export default class Creation extends React.Component {
       stepIndex: stepIndex + 1,
       finished: stepIndex >= 2,
     });
+    const curStepIdx = this.state.stepIndex;
+    if (curStepIdx === 2) {
+      // Make ajax call to create user
+      console.log('creating -> ', userCreateRedux.getState());
+      request
+      .post('http://localhost:3000/user')
+      .send(userCreateRedux.getState())
+      .withCredentials()
+      .end(err => {
+        if (err) {
+          console.error(err);
+        } else {
+          userCreateRedux.dispatch({ type: 'CREATED' });
+        }
+      });
+    }
   }
 
   handlePrev() {
@@ -89,7 +107,7 @@ export default class Creation extends React.Component {
           <div style={ contentStyle }>
             {finished ? (
               <p>
-                <a href='#' onClick={ this.onClickReset }> Click here </a> to reset the example.
+                <h3>New User Created</h3>
               </p>
             ) : (
               <div>

@@ -35,7 +35,6 @@ export default class CompanyList extends React.Component {
       }
     };
     userCreateRedux.dispatch(action);
-    console.log('-> ', userCreateRedux.getState());
   }
 
   componentWillMount() {

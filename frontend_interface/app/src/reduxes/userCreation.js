@@ -10,6 +10,8 @@ const userCreateReducer = (state = {}, action) => {
       return action.user;
     case 'ADDUSER':
       return action.user;
+    case 'CREATED':
+      return {};
     default:
       return {};
   }

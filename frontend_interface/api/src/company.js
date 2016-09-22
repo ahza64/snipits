@@ -19,9 +19,9 @@ router.get('/company', function*() {
 router.post('/company', function*() {
   var company = this.request.body;
   var exists = yield Companies.count({
-    where: { company: company.company },
-    raw: true
+    where: { name: company.name }
   });
+
   if (exists) {
     this.body = true;
     return;
