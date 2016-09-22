@@ -180,6 +180,7 @@ describe('============ Package Api Test ===========', function () {
 */
 
   it('should compare package lists with db lists',function () {
+    
     console.log("Comparing package tree      array against database...");
     expect(apiTrees).to.deep.equal(userTrees);
     console.log("Comparing package workorder array against database...");

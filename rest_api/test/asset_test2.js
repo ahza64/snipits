@@ -89,8 +89,8 @@ describe('=============== Asset Api Test Part 2 =================', function () 
           console.error(err);
         } else {
           console.log("Found ", res.first + ' ' + res.last);
+          expect(res.first + res.last).to.equal(user.first+user.last);
         }
-        expect(res.first + res.last).to.equal(user.first+user.last);
         done();
       });
     });

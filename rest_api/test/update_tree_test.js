@@ -19,7 +19,6 @@ const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
 var   config    = require('dsp_shared/config/config').get({log4js : false});
-//var config = require('dsp_shared_')
 var   chai      = require('chai');
 var   user      = require('./resources/user')
 var   should    = chai.should();
@@ -27,7 +26,7 @@ var   expect    = chai.expect;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   treeData= require('./resources/sample_trees');
+var   treeData  = require('./resources/sample_trees');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 chai.use(require('chai-http'));

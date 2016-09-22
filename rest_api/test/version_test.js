@@ -27,7 +27,7 @@ chai.use(require('chai-http'));
 
 /**
 * @param  {String} description
-* @return {Void}
+* @return {Void} yay
 */
 
 describe('=============Version Test=============', function () {
@@ -65,9 +65,10 @@ describe('=============Version Test=============', function () {
             var api_client = text.data[0];
 
             var count = 0;
+            console.log("comparing" , client.name);
             for(var attr in mongo_client) {
               console.log("comparing", attr);
-              console.log(mongo_client[attr],'===',api_client[attr]);
+              // console.log(mongo_client[attr],'===',api_client[attr]);
               expect(mongo_client[attr]).to.equal(api_client[attr]);
               if (++count === _.keys(client).length)
                 {done();}

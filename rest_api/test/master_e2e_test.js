@@ -15,11 +15,13 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
-
+const path      = require('path');
+const fs        = require('fs');
+const async     = require('async');
+var   _         = require('underscore');
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
-// var   treeData  = require('./resources/sample_trees');
 var   config    = require('dsp_shared/config/config').get({log4js : false});
 require('dsp_shared/database/database')(config.meteor);
 var   request   = require('supertest');
@@ -31,11 +33,21 @@ var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
 var   workorderId = "f0edf3c34eb66824dfd7fd46";
 var   sample_asset = require('./resources/sample_asset');
-
+    var jsFiles = [];
 /**
 * @param {String} description of describe test
 * @param {Function} Test the function Holds the main test
 */
+
+afterEach(function () {
+  if (this.currentTest.state === 'failed'){
+    var date = new Date();
+    fs.appendFile('logs/log.txt', date.toUTCString() + " - " + this.currentTest.fullTitle() + '\n', function (err) {
+      if (err) {console.error(err);}
+    });
+  }
+});
+
 describe('=============== e2e Test Part 1 =================', function () {
 /**
 * Login using user credentials
@@ -44,7 +56,32 @@ describe('=============== e2e Test Part 1 =================', function () {
 * @param {Function} done
 * @return {Void}
 */
+
+  it('shoud load test files', function () {
+
+
+    var file_list = fs.readdirSync(__dirname);
+    async.forEach(file_list, function (file, callback) {
+        if (file.endsWith('.js'))
+          jsFiles.push('./' + file);
+        callback();
+    }, function (err) {
+
+      expect(err).to.be.null;
+      jsFiles  = _.without(jsFiles,
+      './trees_test.js',
+      './update_tree_test.js');
+    });
+
+    file_list = fs.readdirSync(__dirname + '/e2e');
+    for(var i = 0; i < file_list.length; i++) {
+      if(file_list[i].endsWith('.js'))
+        jsFiles.push('./e2e/' + file_list[i]);
+    }
+  });
+
   it('should login and find the cuf logged in', function (done) {
+    console.log(jsFiles);
     server
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
@@ -69,28 +106,26 @@ describe('=============== e2e Test Part 1 =================', function () {
     });
   });
 
-  // it('should post a new tree ',function (done) {
-  //   this.timeout(4000);
-  //   console.log('Adding to workorder :', workorderId, "the following tree", treeData.newTree.circuit_name );
-  //   server
-  //   .post('/workorder/' + workorderId + TREE_URL)
-  //   .set('content-type', 'application/json')
-  //   .send(treeData.newTree)
-  //   .expect(200)
-  //   .end(function (error, response) {
-  //     expect(error).to.be.null;
-  //     var text = JSON.parse(response.text);
-  //     console.log("text : ", text);
-  //     console.error("Error :",error);
-  //     newTreeId = text.data._id;
-  //     console.log("new Tree _id ---------->>>>", newTreeId);
-  //     //sample_asset.ressourceId = newTreeId;
-  //
-  //     done();
-  //   });
-  // })
-  it('should run asset_test1+2', function () {
-    require('./asset_test1');
-    require('./asset_test2');
+  it('should run tests', function (done) {
+    async.forEach(jsFiles, function (file, callback) {
+
+      describe('running all tests:' + file, function () {
+        it('running' + file, function (done) {
+          console.log(file);
+          require(file);
+          done();
+        });
+        callback();
+      });
+
+    }, function (err) {
+      expect(err).to.be.null;
+      done();
+    });
   });
+
+  it('should run update tree test', function (done) {
+    require('./update_tree_test.js');
+    done();
+  })
 });
