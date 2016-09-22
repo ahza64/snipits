@@ -6,6 +6,7 @@ var Cuf = require('dsp_shared/database/model/cufs');
 var router = require('koa-router')();
 var koa = require('koa');
 var Tree = require('dsp_shared/database/model/tree');
+var User = require('dsp_shared/database/model/cufs');
 var TreeHistory = require('dsp_shared/database/model/tree-history');
 var Pmd = require('dsp_shared/database/model/pmd');
 var geocode = require('dsp_shared/lib/gis/google_geocode');
@@ -13,7 +14,7 @@ var crud_opts = require('../crud_op')(Tree);
 var _ = require('underscore');
 var app = koa();
 var TreeHistory = require('dsp_shared/database/model/tree-history');
-
+var config = require('../routes_config').update;
 
 /**
  * addMissingFields - add missing fields to a newly added tree
@@ -33,6 +34,7 @@ function *addMissingFields(treeObj, woId, user) {
   var pmd = yield Pmd.findOne({pge_pmd_num: workOrder.pge_pmd_num});
   var treeId = workOrder.tasks[0];
   tree = yield crud_opts.read(treeId);
+  console.log(workOrder.pge_pmd_num, pmd.pge_pmd_num);
   treeObj.pge_pmd_num = workOrder.pge_pmd_num || pmd.pge_pmd_num;
   treeObj.span_name = workOrder.span_name || pmd.span_name;
   treeObj.division = workOrder.division || pmd.division;
@@ -142,13 +144,19 @@ function *checkLocation(location){
  */
 router.post('/workorder/:woId/tree', function *(){
   var woId = this.params.woId;
-  var user = this.req.user;
-  var userId = user._id;
   var treeObj = this.request.body;
   var treeDone = treeObj.assignment_complete;
   var result = null;
-  try {
+  var userId = this.req.user._id;
+  var user_exclude = {};
 
+  //exclude from user
+  _.each(config.exclude, field => {
+    user_exclude[field] = 0;
+  });
+
+  try {
+    var user = yield User.findOne({_id: userId}).select(user_exclude);
     //check if a tree exists at the same location
     var duplicateTree = yield checkLocation(treeObj.location.coordinates);
     if(duplicateTree > 0){
@@ -167,10 +175,13 @@ router.post('/workorder/:woId/tree', function *(){
     yield TreeHistory.recordTreeHistory({}, result, user);
   } catch(e) {
     if(e === 400) {
+      console.error(e.message);
       this.dsp_env.msg = 'DUPLICATE TREE AT THIS LOCATION';
       this.dsp_env.status = 400;
     } else {
+      console.error(e.message);
       this.dsp_env.msg = 'TREE NOT ADDED';
+      this.dsp_env.error = e.message;
     }
   }
   return result;
@@ -184,11 +195,19 @@ router.post('/workorder/:woId/tree', function *(){
 router.patch('/workorder/:woId/tree/:treeId', function *(){
   var treeId = this.params.treeId;
   var woId = this.params.woId;
-  var userId = this.req.user._id;
   var treeUpdates = this.request.body;
   var treeDone = treeUpdates.assignment_complete;
   var result = null;
+  var userId = this.req.user._id;
+  var user_exclude = {};
+
+  //exclude from user
+  _.each(config.exclude, field => {
+    user_exclude[field] = 0;
+  });
+
   try {
+    var user = yield User.findOne({_id: userId}).select(user_exclude);
     var tree = yield Tree.findOne({_id:treeId});
     //if existing tree is marked as done
     if(treeDone) {
@@ -201,7 +220,7 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
       this.dsp_env.msg = 'Tree Successfully Updated';
     }
     this.body = result;
-    yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
+    yield TreeHistory.recordTreeHistory(tree, result, user);
   } catch(e) {
     console.log(e.message);
     this.dsp_env.error = e.message;
@@ -218,12 +237,18 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
 router.delete('/workorder/:woId/tree/:treeId', function *(){
   var woId = this.params.woId;
   var treeId = this.params.treeId;
-  var userId = this.req.user._id;
   var treeUpdates = this.request.body;
-
   var result = null;
+  var userId = this.req.user._id;
+  var user_exclude = {};
+
+  //exclude from user
+  _.each(config.exclude, field => {
+    user_exclude[field] = 0;
+  });
 
   try {
+    var user = yield User.findOne({_id: userId}).select(user_exclude);
     var tree = yield Tree.findOne({_id:treeId});
     result = yield crud_opts.patch(treeId, treeUpdates, this.header['content-type']);
     yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
@@ -234,7 +259,7 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
         console.log('Tree' + treeId + 'removed and Workorder' + woId + 'updated', data);
       }
     });
-    yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
+    yield TreeHistory.recordTreeHistory(tree, result, user);
   } catch(e) {
     console.log(e.message);
     this.dsp_env.error = e.message;

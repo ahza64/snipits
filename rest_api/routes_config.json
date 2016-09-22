@@ -49,5 +49,17 @@
       "data",
       "vehicle"
     ]
+  },
+  "update": {
+    "exclude": [
+      "__v",
+      "workorder.uniq_id",
+      "project",
+      "assigned_workorders",
+      "division_data",
+      "scheduled_workorders",
+      "scheduled_data",
+      "checksum"
+    ]
   }
 }
