@@ -13,6 +13,7 @@
 const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const LOGIN_URL = '/login';
 const CLIENT_URL= '/client';
+var   path      = require('path');
 var   config    = require('dsp_shared/config/config').get({log4js : false});
 var   chai      = require('chai');
 var   should    = chai.should();
@@ -30,7 +31,7 @@ chai.use(require('chai-http'));
 * @return {Void} yay
 */
 
-describe('=============Version Test=============', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials. get cuf from login
 

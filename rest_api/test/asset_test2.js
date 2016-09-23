@@ -24,6 +24,7 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const ASSET_URL = '/asset';
 const TREE_URL  = '/tree';
+var   path      = require('path');
 var   async     = require('async');
 var   chai      = require('chai');
 var   should    = chai.should();
@@ -79,7 +80,7 @@ function checkTreeUpdated(done) {
 /**
 * Test for asset route
 */
-describe('=============== Asset Api Test Part 2 =================', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials
 * get cuf from login
@@ -154,11 +155,7 @@ describe('=============== Asset Api Test Part 2 =================', function () 
     });
   });
 
-
-
-
   describe('Add the assets',function () {
-
     after(function (done) {
       checkTreeUpdated(done)
     });
@@ -167,10 +164,10 @@ describe('=============== Asset Api Test Part 2 =================', function () 
     * @return {Void}
     */
     it('should add all types of assets', function (done) {
-      this.timeout(6000);
       async.forEach(asset_types, function (asset_type, callback) {
         sample_asset.meta.imageType = asset_type;
         //console.log(sample_asset);
+      //  setTimeout(function(){
         server
         .post(ASSET_URL)
         .send(sample_asset)
@@ -184,9 +181,10 @@ describe('=============== Asset Api Test Part 2 =================', function () 
           asset_typeIds[asset_type] = text._id;
           callback();
         });
+//      }, 1000);
       },
       function (err) {
-        console.log(asset_typeIds);
+        console.log("following assets have been added ", asset_typeIds);
         done();
       });  //each end
     });

@@ -21,7 +21,8 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
-var   user      = require('./resources/user')
+var   user      = require('./resources/user');
+var   path      = require('path');
 var   config    = require('dsp_shared/config/config').get({log4js : false});
 var   chai      = require('chai');
 var   should    = chai.should();
@@ -61,7 +62,7 @@ var randomTree1_id;
 var randomTree2_id;
 var workorderId;
 
-describe('======= Api v3 update tree assignment_complete Test ======= ', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials. get cuf from login
 

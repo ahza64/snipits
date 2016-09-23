@@ -48,7 +48,7 @@ afterEach(function () {
   }
 });
 
-describe('=============== e2e Test Part 1 =================', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials
 * get cuf from login
