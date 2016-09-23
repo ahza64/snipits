@@ -71,4 +71,10 @@ module.exports = {
   completePatch : {
     "assignment_complete" : true
   },
+
+  deletePatch : {
+    'status' : '6511231',
+    'height' : 213,
+    'species' : 'Wild Salmon'
+  },
 }

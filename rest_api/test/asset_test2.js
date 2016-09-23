@@ -61,6 +61,21 @@ var asset_typeIds = {};
 var newTreeId;
 var sample_asset = require('./resources/sample_asset');
 
+function checkTreeUpdated(done) {
+  Tree.findOne({_id : newTreeId},function (err, res) {
+    if(err)
+      console.error(err);
+    async.forEach(asset_types, function (asset_type, callback) {
+      console.log("Checking tree for correct " + asset_type + "...");
+      console.log("tree field", asset_type, " :"  + res[asset_type] );
+      expect(asset_typeIds[asset_type]).to.equal(res[asset_type].toString());
+      callback();
+    }, function (err) {
+      console.log(res);
+      done();
+    });
+  })
+}
 /**
 * Test for asset route
 */
@@ -135,57 +150,47 @@ describe('=============== Asset Api Test Part 2 =================', function () 
       newTreeId = text.data._id;
       console.log("new Tree _id ---------->>>>", newTreeId);
       sample_asset.ressourceId = newTreeId;
-
       done();
     });
   });
 
 
-/**
-* find a random asset
-* @return {Void}
-*/
-  it('should add all types of assets', function (done) {
-    this.timeout(6000);
-    async.forEach(asset_types, function (asset_type, callback) {
-      sample_asset.meta.imageType = asset_type;
-      //console.log(sample_asset);
-      server
-      .post(ASSET_URL)
-      .send(sample_asset)
-      .expect(200)
-      .end(function (error, response) {
-        if (error) {
-          console.error(error);
-        }
-        expect(error).to.be.null;
-        var text = JSON.parse(response.text);
-        asset_typeIds[asset_type] = text._id;
-        callback();
-      });
-    },
-    function (err) {
-      console.log(asset_typeIds);
-      done();
-    });  //each end
-  });
 
-  it('should find if tree is updated', function (done) {
-    this.timeout(4000);
-    Tree.findOne({_id : newTreeId},function (err, res) {
-      if(err)
-        console.error(err);
+
+  describe('Add the assets',function () {
+
+    after(function (done) {
+      checkTreeUpdated(done)
+    });
+    /**
+    * find a random asset
+    * @return {Void}
+    */
+    it('should add all types of assets', function (done) {
+      this.timeout(6000);
       async.forEach(asset_types, function (asset_type, callback) {
-        console.log("Checking tree for correct " + asset_type + "...");
-        console.log("tree field", asset_type, " :"  + res[asset_type] );
-        expect(asset_typeIds[asset_type]).to.equal(res[asset_type].toString());
-        callback();
-      }, function (err) {
-        console.log(res);
+        sample_asset.meta.imageType = asset_type;
+        //console.log(sample_asset);
+        server
+        .post(ASSET_URL)
+        .send(sample_asset)
+        .expect(200)
+        .end(function (error, response) {
+          if (error) {
+            console.error(error);
+          }
+          expect(error).to.be.null;
+          var text = JSON.parse(response.text);
+          asset_typeIds[asset_type] = text._id;
+          callback();
+        });
+      },
+      function (err) {
+        console.log(asset_typeIds);
         done();
-      });
-    })
-  });
+      });  //each end
+    });
+  })
 
 /**
 * Logout

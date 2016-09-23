@@ -29,6 +29,7 @@ var   server    = request.agent(BASE_URL);
 var   treeData  = require('./resources/sample_trees');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
+var   Tree      = require('dsp_shared/database/model/tree');
 chai.use(require('chai-http'));
 
 /**
@@ -54,6 +55,7 @@ var workorderId;
 var newTreeId;
 var userWorkorderIds;
 var userTreeIds;
+
 var edittedTree = treeData.edittedTree;
 
 /**
@@ -111,6 +113,7 @@ describe('=============update_tree Test================', function () {
 * @return {Void}
 */
   it('should add a tree to First workorder', function (done) {
+    this.timeout(3000);
     console.log('Adding to workorder :', workorderId);
     server
     .post('/workorder/' + workorderId + TREE_URL)
@@ -121,7 +124,6 @@ describe('=============update_tree Test================', function () {
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       newTreeId = text.data._id;
-      console.log(text.data);
       console.log("new Tree_id---------->>>>", newTreeId);
       done();
     });
@@ -180,7 +182,7 @@ describe('=============update_tree Test================', function () {
       console.log("Found tree :", targetTree._id);
       for (field in edittedTree) {
         console.log("Checking ", field);
-        console.log(edittedTree[field],"===", targetTree[field]);
+        console.log(edittedTree[field], "===" , targetTree[field]);
         expect(edittedTree[field]).to.deep.equal(targetTree[field]);
       }
       done();
@@ -191,7 +193,7 @@ describe('=============update_tree Test================', function () {
     console.log('deleting tree ' + newTreeId, 'in workorder ' + workorderId);
     server
     .delete('/workorder/' + workorderId + TREE_URL + '/' + newTreeId)
-    .send({'status' : '0511231'})
+    .send(treeData.deletePatch)
     .expect(200)
     .end(function (error, response) {
       expect(error).to.be.null;
@@ -207,9 +209,18 @@ describe('=============update_tree Test================', function () {
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       var packageTreeIds = _.pluck(text.data.trees, '_id');
+      var workorderTasks = _.flatten(_.pluck(text.data.workorders,'tasks'));
       console.log('Checking if tree deleted from package...');
       packageTreeIds.should.not.contain(newTreeId);
-      done();
+      workorderTasks.should.not.contain(newTreeId);
+      Tree.findOne({_id : newTreeId}, function (err, res) {
+        if(err)
+          console.error(err);
+
+        console.log("checking tree for deleted status", treeData.deletePatch.status);
+        expect(res.status).to.equal(treeData.deletePatch.status);
+        done();
+      })
     });
   });
 /**

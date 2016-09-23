@@ -59,7 +59,6 @@ describe('=============== e2e Test Part 1 =================', function () {
 
   it('shoud load test files', function () {
 
-
     var file_list = fs.readdirSync(__dirname);
     async.forEach(file_list, function (file, callback) {
         if (file.endsWith('.js'))
