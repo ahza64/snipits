@@ -1,7 +1,6 @@
 module.exports = {
   newTree : {
     "circuit_name": "EcoBoost",
-    "pge_pmd_num": "911",
     "pge_detection_type": "VC1p_AF",
     "location": {
       "type": "Point",

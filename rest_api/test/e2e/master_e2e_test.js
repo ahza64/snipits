@@ -25,14 +25,13 @@ var   expect    = chai.expect;
 var   config    = require('dsp_shared/config/config').get({log4js : false});
 require('dsp_shared/database/database')(config.meteor);
 var   request   = require('supertest');
-var   user      = require('./resources/user');
+var   user      = require('../resources/user');
 var   server    = request.agent(BASE_URL);
 var   mongoose  = require('mongoose');
 mongoose.connect(MONGO_URL);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
 var   workorderId = "f0edf3c34eb66824dfd7fd46";
-var   sample_asset = require('./resources/sample_asset');
     var jsFiles = [];
 /**
 * @param {String} description of describe test
@@ -42,7 +41,7 @@ var   sample_asset = require('./resources/sample_asset');
 afterEach(function () {
   if (this.currentTest.state === 'failed'){
     var date = new Date();
-    fs.appendFile('logs/log.txt', date.toUTCString() + " - " + this.currentTest.fullTitle() + '\n', function (err) {
+    fs.appendFile('../logs/log.txt', date.toUTCString() + " - " + this.currentTest.fullTitle() + '\n', function (err) {
       if (err) {console.error(err);}
     });
   }
@@ -58,24 +57,25 @@ describe('===============' + path.basename(__filename) + '=================', fu
 */
 
   it('shoud load test files', function () {
-
-    var file_list = fs.readdirSync(__dirname);
+    //loads tests in .. (rest_api/test)
+    var file_list = fs.readdirSync(__dirname + '/..');
     async.forEach(file_list, function (file, callback) {
         if (file.endsWith('.js'))
-          jsFiles.push('./' + file);
+          jsFiles.push('../' + file);
         callback();
     }, function (err) {
 
       expect(err).to.be.null;
       jsFiles  = _.without(jsFiles,
-      './trees_test.js',
-      './update_tree_test.js');
+       '../trees_test.js',
+      '../update_tree_test.js');
     });
 
-    file_list = fs.readdirSync(__dirname + '/e2e');
+    //loads tests in . (rest_api/test/e2e/)
+    file_list = fs.readdirSync(__dirname);
     for(var i = 0; i < file_list.length; i++) {
       if(file_list[i].endsWith('.js'))
-        jsFiles.push('./e2e/' + file_list[i]);
+        jsFiles.push('./' + file_list[i]);
     }
   });
 
@@ -124,7 +124,7 @@ describe('===============' + path.basename(__filename) + '=================', fu
   });
 
   it('should run update tree test', function (done) {
-    require('./update_tree_test.js');
+    require('../update_tree_test.js');
     done();
   })
 });

@@ -78,7 +78,7 @@ function checkTreeUpdated(done) {
   })
 }
 /**
-* Test for asset route
+* Test for asset route part 2
 */
 describe('===============' + path.basename(__filename) + '=================', function () {
 /**
@@ -102,7 +102,7 @@ describe('===============' + path.basename(__filename) + '=================', fu
       Cuf.findOne({_id : text.data._id}, function (err, res) {
         expect(err).to.be.null;
         if(err) {
-          console.error(err);
+          done(err);
         } else {
           console.log("Found ", res.first + ' ' + res.last);
           expect(res.first + res.last).to.equal(user.first+user.last);
@@ -139,15 +139,20 @@ describe('===============' + path.basename(__filename) + '=================', fu
 */
   it('should add a tree to random workorder', function (done) {
     this.timeout(4000);
+    var newTree = new treeData.randomTreeGen();
     console.log('Adding to workorder :', workorderId);
     server
     .post('/workorder/' + workorderId + TREE_URL)
     .set('content-type', 'application/json')
-    .send(treeData.newTree)
+    .send(newTree)
     .expect(200)
     .end(function (error, response) {
+      if (error) {
+        console.error(error);
+      }
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
+      console.log("text", text);
       newTreeId = text.data._id;
       console.log("new Tree _id ---------->>>>", newTreeId);
       sample_asset.ressourceId = newTreeId;
@@ -156,9 +161,6 @@ describe('===============' + path.basename(__filename) + '=================', fu
   });
 
   describe('Add the assets',function () {
-    after(function (done) {
-      checkTreeUpdated(done)
-    });
     /**
     * find a random asset
     * @return {Void}
@@ -166,7 +168,6 @@ describe('===============' + path.basename(__filename) + '=================', fu
     it('should add all types of assets', function (done) {
       async.forEach(asset_types, function (asset_type, callback) {
         sample_asset.meta.imageType = asset_type;
-        //console.log(sample_asset);
       //  setTimeout(function(){
         server
         .post(ASSET_URL)
@@ -174,7 +175,7 @@ describe('===============' + path.basename(__filename) + '=================', fu
         .expect(200)
         .end(function (error, response) {
           if (error) {
-            console.error(error);
+            done(error);
           }
           expect(error).to.be.null;
           var text = JSON.parse(response.text);
@@ -184,7 +185,13 @@ describe('===============' + path.basename(__filename) + '=================', fu
 //      }, 1000);
       },
       function (err) {
-        console.log("following assets have been added ", asset_typeIds);
+        if (err) {
+          console.error(err);
+        }
+        console.log("following assets have been added :", asset_typeIds);
+        setTimeout(function () {
+          checkTreeUpdated();
+        }, 3000);
         done();
       });  //each end
     });
