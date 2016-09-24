@@ -15,6 +15,7 @@ const v2ToV3Migrate = require("dsp_migrate/migration/2016-04-meteor-v2/tree_v2_t
 
 const TransTree = require('dsp_shared/database/model/trans/tree');
 const TransPatch = require('dsp_shared/database/model/trans/patch');
+const TransUser = require('dsp_shared/database/model/trans/user');
 
 const transTreeSchmeaUpdate = require('dispatchr-javascript-utils').migrate_tree;
 
@@ -34,16 +35,19 @@ var deletd_moraga_4 = {
 };
 
 
-// db.getCollection('users').update({_id: ObjectId("566f4904d45c85303a350ac4")}, {$set: {vehicle: "5654cfde2895a53d284117d1"}})
+// db.getCollection('users').update(
 
 function *run() {
   
+  yield TransUser.update({_id: "566f4904d45c85303a350ac4"}, {$set: {vehicle: "5654cfde2895a53d284117d1"}});
+  yield TransUser.update({_id: "56846116d9bfa5c61e038d90"}, {$set: {vehicle: "567a8f00d45c85303a375615"}});
   yield Grid.update({_id: deletd_moraga_2._id}, deletd_moraga_2, {upsert: true});
   yield Grid.update({_id: deletd_moraga_3._id}, deletd_moraga_3, {upsert: true});
   yield Grid.update({_id: deletd_moraga_4._id}, deletd_moraga_4, {upsert: true});
   
   
-  var query = {_id: "565372ac539dc97c02f0b7a9"};
+  var query = {};
+  // var query = {_id: "567b0670d45c85303a3784d2"};
   var count = yield TransTree.find(query).count();
   var i = 0;
   for(var treep of stream(TransTree, query)) {
@@ -56,15 +60,16 @@ function *run() {
       var prev = {};
       console.log("TREE", tree._id);
       for(var version of TransPatch.versionIterator("Tree", tree._id)){
+        // console.log('version', version);
         version = yield version;
         if(version) {
           ver++;
           version = transTreeSchmeaUpdate(version);          
-          // console.log("V2 VERSION", version);  
+          // console.log("V2 VERSION", version);
           version = yield v2ToV3Migrate(version);
           var mig_user = {_id: 'tree_patch_to_history', type:"Migration"};
           // console.log("V3 VERSION", version);
-          var history_rec = yield TreeHistory.recordTreeHistory(prev, version, mig_user, version.updated);
+          var history_rec = yield TreeHistory.recordTreeHistory(prev, version, mig_user, version.updated, 'api_v2_patches');
           // console.log("TREE HISTORY", history_rec);
           prev = version;
         }

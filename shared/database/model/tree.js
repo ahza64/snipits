@@ -37,7 +37,8 @@ var treeSchema = new mongoose.Schema({
   pi_user_id: { type: String, index: true },
   tc_start_time: { type: Date, index: true },
   tc_user_id: { type: String, index: true },
-
+  tc_overtime: { type: String, default: 'standard', enum: ['standard', 'overtime', 'double', 'time/material', 'non-billable'] },
+  
   address: {type: String}, //from mobile app
   trim_code: {type: String},
   image: {type: mongoose.Schema.Types.ObjectId},
@@ -60,6 +61,7 @@ var treeSchema = new mongoose.Schema({
   gps_acq_date: { type: Date, index: true },
   created: { type: Date, default: Date.now, index: true },
   updated: { type: Date, default: Date.now, index: true },
+  
 });
 
 treeSchema.index({location: '2dsphere'});

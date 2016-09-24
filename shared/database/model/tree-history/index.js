@@ -8,16 +8,16 @@ const DELETED = '---deleted---';
 const utils = require('dsp_lib/utils');
 const mongoose = require('mongoose');
 
-historySchema.statics.recordTreeHistory = function(oldTree, newTree, user, queued) {
+historySchema.statics.recordTreeHistory = function(oldTree, newTree, user, queued, source) {
   var changes = diff(utils.toJSON(oldTree), utils.toJSON(newTree));
-  return TreeHistoryModel.create(changes, newTree, user, queued);
+  return TreeHistoryModel.create(changes, newTree, user, queued, source);
 };
 
-historySchema.statics.create = function(treeDiff, tree, user, queued) {
+historySchema.statics.create = function(treeDiff, tree, user, queued, source) {
   var eligibleChanges = _.filter(treeDiff, diff => IGNORE_FIELDS.indexOf(diff.path.join()) === -1);
   var treeHistory = {};
   eligibleChanges.map(diff => generateRecord(diff, tree, treeHistory));
-  var historyRecord = singleHistoryRecord(tree, user, treeHistory, queued);
+  var historyRecord = singleHistoryRecord(tree, user, treeHistory, queued, source);
   var historyRecordPg = historyRecord;
   historyRecordPg.object_id = historyRecord.object_id.toString();
 
@@ -25,6 +25,7 @@ historySchema.statics.create = function(treeDiff, tree, user, queued) {
     // console.log("HISTORY", treeHistory);
     return TreeHistoryPGModel.build(historyRecord).save()
     .then(() => TreeHistoryModel.collection.insertOne(historyRecord))
+    .then(() => historyRecord)
     .catch(err => {
       console.error('TreeHistoryError ' + err);
       return Promise.reject(err);
@@ -65,11 +66,22 @@ historySchema.statics.buildVersion = function(type, id, date) {
   });
 };
 
+//https://github.com/jquery/jquery/blob/master/src/core.js
+function isNumeric( obj ) {
+
+		return ( _.isNumber(obj) || _.isString(obj) ) &&
+
+		// parseFloat NaNs numeric-cast false positives ("")
+		// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
+		// subtraction forces infinities to NaN
+		!isNaN( obj - parseFloat( obj ) );
+}
 
 function generateRecord(treeDiff, tree, result) {
   // console.log(treeDiff);
   var columnName = treeDiff.path[0];
   var item;
+  // console.log("treeDiff", treeDiff, tree, result);
 
   // Map annotations is an edge case, since they come in nested object/array form
   if(columnName === 'map_annotations') {
@@ -78,21 +90,33 @@ function generateRecord(treeDiff, tree, result) {
     item = treeDiff.item || treeDiff;
 
     result[columnName][index] = item.rhs || DELETED;
+  } else if(columnName === "location") {    
+    if(!result.location) {
+      result.location = _.extend({}, tree.location);
+    }
+    var tmp = result;
+    for(var i = 0 ; i < treeDiff.path.length; i++) {
+      var field = treeDiff.path[i];
+      tmp[field] = tmp[field] || (isNumeric(tmp[field]) ? [] : {});
+      tmp = tmp[field];
+    }
   } else {
     item = treeDiff;
     result[treeDiff.path.join('.')] = item.rhs || DELETED;
   }
+
   // console.log("RESULT", result);
   return result;
 }
 
-function singleHistoryRecord(tree, user, json, timestamp) {
+function singleHistoryRecord(tree, user, json, timestamp, source) {
   return {
     action_value: json,
     object_type: 'Tree',
     object_id: mongoose.Types.ObjectId(tree._id),
     performer_id: user._id,
     performer_type: user.type || 'User',
+    source: source,
     request_created: Date.create(timestamp) || new Date(),
     created: new Date()
   };
