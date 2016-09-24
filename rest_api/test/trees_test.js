@@ -23,6 +23,7 @@ const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const RES_URL   = '/tree';
+var   path      = require('path');
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
@@ -74,7 +75,7 @@ var postData = treeData.postData;
 * @return {Void}
 */
 
-describe('=========== Tree resource Test =============', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials
 * get cuf from login

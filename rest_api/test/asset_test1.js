@@ -16,6 +16,7 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const ASSET_URL = '/asset';
 var   chai      = require('chai');
+var   path      = require('path');
 var   should    = chai.should();
 var   expect    = chai.expect;
 var   request   = require('supertest');
@@ -54,7 +55,7 @@ var newAssetData = require('./resources/sample_asset');
 * @param {String} description of describe test
 * @param {Function} Test the function Holds the main test
 */
-describe('=============== Asset Api Test Part 1 =================', function () {
+describe('===============' + __filename + '=================', function () {
 /**
 * Login using user credentials
 * get cuf from login

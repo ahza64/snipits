@@ -18,6 +18,7 @@ const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const PACK_URL  = '/workr/package';
 const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
+var   path      = require('path');
 var   config    = require('dsp_shared/config/config').get({log4js : false});
 var   chai      = require('chai');
 var   should    = chai.should();
@@ -74,7 +75,7 @@ var package_updated;
 * @return {Void}
 */
 
-describe('============ Package Api Test ===========', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials
 * get cuf from login
@@ -180,6 +181,7 @@ describe('============ Package Api Test ===========', function () {
 */
 
   it('should compare package lists with db lists',function () {
+
     console.log("Comparing package tree      array against database...");
     expect(apiTrees).to.deep.equal(userTrees);
     console.log("Comparing package workorder array against database...");

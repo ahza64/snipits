@@ -18,18 +18,21 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
+var   async     = require('async');
 var   config    = require('dsp_shared/config/config').get({log4js : false});
-//var config = require('dsp_shared_')
 var   chai      = require('chai');
 var   user      = require('./resources/user')
 var   should    = chai.should();
 var   expect    = chai.expect;
+var   assert    = chai.assert;
+var   path      = require('path');
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   treeData= require('./resources/sample_trees');
+var   treeData  = require('./resources/sample_trees');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
+var   Tree      = require('dsp_shared/database/model/tree');
 chai.use(require('chai-http'));
 
 /**
@@ -55,6 +58,7 @@ var workorderId;
 var newTreeId;
 var userWorkorderIds;
 var userTreeIds;
+
 var edittedTree = treeData.edittedTree;
 
 /**
@@ -71,7 +75,7 @@ Route: /api/v3/workorder/:woId/trees/:treeId
 * @return {Void}
 */
 
-describe('=============update_tree Test================', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials. get cuf from login
 
@@ -112,6 +116,7 @@ describe('=============update_tree Test================', function () {
 * @return {Void}
 */
   it('should add a tree to First workorder', function (done) {
+    this.timeout(3000);
     console.log('Adding to workorder :', workorderId);
     server
     .post('/workorder/' + workorderId + TREE_URL)
@@ -122,7 +127,6 @@ describe('=============update_tree Test================', function () {
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       newTreeId = text.data._id;
-      console.log(text.data);
       console.log("new Tree_id---------->>>>", newTreeId);
       done();
     });
@@ -181,18 +185,18 @@ describe('=============update_tree Test================', function () {
       console.log("Found tree :", targetTree._id);
       for (field in edittedTree) {
         console.log("Checking ", field);
-        console.log(edittedTree[field],"===", targetTree[field]);
+        console.log(edittedTree[field], "===" , targetTree[field]);
         expect(edittedTree[field]).to.deep.equal(targetTree[field]);
       }
       done();
     });
   });
 
-  it('should delete dat tree', function (done) {
+  it('should delete dat tree uhearme', function (done) {
     console.log('deleting tree ' + newTreeId, 'in workorder ' + workorderId);
     server
     .delete('/workorder/' + workorderId + TREE_URL + '/' + newTreeId)
-    .send({'status' : '0511231'})
+    .send(treeData.deletePatch)
     .expect(200)
     .end(function (error, response) {
       expect(error).to.be.null;
@@ -200,7 +204,7 @@ describe('=============update_tree Test================', function () {
     });
   });
 
-  it('should check package for successful delete ', function (done) {
+  it('should check package for successful delete edits', function (done) {
     server
     .get(PACK_URL)
     .expect(200)
@@ -208,9 +212,25 @@ describe('=============update_tree Test================', function () {
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       var packageTreeIds = _.pluck(text.data.trees, '_id');
+      var workorderTasks = _.flatten(_.pluck(text.data.workorders,'tasks'));
       console.log('Checking if tree deleted from package...');
       packageTreeIds.should.not.contain(newTreeId);
-      done();
+      workorderTasks.should.not.contain(newTreeId);
+      Tree.findOne({_id : newTreeId}, function (err, res) {
+        if(err)
+          console.error(err);
+        async.forEach(_.keys(treeData.deletePatch), function (field, callback) {
+          console.log("checking tree for field", field);
+          console.log((treeData.deletePatch[field]), (res[field]));
+          expect(res[field]).to.equal(treeData.deletePatch[field]);
+          callback();
+        }, function (err) {
+          if (err) {
+            console.error(err);
+          }
+          done();
+        });
+      })
     });
   });
 /**

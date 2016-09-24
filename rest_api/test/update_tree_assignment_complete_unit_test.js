@@ -21,7 +21,8 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
-var   user      = require('./resources/user')
+var   user      = require('./resources/user');
+var   path      = require('path');
 var   config    = require('dsp_shared/config/config').get({log4js : false});
 var   chai      = require('chai');
 var   should    = chai.should();
@@ -61,7 +62,7 @@ var randomTree1_id;
 var randomTree2_id;
 var workorderId;
 
-describe('======= Api v3 update tree assignment_complete Test ======= ', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials. get cuf from login
 
@@ -130,7 +131,7 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
     .end(function (error, response) {
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
-      console.log(text.data.workorders[randomWO].tasks, " should contain", randomTree1_id);
+      console.log("text.data.workorders[randomWO].tasks,", " should contain the tree id :", randomTree1_id);
       text.data.workorders[randomWO].tasks.should.contain(randomTree1_id);
       console.log("checking trees db for " + randomTree1_id);
       Tree.findOne({_id : randomTree1_id}, function (err, res) {
@@ -173,7 +174,7 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       console.log("Checking workorder " + workorderId + " for Tree " + randomTree1_id);
-      console.log((text.data.workorders[randomWO].tasks, "should NOT contain" , randomTree1_id));
+      console.log(("text.data.workorders[randomWO].tasks", "should NOT contain the tree id :" , randomTree1_id));
       text.data.workorders[randomWO].tasks.should.not.contain(randomTree1_id);
       done();
     });
@@ -204,9 +205,9 @@ describe('======= Api v3 update tree assignment_complete Test ======= ', functio
       var packageTreeIds = _.pluck(text.data.trees, '_id');
       console.log('Checking if tree removed from package and workorder : ' + workorderId);
 
-      console.log(packageTreeIds, "should NOT contain" , randomTree2_id);
+      console.log("packageTreeIds", "should NOT contain the tree id " , randomTree2_id);
       packageTreeIds.should.not.contain(randomTree2_id);
-      console.log(text.data.workorders[randomWO].tasks, "should NOT contain" , randomTree2_id);
+      console.log("text.data.workorders[randomWO].tasks", "should NOT contain the tree id " , randomTree2_id);
       text.data.workorders[randomWO].tasks.should.not.contain(randomTree2_id);
 
       console.log("checking trees db for " + randomTree2_id);
