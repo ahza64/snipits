@@ -37,9 +37,11 @@ var   Tree      = require('dsp_shared/database/model/tree');
 chai.use(require('chai-http'));
 
 /**
-* The (random) workorder of the user that
+* The (random) workorder # of the user that
   that we will be modifying
-* @var randomWO
+* @var {Number} randomWO
+* Its ID
+* @var {String} workorderId
 
 * A random tree to insert
 * @var {Object} randomTree1
