@@ -98,6 +98,7 @@ describe('===============' + path.basename(__filename) + '=================', fu
         res.should.not.be.null;
         if(err) {
           console.error(err);
+          done(err);
         } else {
           console.log("Found ", res.first + ' ' + res.last);
         }
@@ -154,7 +155,7 @@ describe('===============' + path.basename(__filename) + '=================', fu
 * Patch the tree we just made
 * @return {Void}
 */
-  it('should edit/patch dat tree', function (done) {
+  it('should edit/patch dat tree fam', function (done) {
     console.log('editting tree ' + newTreeId, 'in workorder ' + workorderId);
     server
     .patch('/workorder/' + workorderId + TREE_URL + '/' + newTreeId)

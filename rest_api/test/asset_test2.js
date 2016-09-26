@@ -1,17 +1,16 @@
 /**
 * @fileoverview tests the asset
-Login
-Add new tree.
-Check if new tree was added successfully.
-POST 3 assets with different asset_types. [image, tc_image, ntw_image].
-Check if all 3 fields in the tree is updated with the respective asset ID's.
-Logout
+  Login
+  Add new tree.
+  Check if new tree was added successfully.
+  POST 3 assets with different asset_types. [image, tc_image, ntw_image].
+  Check if all 3 fields in the tree is updated with the respective asset ID's.
+  Logout
 *
 * @author Hasnain Haider 9/20/16
 */
 
 /**
-
 
 * Base URL to the server
 * @var {String} BASE_URL
@@ -152,7 +151,6 @@ describe('===============' + path.basename(__filename) + '=================', fu
       }
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
-      console.log("text", text);
       newTreeId = text.data._id;
       console.log("new Tree _id ---------->>>>", newTreeId);
       sample_asset.ressourceId = newTreeId;
@@ -168,7 +166,6 @@ describe('===============' + path.basename(__filename) + '=================', fu
     it('should add all types of assets', function (done) {
       async.forEach(asset_types, function (asset_type, callback) {
         sample_asset.meta.imageType = asset_type;
-      //  setTimeout(function(){
         server
         .post(ASSET_URL)
         .send(sample_asset)
@@ -182,7 +179,6 @@ describe('===============' + path.basename(__filename) + '=================', fu
           asset_typeIds[asset_type] = text._id;
           callback();
         });
-//      }, 1000);
       },
       function (err) {
         if (err) {

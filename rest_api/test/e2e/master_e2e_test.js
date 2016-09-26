@@ -50,8 +50,6 @@ afterEach(function () {
 describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials
-* get cuf from login
-  Ifoundthebug
 * @param {Function} done
 * @return {Void}
 */

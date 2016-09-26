@@ -31,10 +31,6 @@ chai.use(require('chai-http'));
 /**
 * @global
 
-* The information of the user we login
-  as
-* @var {Object} user
-
 * a random tree to add asset(s)  to
 * @var {String} targetTreeId
 
@@ -55,10 +51,9 @@ var newAssetData = require('./resources/sample_asset');
 * @param {String} description of describe test
 * @param {Function} Test the function Holds the main test
 */
-describe('===============' + __filename + '=================', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials
-* get cuf from login
 
 * @param {Function} done
 * @return {Void}
@@ -100,14 +95,15 @@ describe('===============' + __filename + '=================', function () {
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       var randomNumber = Math.floor(Math.random() * 1000) % text.data.trees.length;
-      //console.log( "num", randomNumber,'LENgth', text.data.trees.length);
       targetTreeId = text.data.trees[randomNumber]._id;
       console.log("random tree to add asset to ---->>>>", targetTreeId);
       newAssetData.ressourceId = targetTreeId;
       done();
     });
   });
-
+/**
+* post a new asset to ASSET_URL
+*/
   it('should post new asset', function (done) {
     console.log("newAssetData", newAssetData);
     server

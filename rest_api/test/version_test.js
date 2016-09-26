@@ -28,7 +28,7 @@ chai.use(require('chai-http'));
 
 /**
 * @param  {String} description
-* @return {Void} yay
+* @return {Void}
 */
 
 describe('===============' + path.basename(__filename) + '=================', function () {
@@ -64,7 +64,6 @@ describe('===============' + path.basename(__filename) + '=================', fu
           .then(function (response) {
             var text = JSON.parse(response.text);
             var api_client = text.data[0];
-
             var count = 0;
             console.log("comparing" , client.name);
             for(var attr in mongo_client) {
