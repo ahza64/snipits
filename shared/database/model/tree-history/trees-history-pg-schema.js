@@ -9,6 +9,7 @@ const DEFINITION_OBJECT = {
   performer_id: { type: Sequelize.STRING },
   performer_type: { type: Sequelize.STRING },
   request_created: { type: Sequelize.DATE },
+  source: {type: Sequelize.STRING },
   created: { type: Sequelize.DATE, defaultValue: Sequelize.now }
 };
 
