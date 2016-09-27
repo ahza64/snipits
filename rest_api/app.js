@@ -43,14 +43,16 @@ app.use(requestId());
 
 //set accept header
 app.use(function *(next){
-  console.log('accept header:', this.request.header.accept);
-  if (this.request.url.endsWith('.jpeg') || this.request.url.endsWith('.jpg')) {
-    this.request.header.accept= "image/jpeg";
-    var sufix_len = this.request.url.endsWith('.jpeg') ? 5 : 4;
-    this.request.url = this.request.url.substring(0, this.request.url.length-sufix_len);
+  var url = this.request.url;
+  var header = this.request.header;
+  console.log('accept header:', header.accept);
+  if (url.endsWith('.jpeg') || url.endsWith('.jpg')) {
+    header.accept= "image/jpeg";
+    var sufix_len = url.endsWith('.jpeg') ? 5 : 4;
+    url = url.substring(0, url.length-sufix_len);
   }
-  if(this.request.header.accept === '*/*' || !this.request.header.accept) {
-    this.request.header.accept = "application/json";
+  if(header.accept === '*/*' || !header.accept) {
+    header.accept = "application/json";
   }
   yield next;
 });
