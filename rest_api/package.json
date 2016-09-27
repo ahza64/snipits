@@ -19,10 +19,13 @@
     "koa-cors": "0.0.16",
     "koa-logger": "^1.3.0",
     "koa-mount": "^1.3.0",
+    "koa-passport": "^1.3.0",
+    "koa-request-id": "^1.0.1",
     "koa-router": "^5.4.0",
     "koa-session": "^3.3.1",
     "log4js": "https://github.com/gabe0x02/log4js-node.git",
     "node-geocoder": "^3.15.0",
+    "passport-local": "^1.0.0",
     "sugar": "^1.4.1",
     "underscore": "^1.8.3"
   },
