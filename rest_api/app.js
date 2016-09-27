@@ -41,6 +41,20 @@ app.use(logger());
 app.use(compress());
 app.use(requestId());
 
+//set accept header
+app.use(function *(next){
+  console.log('accept header:', this.request.header.accept);
+  if (this.request.url.endsWith('.jpeg') || this.request.url.endsWith('.jpg')) {
+    this.request.header.accept= "image/jpeg";
+    var sufix_len = this.request.url.endsWith('.jpeg') ? 5 : 4;
+    this.request.url = this.request.url.substring(0, this.request.url.length-sufix_len);
+  }
+  if(this.request.header.accept === '*/*' || !this.request.header.accept) {
+    this.request.header.accept = "application/json";
+  }
+  yield next;
+});
+
 //envelope middleware
 app.use(function *(next){
   this.dsp_env = {
@@ -50,8 +64,7 @@ app.use(function *(next){
     method: this.request.method
   };
   yield next;
-  console.log(this.request);
-  if (this.request.url.split('/')[3] !== 'asset') {
+  if(this.request.header.accept === 'application/json') {
     this.body = {
       envelope: this.dsp_env,
       data: this.body
@@ -75,8 +88,12 @@ app.use(function*(next) {
     this.user = this.passport.user;
     yield next;
   } else {
-    this.dsp_env.msg = 'Not Authenticated.!!';
-    this.dsp_env.status = 400;
+    if(this.request.header.accept === 'application/json'){
+      this.dsp_env.msg = 'Not Authenticated.!!';
+      this.dsp_env.status = 400;
+    }
+    this.status = 400;
+    this.dsp_env.msg = 'Not Authenticated!!'
   }
 });
 

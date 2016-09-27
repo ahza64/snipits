@@ -57,6 +57,7 @@ app.use(passport.session());
 router.post('/login',
   passport.authenticate('local', {}),
   function *() {
+
     log.info("USER LOG IN", this.passport.user["email"], this.host, this.hostname, "https://"+this.host+"/login");
 
     this.status = 200;
@@ -67,7 +68,8 @@ router.post('/login',
 router.get('/logout',function (){
   this.session = null;
   this.logout();
-  this.body = "Successfully Logged Out";
+  this.dsp_env.msg = 'Successfully Logged Out!!!';
+  this.status = 200;
 });
 
 app.use(router.routes());
