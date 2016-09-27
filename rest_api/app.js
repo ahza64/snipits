@@ -16,6 +16,7 @@ var session = require('koa-session');
 var request_log = require('log4js').getLogger('request');
 require('dsp_shared/database/database')(config.meteor);
 require('dsp_shared/database/sequelize')(config.postgres);
+
 var whitelist = config.corsWhitelist;
 var login = require('./auth/auth');
 var bodyParser = require('koa-body-parser');

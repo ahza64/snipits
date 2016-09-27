@@ -10,6 +10,8 @@ var _ = require('underscore');
 
 var trees = {
   worked: require("./data/worked.json"),
+  worked2: require("./data/worked2.json"),
+  worked3: require("./data/worked3.json"),
 };
 
 
@@ -27,8 +29,9 @@ function createTest(tree_type, tree) {
   it("tree "+tree_type+" should match results", function(){
     
     
-    var WorkComplete = loadWorkComplete(tree);
-    // test_util.testResults(tree.results, "tree", tree_type, treeRecord.record);
+    var workComplete = loadWorkComplete(tree);
+    // console.log(workComplete);
+    test_util.testResults(tree.results, "tree", tree_type, workComplete.work_complete);
   });
 }
 
@@ -53,12 +56,12 @@ function loadWorkComplete(tree) {
   loc.addTree(record);
   var packet = new WorkPacket();
   packet.addLocation(loc);
-  console.log(packet.toXML());
+  // console.log(packet.toXML());
   
   var work_complete = new WorkComplete(tree_data, trimmer);
-  console.log(work_complete.toXML());
+  // console.log(work_complete.toXML());
   
-  
+  return work_complete;
 }
 
 module.exports = {

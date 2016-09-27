@@ -1,3 +1,5 @@
+var geo = require('dsp_lib/gis/geo');
+var _ = require("underscore");
 var mongoose = require('mongoose');
 var connection = require('dsp_database/connections')('meteor');
 const autoIncrement = require('mongoose-auto-increment');
@@ -35,7 +37,8 @@ var treeSchema = new mongoose.Schema({
   pi_user_id: { type: String, index: true },
   tc_start_time: { type: Date, index: true },
   tc_user_id: { type: String, index: true },
-
+  tc_overtime: { type: String, default: 'standard', enum: ['standard', 'overtime', 'double', 'time/material', 'non-billable'] },
+  
   address: {type: String}, //from mobile app
   trim_code: {type: String},
   image: {type: mongoose.Schema.Types.ObjectId},
@@ -58,6 +61,7 @@ var treeSchema = new mongoose.Schema({
   gps_acq_date: { type: Date, index: true },
   created: { type: Date, default: Date.now, index: true },
   updated: { type: Date, default: Date.now, index: true },
+  
 });
 
 treeSchema.index({location: '2dsphere'});
@@ -86,6 +90,30 @@ Tree.queryStatus = function(statuses, not) {
   var regEx = "^["+not+status_char+"]";
   // regEx = new RegExp(regEx);
   return {status: {$regex: regEx}};
+};
+
+Tree.findNear = function*(location, distance, unit, query, limit) {
+  unit = unit || 'radian';
+  limit = limit || 500;
+  if(Array.isArray(location)) {
+    location = {
+      type: "Point",
+      coordinates: location
+    };
+  } else if(location.location) {
+    location = location.location;
+  }
+
+  // log.debug("findNear INPUT", location, distance, unit, query, limit);
+  distance = geo.toRadians(distance, unit);
+  distance = geo.fromRadians(distance, 'meter');
+  var results = yield Tree.geoNear(location, { maxDistance : distance, spherical : true, limit: limit, query: query });
+  // log.debug("WHF FIND NEAR>>>>>>>>>>", results);
+  _.each(results, function(result){
+    result.dis = geo.toRadians(result.dis, 'meter');
+    result.dis = geo.fromRadians(result.dis, unit);
+  });
+  return results;
 };
 
 module.exports = Tree;

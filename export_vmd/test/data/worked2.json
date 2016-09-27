@@ -19,11 +19,10 @@
         "map_annotations" : [],
         "type" : "tree",
         "span_name" : "025/279-025/280",
-        "tc_complete_time" : "2016-05-26T22:52:31.879Z",
+        "tc_complete_time" : "2016-09-26T22:52:31.879Z",
         "pi_complete_time" : "2016-05-26T22:52:31.879Z",
         "division" : "Sacramento",
         "pge_pmd_num" : "134330",
-        "tc_overtime": "overtime",
         "location" : {
             "type" : "Point",
             "coordinates" : [ 
@@ -151,8 +150,8 @@
         }
     }, 
     "results": {
-      "sBillingCode": "XX",
-      "iBillingRate": 1
+      "sBillingCode": "R2",
+      "iBillingRate": 0
     }
 
 }

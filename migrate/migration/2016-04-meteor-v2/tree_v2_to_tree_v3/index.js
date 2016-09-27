@@ -119,7 +119,7 @@ function calculateStatus(tree){
 
 
 function getTreeStatus(mobileTree) {
-  console.log("getTreeStatus", mobileTree);
+  // console.log("getTreeStatus", mobileTree);
   /* jshint maxcomplexity:15 */
   if(mobileTree.status === 'newTree') { 
     mobileTree.status = "ready";

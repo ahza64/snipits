@@ -23,7 +23,7 @@
         "pi_complete_time" : "2016-05-26T22:52:31.879Z",
         "division" : "Sacramento",
         "pge_pmd_num" : "134330",
-        "tc_overtime": "overtime",
+        "tc_overtime": "standard",
         "location" : {
             "type" : "Point",
             "coordinates" : [ 
@@ -131,7 +131,7 @@
             "cufs" : [],
             "nerc" : false,
             "__v" : 1,
-            "vmd_circuit_num": "TR00806002"
+            "vmd_circuit_num": "TR00607001"
         }, 
         "image": {
             "_id" : "569eaaeb1cc8a3580ef91798",
@@ -152,7 +152,7 @@
     }, 
     "results": {
       "sBillingCode": "XX",
-      "iBillingRate": 1
+      "iBillingRate": 0
     }
 
 }

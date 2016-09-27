@@ -2,3 +2,4 @@
 #https://gist.github.com/dvessel/1478685
 excludeInFolderSearch = "{$excludeInFolderSearch,node_modules,javascript/lib,data-backup}"
 include = "{$include,.gitignore,.jshintrc}"
+excludeInFileChooser = "{$exclude,$excludeInFolderSearch,node_modules}"
