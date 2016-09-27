@@ -11,31 +11,35 @@
 
 * Contains sample data a user would use to
   update a tree(s)
-* @var {Object} otherTrees
+* @var {Object} treeData
 */
 const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
-var   config    = require('dsp_shared/config/config').get();
+var   async     = require('async');
+var   config    = require('dsp_shared/config/config').get({log4js : false});
 var   chai      = require('chai');
 var   user      = require('./resources/user')
 var   should    = chai.should();
 var   expect    = chai.expect;
+var   assert    = chai.assert;
+var   path      = require('path');
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   otherTrees= require('./resources/sample_trees');
+var   treeData  = require('./resources/sample_trees');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
+var   Tree      = require('dsp_shared/database/model/tree');
 chai.use(require('chai-http'));
 
 /**
 * @global
-* A random Number between 0-10000 that is assigned to the
-  tree
-* @var {Number} incId
+* A random Number to determine workorder the workorder to
+  edit
+* @var {Number} randomWO
 
 * The id of the workorder of the tree we are manipulating
 * @var {String} workorderId
@@ -49,12 +53,13 @@ chai.use(require('chai-http'));
 * List of all trees' ids in all user workorders
 * @var {Array} userTreeIds
 */
-var randomWO = Math.floor(Math.random()*100);
+var randomWO;
 var workorderId;
 var newTreeId;
 var userWorkorderIds;
 var userTreeIds;
-var edittedTree = otherTrees.edittedTree;
+
+var edittedTree = treeData.edittedTree;
 
 /**
 *route/update_tree.js Test
@@ -70,7 +75,7 @@ Route: /api/v3/workorder/:woId/trees/:treeId
 * @return {Void}
 */
 
-describe('Tree Api Test', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials. get cuf from login
 
@@ -82,9 +87,9 @@ describe('Tree Api Test', function () {
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
     .send(user)
+    .expect(200)
     .end(function (error, response) {
       expect(error).to.be.null;
-      response.should.have.status(200);
       var text = JSON.parse(response.text);
       console.log("searching for user with id : " + text.data._id );
 
@@ -93,13 +98,14 @@ describe('Tree Api Test', function () {
         res.should.not.be.null;
         if(err) {
           console.error(err);
+          done(err);
         } else {
           console.log("Found ", res.first + ' ' + res.last);
         }
         expect(res.workorder).to.not.be.empty;
         userWorkorderIds = _.pluck(res.workorder, '_id');
         userTreeIds = _.flatten(_.pluck(res.workorder, 'tasks'));
-        randomWO   %= userWorkorderIds.length;
+        randomWO    = Math.floor(Math.random() * userWorkorderIds.length);
         workorderId = userWorkorderIds[randomWO];
         done();
       });
@@ -111,17 +117,17 @@ describe('Tree Api Test', function () {
 * @return {Void}
 */
   it('should add a tree to First workorder', function (done) {
+    this.timeout(3000);
     console.log('Adding to workorder :', workorderId);
     server
     .post('/workorder/' + workorderId + TREE_URL)
     .set('content-type', 'application/json')
-    .send(otherTrees.newTree)
+    .send(treeData.newTree)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       newTreeId = text.data._id;
-      console.log(text.data);
       console.log("new Tree_id---------->>>>", newTreeId);
       done();
     });
@@ -136,8 +142,8 @@ describe('Tree Api Test', function () {
     server
     .get(PACK_URL)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       text.data.workorders[randomWO].tasks.should.contain(newTreeId);
@@ -149,14 +155,14 @@ describe('Tree Api Test', function () {
 * Patch the tree we just made
 * @return {Void}
 */
-  it('should edit/patch dat tree', function (done) {
+  it('should edit/patch dat tree fam', function (done) {
     console.log('editting tree ' + newTreeId, 'in workorder ' + workorderId);
     server
     .patch('/workorder/' + workorderId + TREE_URL + '/' + newTreeId)
     .set('content-type', 'application/json')
     .send(edittedTree)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       done();
     });
@@ -170,8 +176,8 @@ describe('Tree Api Test', function () {
     server
     .get(PACK_URL)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       var targetTree = _.find(text.data.trees, function (x) {
@@ -180,36 +186,52 @@ describe('Tree Api Test', function () {
       console.log("Found tree :", targetTree._id);
       for (field in edittedTree) {
         console.log("Checking ", field);
-        console.log(edittedTree[field],"===", targetTree[field]);
+        console.log(edittedTree[field], "===" , targetTree[field]);
         expect(edittedTree[field]).to.deep.equal(targetTree[field]);
       }
       done();
     });
   });
 
-  it('should delete dat tree', function (done) {
+  it('should delete dat tree uhearme', function (done) {
     console.log('deleting tree ' + newTreeId, 'in workorder ' + workorderId);
     server
     .delete('/workorder/' + workorderId + TREE_URL + '/' + newTreeId)
-    .send({'status' : '0511231'})
+    .send(treeData.deletePatch)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       done();
     });
   });
 
-  it('should check package for successful delete ', function (done) {
+  it('should check package for successful delete edits', function (done) {
     server
     .get(PACK_URL)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       var packageTreeIds = _.pluck(text.data.trees, '_id');
+      var workorderTasks = _.flatten(_.pluck(text.data.workorders,'tasks'));
       console.log('Checking if tree deleted from package...');
       packageTreeIds.should.not.contain(newTreeId);
-      done();
+      workorderTasks.should.not.contain(newTreeId);
+      Tree.findOne({_id : newTreeId}, function (err, res) {
+        if(err)
+          console.error(err);
+        async.forEach(_.keys(treeData.deletePatch), function (field, callback) {
+          console.log("checking tree for field", field);
+          console.log((treeData.deletePatch[field]), (res[field]));
+          expect(res[field]).to.equal(treeData.deletePatch[field]);
+          callback();
+        }, function (err) {
+          if (err) {
+            console.error(err);
+          }
+          done();
+        });
+      })
     });
   });
 /**
@@ -219,10 +241,10 @@ describe('Tree Api Test', function () {
   it('should logout', function () {
     server
     .get(LOGOUT_URL)
-      .end(function (error, response) {
-        console.log("Attempting logout...");
-        expect(error).to.be.null;
-        response.should.have.status(200);
-      });
+    .expect(200)
+    .end(function (error, response) {
+      console.log("Attempting logout...");
+      expect(error).to.be.null;
+    });
   });
 });

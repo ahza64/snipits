@@ -9,7 +9,7 @@
 /**
 * Contains sample data a user would use to
   update a tree(s)
-* @var {Object} otherTrees
+* @var {Object} treeData
 
 * Base URL to the server
 * @var {String} BASE_URL
@@ -21,25 +21,27 @@ const LOGIN_URL = '/login';
 const LOGOUT_URL= '/logout';
 const PACK_URL  = '/workr/package';
 const TREE_URL  = '/tree';
-var   user      = require('./resources/user')
-var   config    = require('dsp_shared/config/config').get();
+var   user      = require('./resources/user');
+var   path      = require('path');
+var   config    = require('dsp_shared/config/config').get({log4js : false});
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
-var   assert    = chai.assert;
 var   request   = require('supertest');
 var   _         = require('underscore');
 var   server    = request.agent(BASE_URL);
-var   otherTrees= require('./resources/sample_trees');
+var   treeData= require('./resources/sample_trees');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
 chai.use(require('chai-http'));
 
 /**
-* The (random) workorder of the user that
+* The (random) workorder # of the user that
   that we will be modifying
-* @var randomWO
+* @var {Number} randomWO
+* Its ID
+* @var {String} workorderId
 
 * A random tree to insert
 * @var {Object} randomTree1
@@ -54,15 +56,15 @@ chai.use(require('chai-http'));
 
 */
 
-var randomWO = Math.floor(Math.random() * 100);
-var randomTree1 = otherTrees.randomTreeGen();
-var randomTree2 = otherTrees.randomTreeGen();
+var randomWO;
+var randomTree1 = treeData.randomTreeGen();
+var randomTree2 = treeData.randomTreeGen();
 randomTree2.assignment_complete = true;
 var randomTree1_id;
 var randomTree2_id;
 var workorderId;
 
-describe('Tree Api Test', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials. get cuf from login
 
@@ -75,9 +77,9 @@ describe('Tree Api Test', function () {
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
     .send(user)
+    .expect(200)
     .end(function (error, response) {
       expect(error).to.be.null;
-      response.should.have.status(200);
       var text = JSON.parse(response.text);
       console.log("searching for user with id : " + text.data._id );
 
@@ -90,7 +92,7 @@ describe('Tree Api Test', function () {
         }
         expect(res.workorder).to.not.be.empty;
         var userWorkorderIds = _.pluck(res.workorder, '_id');
-        randomWO   %= userWorkorderIds.length;
+        randomWO    = Math.floor(Math.random() * userWorkorderIds.length);
         workorderId = userWorkorderIds[randomWO];
         done();
       });
@@ -108,8 +110,8 @@ describe('Tree Api Test', function () {
     .post('/workorder/' + workorderId + TREE_URL)
     .set('content-type', 'application/json')
     .send(randomTree1)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       randomTree1_id = text.data._id;
@@ -127,11 +129,11 @@ describe('Tree Api Test', function () {
     server
     .get(PACK_URL)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
-      console.log(text.data.workorders[randomWO].tasks, " should contain", randomTree1_id);
+      console.log("text.data.workorders[randomWO].tasks,", " should contain the tree id :", randomTree1_id);
       text.data.workorders[randomWO].tasks.should.contain(randomTree1_id);
       console.log("checking trees db for " + randomTree1_id);
       Tree.findOne({_id : randomTree1_id}, function (err, res) {
@@ -153,9 +155,9 @@ describe('Tree Api Test', function () {
     server
     .patch('/workorder/' + workorderId + TREE_URL + '/' + randomTree1_id)
     .set('content-type', 'application/json')
-    .send(otherTrees.completePatch)
+    .send(treeData.completePatch)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       console.log("tree1 set to Completed");
       done();
@@ -169,12 +171,12 @@ describe('Tree Api Test', function () {
     server
     .get(PACK_URL)
     .set('content-type', 'application/json')
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       console.log("Checking workorder " + workorderId + " for Tree " + randomTree1_id);
-      console.log((text.data.workorders[randomWO].tasks, "should NOT contain" , randomTree1_id));
+      console.log(("text.data.workorders[randomWO].tasks", "should NOT contain the tree id :" , randomTree1_id));
       text.data.workorders[randomWO].tasks.should.not.contain(randomTree1_id);
       done();
     });
@@ -185,8 +187,8 @@ describe('Tree Api Test', function () {
     server
     .post('/workorder/' + workorderId + TREE_URL + '/' )
     .send(randomTree2)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       randomTree2_id = text.data._id;
@@ -198,16 +200,16 @@ describe('Tree Api Test', function () {
   it('should check package for tree 2', function (done) {
     server
     .get(PACK_URL)
+    .expect(200)
     .end(function (error, response) {
-      response.should.have.status(200);
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       var packageTreeIds = _.pluck(text.data.trees, '_id');
-      console.log('Checking if tree removed from package and WO...');
+      console.log('Checking if tree removed from package and workorder : ' + workorderId);
 
-      console.log(packageTreeIds, "should NOT contain" , randomTree2_id);
+      console.log("packageTreeIds", "should NOT contain the tree id " , randomTree2_id);
       packageTreeIds.should.not.contain(randomTree2_id);
-      console.log(text.data.workorders[randomWO].tasks, "should NOT contain" , randomTree2_id);
+      console.log("text.data.workorders[randomWO].tasks", "should NOT contain the tree id " , randomTree2_id);
       text.data.workorders[randomWO].tasks.should.not.contain(randomTree2_id);
 
       console.log("checking trees db for " + randomTree2_id);
@@ -228,11 +230,11 @@ describe('Tree Api Test', function () {
   it('should logout', function () {
     server
     .get(LOGOUT_URL)
-      .end(function (error, response) {
-        console.log("Attempting logout...");
-        expect(error).to.be.null;
-        response.should.have.status(200);
-      });
+    .expect(200)
+    .end(function (error, response) {
+      console.log("Attempting logout...");
+      expect(error).to.be.null;
+    });
   });
 
 });

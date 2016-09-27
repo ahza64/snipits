@@ -1,6 +1,6 @@
 /**
 * @fileoverview tests the GET /route/version.js
-* @author Hasnain Haider 
+* @author Hasnain Haider
 */
 
 /**
@@ -13,7 +13,8 @@
 const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const LOGIN_URL = '/login';
 const CLIENT_URL= '/client';
-var   config    = require('dsp_shared/config/config').get();
+var   path      = require('path');
+var   config    = require('dsp_shared/config/config').get({log4js : false});
 var   chai      = require('chai');
 var   should    = chai.should();
 var   expect    = chai.expect;
@@ -30,7 +31,7 @@ chai.use(require('chai-http'));
 * @return {Void}
 */
 
-describe('version test', function () {
+describe('===============' + path.basename(__filename) + '=================', function () {
 /**
 * Login using user credentials. get cuf from login
 
@@ -42,9 +43,9 @@ describe('version test', function () {
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
     .send(user)
+    .expect(200)
     .end(function (error, response) {
       expect(error).to.be.null;
-      response.should.have.status(200);
       done();
     });
   });
@@ -59,15 +60,15 @@ describe('version test', function () {
           var mongo_client = client;
           server
           .get(CLIENT_URL + query)
+          .expect(200)
           .then(function (response) {
-            response.should.have.status(200);
             var text = JSON.parse(response.text);
             var api_client = text.data[0];
-
             var count = 0;
+            console.log("comparing" , client.name);
             for(var attr in mongo_client) {
               console.log("comparing", attr);
-              console.log(mongo_client[attr],'===',api_client[attr]);
+              // console.log(mongo_client[attr],'===',api_client[attr]);
               expect(mongo_client[attr]).to.equal(api_client[attr]);
               if (++count === _.keys(client).length)
                 {done();}
