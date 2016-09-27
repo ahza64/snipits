@@ -45,13 +45,17 @@ module.exports = {
     },
     {
       label: 'Last Week Hrs Worked',
-      value: 'hrs',
-      default: '0'
+      default: '0',
+      value: function(row) {
+        return row.hrs.toFixed(2);
+      }
     },
     {
       label: 'Last Week Trees Worked',
-      value: 'units',
-      default: '0'
+      default: '0',
+      value: function(row) {
+        return row.units.toFixed(2);
+      }
     },
     {
       label: 'Not Ready',
