@@ -1,0 +1,65 @@
+{
+  "package": {
+    "exclude" : {
+      "tree": [
+        "__v",
+        "updated",
+        "created",
+        "county",
+        "gps_acq_date",
+        "map_annotations",
+        "type",
+        "qsi_id",
+        "gps_acq_date"
+      ],
+      "workorder" : [
+        "__v",
+        "workorder.pge_pmd_num",
+        "workorder.uniq_id",
+        "project",
+        "assigned_workorders",
+        "division_data",
+        "scheduled_workorders",
+        "scheduled_data",
+        "checksum"
+      ],
+      "mapfeature" : [
+        "type",
+        "source_id",
+        "location",
+        "created",
+        "updated",
+        "map_icon"
+      ]
+    }
+  },
+  "asset": {
+    "exclude" : ["_v"]
+  },
+  "auth": {
+    "exclude": [
+      "__v",
+      "workorder",
+      "project",
+      "assigned_workorders",
+      "division_data",
+      "scheduled_workorders",
+      "scheduled_data",
+      "checksum",
+      "data",
+      "vehicle"
+    ]
+  },
+  "update": {
+    "exclude": [
+      "__v",
+      "workorder.uniq_id",
+      "project",
+      "assigned_workorders",
+      "division_data",
+      "scheduled_workorders",
+      "scheduled_data",
+      "checksum"
+    ]
+  }
+}

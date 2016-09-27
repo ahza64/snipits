@@ -8,10 +8,11 @@ if (require.main === module) {
 const MIN_DISTANCE = 0.125; //in miles
 var koa = require('koa');
 var router = require('koa-router')();
-var Cuf = require('dsp_shared/database/model/cufs');
+var User = require('dsp_shared/database/model/cufs');
 var Tree = require('dsp_shared/database/model/tree');
 var MapFeature = require('dsp_shared/database/model/mapfeatures');
 var _ = require("underscore");
+var config = require('../routes_config').package.exclude;
 var app = koa();
 
 //Things to test
@@ -23,37 +24,52 @@ function* extractCircuitNamesFromWO(workorder) {
   });
   return yield _.uniq(circuitNamesInWO);
 }
+
 router.get('/workr/package', function*() {
 
   try{
+    var tree_exclude = {};
+    var user_exclude = {};
 
-    var cuf = this.req.user;
-    var workorders = cuf.workorder;
+    //fields to exclude from the workorders
+    _.each(config.workorder, field => {
+      user_exclude[field] = 0;
+    });
+
+    //fields to exclude from trees
+    _.each(config.tree, field => {
+      tree_exclude[field] = 0;
+    });
+
+    var userId = this.passport.user._id;
+    var user = yield User.findOne({_id: userId}).select(user_exclude);
+    var workorders = user.workorder;
     var map_features =[];
     var tree_ids = [];
+
     for (var i = 0; i < workorders.length; ++i) {
         var workorder = workorders[i];
         tree_ids = tree_ids.concat(workorder.tasks);
-        var features = yield MapFeature.findNear(workorder.location, MIN_DISTANCE, 'miles', { type: "alert" });
+        var features = yield MapFeature.findNear(workorder.location, MIN_DISTANCE, 'miles', { type: "alert" }, config.mapfeature);
         map_features = map_features.concat(features);
         workorder.circuit_names = yield extractCircuitNamesFromWO(workorder);
     }
 
     //optimizaton - make one db request for trees
-    var trees = yield Tree.find({_id: {$in: tree_ids}});
+    var trees = yield Tree.find({_id: {$in: tree_ids}}).select(tree_exclude);
     this.dsp_env.workorders = workorders.length;
     this.dsp_env.trees = trees.length;
     this.dsp_env.map_features = map_features.length;
 
     var userObject = {
-      _id: cuf._id,
-      first: cuf.first,
-      last: cuf.last,
-      work_type: cuf.work_type[0]
+      _id: user._id,
+      first: user.first,
+      last: user.last,
+      work_type: user.work_type[0]
     };
 
     //timestamp for last time the assignment changed
-    var lastUpdated = cuf.last_sent_at;
+    var lastUpdated = user.last_sent_at;
 
     this.body = {
       updated: lastUpdated,
@@ -66,7 +82,7 @@ router.get('/workr/package', function*() {
     console.log('Exception: ', e.message);
     this.dsp_env.msg = 'Error';
     this.dsp_env.error = e.message;
-    this.status = 500;
+    this.dsp_env.status = 500;
   }
 });
 

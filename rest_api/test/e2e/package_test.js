@@ -30,6 +30,7 @@ var   user      = require('../resources/user');
 require('dsp_shared/database/database')(config.meteor);
 var   Cuf       = require('dsp_shared/database/model/cufs');
 var   Tree      = require('dsp_shared/database/model/tree');
+var exclude_fields = require('../../routes_config').package.exclude;
 chai.use(require('chai-http'));
 
 /**
@@ -166,8 +167,26 @@ describe('===============' + path.basename(__filename) + '=================', fu
       expect(error).to.be.null;
       var text = JSON.parse(response.text);
       apiTrees = text.data.trees.map(x =>x._id).sort();
+
+      //unit test for checking excluded fields in trees
+      _.each(text.data.trees, tree => {
+        var temp = _.omit(JSON.parse(JSON.stringify(tree)), exclude_fields.tree);
+        if(Object.keys(temp).length !== Object.keys(tree).length){
+          expect(false).to.equal(true);
+        }
+      });
+      console.log('Excluded Fields are correctly excluded from trees');
       console.log("retrieved " + apiTrees.length + " tree ids from API");
       apiWorkorders = text.data.workorders.map(x => x._id).sort();
+
+      //unit test for checking excluded fields in workorders
+      _.each(text.data.workorders, wo => {
+        var temp = _.omit(JSON.parse(JSON.stringify(wo)), exclude_fields.tree);
+        if(Object.keys(temp).length !== Object.keys(wo).length){
+          expect(false).to.equal(true);
+        }
+      });
+      console.log('Excluded Fields are correctly excluded from workorders');
       console.log("retrieved " + apiWorkorders.length + " workorders from API");
       done();
     });
