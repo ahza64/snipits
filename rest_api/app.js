@@ -91,7 +91,6 @@ app.use(function*(next) {
     yield next;
   } else {
     if(this.request.header.accept === 'application/json'){
-      this.dsp_env.msg = 'Not Authenticated.!!';
       this.dsp_env.status = 400;
     }
     this.status = 400;
