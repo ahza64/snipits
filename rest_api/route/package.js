@@ -43,7 +43,14 @@ router.get('/workr/package', function*() {
 
     var userId = this.passport.user._id;
     var user = yield User.findOne({_id: userId}).select(user_exclude);
-    var workorders = user.workorder;
+    
+    //filter out workorders with no trees
+    var workorders = _.filter(user.workorder, wo => {
+      if(wo.tasks.length !== 0){
+        return wo;
+      }
+    });
+
     var map_features =[];
     var tree_ids = [];
 
