@@ -148,9 +148,7 @@ describe('===============' + path.basename(__filename) + '=================', fu
       //unit test for checking excluded fields in trees
       _.each(text.data.trees, tree => {
         var temp = _.omit(JSON.parse(JSON.stringify(tree)), exclude_fields.tree);
-        if(Object.keys(temp).length !== Object.keys(tree).length){
-          expect(false).to.equal(true);
-        }
+        expect(Object.keys(temp).length).to.equal(Object.keys(tree).length);
       });
       apiWorkorders = text.data.workorders.map(x => x._id).sort();
 
