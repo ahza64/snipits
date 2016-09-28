@@ -2,7 +2,7 @@
 logs
 *.log
 npm-debug.log*
-log.txt
+rest_api/test/logs/log.txt
 
 # Runtime data
 pids
