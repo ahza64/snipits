@@ -174,6 +174,7 @@ router.post('/workorder/:woId/tree', function *(){
     }
     yield TreeHistory.recordTreeHistory({}, result, user);
   } catch(e) {
+    console.log('EXCEPTION: ', e);
     if(e === 400) {
       console.error(e.message);
       this.dsp_env.msg = 'DUPLICATE TREE AT THIS LOCATION';

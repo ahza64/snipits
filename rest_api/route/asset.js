@@ -39,27 +39,12 @@ function *get_req(id, response) {
   }
 }
 
-/**
-* @param { String } id - user id
-*/
-
-router.get('/asset/:id.jpg', function*() {
-  yield get_req(this.params.id, this);
-
-  if(this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
-    this.body = new Buffer(this.body.data.substring("data:image/jpeg;base64".length), "base64");
-    this.type = "image/jpeg";
+function getJPEG(data) {
+  if(data && data.startsWith("data:image/jpeg;base64,")) {
+    return new Buffer(data.substring("data:image/jpeg;base64".length), "base64");
   }
-});
-
-router.get('/asset/:id.jpeg', function*() {
-  yield get_req(this.params.id, this);
-
-  if(this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
-    this.body = new Buffer(this.body.data.substring("data:image/jpeg;base64".length), "base64");
-    this.type = "image/jpeg";
-  }
-});
+  return null;
+}
 
 //Add if(read_only)
 router.post('/asset', function*(next) {
@@ -92,12 +77,10 @@ router.post('/asset', function*(next) {
 router.get('/asset/:id', function*() {
   try {
     yield get_req(this.params.id, this);
-
-    if(this.body.data && this.body.data.startsWith("data:image/jpeg;base64,")) {
-      var imgStr = this.body.data.substring("data:image/jpeg;base64".length);
-      var buf = new Buffer(imgStr, 'base64');
+    console.log("BASE ROUTE", this.request.header, this.request.header.accept, this.request.header.accept === 'image/jpeg');
+    if(this.request.header.accept === 'image/jpeg') {
+      this.body = getJPEG(this.body.data);
       this.type = "image/jpeg";
-      this.body = buf;
     }
   } catch(e) {
     console.log('Exception: ', e.message);
