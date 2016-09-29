@@ -1,22 +1,15 @@
-/**
-* @fileoverview tests the GET /route/version.js
-* @author Hasnain Haider
-*/
+/* globals describe, it */
 
 /**
-* Base URL to the server
-* @var {String} BASE_URL
-* @const
-* @defaultvalue http://localhost:3000/api/v3
+ * @fileoverview tests the GET /route/version.js
+ */
 
-*/
 const BASE_URL  = process.env.BASE_URL  || 'http://localhost:3000/api/v3';
 const LOGIN_URL = '/login';
 const CLIENT_URL= '/client';
 var   path      = require('path');
 var   config    = require('dsp_shared/config/config').get({log4js : false});
 var   chai      = require('chai');
-var   should    = chai.should();
 var   expect    = chai.expect;
 var   user      = require('./resources/user');
 var   request   = require('supertest');
@@ -27,34 +20,32 @@ require('dsp_shared/database/database')(config.meteor);
 chai.use(require('chai-http'));
 
 /**
-* @param  {String} description
-* @return {Void}
-*/
-
+ * @param  {String} description
+ * @return {Void}
+ */
 describe('===============' + path.basename(__filename) + '=================', function () {
-/**
-* Login using user credentials. get cuf from login
-
-* @param {Function} done
-* @return {Void}
-*/
+  /**
+   * Login using user credentials. get cuf from login
+   * 
+   * @param {Function} done
+   * @return {Void}
+   */
   it('should login', function (done) {
     server
     .post(LOGIN_URL)
     .set('content-type', 'application/json')
     .send(user)
     .expect(200)
-    .end(function (error, response) {
+    .end(function (error) {
       expect(error).to.be.null;
       done();
     });
   });
 
-  it('should test all mongo_clients', function () {
-
+  it('should test all mongo clients', function () {
     _.each(mongo_clients, function (client) {
-      describe('Comparing client object', function () {
-        it('should compare each object', function (done) {
+      describe('Comparing mongo client objects', function () {
+        it('should compare each mongo client object', function (done) {
           var query = '/?name=' + client.name;
           console.log(CLIENT_URL + query);
           var mongo_client = client;
@@ -64,19 +55,15 @@ describe('===============' + path.basename(__filename) + '=================', fu
           .then(function (response) {
             var text = JSON.parse(response.text);
             var api_client = text.data[0];
-            var count = 0;
-            console.log("comparing" , client.name);
             for(var attr in mongo_client) {
-              console.log("comparing", attr);
-              // console.log(mongo_client[attr],'===',api_client[attr]);
-              expect(mongo_client[attr]).to.equal(api_client[attr]);
-              if (++count === _.keys(client).length)
-                {done();}
+              if (mongo_client.hasOwnProperty(attr)) {
+                expect(mongo_client[attr]).to.equal(api_client[attr]);
+              }
             }
           });
-        });//nested-it end
-      });//nested-describe end
-    });  //each end
-
-  });    // it end
-});      //describe end
+          done();
+        });
+      });
+    });
+  });
+});
