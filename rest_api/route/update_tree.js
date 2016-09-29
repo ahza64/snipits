@@ -39,7 +39,7 @@ function *addMissingFields(treeObj, woId, user) {
   treeObj.span_name = workOrder.span_name || pmd.span_name;
   treeObj.division = workOrder.division || pmd.division;
   treeObj.region = workOrder.region || pmd.region;
-  treeObj.circuit_name = workOrder.circuit_name || tree.circuit_name;
+  treeObj.circuit_name = workOrder.circuit_names[0] || tree.circuit_name;
   return treeObj;
 }
 
