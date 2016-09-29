@@ -55,7 +55,9 @@ router.get('/workr/package', function*() {
         tree_ids = tree_ids.concat(workorder.tasks);
         var features = yield MapFeature.findNear(workorder.location, MIN_DISTANCE, 'miles', { type: "alert" }, config.mapfeature);
         map_features = map_features.concat(features);
-        workorder.circuit_names = yield extractCircuitNamesFromWO(workorder);
+        if(!workorder.circuit_names){
+          workorder.circuit_names = yield extractCircuitNamesFromWO(workorder);
+        }
     }
 
     //optimizaton - make one db request for trees
