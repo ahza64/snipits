@@ -49,7 +49,7 @@ app.use(function *(next){
   if (url.endsWith('.jpeg') || url.endsWith('.jpg')) {
     header.accept= "image/jpeg";
     var sufix_len = url.endsWith('.jpeg') ? 5 : 4;
-    url = url.substring(0, url.length-sufix_len);
+    this.request.url = url.substring(0, url.length-sufix_len);
   }
   if(header.accept === '*/*' || !header.accept) {
     header.accept = "application/json";
