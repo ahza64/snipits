@@ -165,6 +165,9 @@ router.post('/workorder/:woId/tree', function *(){
     //get address from google reverse geocode
     treeObj = yield setAddress(treeObj);
 
+    //remove temporary inc_id before adding new tree
+    delete treeObj.inc_id;
+
     //if new tree is marked as done
     result = yield addNewTree(treeObj, woId, user);
     this.body = result;
