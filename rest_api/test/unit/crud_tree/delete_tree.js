@@ -2,8 +2,9 @@
 
 /**
  * @fileOverview Unit test for:
- * 1. Update the trim code of a tree
- * 2. Check in the db
+ * 1. Delete a tree
+ * 2. Check cufs collection in the db
+ * 3. Check trees collection in the db
  */
 
 // Module
@@ -20,26 +21,23 @@ const Tree = require('dsp_shared/database/model/tree');
 // Data
 const user = require('../data/user').user;
 const oldTree = require('../data/old_tree');
-const newTrimCode = 'NEW_TRIM';
+const treeStatus = require('../data/tree_status');
 
 // Jar
 var cookie;
 
 // Test Block
-describe('Update a tree', function() {
+describe('Delete a tree', function() {
 
   before(function(done) {
     User.create(user)
     .then(function() {
       console.log('user created');
 
-      Tree.create(oldTree.notComplete)
+      Tree.create(oldTree)
       .then(function() {
-        Tree.create(oldTree.complete)
-        .then(function() {
-          console.log('tree created');
-          done();
-        });
+        console.log('tree created');
+        done();
       });
     });
   });
@@ -64,61 +62,33 @@ describe('Update a tree', function() {
     });
   });
 
-  it('Should update a tree', function(done) {
+  it('Should delete a tree', function(done) {
     User.findOne({ _id: user._id }, function(err, res) {
       expect(err).to.equal(null);
       expect(res).to.be.an('object');
 
       var woId = res.workorder[0]._id;
-      var treeId = oldTree.notComplete._id;
-      var updatedTree = oldTree.notComplete;
-      updatedTree.trim_code = newTrimCode;
+      var treeId = oldTree._id;
+      oldTree.status = treeStatus.deleted;
+      var deletedTree = oldTree;
 
       agent
-      .patch('/api/test/workorder/' + woId + '/tree/' + treeId)
-      .send(updatedTree)
+      .del('/api/test/workorder/' + woId + '/tree/' + treeId)
+      .send(deletedTree)
       .set('Cookie', cookie)
       .end(function (err, res) {
         expect(err).to.equal(null);
         expect(res.body.data).to.be.an('object');
         
-        Tree.findOne({ _id: updatedTree._id }, function(err, res) {
+        Tree.findOne({ _id: deletedTree._id }, function(err, res) {
           expect(err).to.equal(null);
           expect(res).to.be.an('object');
-          expect(res.trim_code).to.equal(newTrimCode);
-          done();
-        });
-      });
-    });
-  });
-
-  it('Should update a complete tree', function(done) {
-    User.findOne({ _id: user._id }, function(err, res) {
-      expect(err).to.equal(null);
-      expect(res).to.be.an('object');
-
-      var woId = res.workorder[0]._id;
-      var treeId = oldTree.complete._id;
-      var updatedTree = oldTree.complete;
-      updatedTree.trim_code = newTrimCode;
-
-      agent
-      .patch('/api/test/workorder/' + woId + '/tree/' + treeId)
-      .send(updatedTree)
-      .set('Cookie', cookie)
-      .end(function (err, res) {
-        expect(err).to.equal(null);
-        expect(res.body).to.be.an('object');
-        
-        User.findOne({ _id: user._id }, function(err, res) {
-          expect(err).to.equal(null);
-          expect(res).to.be.an('object');
-          expect(res.workorder[0].tasks).to.not.include(updatedTree._id);
+          expect(res.status).to.equal(deletedTree.status);
           
-          Tree.findOne({ _id: updatedTree._id }, function(err, res) {
+          User.findOne({ _id: user._id }, function(err, res) {
             expect(err).to.equal(null);
             expect(res).to.be.an('object');
-            expect(res.trim_code).to.equal(newTrimCode);
+            expect(res.body.data.workorder[0].tasks).to.not.include(deletedTree._id);
             done();
           });
         });

@@ -1,4 +1,4 @@
-/* globals describe, it, before */
+/* globals describe, it, before, after */
 
 /**
  * @fileOverview Unit test for:
@@ -16,17 +16,18 @@ var agent = request(server);
 // Collection
 const User = require('dsp_shared/database/model/cufs');
 const Project = require('dsp_shared/database/model/pmd');
+const Tree = require('dsp_shared/database/model/tree');
 
 // Data
-const user = require('../data/user');
+const user = require('../data/user').user;
 const newTree = require('../data/new_tree');
 const project = require('../data/project');
 
-// Global Jar
+// Jar
 var cookie;
 
 // Test Block
-describe('Add/Update/Delete a tree', function() {
+describe('Add a new tree', function() {
 
   before(function(done) {
     User.create(user)
@@ -41,6 +42,11 @@ describe('Add/Update/Delete a tree', function() {
     });
   });
 
+  after(function(done) {
+    require('../database/dropDatabase')();
+    done();
+  });
+
   it('Should log in', function(done) {
     agent
     .post('/api/test/login')
@@ -48,6 +54,7 @@ describe('Add/Update/Delete a tree', function() {
     .end(function (err, res) {
       expect(err).to.equal(null);
       expect(res.body.data).to.be.an('object');
+      expect(res.body.data._id).to.equal(user._id);
       cookie = res.header['set-cookie'].map(function(r) {
         return r.replace('; path=/; httponly', '');
       }).join('; ');
@@ -63,21 +70,76 @@ describe('Add/Update/Delete a tree', function() {
       var woId = res.workorder[0]._id;
       agent
       .post('/api/test/workorder/' + woId + '/tree')
-      .send(newTree)
+      .send(newTree.notComplete)
       .set('Cookie', cookie)
       .end(function (err, res) {
+        expect(err).to.equal(null);
+        expect(res.body.data).to.be.an('object');
+        
+        var newTreeId = res.body.data._id;
+        User.findOne({ _id: user._id }, function(err, res) {
           expect(err).to.equal(null);
-          expect(res.body.data).to.be.an('object');
-          
-          var newTreeId = res.body.data._id;
-          User.findOne({ _id: user._id }, function(err, res) {
+          expect(res).to.be.an('object');
+          expect(res.workorder[0].tasks).to.include(newTreeId);
+
+          Tree.findOne({ _id: newTreeId }, function(err, res) {
             expect(err).to.equal(null);
             expect(res).to.be.an('object');
-            expect(res.workorder[0].tasks).to.include(newTreeId);
+            expect(res._id.toString()).to.equal(newTreeId);
             done();
           });
         });
-      }
-    );
+      });
+    });
+  });
+
+  it('Should not add a tree at the same location', function(done) {
+    User.findOne({ _id: user._id }, function(err, res) {
+      expect(err).to.equal(null);
+      expect(res).to.be.an('object');
+
+      var woId = res.workorder[0]._id;
+      agent
+      .post('/api/test/workorder/' + woId + '/tree')
+      .send(newTree.notComplete)
+      .set('Cookie', cookie)
+      .end(function (err, res) {
+        expect(err).to.equal(null);
+        expect(res.body.envelope).to.be.an('object');
+        expect(res.body.envelope.status).to.equal(400);
+        done();
+      });
+    });
+  });
+
+  it('Should add a new complete tree', function(done) {
+    User.findOne({ _id: user._id }, function(err, res) {
+      expect(err).to.equal(null);
+      expect(res).to.be.an('object');
+
+      var woId = res.workorder[0]._id;
+      agent
+      .post('/api/test/workorder/' + woId + '/tree')
+      .send(newTree.complete)
+      .set('Cookie', cookie)
+      .end(function (err, res) {
+        expect(err).to.equal(null);
+        expect(res.body.data).to.be.an('object');
+        
+        var newTreeId = res.body.data._id;
+        User.findOne({ _id: user._id }, function(err, res) {
+          expect(err).to.equal(null);
+          expect(res).to.be.an('object');
+          expect(res.workorder[0].tasks).to.not.include(newTreeId);
+          
+          Tree.findOne({ _id: newTreeId }, function(err, res) {
+            expect(err).to.equal(null);
+            expect(res).to.be.an('object');
+            expect(res._id.toString()).to.equal(newTreeId);
+            done();
+          });
+        });
+      });
+    });
   });
 });
