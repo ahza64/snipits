@@ -6,7 +6,6 @@ const bodyParser = require('koa-body-parser');
 const requestId = require('koa-request-id');
 const session = require('koa-session');
 const mount = require('koa-mount');
-//const isPromise = require('is-promise');
 
 // Dispatchr Module
 const testConfig = require('./config');

@@ -3,8 +3,7 @@
 /**
  * @fileOverview Unit test for:
  * 1. Add a new tree
- * 2. Update the new tree
- * 3. Delete the new tree
+ * 2. Check in the db
  */
 
 // Module
@@ -30,11 +29,13 @@ var cookie;
 describe('Add/Update/Delete a tree', function() {
 
   before(function(done) {
-    User.create(user, function() {
-      console.log('test user created');
+    User.create(user)
+    .then(function() {
+      console.log('user created');
 
-      Project.create(project, function() {
-        console.log('test project created');
+      Project.create(project)
+      .then(function() {
+        console.log('project created');
         done();
       });
     });
@@ -55,7 +56,10 @@ describe('Add/Update/Delete a tree', function() {
   });
 
   it('Should add a new tree', function(done) {
-    User.findOne({ workorder: { $gt: [] } }, function(err, res) {
+    User.findOne({ _id: user._id }, function(err, res) {
+      expect(err).to.equal(null);
+      expect(res).to.be.an('object');
+
       var woId = res.workorder[0]._id;
       agent
       .post('/api/test/workorder/' + woId + '/tree')
@@ -64,7 +68,14 @@ describe('Add/Update/Delete a tree', function() {
       .end(function (err, res) {
           expect(err).to.equal(null);
           expect(res.body.data).to.be.an('object');
-          done();
+          
+          var newTreeId = res.body.data._id;
+          User.findOne({ _id: user._id }, function(err, res) {
+            expect(err).to.equal(null);
+            expect(res).to.be.an('object');
+            expect(res.workorder[0].tasks).to.include(newTreeId);
+            done();
+          });
         });
       }
     );
