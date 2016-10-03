@@ -10,6 +10,7 @@ const mount = require('koa-mount');
 // Dispatchr Module
 const testConfig = require('./config');
 const config = require('dsp_shared/config/config').get({log4js : false});
+const middleware = require('../../middleware');
 config.meteor.mongo_db_name = 'dispatcher_unit_test';
 
 // Connect to Database
@@ -22,10 +23,10 @@ app.use(bodyParser());
 app.use(requestId());
 app.keys = ['dispatchr_cookie::ius45jbipsdhip42oj59g'];
 app.use(session({ key: 'dispatchr:sess' }, app));
-app.use(require('./middleware').headerAccept);
-app.use(require('./middleware').envelope);
+app.use(middleware.headerAccept);
+app.use(middleware.envelope);
 app.use(mount('/api/test', require('../../auth/auth')));
-app.use(require('./middleware').auth);
+app.use(middleware.auth);
 
 // Test Router
 var routesFile = fs.readdirSync(testConfig.route_dir);
