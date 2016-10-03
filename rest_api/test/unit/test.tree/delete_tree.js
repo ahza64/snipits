@@ -20,8 +20,7 @@ const Tree = require('dsp_shared/database/model/tree');
 
 // Data
 const user = require('../data/user').user;
-const oldTree = require('../data/old_tree');
-const treeStatus = require('../data/tree_status');
+const oldTree = require('../data/old_tree').complete;
 
 // Jar
 var cookie;
@@ -69,8 +68,8 @@ describe('Delete a tree', function() {
 
       var woId = res.workorder[0]._id;
       var treeId = oldTree._id;
-      oldTree.status = treeStatus.deleted;
       var deletedTree = oldTree;
+      var deletedStatus = '6' + deletedTree.status.slice(1);
 
       agent
       .del('/api/test/workorder/' + woId + '/tree/' + treeId)
@@ -83,12 +82,12 @@ describe('Delete a tree', function() {
         Tree.findOne({ _id: deletedTree._id }, function(err, res) {
           expect(err).to.equal(null);
           expect(res).to.be.an('object');
-          expect(res.status).to.equal(deletedTree.status);
+          expect(res.status).to.equal(deletedStatus);
           
           User.findOne({ _id: user._id }, function(err, res) {
             expect(err).to.equal(null);
             expect(res).to.be.an('object');
-            expect(res.body.data.workorder[0].tasks).to.not.include(deletedTree._id);
+            expect(res.workorder[0].tasks).to.not.include(deletedTree._id);
             done();
           });
         });
