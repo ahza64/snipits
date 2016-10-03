@@ -30,7 +30,7 @@ var cookie;
 var assetId;
 
 // Test Block
-describe('Delete a tree', function() {
+describe('Post/Get an asset', function() {
 
   before(function(done) {
     User.create(user)
