@@ -23,7 +23,7 @@ var config = require('../routes_config').update;
  * @param  {String} character
  * @return {String}
  */
-String.prototype.replaceAt=function(index, character) {
+String.prototype.replaceAt = function(index, character) {
     return this.substr(0, index) + character + this.substr(index+character.length);
 };
 
@@ -252,7 +252,6 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
 router.delete('/workorder/:woId/tree/:treeId', function *(){
   var woId = this.params.woId;
   var treeId = this.params.treeId;
-  var treeUpdates = this.request.body;
   var result = null;
   var userId = this.req.user._id;
   var user_exclude = {};
@@ -268,7 +267,7 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
     var oldTreeStatus = tree.status;
     var newTreeStatus = {
       status: oldTreeStatus.replaceAt(0, '6')
-    }
+    };
     result = yield crud_opts.patch(treeId, newTreeStatus, this.header['content-type']);
     this.body = result;
     Cuf.update({_id: userId, 'workorder._id': woId}, {'$pull': {'workorder.$.tasks': treeId}}, function(err, data){
