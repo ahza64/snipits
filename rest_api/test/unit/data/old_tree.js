@@ -32,7 +32,7 @@ module.exports = {
     'map_annotations' : [],
     'type' : 'tree',
     '__v' : 0,
-    'assigned_user_id' : '564ae08e78b391d26af3ac46',
+    'assigned_user_id' : '57eeadb7895ac9c5dcdfa1d7',
     'inc_id' : 268704,
     'clearance' : 0,
     'pi_start_time' : new Date('2016-09-21T21:29:54.860Z'),
@@ -79,7 +79,7 @@ module.exports = {
     'map_annotations' : [],
     'type' : 'tree',
     '__v' : 0,
-    'assigned_user_id' : null,
+    'assigned_user_id' : '57eeadb7895ac9c5dcdfa1d7',
     'inc_id' : 268974,
     'clearance' : 0,
     'pi_start_time' : new Date('2016-09-28T14:23:48.704Z'),
@@ -91,5 +91,5 @@ module.exports = {
     'trim_code' : 'R2D',
     'tc_overtime' : 'standard',
     'pi_complete_time' : new Date('2016-09-28T14:23:52.843Z')
-}
+  }
 };

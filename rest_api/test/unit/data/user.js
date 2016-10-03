@@ -1,12 +1,4 @@
 module.exports = {
-  // The way to extract cookie
-  /*cookie = res.header['set-cookie'].map(function(r) {
-    return r.replace('; path=/; httponly', '');
-  }).join('; ');*/
-  cookie: 'dispatchr:sess=eyJwYXNzcG9ydCI6eyJ1c2VyIjoiNTdlZ' + 
-          'WFkYjc4OTVhYzljNWRjZGZhMWQ3In0sIl9leHBpcmUiOj' +
-          'E0NzU0NzAxOTE2ODQsIl9tYXhBZ2UiOjg2NDAwMDAwfQ==; ' + 
-          'dispatchr:sess.sig=DP8-Mp0AIv9YPLuB5EMdH66xSOg',
   user: {
     _id: '57eeadb7895ac9c5dcdfa1d7',
     vehicle: '',
@@ -43,6 +35,24 @@ module.exports = {
           '577e334ebbf5a3119891c12b',
           '577e3387bbf5a3119891c239'
         ]
+      },
+      {
+        '_id' : '713a9bc7b8aa370d04448425',
+        'uniq_id' : '134035010/076-010/07520',
+        'span_name' : '010/076-010/075',
+        'location' : {
+          'type' : 'Point',
+          'coordinates' : [ 
+            -122.13005017214, 
+            37.8676962714125
+          ]
+        },
+        'pge_pmd_num' : '134035',
+        'status' : 'assigned',
+        'priority' : 'routine',
+        'work_type' : 'tree_inspect',
+        'name' : '586223',
+        'tasks' : []
       }
     ],
     password: '$2a$10$blbQY8yKMd3c3SnPzPOBseJORPyjY/i61Wf2avdQHpknRlJ.AfnRu',
