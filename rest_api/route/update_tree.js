@@ -263,7 +263,7 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
 
   try {
     var user = yield User.findOne({_id: userId}).select(user_exclude);
-    var tree = yield Tree.findOne({_id:treeId});
+    var tree = yield crud_opts.read(treeId);
     var oldTreeStatus = tree.status;
     var newTreeStatus = {
       status: oldTreeStatus.replaceAt(0, '6')
