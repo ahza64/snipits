@@ -17,6 +17,17 @@ var TreeHistory = require('dsp_shared/database/model/tree-history');
 var config = require('../routes_config').update;
 
 /**
+ * String.prototype.replaceAt - Special function to replace character at specified index
+ *
+ * @param  {Number} index
+ * @param  {String} character
+ * @return {String}
+ */
+String.prototype.replaceAt=function(index, character) {
+    return this.substr(0, index) + character + this.substr(index+character.length);
+};
+
+/**
  * addMissingFields - add missing fields to a newly added tree
  *
  * @param  {Object} treeObj
@@ -254,8 +265,11 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
   try {
     var user = yield User.findOne({_id: userId}).select(user_exclude);
     var tree = yield Tree.findOne({_id:treeId});
-    result = yield crud_opts.patch(treeId, treeUpdates, this.header['content-type']);
-    yield TreeHistory.recordTreeHistory(tree, result, this.req.user);
+    var oldTreeStatus = tree.status;
+    var newTreeStatus = {
+      status: oldTreeStatus.replaceAt(0, '6')
+    }
+    result = yield crud_opts.patch(treeId, newTreeStatus, this.header['content-type']);
     this.body = result;
     Cuf.update({_id: userId, 'workorder._id': woId}, {'$pull': {'workorder.$.tasks': treeId}}, function(err, data){
       if(err) { console.log(err); }
