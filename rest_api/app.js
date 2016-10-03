@@ -9,70 +9,26 @@ var logger = require('koa-logger');
 var compress = require('koa-compress');
 var mount = require('koa-mount');
 var koa = require('koa');
-var cors = require('koa-cors');
 var resources = require('./resources.json');
 var requestId = require('koa-request-id');
 var session = require('koa-session');
-var request_log = require('log4js').getLogger('request');
 require('dsp_shared/database/database')(config.meteor);
 require('dsp_shared/database/sequelize')(config.postgres);
-
-var whitelist = config.corsWhitelist;
 var login = require('./auth/auth');
 var bodyParser = require('koa-body-parser');
-
-
 var app = koa();
 
-var corsOptions = {
-  origin: function(origin, callback){
-    var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
-    callback(null, originIsWhitelisted);
-  },
-	methods: ['GET', 'PUT', 'POST', 'PATCH'],
-	credentials: true
-};
-
-
 // middleware
-// app.use(cors(corsOptions));
 app.use(bodyParser());
 app.use(logger());
 app.use(compress());
 app.use(requestId());
 
 //set accept header
-app.use(function *(next){
-  var url = this.request.url;
-  var header = this.request.header;
-  console.log('accept header:', header.accept);
-  if (url.endsWith('.jpeg') || url.endsWith('.jpg')) {
-    header.accept= "image/jpeg";
-    var sufix_len = url.endsWith('.jpeg') ? 5 : 4;
-    this.request.url = url.substring(0, url.length-sufix_len);
-  }
-  if(header.accept === '*/*' || !header.accept) {
-    header.accept = "application/json";
-  }
-  yield next;
-});
+app.use(require('./middleware').headerAccept);
 
 //envelope middleware
-app.use(function *(next){
-  this.dsp_env = {
-    request_id: this.id,
-    request_url: this.request.url,
-    host: this.request.header.host,
-    method: this.request.method
-  };
-  yield next;
-  if(this.request.header.accept === 'application/json') {
-    this.body = {
-      envelope: this.dsp_env,
-      data: this.body
-    };
-  }
-});
+app.use(require('./middleware').envelope);
 
 // No authentication required for these routes
 app.use(mount('/api/v3', require('./route/version')));
@@ -85,38 +41,9 @@ app.use(session({ key: 'dispatchr:sess' }, app));
 app.use(mount('/api/v3', login));
 
 // Don't require login but include it
-app.use(function*(next) {
-  if(this.isAuthenticated()) {
-    this.user = this.passport.user;
-    yield next;
-  } else {
-    if(this.request.header.accept === 'application/json'){
-      this.dsp_env.status = 400;
-    }
-    this.status = 400;
-    this.dsp_env.msg = 'Not Authenticated!!'
-  }
-});
+app.use(require('./middleware').auth);
 
-app.use(function*(next){
-  var ip;
-  if(this.request.connection) {
-    ip = this.request.connection.remoteAddress;
-  }
-
-  var log_me = {
-    method: this.method,
-    host: this.request.host,
-    url: this.originalUrl,
-    body: this.request.body,
-    user: yield Promise.resolve(this.user),
-    user_ip: ip,
-    "user-agent": this.request.header['user-agent']
-  };
-  request_log.info(JSON.stringify(log_me));
-
-  yield next;
-});
+app.use(require('./middleware').requestLog);
 
 //mount each resource
 _.each(resources, function(resource){
