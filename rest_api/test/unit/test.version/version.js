@@ -9,6 +9,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
+const testConfig = require('../config');
 const server = require('../entry');
 var agent = request(server);
 
@@ -27,26 +28,26 @@ var cookie;
 describe('Get version', function() {
 
   before(function(done) {
+    console.log('===================== VERSION start =====================');
     User.create(user)
     .then(function() {
       console.log('user created');
-
-      Client.create(version)
-      .then(function() {
-        console.log('version created');
-        done();
-      });
+      return Client.create(version);
+    })
+    .then(function() {
+      console.log('version created');
+      done();
     });
   });
 
   after(function(done) {
-    require('../database/dropDatabase')();
-    done();
+    require('../database/dropDatabase')().then(() => { done(); });
+    console.log('===================== VERSION end =====================');
   });
 
   it('Should log in', function(done) {
     agent
-    .post('/api/test/login')
+    .post(testConfig.BASE_URL + '/login')
     .send({ email: user.uniq_id, password: user.phone_number })
     .end(function(err, res) {
       expect(err).to.equal(null);
@@ -62,7 +63,7 @@ describe('Get version', function() {
   it('Should get the version', function(done) {
     var clientName = 'pge';
     agent
-    .get('/api/test/client?name=' + clientName)
+    .get(testConfig.BASE_URL + '/client?name=' + clientName)
     .set('Cookie', cookie)
     .end(function(err, res) {
       expect(err).to.equal(null);

@@ -10,6 +10,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
+const testConfig = require('../config');
 const server = require('../entry');
 var agent = request(server);
 
@@ -30,26 +31,26 @@ var cookie;
 describe('Add a new tree', function() {
 
   before(function(done) {
+    console.log('===================== ADD NEW TREE start =====================');
     User.create(user)
     .then(function() {
       console.log('user created');
-
-      Project.create(project)
-      .then(function() {
-        console.log('project created');
-        done();
-      });
+      return Project.create(project);
+    })
+    .then(function() {
+      console.log('project created');
+      done();
     });
   });
 
   after(function(done) {
-    require('../database/dropDatabase')();
-    done();
+    require('../database/dropDatabase')().then(() => { done(); });
+    console.log('===================== ADD NEW TREE end =====================');
   });
 
   it('Should log in', function(done) {
     agent
-    .post('/api/test/login')
+    .post(testConfig.BASE_URL + '/login')
     .send({ email: user.uniq_id, password: user.phone_number })
     .end(function (err, res) {
       expect(err).to.equal(null);
@@ -69,13 +70,14 @@ describe('Add a new tree', function() {
 
       var woId = res.workorder[0]._id;
       agent
-      .post('/api/test/workorder/' + woId + '/tree')
+      .post(testConfig.BASE_URL + '/workorder/' + woId + '/tree')
       .send(newTree.notComplete)
       .set('Cookie', cookie)
       .end(function (err, res) {
         expect(err).to.equal(null);
         expect(res.body.data).to.be.an('object');
-        
+        console.log('------------------> ', err);
+        console.log('------------------> ', res.body);
         var newTreeId = res.body.data._id;
         User.findOne({ _id: user._id }, function(err, res) {
           expect(err).to.equal(null);
@@ -100,7 +102,7 @@ describe('Add a new tree', function() {
 
       var woId = res.workorder[0]._id;
       agent
-      .post('/api/test/workorder/' + woId + '/tree')
+      .post(testConfig.BASE_URL + '/workorder/' + woId + '/tree')
       .send(newTree.notComplete)
       .set('Cookie', cookie)
       .end(function (err, res) {
@@ -119,7 +121,7 @@ describe('Add a new tree', function() {
 
       var woId = res.workorder[0]._id;
       agent
-      .post('/api/test/workorder/' + woId + '/tree')
+      .post(testConfig.BASE_URL + '/workorder/' + woId + '/tree')
       .send(newTree.complete)
       .set('Cookie', cookie)
       .end(function (err, res) {

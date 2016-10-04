@@ -12,6 +12,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
+const testConfig = require('../config');
 const server = require('../entry');
 var agent = request(server);
 
@@ -33,26 +34,26 @@ var assetId;
 describe('Post/Get an asset', function() {
 
   before(function(done) {
+    console.log('===================== ASSET start =====================');
     User.create(user)
     .then(function() {
       console.log('user created');
-
-      Tree.create(oldTree)
-      .then(function() {
-        console.log('tree created');
-        done();
-      });
+      return Tree.create(oldTree);      
+    })
+    .then(function() {
+      console.log('tree created');
+      done();
     });
   });
 
   after(function(done) {
-    require('../database/dropDatabase')();
-    done();
+    require('../database/dropDatabase')().then(() => {done();});
+    console.log('===================== ASSET end =====================');
   });
 
   it('Should log in', function(done) {
     agent
-    .post('/api/test/login')
+    .post(testConfig.BASE_URL + '/login')
     .send({ email: user.uniq_id, password: user.phone_number })
     .end(function(err, res) {
       expect(err).to.equal(null);
@@ -67,7 +68,7 @@ describe('Post/Get an asset', function() {
 
   it('Should save a tree asset', function(done) {
     agent
-    .post('/api/test/asset')
+    .post(testConfig.BASE_URL + '/asset')
     .send(asset)
     .set('Cookie', cookie)
     .end(function(err, res) {
@@ -91,7 +92,7 @@ describe('Post/Get an asset', function() {
 
   it('Should get a tree asset with jpeg format', function(done) {
     agent
-    .get('/api/test/asset/' + assetId + '.jpeg')
+    .get(testConfig.BASE_URL + '/asset/' + assetId + '.jpeg')
     .set('Cookie', cookie)
     .end(function(err, res) {
       expect(err).to.equal(null);

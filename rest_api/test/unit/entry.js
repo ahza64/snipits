@@ -31,7 +31,7 @@ app.use(middleware.auth);
 // Test Router
 var routesFile = fs.readdirSync(testConfig.route_dir);
 routesFile.forEach(f => {
-  app.use(mount('/api/test', require(path.resolve(testConfig.route_dir, f))));
+  app.use(mount(testConfig.BASE_URL, require(path.resolve(testConfig.route_dir, f))));
 });
 
 // Export

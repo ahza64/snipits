@@ -10,6 +10,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
+const testConfig = require('../config');
 const server = require('../entry');
 var agent = request(server);
 
@@ -29,29 +30,29 @@ var cookie;
 describe('Update a tree', function() {
 
   before(function(done) {
+    console.log('===================== UPDATE TREE start =====================');
     User.create(user)
     .then(function() {
       console.log('user created');
-
-      Tree.create(oldTree.notComplete)
-      .then(function() {
-        Tree.create(oldTree.complete)
-        .then(function() {
-          console.log('tree created');
-          done();
-        });
-      });
+      return Tree.create(oldTree.notComplete);
+    })
+    .then(function() {
+      return Tree.create(oldTree.complete);
+    })
+    .then(function() {
+      console.log('tree created');
+      done();
     });
   });
 
   after(function(done) {
-    require('../database/dropDatabase')();
-    done();
+    require('../database/dropDatabase')().then(() => { done(); });
+    console.log('===================== UPDATE TREE end =====================');
   });
 
   it('Should log in', function(done) {
     agent
-    .post('/api/test/login')
+    .post(testConfig.BASE_URL + '/login')
     .send({ email: user.uniq_id, password: user.phone_number })
     .end(function (err, res) {
       expect(err).to.equal(null);
@@ -75,7 +76,7 @@ describe('Update a tree', function() {
       updatedTree.trim_code = newTrimCode;
 
       agent
-      .patch('/api/test/workorder/' + woId + '/tree/' + treeId)
+      .patch(testConfig.BASE_URL + '/workorder/' + woId + '/tree/' + treeId)
       .send(updatedTree)
       .set('Cookie', cookie)
       .end(function (err, res) {
@@ -103,7 +104,7 @@ describe('Update a tree', function() {
       updatedTree.trim_code = newTrimCode;
 
       agent
-      .patch('/api/test/workorder/' + woId + '/tree/' + treeId)
+      .patch(testConfig.BASE_URL + '/workorder/' + woId + '/tree/' + treeId)
       .send(updatedTree)
       .set('Cookie', cookie)
       .end(function (err, res) {

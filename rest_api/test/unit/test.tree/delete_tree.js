@@ -11,6 +11,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
+const testConfig = require('../config');
 const server = require('../entry');
 var agent = request(server);
 
@@ -29,26 +30,26 @@ var cookie;
 describe('Delete a tree', function() {
 
   before(function(done) {
+    console.log('===================== DELETE TREE start =====================');
     User.create(user)
     .then(function() {
       console.log('user created');
-
-      Tree.create(oldTree)
-      .then(function() {
-        console.log('tree created');
-        done();
-      });
+      return Tree.create(oldTree);
+    })
+    .then(function() {
+      console.log('tree created');
+      done();
     });
   });
 
   after(function(done) {
-    require('../database/dropDatabase')();
-    done();
+    require('../database/dropDatabase')().then(() => { done(); });
+    console.log('===================== DELETE TREE end =====================');
   });
 
   it('Should log in', function(done) {
     agent
-    .post('/api/test/login')
+    .post(testConfig.BASE_URL + '/login')
     .send({ email: user.uniq_id, password: user.phone_number })
     .end(function (err, res) {
       expect(err).to.equal(null);
@@ -72,7 +73,7 @@ describe('Delete a tree', function() {
       var deletedStatus = '6' + deletedTree.status.slice(1);
 
       agent
-      .del('/api/test/workorder/' + woId + '/tree/' + treeId)
+      .del(testConfig.BASE_URL + '/workorder/' + woId + '/tree/' + treeId)
       .send(deletedTree)
       .set('Cookie', cookie)
       .end(function (err, res) {

@@ -12,6 +12,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
+const testConfig = require('../config');
 const server = require('../entry');
 var agent = request(server);
 
@@ -25,9 +26,10 @@ const user = require('../data/user').user;
 var cookie;
 
 // Test Block
-describe('Add a new tree', function() {
+describe('Get package', function() {
 
   before(function(done) {
+    console.log('===================== PACKAGE start =====================');
     User.create(user)
     .then(function() {
       console.log('user created');
@@ -36,13 +38,13 @@ describe('Add a new tree', function() {
   });
 
   after(function(done) {
-    require('../database/dropDatabase')();
-    done();
+    require('../database/dropDatabase')().then(() => { done(); });
+    console.log('===================== PACKAGE end =====================');
   });
 
   it('Should log in', function(done) {
     agent
-    .post('/api/test/login')
+    .post(testConfig.BASE_URL + '/login')
     .send({ email: user.uniq_id, password: user.phone_number })
     .end(function (err, res) {
       expect(err).to.equal(null);
@@ -61,7 +63,7 @@ describe('Add a new tree', function() {
       expect(res).to.be.an('object');
 
       agent
-      .get('/api/test/workr/package')
+      .get(testConfig.BASE_URL + '/workr/package')
       .set('Cookie', cookie)
       .end(function (err, res) {
         expect(err).to.equal(null);

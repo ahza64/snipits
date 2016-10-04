@@ -1,3 +1,4 @@
 {
-  "route_dir": "../../route/"
+  "route_dir": "../../route/",
+  "BASE_URL": "/api/test"
 }
