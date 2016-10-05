@@ -15,6 +15,7 @@ var _ = require('underscore');
 var app = koa();
 var TreeHistory = require('dsp_shared/database/model/tree-history');
 var config = require('../routes_config').update;
+var MIN_DISTANCE = 0.125;
 
 /**
  * String.prototype.replaceAt - Special function to replace character at specified index
@@ -49,7 +50,7 @@ function *addMissingFields(treeObj, woId, user) {
     project: 'transmission_2015'
   };
   var treeFromWorkorder = yield crud_opts.read(treeId);
-  var nearbyTree = yield Tree.findNear(treeObj.location, 0.125, 'miles', query, 1);
+  var nearbyTree = yield Tree.findNear(treeObj.location, MIN_DISTANCE, 'miles', query, 1);
   treeObj.pge_pmd_num = workOrder.pge_pmd_num;
   treeObj.span_name = workOrder.span_name || pmd.span_name;
   treeObj.division = workOrder.division || pmd.division;
