@@ -15,6 +15,7 @@ var _ = require('underscore');
 var app = koa();
 var TreeHistory = require('dsp_shared/database/model/tree-history');
 var config = require('../routes_config').update;
+var MIN_DISTANCE = 0.125;
 
 /**
  * String.prototype.replaceAt - Special function to replace character at specified index
@@ -36,7 +37,6 @@ String.prototype.replaceAt = function(index, character) {
  * @return {Object}
  */
 function *addMissingFields(treeObj, woId, user) {
-  var tree = null;
   var workOrder = _.find(user.workorder, wo => {
     if(wo._id === woId){
       return wo;
@@ -44,23 +44,25 @@ function *addMissingFields(treeObj, woId, user) {
   });
   var pmd = yield Pmd.findOne({pge_pmd_num: workOrder.pge_pmd_num});
   var treeId = workOrder.tasks[0];
-  tree = yield crud_opts.read(treeId);
-  console.log(workOrder.pge_pmd_num, pmd.pge_pmd_num);
-  treeObj.pge_pmd_num = workOrder.pge_pmd_num || pmd.pge_pmd_num;
+  var query = {
+    circuit_name: {$exists: true},
+    status: /^[^06]/,
+    project: 'transmission_2015'
+  };
+  var treeFromWorkorder = yield crud_opts.read(treeId);
+  var nearbyTree = yield Tree.findNear(treeObj.location, MIN_DISTANCE, 'miles', query, 1);
+  treeObj.pge_pmd_num = workOrder.pge_pmd_num;
   treeObj.span_name = workOrder.span_name || pmd.span_name;
   treeObj.division = workOrder.division || pmd.division;
   treeObj.region = workOrder.region || pmd.region;
-  treeObj.circuit_name = workOrder.circuit_names[0] || tree.circuit_name;
+  treeObj.circuit_name = nearbyTree[0].obj.circuit_name || workOrder.circuit_names[0] || treeFromWorkorder.circuit_name;
   return treeObj;
 }
-
 
 /**
  * getAddress - get geocoded address
  *
  * @param  {Object} treeObj
- * @param  {Number} x
- * @param  {Number} y
  * @return {Object}
  */
 function *setAddress(treeObj) {
@@ -74,7 +76,6 @@ function *setAddress(treeObj) {
 
   return treeObj;
 }
-
 
 /**
  * addNewTree - adds a new tree to the Tree collection
@@ -91,7 +92,6 @@ function *addNewTree(treeObj, woId, user){
   result = yield crud_opts.read(result._id);
   return result;
 }
-
 
 /**
  * updateTree - updates existing tree
