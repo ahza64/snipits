@@ -76,18 +76,21 @@ describe('Add a new tree', function() {
       .end(function (err, res) {
         expect(err).to.equal(null);
         expect(res.body.data).to.be.an('object');
-        console.log('------------------> ', err);
-        console.log('------------------> ', res.body);
         var newTreeId = res.body.data._id;
         User.findOne({ _id: user._id }, function(err, res) {
           expect(err).to.equal(null);
           expect(res).to.be.an('object');
           expect(res.workorder[0].tasks).to.include(newTreeId);
 
-          Tree.findOne({ _id: newTreeId }, function(err, res) {
+          Tree.findOne({ _id: newTreeId }, function(err, tree) {
             expect(err).to.equal(null);
-            expect(res).to.be.an('object');
-            expect(res._id.toString()).to.equal(newTreeId);
+            expect(tree).to.be.an('object');
+            expect(tree._id.toString()).to.equal(newTreeId);
+
+            // check addMissingFields function result
+            expect(JSON.parse(JSON.stringify(tree))).to.contain.all.keys(
+             'circuit_name', 'pge_pmd_num', 'region', 'division'
+            );
             done();
           });
         });
@@ -127,13 +130,13 @@ describe('Add a new tree', function() {
       .end(function (err, res) {
         expect(err).to.equal(null);
         expect(res.body.data).to.be.an('object');
-        
+
         var newTreeId = res.body.data._id;
         User.findOne({ _id: user._id }, function(err, res) {
           expect(err).to.equal(null);
           expect(res).to.be.an('object');
           expect(res.workorder[0].tasks).to.not.include(newTreeId);
-          
+
           Tree.findOne({ _id: newTreeId }, function(err, res) {
             expect(err).to.equal(null);
             expect(res).to.be.an('object');

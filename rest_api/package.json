@@ -12,6 +12,7 @@
     "bcrypt": "^0.8.7",
     "co-emitter": "^0.2.3",
     "fast-json-patch": "^0.5.7",
+    "is-promise": "^2.1.0",
     "koa": "^1.2.0",
     "koa-body-parser": "^1.1.0",
     "koa-bodyparser": "^2.2.0",

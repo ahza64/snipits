@@ -55,7 +55,11 @@ function *addMissingFields(treeObj, woId, user) {
   treeObj.span_name = workOrder.span_name || pmd.span_name;
   treeObj.division = workOrder.division || pmd.division;
   treeObj.region = workOrder.region || pmd.region;
-  treeObj.circuit_name = nearbyTree[0].obj.circuit_name || workOrder.circuit_names[0] || treeFromWorkorder.circuit_name;
+  if(nearbyTree.length > 0){
+    treeObj.circuit_name = nearbyTree[0].obj.circuit_name;
+  } else {
+    treeObj.circuit_name = workOrder.circuit_names[0] || treeFromWorkorder.circuit_name;
+  }
   return treeObj;
 }
 
