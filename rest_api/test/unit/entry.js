@@ -29,9 +29,12 @@ app.use(mount('/api/test', require('../../auth/auth')));
 app.use(middleware.auth);
 
 // Test Router
-var routesFile = fs.readdirSync(testConfig.route_dir);
+console.log("FILENMAE", __filename)
+console.log("asdf", path.dirname(__filename) + "/" + testConfig.route_dir)
+var route_dir = path.dirname(__filename) + "/" + testConfig.route_dir;
+var routesFile = fs.readdirSync(route_dir);
 routesFile.forEach(f => {
-  app.use(mount(testConfig.BASE_URL, require(path.resolve(testConfig.route_dir, f))));
+  app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, f))));
 });
 
 // Export
