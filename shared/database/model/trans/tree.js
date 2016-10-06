@@ -1,7 +1,7 @@
 /**
     Models define a Schema will add a will define add that model to the mongoose db connection
 */
-var log = require('log4js').getLogger('['+__filename +']');
+var log = require('dsp_config/config').get().getLogger('['+__filename+']');
 var mongoose = require('mongoose');
 var connection = require('dsp_database/connections')('trans');
 var Schema = mongoose.Schema;

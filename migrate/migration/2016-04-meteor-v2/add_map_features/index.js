@@ -6,7 +6,7 @@ var BPromise = require('bluebird');
 var basename = require('path').basename;
 var dirname = require('path').dirname;
 var readDir = BPromise.promisify(require('fs').readdir);
-var log = require('log4js').getLogger('['+__filename+']');
+var log = require('dsp_shared/config/config').get().getLogger('['+__filename+']');
 var MapFeature = require("dsp_model/meteor_v3/map_feature"); 
 var pathlib = require('path');
 require('dsp_lib/starts_with');

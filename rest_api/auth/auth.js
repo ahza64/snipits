@@ -1,4 +1,4 @@
-const log = require('log4js').getLogger('['+__filename+']');
+const log = require('dsp_shared/config/config').get().getLogger('['+__filename+']');
 const koa = require('koa');
 const router = require('koa-router')();
 const passport = require('koa-passport');

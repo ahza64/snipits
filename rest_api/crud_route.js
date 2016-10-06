@@ -17,11 +17,12 @@
 * @overview This file handles the routes for a resource
   it implements the standard CRUD operations
 **/
-var log = require('log4js').getLogger('['+__filename +']');
+var config = require('dsp_shared/config/config').get();
+var log = config.getLogger('['+__filename+']');
 var koa = require('koa');
 var _ = require('underscore');
 var router = require('koa-router');
-var config = require('dsp_shared/config/config').get();
+
 // var bodyParser = require('koa-body-parser');
 
 /*

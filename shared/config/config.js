@@ -10,7 +10,7 @@ var configs = (function() {
   // http://addyosmani.com/resources/essentialjsdesignpatterns/book/#singletonpatternjavascript
 
   var instance;
-
+  var log4js;
   function initConfigs(options) {
     var config = {};
     options = options || {};
@@ -33,7 +33,7 @@ var configs = (function() {
     }
 
     if(options.log4js !== false) {
-      var log4js = require('log4js');
+      log4js = require('log4js');
       require('log4js-json-layout');
       require('log4js-node-mongodb');
       //update mongo logging config
@@ -47,9 +47,20 @@ var configs = (function() {
       }
       log4js.configure(config.logging);
     }
+    
+    config.getLogger = function(category) {
+      if(log4js) {
+        return log4js.getLogger(category);
+      } else {
+
+        return console;
+      }    
+    }
     // console.log("LOGGING CONFIG", config.logging);
     return config;
   }
+  
+
 
   return {
     get: function(options) {

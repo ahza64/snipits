@@ -1,4 +1,4 @@
-var log = require('log4js').getLogger('['+__filename+']');
+var log = require('dsp_config/config').get().getLogger('['+__filename+']');
 var _ = require('underscore');
 var timer = require('co-timer');
 

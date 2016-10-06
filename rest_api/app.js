@@ -4,7 +4,7 @@
 */
 var _ = require('underscore');
 var config = require('dsp_shared/config/config').get();
-var log = require('log4js').getLogger('['+__filename+']');
+var log = config.getLogger('['+__filename+']');
 var logger = require('koa-logger');
 var compress = require('koa-compress');
 var mount = require('koa-mount');

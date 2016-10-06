@@ -10,7 +10,7 @@
     List
     Patch (apply diff)
 */
-var log = require('log4js').getLogger('['+__filename +']');
+var log = require('dsp_shared/config/config').get().getLogger('['+__filename+']');
 var _ = require('underscore');
 // var moment = require('moment');
 
