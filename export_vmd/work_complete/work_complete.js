@@ -118,7 +118,7 @@ var TreeWorkComplete = function(tree, trimmer, image, test_email) {
   }
       
   if(tree.comments) {
-    var matches = tree.comments.match(/#([0-9]*)#/);
+    var matches = tree.comments.match(/#([0-9]+)#/);
     if(matches) {
       this.work_complete.nQty = matches[1];
     }

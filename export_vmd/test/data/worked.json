@@ -24,6 +24,7 @@
         "division" : "Sacramento",
         "pge_pmd_num" : "134330",
         "tc_overtime": "overtime",
+        "comments": "some comemment ##3# or another",
         "location" : {
             "type" : "Point",
             "coordinates" : [ 
@@ -152,7 +153,8 @@
     }, 
     "results": {
       "sBillingCode": "XX",
-      "iBillingRate": 1
+      "iBillingRate": 1,
+      "nQty": "3"
     }
 
 }
