@@ -9,6 +9,7 @@
 // Module
 const chai = require('chai');
 const expect = chai.expect;
+const assert = chai.assert;
 const request = require('supertest');
 const testConfig = require('../config');
 const server = require('../entry');
@@ -83,6 +84,7 @@ describe('Add a new tree', function() {
           expect(res.workorder[0].tasks).to.include(newTreeId);
 
           Tree.findOne({ _id: newTreeId }, function(err, tree) {
+            tree = JSON.parse(JSON.stringify(tree));
             expect(err).to.equal(null);
             expect(tree).to.be.an('object');
             expect(tree._id.toString()).to.equal(newTreeId);
@@ -91,6 +93,12 @@ describe('Add a new tree', function() {
             expect(JSON.parse(JSON.stringify(tree))).to.contain.all.keys(
              'circuit_name', 'pge_pmd_num', 'region', 'division'
             );
+            if(tree.tc_overtime){
+              expect(['standard', 'overtime', 'double', 'time/material', 'non-billable']).to.include(tree.tc_overtime);
+            }
+            if(tree.tc_billing_type){
+              expect(['unit', 'tm']).to.include(tree.tc_billing_type);
+            }
             done();
           });
         });
