@@ -1,4 +1,5 @@
-var request_log = require('log4js').getLogger('request');
+var config = require('dsp_shared/config/config').get();
+var request_log = config.getLogger('request');
 const isPromise = require('is-promise');
 
 module.exports = {

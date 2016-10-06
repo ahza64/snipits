@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const connection = require('dsp_database/connections')('meteor');
 const autoIncrement = require('mongoose-auto-increment');
-const log = require('log4js').getLogger('generic');
+const log = require('dsp_config/config').get().getLogger('generic');
 const TreeModel = require('./tree');
 
 autoIncrement.initialize(connection);

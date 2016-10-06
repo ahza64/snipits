@@ -1,4 +1,4 @@
-var log = require('log4js').getLogger('['+__filename+']');
+var log = require('dsp_config/config').get().getLogger('['+__filename+']');
 var rest = require('restler');
 
 function req_thunk(url, options) {

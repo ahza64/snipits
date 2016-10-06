@@ -29,7 +29,8 @@ var config_override = {
   }
 };
 var config = require('dsp_config/configure').get({overrides: config_override});
-var log = require('log4js').getLogger(test_name);
+
+var log = config.getLogger(test_name);
 var database = require('dsp_model/database');
 var tree1 = require("./v2_tree1.json");
 var tree2 = require('./complete_tree.json');

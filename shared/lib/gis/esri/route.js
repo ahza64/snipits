@@ -1,4 +1,4 @@
-var log = require('log4js').getLogger('['+__filename+']');
+var log = require('dsp_config/config').get().getLogger('['+__filename+']');
 var moment = require('moment');
 function date(t) {
   return moment(t).zone("-0700");
