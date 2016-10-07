@@ -11,6 +11,7 @@
   "dependencies": {
     "bcrypt": "^0.8.7",
     "co-emitter": "^0.2.3",
+    "deep-freeze-strict": "^1.1.1",
     "fast-json-patch": "^0.5.7",
     "is-promise": "^2.1.0",
     "koa": "^1.2.0",

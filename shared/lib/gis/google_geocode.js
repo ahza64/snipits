@@ -13,18 +13,11 @@ var geocoder = require('node-geocoder')(geocoderProvider, httpAdapter, extra);
  * @param {Float} x coordinate (logitude)
  * @param {Floay} y coordinate (latitude)
  */
-function getAddress(x, y, error_count){
+function getAddress(x, y){
  return new Bpromise(function(resolve,reject){
    geocoder.reverse({lat: y, lon: x}, function (err, res) {
      if (err) {
-       error_count = error_count || 0;
-       error_count += 1;
-       console.log("REVERSE GEO CODE", err.message, err.code, x, y, error_count, res);
-       setTimeout(function () {
-             getAddress(x, y, error_count).then(function(result){
-               resolve(result);
-             });
-       }, 5000*error_count);
+        reject(err);
      }else {
        var address = res[0];
        address.county = address.administrativeLevels.level2long;
@@ -43,4 +36,24 @@ function getAddress(x, y, error_count){
  });
 }
 
-module.exports = {getAddress};
+ function getAddressRetry(x, y, retries, delay) {
+   if(delay === undefined) {
+     delay = 5000;
+   }
+   return getAddress(x, y).catch(function (err) {
+     if(retries === 0) {
+       return Bpromise.reject(err);
+     } else {
+       console.log("get Address Retrying ", retries);
+       return new Bpromise(function(resolve, reject) {
+         setTimeout(function(){
+           getAddressRetry(x, y, retries-1)
+           .then(resolve)
+           .catch(reject);
+         }, delay);
+       });
+     }
+   });
+}
+
+module.exports = {getAddress: getAddressRetry};
