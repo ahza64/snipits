@@ -38,7 +38,7 @@ describe('Post/Get an asset', function() {
     User.create(user)
     .then(function() {
       console.log('user created');
-      return Tree.create(oldTree);      
+      return Tree.create(oldTree);
     })
     .then(function() {
       console.log('tree created');
@@ -74,17 +74,12 @@ describe('Post/Get an asset', function() {
     .end(function(err, res) {
       expect(err).to.equal(null);
       expect(res.body.data).to.be.an('object');
-
       assetId = res.body.data._id;
       expect(assetId).to.be.a('string');
-      
-      var imageType = asset.meta.imageType;
-      var query = {};
-      query[imageType] = assetId;
-      Tree.findOne(query, function(err, res) {
+      Asset.findOne({_id: assetId}, function(err, res){
         expect(err).to.equal(null);
         expect(res).to.be.an('object');
-        expect(res._id.toString()).to.equal(oldTree._id);
+        expect(res._id.toString()).to.equal(assetId);
         done();
       });
     });
@@ -97,20 +92,10 @@ describe('Post/Get an asset', function() {
     .end(function(err, res) {
       expect(err).to.equal(null);
       expect(res.body).to.not.equal(null);
-
-      var imageType = asset.meta.imageType;
-      var query = {};
-      query[imageType] = assetId;
-      Tree.findOne(query, function(err, res) {
+      Asset.findOne({ _id: assetId }, function(err, res) {
         expect(err).to.equal(null);
         expect(res).to.be.an('object');
-        expect(res._id.toString()).to.equal(oldTree._id);
-        
-        Asset.findOne({ _id: assetId }, function(err, res) {
-          expect(err).to.equal(null);
-          expect(res).to.be.an('object');
-          done();
-        });
+        done();
       });
     });
   });
