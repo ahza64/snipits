@@ -30,6 +30,9 @@ app.use(require('./middleware').headerAccept);
 //envelope middleware
 app.use(require('./middleware').envelope);
 
+//error middleware
+app.use(require('./error'));
+
 // No authentication required for these routes
 app.use(mount('/api/v3', require('./route/version')));
 

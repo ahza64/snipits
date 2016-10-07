@@ -15,7 +15,10 @@ var _ = require('underscore');
 var app = koa();
 var TreeHistory = require('dsp_shared/database/model/tree-history');
 var config = require('../routes_config').update;
+var ERROR = require('../error');
 var MIN_DISTANCE = 0.125;
+var RETRIES = 2;
+var DELAY = 2000;
 
 /**
  * String.prototype.replaceAt - Special function to replace character at specified index
@@ -43,6 +46,7 @@ function *addMissingFields(treeObj, woId, user) {
     }
   });
   var pmd = yield Pmd.findOne({pge_pmd_num: workOrder.pge_pmd_num});
+  console.log('WORKORDER ---->', workOrder);
   var treeId = workOrder.tasks[0];
   var query = {
     circuit_name: {$exists: true},
@@ -58,7 +62,7 @@ function *addMissingFields(treeObj, woId, user) {
   if(nearbyTree.length > 0){
     treeObj.circuit_name = nearbyTree[0].obj.circuit_name;
   } else {
-    treeObj.circuit_name = workOrder.circuit_names[0] || treeFromWorkorder.circuit_name;
+    treeObj.circuit_name = (workOrder.circuit_names && workOrder.circuit_names[0]) || treeFromWorkorder.circuit_name;
   }
   return treeObj;
 }
@@ -70,15 +74,14 @@ function *addMissingFields(treeObj, woId, user) {
  * @return {Object}
  */
 function *setAddress(treeObj) {
-  var addressObj = yield geocode.getAddress(treeObj.location.coordinates[0], treeObj.location.coordinates[1]);
-  treeObj.streetName = addressObj.streetName;
-  treeObj.streetNumber = addressObj.streetNumber;
-  treeObj.zipcode = addressObj.zipcode;
-  treeObj.state = addressObj.state;
-  treeObj.city = addressObj.city;
-  treeObj.county = addressObj.county;
-
-  return treeObj;
+    var addressObj = yield geocode.getAddress(treeObj.location.coordinates[0], treeObj.location.coordinates[1], RETRIES, DELAY);
+    treeObj.streetName = addressObj.streetName;
+    treeObj.streetNumber = addressObj.streetNumber;
+    treeObj.zipcode = addressObj.zipcode;
+    treeObj.state = addressObj.state;
+    treeObj.city = addressObj.city;
+    treeObj.county = addressObj.county;
+    return treeObj;
 }
 
 /**
@@ -175,10 +178,16 @@ router.post('/workorder/:woId/tree', function *(){
     //check if a tree exists at the same location
     var duplicateTree = yield checkLocation(treeObj.location.coordinates);
     if(duplicateTree > 0){
-      throw ('Duplicate Tree at this location', 400);
+      this.setError(this.errors.DUPLICATE_TREE);
+      return null;
     }
+
     //get address from google reverse geocode
-    treeObj = yield setAddress(treeObj);
+    try {
+      treeObj = yield setAddress(treeObj);
+    } catch(e) {
+      this.setError(this.errors.GEOCODE_ERROR);
+    }
 
     //remove temporary inc_id before adding new tree
     delete treeObj.inc_id;
@@ -192,18 +201,8 @@ router.post('/workorder/:woId/tree', function *(){
     }
     yield TreeHistory.recordTreeHistory({}, result, user);
   } catch(e) {
-    console.log('EXCEPTION: ', e);
-    if(e === 400) {
-      console.error(e.message);
-      this.dsp_env.msg = 'DUPLICATE TREE AT THIS LOCATION';
-      this.dsp_env.status = 400;
-    } else {
-      console.error(e.message);
-      this.dsp_env.msg = 'TREE NOT ADDED';
-      this.dsp_env.error = e.message;
-    }
+    this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
-  return result;
 });
 
 /**
