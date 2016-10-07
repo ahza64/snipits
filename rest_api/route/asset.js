@@ -5,12 +5,8 @@ var app = koa();
 require('dsp_shared/lib/starts_with');
 var router = require('koa-router')();
 var Asset = require('dsp_shared/database/model/assets');
-var Tree = require('dsp_shared/database/model/tree');
-var TreeHistory = require('dsp_shared/database/model/tree-history');
 
 var crud_opts_asset = require('../crud_op')(Asset);
-var crud_opts_tree = require('../crud_op')(Tree);
-var TreeHistory = require('dsp_shared/database/model/tree-history');
 
 var bodyParser = require('koa-bodyparser');
 
@@ -49,22 +45,11 @@ function getJPEG(data) {
 //Add if(read_only)
 router.post('/asset', function*(next) {
   var result = null;
-  //var updateTree = null;
-  // var treeId;
-  // var tree;
-  // var imageType;
-  // var update = {};
   try {
     result = yield crud_opts_asset.create(this.request.body);
     result = yield crud_opts_asset.read(result._id);
-    // treeId = result.ressourceId;
-    // tree = yield Tree.findOne({_id:treeId});
-    // imageType = result.meta.imageType;
-    // update[imageType] = result._id;
-    // updateTree = yield crud_opts_tree.patch(treeId, update, this.header['content-type']);
     this.body = {_id:result._id};
     this.status = 200;
-    //yield TreeHistory.recordTreeHistory(tree, updateTree, this.req.user);
   } catch(e) {
     console.log('Exception:', e.message);
     this.dsp_env.msg = 'Error';
