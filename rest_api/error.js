@@ -4,7 +4,9 @@ const ERROR_RESOURCE = deepFreeze({
   DUPLICATE_TREE: { status: 409, message: 'Tree already exists at this location'},
   GEOCODE_ERROR: { status: 201, message: 'No Address found at location'},
   NOT_ADDED: {status: 400, message: 'not added'},
-  INTERNAL_SERVER_ERROR: {status: 500, message: 'Internal Server Error'}
+  NOT_FOUND: {status: 404, message: 'not found'},
+  INTERNAL_SERVER_ERROR: {status: 500, message: 'Internal Server Error'},
+  HISTORIES_ERROR: {status: 200, message: 'Histories Error'}
 });
 
 function handleError(context, error, message) {

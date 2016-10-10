@@ -15,10 +15,9 @@ var _ = require('underscore');
 var app = koa();
 var TreeHistory = require('dsp_shared/database/model/tree-history');
 var config = require('../routes_config').update;
-var ERROR = require('../error');
 var MIN_DISTANCE = 0.125;
 var RETRIES = 2;
-var DELAY = 2000;
+var DELAY = 1000;
 
 /**
  * String.prototype.replaceAt - Special function to replace character at specified index
@@ -46,7 +45,6 @@ function *addMissingFields(treeObj, woId, user) {
     }
   });
   var pmd = yield Pmd.findOne({pge_pmd_num: workOrder.pge_pmd_num});
-  console.log('WORKORDER ---->', workOrder);
   var treeId = workOrder.tasks[0];
   var query = {
     circuit_name: {$exists: true},
@@ -199,7 +197,14 @@ router.post('/workorder/:woId/tree', function *(){
     if(!treeDone) {
       yield addTreeToWorkorder(userId, woId, result._id.toString());
     }
-    yield TreeHistory.recordTreeHistory({}, result, user);
+
+    //add to histories
+    try {
+      yield TreeHistory.recordTreeHistory({}, result, user);
+    } catch(e) {
+      console.log('EXCEPTION: ', e.message);
+      this.setError(this.errors.HISTORIES_ERROR);
+    }
   } catch(e) {
     this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
@@ -238,11 +243,17 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
       this.dsp_env.msg = 'Tree Successfully Updated';
     }
     this.body = result;
-    yield TreeHistory.recordTreeHistory(tree, result, user);
+
+    //add to histories
+    try{
+      yield TreeHistory.recordTreeHistory(tree, result, user);
+    } catch(e){
+      console.log('EXCEPTION: ', e.message);
+      this.setError(this.errors.HISTORIES_ERROR);
+    }
   } catch(e) {
     console.log(e.message);
-    this.dsp_env.error = e.message;
-    this.dsp_env.status = 500;
+    this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
   return result;
 });
@@ -279,11 +290,17 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
         console.log('Tree' + treeId + 'removed and Workorder' + woId + 'updated', data);
       }
     });
-    yield TreeHistory.recordTreeHistory(tree, result, user);
+
+    //add to histories
+    try{
+      yield TreeHistory.recordTreeHistory(tree, result, user);
+    } catch(e){
+      console.log('EXCEPTION: ', e.message);
+      this.setError(this.errors.HISTORIES_ERROR);
+    }
   } catch(e) {
     console.log(e.message);
-    this.dsp_env.error = e.message;
-    this.dsp_env.status = 500;
+    this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
   return result;
 });

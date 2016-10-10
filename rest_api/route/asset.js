@@ -68,10 +68,7 @@ router.get('/asset/:id', function*() {
       this.type = "image/jpeg";
     }
   } catch(e) {
-    console.log('Exception: ', e.message);
-    this.dsp_env.msg = 'Error';
-    this.dsp_env.error = e.message;
-    this.status = 500;
+    this.setError(this.errors.NOT_FOUND);
   }
 });
 
