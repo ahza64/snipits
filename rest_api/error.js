@@ -28,7 +28,7 @@ function *middleware(next) {
     };
     yield next;
   } catch (e) {
-    handleError(this, 'INTERNAL_SERVER_ERROR');
+    handleError(this, STATUS_RESOURCE.INTERNAL_SERVER_ERROR);
   }
 }
 
