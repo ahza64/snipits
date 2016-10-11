@@ -206,6 +206,7 @@ router.post('/workorder/:woId/tree', function *(){
       this.setError(this.errors.HISTORIES_ERROR);
     }
   } catch(e) {
+    console.log('Exception:', e.message);
     this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
 });
@@ -252,7 +253,7 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
       this.setError(this.errors.HISTORIES_ERROR);
     }
   } catch(e) {
-    console.log(e.message);
+    console.log('Exception:', e.message);
     this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
   return result;
@@ -299,7 +300,7 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
       this.setError(this.errors.HISTORIES_ERROR);
     }
   } catch(e) {
-    console.log(e.message);
+    console.log('Exception:', e.message);
     this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
   return result;

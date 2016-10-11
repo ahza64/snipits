@@ -1,7 +1,7 @@
 const deepFreeze = require('deep-freeze-strict');
 
-const STATUS_RESOURCE = deepFreeze({  
-  LOGIN_ERROR: { status: 401, message: 'NOT AUTHENTICATED!!'},
+const STATUS_RESOURCE = deepFreeze({
+  LOGIN_ERROR: { status: 401, message: 'Login Failure. Not Authenticated!'},
   DUPLICATE_TREE: { status: 409, message: 'Tree already exists at this location'},
   GEOCODE_ERROR: { status: 201, message: 'No Address found at location'},
   NOT_ADDED: {status: 400, message: 'not added'},
