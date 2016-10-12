@@ -5,7 +5,7 @@ const moment = require('moment');
 const _ = require('underscore');
 
 // Dispatchr module
-const config = require('dsp_shared/config').get({ log4js : false });
+const config = require('dsp_shared/config').get();
 require('dsp_shared/database/database')(config.meteor);
 const User = require('dsp_shared/database/model/users');
 

@@ -2,7 +2,7 @@
 const co = require('co');
 
 // Dispatchr module
-const config = require('dsp_shared/config').get({ log4js : false });
+const config = require('dsp_shared/config').get();
 require('dsp_shared/database/database')(config.meteor);
 const Cuf = require('dsp_shared/database/model/cufs');
 const Export = require('dsp_shared/database/model/export');
