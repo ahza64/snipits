@@ -28,6 +28,8 @@ app.use(middleware.headerAccept);
 app.use(middleware.envelope);
 app.use(mount('/api/test', require('../../auth/auth')));
 app.use(middleware.auth);
+
+// Error
 app.use(error);
 
 // Test Router
