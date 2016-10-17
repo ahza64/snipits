@@ -31,7 +31,7 @@ export default class UploadedFiles extends React.Component {
           <TableRow>
             <TableHeaderColumn>ID</TableHeaderColumn>
             <TableHeaderColumn>File</TableHeaderColumn>
-            <TableHeaderColumn>Upload Time</TableHeaderColumn>
+            <TableHeaderColumn>Last Modified Time</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -40,8 +40,8 @@ export default class UploadedFiles extends React.Component {
               return (
                 <TableRow key={ idx }>
                   <TableRowColumn>{ idx }</TableRowColumn>
-                  <TableRowColumn>{ file }</TableRowColumn>
-                  <TableRowColumn>Now</TableRowColumn>
+                  <TableRowColumn>{ file.Key }</TableRowColumn>
+                  <TableRowColumn>{ file.LastModified }</TableRowColumn>
                 </TableRow>
               );
             })

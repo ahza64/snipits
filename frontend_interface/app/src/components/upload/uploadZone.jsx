@@ -21,7 +21,7 @@ export default class UploadZone extends React.Component {
   }
 
   getUploadedFiles() {
-    var company = authRedux.getState().company;
+    var company = authRedux.getState()['company.name'];
     var displayUploadsLink = 'http://localhost:3000/displayUpload/' + company;
 
     request
@@ -38,7 +38,7 @@ export default class UploadZone extends React.Component {
 
   onDrop(files) {
     console.log('Received files: ', files);
-    var company = authRedux.getState().company;
+    var company = authRedux.getState()['company.name'];
     var uploadData = new FormData();
     var uploadLink = 'http://localhost:3000/upload/' + company;
 

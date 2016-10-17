@@ -5,6 +5,7 @@ const os = require('os');
 const koa = require('koa');
 const router = require('koa-router')();
 const parse = require('co-busboy');
+const s3 = require('dsp_shared/aws/s3');
 
 // App
 const app = koa();
@@ -43,17 +44,10 @@ router.post('/upload/:company', function*() {
 // Get the uploaded files
 router.get('/displayUpload/:company', function*() {
   var company = this.params.company;
-  var uploadFileCompDir = uploadFileDir + '/' + company;
-
-  try {
-    fs.accessSync(uploadFileCompDir);
-  } catch (err) {
-    this.body = [];
-    return;
-  }
-
-  var files = fs.readdirSync(uploadFileCompDir);
-  console.log('Display Uploads: ', files);
+  var bucket = company.toLowerCase() + '.ftp';
+  var res = yield s3.list(bucket);
+  var files = res.Contents;
+  console.log('Files already uploaded: ', files);
   this.body = files;
 });
 
