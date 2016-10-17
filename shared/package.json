@@ -5,6 +5,7 @@
   "private": true,
   "main": "",
   "dependencies": {
+    "aws-sdk": "^2.6.9",
     "bcrypt": "^0.8.7",
     "bluebird": "^3.4.0",
     "co": "^4.6.0",
