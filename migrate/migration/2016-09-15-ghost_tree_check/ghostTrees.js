@@ -8,7 +8,8 @@ var createCSV = require('dsp_shared/lib/write_csv');
 function *ghostTreeCheck(){
   var query = {
     project: 'transmission_2015',
-    status: /^[^06]/
+    status: /^[^06]/,
+    qsi_id: {$exists: true}
   }
   var data = [];
   var trees = Tree.find(query).stream();
