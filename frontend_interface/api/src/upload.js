@@ -5,7 +5,11 @@ const os = require('os');
 const koa = require('koa');
 const router = require('koa-router')();
 const parse = require('co-busboy');
+
+// S3 Module
+const config = require('../model/config').s3bucket;
 const s3 = require('dsp_shared/aws/s3');
+const s3auth = require('./s3auth');
 
 // App
 const app = koa();
@@ -49,6 +53,14 @@ router.get('/displayUpload/:company', function*() {
   var files = res.Contents;
   console.log('Files already uploaded: ', files);
   this.body = files;
+});
+
+// Get the s3 signature
+router.post('/s3auth', function*() {
+  var fileName = this.request.body.name;
+  var fileType = this.request.body.type;
+  var signedUrl = yield s3.sign('putObject', config.bucket, fileName, fileType);
+  this.body = signedUrl;
 });
 
 app.use(router.routes());

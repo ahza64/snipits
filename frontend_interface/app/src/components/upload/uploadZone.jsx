@@ -37,25 +37,34 @@ export default class UploadZone extends React.Component {
   }
 
   onDrop(files) {
-    console.log('Received files: ', files);
     var company = authRedux.getState()['company.name'];
-    var uploadData = new FormData();
-    var uploadLink = 'http://localhost:3000/upload/' + company;
-
-    files.forEach(file => {
-      uploadData.append(file.name, file);
-    });
-
+    var file = files[0];
+    var s3authUrl = 'http://localhost:3000/s3auth';
     request
-    .post(uploadLink)
-    .send(uploadData)
+    .post(s3authUrl)
+    .send({
+      name: file.name,
+      type: file.type
+    })
     .withCredentials()
     .end((err, res) => {
       if (err) {
         console.error(err);
       } else {
-        console.log('Uploaded files: ', res);
-        this.getUploadedFiles();
+        console.log('signedUrl: ', res.text);
+        var signedUrl = res.text;
+
+        request
+        .put(signedUrl)
+        .set('Content-Type', file.type)
+        .send(file)
+        .end((err, res) => {
+          if (err) {
+            console.error(err);
+          } else {
+            this.getUploadedFiles();
+          }
+        });
       }
     });
   }

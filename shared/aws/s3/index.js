@@ -17,6 +17,7 @@ s3.getObjectAsync = BPromise.promisify(s3.getObject);
 fs.writeFileAsync = BPromise.promisify(fs.writeFile);
 s3.deleteObjectsAsync = BPromise.promisify(s3.deleteObjects);
 s3.listObjectsAsync = BPromise.promisify(s3.listObjectsV2);
+s3.getSignedUrlAsync = BPromise.promisify(s3.getSignedUrl);
 
 module.exports = {
   createBucket: co.wrap(function* (bucketName) {
@@ -93,6 +94,22 @@ module.exports = {
       var objs = yield s3.listObjectsAsync(params);
       console.log('Successfully display data from ' + bucketName);
       return objs;
+    } catch(e) {
+      console.error(e);
+    }
+  }),
+
+  sign: co.wrap(function* (action, bucketName, fileName, fileType) {
+    var params = {
+      Bucket: bucketName,
+      Key: fileName,
+      Expires: 3000,
+      ContentType: fileType
+    };
+
+    try {
+      var signedUrl = yield s3.getSignedUrlAsync(action, params);
+      return signedUrl;
     } catch(e) {
       console.error(e);
     }

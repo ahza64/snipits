@@ -1,5 +1,13 @@
 {
-  "db_username": "postgres",
-  "db_password": "465tenth",
-  "db_name": "platform"
+  "postgres": {
+    "db_username": "postgres",
+    "db_password": "465tenth",
+    "db_name": "platform"
+  },
+  "s3bucket": {
+    "bucket": "dispatchr.ftp",
+    "region": "us-west-2",
+    "accessKey": "AKIAJCSRVQH3PA4GN5OA",
+    "secretKey": "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"
+  }
 }
