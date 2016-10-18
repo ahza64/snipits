@@ -10,7 +10,7 @@ var assert = require('assert');
  *           tree = yield tree;
  *           console.log("tree", tree._id, count);
  *           count++;
- *         }      
+ *         }
  *       }).then(function(){
  *         console.log("DONE");
  *       });
@@ -20,11 +20,11 @@ var assert = require('assert');
 
 
 /**
- * @description stream the documents in this model one doc at a time. This generator yields promises 
+ * @description stream the documents in this model one doc at a time. This generator yields promises
  * that resolve to mongo documents
- * 
+ *
  * @param {Object} Model The model object to run the query
- * @param {Object} query a mongo query    
+ * @param {Object} query a mongo query
  */
 function *stream(Model, query, sort) {
   // console.log("stream_gen", Model.name, query);
@@ -38,8 +38,8 @@ function *stream(Model, query, sort) {
   if(sort) {
     cursor = cursor.sort(sort);
   }
-  var _stream = cursor.stream();
-  _stream.on('data', function(doc){  
+  var _stream = cursor.cursor();
+  _stream.on('data', function(doc){
     this.pause();
     if(next_resolve) {
       next_resolve(doc);
@@ -54,7 +54,7 @@ function *stream(Model, query, sort) {
       }
     }
   });
-          
+
   _stream.on('error', function (err) {
     // handle err
     error = err;
@@ -70,9 +70,9 @@ function *stream(Model, query, sort) {
       next_resolve(null);
     }
   });
-  
+
   while(!done || next) {
-    yield new BPromse(function(resolve, reject) {      
+    yield new BPromse(function(resolve, reject) {
       if(error) {
         reject(error);
       } else if(next) {
