@@ -1,49 +1,10 @@
 // Module
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
 const koa = require('koa');
 const router = require('koa-router')();
-const parse = require('co-busboy');
-
-// S3 Module
-const config = require('../model/config').s3bucket;
 const s3 = require('dsp_shared/aws/s3');
-const s3auth = require('./s3auth');
 
 // App
 const app = koa();
-
-// Constant
-const uploadFileDir = path.join(os.homedir() + '/uploaded_files');
-
-// Upload a file
-router.post('/upload/:company', function*() {
-  // Check if company folder exists
-  // If not create one
-  var company = this.params.company;
-  var uploadFileCompDir = uploadFileDir + '/' + company;
-  
-  try {
-    fs.accessSync(uploadFileCompDir);
-  } catch (err) {
-    fs.mkdirSync(uploadFileCompDir);
-  }
-
-  var files = [];
-  var parts = parse(this);
-  var part;
-
-  while (part = yield parts) {
-    var filename = part.filename;
-    var stream = fs.createWriteStream(path.join(uploadFileCompDir, filename));
-    part.pipe(stream);
-    files.push(filename);
-    console.log('uploading %s -> %s', part.filename, stream.path);
-  }
-
-  this.body = { files: files };
-});
 
 // Get the uploaded files
 router.get('/displayUpload/:company', function*() {
@@ -59,8 +20,18 @@ router.get('/displayUpload/:company', function*() {
 router.post('/s3auth', function*() {
   var fileName = this.request.body.name;
   var fileType = this.request.body.type;
-  var signedUrl = yield s3.sign('putObject', config.bucket, fileName, fileType);
+  var company = this.request.body.company.toLowerCase();
+  var signedUrl = yield s3.sign('putObject', company + '.ftp', fileName, fileType);
   this.body = signedUrl;
+});
+
+// Delete the uploaded file
+router.post('/delete', function*() {
+  var bucketName = this.request.body.company.toLowerCase() + '.ftp';
+  var fileName = this.request.body.file;
+  console.log('Deleted file ' + fileName + ' from ' + bucketName);
+  yield s3.delete(bucketName, [fileName]);
+  this.throw(200);
 });
 
 app.use(router.routes());
