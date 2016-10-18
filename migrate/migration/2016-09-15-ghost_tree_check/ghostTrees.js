@@ -22,6 +22,7 @@ function *ghostTreeCheck(){
           data.push({
             treeId : doc._id,
             inc_id : doc.inc_id,
+            qsi_id : doc.qsi_id,
             location : doc.location.coordinates,
             project : doc.pge_pmd_num,
             division : doc.division,
@@ -50,7 +51,7 @@ function *ghostTreeCheck(){
       console.log(treeCount, ghostTreeCount);
       console.log("ALL DONE");
       console.log('Generating CSV....');
-      var fields = ['treeId', 'inc_id', 'location', 'project', 'division', 'region'];
+      var fields = ['treeId', 'inc_id', 'qsi_id', 'location', 'project', 'division', 'region'];
       createCSV(fields, data, 'ghostTrees.csv');
       resolve();
     });
