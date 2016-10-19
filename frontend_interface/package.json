@@ -50,6 +50,8 @@
     "sequelize": "^3.24.3",
     "style-loader": "^0.13.1",
     "superagent": "^2.2.0",
+    "superagent-promise": "^1.1.0",
+    "underscore": "^1.8.3",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2"
   },

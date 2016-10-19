@@ -1,6 +1,7 @@
 // Modules
 const koa = require('koa');
 const router = require('koa-router')();
+const s3 = require('dsp_shared/aws/s3');
 
 // App
 const app = koa();
@@ -28,6 +29,7 @@ router.post('/company', function*() {
   }
   
   yield Companies.create(company);
+  yield s3.createBucket(company.name.toLowerCase() + '.ftp');
   this.body = true;
 });
 

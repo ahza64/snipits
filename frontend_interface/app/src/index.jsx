@@ -2,6 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { isRouteAuthorized } from './components/auth/auth';
 
 // Components
 import App from './components/App.jsx';
@@ -15,9 +16,9 @@ ReactDOM.render(
   <Router history={ browserHistory }>
     <Route path='/' component={ App }>
       <IndexRoute component={ Login } />
-      <Route path='upload' component={ Upload }></Route>
-      <Route path='admin' component={ Admin }></Route>
-      <Route path='ingestion' component={ Ingestion }></Route>
+      <Route onEnter={ isRouteAuthorized } path='upload' component={ Upload }></Route>
+      <Route onEnter={ isRouteAuthorized } path='admin' component={ Admin }></Route>
+      <Route onEnter={ isRouteAuthorized } path='ingest' component={ Ingestion }></Route>
     </Route>
   </Router>,
 document.getElementById('app'));

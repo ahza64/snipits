@@ -1,6 +1,7 @@
 // Modules
 import React from 'react';
 import * as request from 'superagent';
+import { companyUrl } from '../../../config';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -45,7 +46,7 @@ export default class CompanyCreation extends React.Component {
 
   loadCompanyList() {
     request
-    .get('http://localhost:3000/company')
+    .get(companyUrl)
     .withCredentials()
     .end((err, res) => {
       if (err) {
@@ -60,7 +61,7 @@ export default class CompanyCreation extends React.Component {
     var newCompany = { name: this.state.newCompany };
 
     request
-    .post('http://localhost:3000/company')
+    .post(companyUrl)
     .send(newCompany)
     .withCredentials()
     .end(err => {

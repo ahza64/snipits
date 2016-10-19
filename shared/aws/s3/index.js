@@ -18,16 +18,36 @@ fs.writeFileAsync = BPromise.promisify(fs.writeFile);
 s3.deleteObjectsAsync = BPromise.promisify(s3.deleteObjects);
 s3.listObjectsAsync = BPromise.promisify(s3.listObjectsV2);
 s3.getSignedUrlAsync = BPromise.promisify(s3.getSignedUrl);
+s3.putBucketCorsAsync = BPromise.promisify(s3.putBucketCors);
 
 module.exports = {
   createBucket: co.wrap(function* (bucketName) {
-    var params = {
+    var params1 = {
       Bucket: bucketName,
       CreateBucketConfiguration: { LocationConstraint: 'us-west-2' },
     };
-    
+
+    var params2 = {
+      Bucket: bucketName,
+      CORSConfiguration: {
+        CORSRules: [
+          {
+            AllowedMethods: [
+              'GET',
+              'POST',
+              'PUT',
+              'DELETE'
+            ],
+            AllowedOrigins: [ '*' ],
+            AllowedHeaders: [ '*' ],
+          }
+        ]
+      }
+    };
+
     try {
-      yield s3.createBucketAsync(params);
+      yield s3.createBucketAsync(params1);
+      yield s3.putBucketCorsAsync(params2);
       console.log('Successfully created bucket ' + bucketName);
     } catch(e) {
       console.error(e);

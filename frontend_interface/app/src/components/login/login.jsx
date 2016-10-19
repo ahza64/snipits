@@ -3,6 +3,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import * as request from 'superagent';
 import authRedux from '../../reduxes/auth';
+import { loginUrl } from '../../config';
 
 // Styles
 import Paper from 'material-ui/Paper';
@@ -51,7 +52,7 @@ export default class Login extends React.Component {
     const loginData = this.state;
 
     request
-    .post('http://localhost:3000/login')
+    .post(loginUrl)
     .send(loginData)
     .withCredentials()
     .end((err, res) => {

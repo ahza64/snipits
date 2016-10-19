@@ -2,6 +2,7 @@
 import React from 'react';
 import * as request from 'superagent';
 import Dropzone from 'react-dropzone';
+import { displayFilesUrl, fileHistoryUrl, s3authUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -26,10 +27,9 @@ export default class UploadZone extends React.Component {
 
   getUploadedFiles() {
     var company = authRedux.getState()['company.name'];
-    var displayUploadsLink = 'http://localhost:3000/displayUpload/' + company;
 
     request
-    .get(displayUploadsLink)
+    .get(displayFilesUrl + company)
     .withCredentials()
     .end((err, res) => {
       if (err) {
@@ -43,13 +43,14 @@ export default class UploadZone extends React.Component {
   onDrop(files) {
     var company = authRedux.getState()['company.name'];
     var file = files[0];
-    var s3authUrl = 'http://localhost:3000/s3auth';
+
     request
     .post(s3authUrl)
     .send({
       name: file.name,
       type: file.type,
-      company: company
+      company: company,
+      action: 'putObject'
     })
     .withCredentials()
     .end((err, res) => {
@@ -68,6 +69,20 @@ export default class UploadZone extends React.Component {
           } else {
             this.getUploadedFiles();
             this.setState({ open: true });
+
+            request
+            .post(fileHistoryUrl)
+            .withCredentials()
+            .send({
+              email: authRedux.getState().email,
+              file: file.name,
+              action: 'upload'
+            })
+            .end(err => {
+              if (err) {
+                console.error(err);
+              }
+            });
           }
         });
       }

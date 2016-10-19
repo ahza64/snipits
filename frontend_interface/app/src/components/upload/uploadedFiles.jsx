@@ -1,6 +1,7 @@
 // Modules
 import React from 'react';
 import * as request from 'superagent';
+import { displayFilesUrl, fileHistoryUrl, deleteFileUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -14,8 +15,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Snackbar from 'material-ui/Snackbar';
 const deleteStyle = {
-  'color': 'white',
-  'width': 70
+  'color': 'white'
 };
 
 export default class UploadedFiles extends React.Component {
@@ -39,10 +39,9 @@ export default class UploadedFiles extends React.Component {
 
   getUploadedFiles() {
     var company = authRedux.getState()['company.name'];
-    var displayUploadsLink = 'http://localhost:3000/displayUpload/' + company;
 
     request
-    .get(displayUploadsLink)
+    .get(displayFilesUrl + company)
     .withCredentials()
     .end((err, res) => {
       if (err) {
@@ -54,12 +53,10 @@ export default class UploadedFiles extends React.Component {
   }
 
   handleDelete(fileName) {
-    console.log('deleting ', fileName);
-    var deleteUrl = 'http://localhost:3000/delete';
     var company = authRedux.getState()['company.name'];
     
     request
-    .post(deleteUrl)
+    .post(deleteFileUrl)
     .withCredentials()
     .send({
       file: fileName,
@@ -71,6 +68,20 @@ export default class UploadedFiles extends React.Component {
       } else {
         this.getUploadedFiles();
         this.setState({ open: true });
+
+        request
+        .post(fileHistoryUrl)
+        .withCredentials()
+        .send({
+          email: authRedux.getState().email,
+          file: fileName,
+          action: 'delete'
+        })
+        .end(err => {
+          if (err) {
+            console.error(err);
+          }
+        });
       }
     });
   }

@@ -1,6 +1,7 @@
 // Modules
 import React from 'react';
 import * as request from 'superagent';
+import { userUrl } from '../../config';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -44,9 +45,8 @@ export default class Creation extends React.Component {
     const curStepIdx = this.state.stepIndex;
     if (curStepIdx === 2) {
       // Make ajax call to create user
-      console.log('creating -> ', userCreateRedux.getState());
       request
-      .post('http://localhost:3000/user')
+      .post(userUrl)
       .send(userCreateRedux.getState())
       .withCredentials()
       .end(err => {
@@ -106,9 +106,7 @@ export default class Creation extends React.Component {
         <Row>
           <div style={ contentStyle }>
             {finished ? (
-              <p>
-                <h3>New User Created</h3>
-              </p>
+              <h3>New User Created</h3>
             ) : (
               <div>
                 <Row>{ this.getStepContent(stepIndex) }</Row>

@@ -10,8 +10,8 @@ import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 
 export default class Upload extends React.Component {
-  constructor() {
-    super();    
+  constructor(props) {
+    super(props);
   }
 
   render() {

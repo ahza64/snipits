@@ -3,6 +3,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import * as request from 'superagent';
 import authRedux from '../../reduxes/auth';
+import { isRoleAuthorized } from '../auth/auth';
 
 // Styles
 import Nav from 'react-bootstrap/lib/Nav';
@@ -21,6 +22,8 @@ export default class DefaultNavbar extends React.Component {
     this.goToUpload = this.goToUpload.bind(this);
     this.goToIngestion = this.goToIngestion.bind(this);
     this.goToAdmin = this.goToAdmin.bind(this);
+    this.showIngest = this.showIngest.bind(this);
+    this.showAdmin = this.showAdmin.bind(this);
   }
 
   handleLogout(event) {
@@ -46,11 +49,23 @@ export default class DefaultNavbar extends React.Component {
   }
 
   goToIngestion() {
-    browserHistory.push('/ingestion');
+    browserHistory.push('/ingest');
   }
 
   goToAdmin() {
     browserHistory.push('/admin');
+  }
+
+  showIngest() {
+    if (isRoleAuthorized('ingest')) {
+      return (<MenuItem eventKey={1.2} onClick={ this.goToIngestion }>Ingest</MenuItem>);
+    }
+  }
+
+  showAdmin() {
+    if (isRoleAuthorized('admin')) {
+      return (<MenuItem eventKey={1.3} onClick={ this.goToAdmin }>Admin</MenuItem>);
+    }
   }
 
   render() {
@@ -68,8 +83,8 @@ export default class DefaultNavbar extends React.Component {
           <Nav pullRight>
             <NavDropdown eventKey={1} title='Menu' id='basic-nav-dropdown'>
               <MenuItem eventKey={1.1} onClick={ this.goToUpload }>Upload</MenuItem>
-              <MenuItem eventKey={1.2} onClick={ this.goToIngestion }>Ingestion</MenuItem>
-              <MenuItem eventKey={1.3} onClick={ this.goToAdmin }>Admin</MenuItem>
+              { this.showIngest() }
+              { this.showAdmin() }
               <MenuItem divider />
               <MenuItem eventKey={1.4} onClick={ this.handleLogout }>Logout</MenuItem>
             </NavDropdown>

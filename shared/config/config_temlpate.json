@@ -32,7 +32,7 @@
     },
      "meteor":{
                 "mongo_db_host": "localhost",
-                "mongo_db_name": "prod_meteor_822",
+                "mongo_db_name": "dev_meteor",
                 "mongo_db_port": 27017,
                 "name":"meteor"
     },
