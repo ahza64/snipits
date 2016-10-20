@@ -61,7 +61,7 @@ router.get('/workr/package', function*() {
     }
 
     //optimizaton - make one db request for trees
-    var trees = yield Tree.find({_id: {$in: tree_ids}}).select(tree_exclude);
+    var trees = yield Tree.find({_id: {$in: tree_ids}, status:/^[^06]/}).select(tree_exclude);
     this.dsp_env.workorders = workorders.length;
     this.dsp_env.trees = trees.length;
     this.dsp_env.map_features = map_features.length;
