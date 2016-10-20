@@ -37,7 +37,6 @@ function *migrateUsers(){
   var tree_stream = stream(Tree, query);
   for( var tree of tree_stream){
     treeCount--;
-    console.log(treeCount);
     tree = yield tree;
     try {
       if(tree.image){
@@ -55,6 +54,7 @@ function *migrateUsers(){
     } catch(e) {
       console.error('Exception', e.message);
     }
+    console.log(treeCount);
   }
 }
 
