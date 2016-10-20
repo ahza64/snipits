@@ -23,7 +23,7 @@ import UserCreation from './user/userCreation';
 import InfoConfirm from './user/infoConfirm';
 import userCreateRedux from '../../reduxes/userCreation';
 
-export default class Creation extends React.Component {
+export default class CreationStepper extends React.Component {
   constructor() {
     super();
     this.handleNext = this.handleNext.bind(this);
