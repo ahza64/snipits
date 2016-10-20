@@ -1,0 +1,19 @@
+.dropzone {
+  margin-left: 5%;
+  margin-right: 5%;
+  border: grey 2px dashed;
+  height: 200px;
+  width: 90%;
+  border-radius: 20px;
+  cursor: pointer;
+
+  .dropzone-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 25px;
+    opacity: 0.5;
+    color: grey;
+  }
+}

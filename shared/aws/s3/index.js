@@ -17,16 +17,37 @@ s3.getObjectAsync = BPromise.promisify(s3.getObject);
 fs.writeFileAsync = BPromise.promisify(fs.writeFile);
 s3.deleteObjectsAsync = BPromise.promisify(s3.deleteObjects);
 s3.listObjectsAsync = BPromise.promisify(s3.listObjectsV2);
+s3.getSignedUrlAsync = BPromise.promisify(s3.getSignedUrl);
+s3.putBucketCorsAsync = BPromise.promisify(s3.putBucketCors);
 
 module.exports = {
   createBucket: co.wrap(function* (bucketName) {
-    var params = {
+    var params1 = {
       Bucket: bucketName,
       CreateBucketConfiguration: { LocationConstraint: 'us-west-2' },
     };
-    
+
+    var params2 = {
+      Bucket: bucketName,
+      CORSConfiguration: {
+        CORSRules: [
+          {
+            AllowedMethods: [
+              'GET',
+              'POST',
+              'PUT',
+              'DELETE'
+            ],
+            AllowedOrigins: [ '*' ],
+            AllowedHeaders: [ '*' ],
+          }
+        ]
+      }
+    };
+
     try {
-      yield s3.createBucketAsync(params);
+      yield s3.createBucketAsync(params1);
+      yield s3.putBucketCorsAsync(params2);
       console.log('Successfully created bucket ' + bucketName);
     } catch(e) {
       console.error(e);
@@ -93,6 +114,22 @@ module.exports = {
       var objs = yield s3.listObjectsAsync(params);
       console.log('Successfully display data from ' + bucketName);
       return objs;
+    } catch(e) {
+      console.error(e);
+    }
+  }),
+
+  sign: co.wrap(function* (action, bucketName, fileName, fileType) {
+    var params = {
+      Bucket: bucketName,
+      Key: fileName,
+      Expires: 3000,
+      ContentType: fileType
+    };
+
+    try {
+      var signedUrl = yield s3.getSignedUrlAsync(action, params);
+      return signedUrl;
     } catch(e) {
       console.error(e);
     }
