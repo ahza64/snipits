@@ -9,7 +9,7 @@ import DefaultNavbar from '../navbar/DefaultNavbar';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 
-export default class Ingestion extends React.Component {
+export default class Ingest extends React.Component {
   constructor() {
     super();
   }

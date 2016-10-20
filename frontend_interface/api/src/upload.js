@@ -46,27 +46,24 @@ router.post('/history', function*() {
   var fileName = body.file;
   var action = body.action;
 
-  // Check whether exists
+  // Check whether the user exists
   var user = yield Users.findOne({ where: { email: email }, raw: true });
   var userId = user.id;
-  var query = { fileName: fileName };
-  var existHis = yield Histories.find({ where: query, raw: true });
+  if (!userId) { this.throw(403); }
 
-  var obj = { fileName: fileName };
-  obj[action + 'Id'] = userId;
-  obj[action + 'Time'] = new Date();
-
-  if (existHis) {
-    // Exists, old history
-    yield Histories.update(obj, {
-      fields: [action + 'Id', action + 'Time'],
-      where: query 
-    });
-  } else {
-    // New history
-    yield Histories.create(obj);
+  var obj = {
+    fileName: fileName,
+    action: action,
+    time: new Date(),
+    userId: userId
+  };
+  try {
+    yield Histories.create(obj);  
+  } catch (e) {
+    console.error(e);
+    this.throw(500);
   }
-
+  
   this.throw(200);
 });
 

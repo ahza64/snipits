@@ -3,7 +3,8 @@ module.exports = function(sequelize, DataTypes) {
     name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING },
-    role: { type: DataTypes.STRING }
+    role: { type: DataTypes.STRING },
+    status: { type: DataTypes.STRING }
   }, {
     classMethods: {
       associate: function(models) {

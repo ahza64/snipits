@@ -9,7 +9,7 @@ import App from './components/App.jsx';
 import Upload from './components/upload/upload.jsx';
 import Login from './components/login/login.jsx';
 import Admin from './components/admin/admin.jsx';
-import Ingestion from './components/ingestion/ingestion.jsx';
+import Ingest from './components/ingest/ingest.jsx';
 
 // Router
 ReactDOM.render(
@@ -18,7 +18,7 @@ ReactDOM.render(
       <IndexRoute component={ Login } />
       <Route onEnter={ isRouteAuthorized } path='upload' component={ Upload }></Route>
       <Route onEnter={ isRouteAuthorized } path='admin' component={ Admin }></Route>
-      <Route onEnter={ isRouteAuthorized } path='ingest' component={ Ingestion }></Route>
+      <Route onEnter={ isRouteAuthorized } path='ingest' component={ Ingest }></Route>
     </Route>
   </Router>,
 document.getElementById('app'));

@@ -25,6 +25,7 @@ router.post('/user', function*() {
     email: temp.email,
     password: temp.password,
     role: temp.role,
+    status: 'active',
     companyId: companyId
   };
 

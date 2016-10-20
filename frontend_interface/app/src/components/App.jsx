@@ -14,7 +14,7 @@ export default class App extends React.Component {
   render() {
     return (
       <MuiThemeProvider>
-        {this.props.children}
+        { this.props.children }
       </MuiThemeProvider>
     );
   };
