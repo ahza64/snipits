@@ -82,7 +82,6 @@ describe('Add a new tree', function() {
           expect(err).to.equal(null);
           expect(res).to.be.an('object');
           expect(res.workorder[0].tasks).to.include(newTreeId);
-
           Tree.findOne({ _id: newTreeId }, function(err, tree) {
             tree = JSON.parse(JSON.stringify(tree));
             expect(err).to.equal(null);
@@ -119,7 +118,7 @@ describe('Add a new tree', function() {
       .end(function (err, res) {
         expect(err).to.equal(null);
         expect(res.body.envelope).to.be.an('object');
-        expect(res.body.envelope.status).to.equal(400);
+        expect(res.body.envelope.status).to.equal(409);
         done();
       });
     });

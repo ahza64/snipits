@@ -69,6 +69,7 @@ router.get('/logout',function (){
   this.session = null;
   this.logout();
   this.dsp_env.msg = 'Successfully Logged Out!!!';
+  this.dsp_env.status = 200;
   this.status = 200;
 });
 

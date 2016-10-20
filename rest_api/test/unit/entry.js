@@ -11,6 +11,7 @@ const mount = require('koa-mount');
 const testConfig = require('./config');
 const config = require('dsp_shared/config/config').get({log4js : false});
 const middleware = require('../../middleware');
+const error = require('../../error');
 config.meteor.mongo_db_name = 'dispatcher_unit_test';
 
 // Connect to Database
@@ -27,6 +28,9 @@ app.use(middleware.headerAccept);
 app.use(middleware.envelope);
 app.use(mount('/api/test', require('../../auth/auth')));
 app.use(middleware.auth);
+
+// Error
+app.use(error);
 
 // Test Router
 console.log("FILENMAE", __filename)

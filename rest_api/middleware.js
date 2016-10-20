@@ -37,16 +37,15 @@ module.exports = {
   auth: function*(next) {
     if(this.isAuthenticated()) {
       this.user = this.passport.user;
-      if(isPromise(this.passport.user)) {   
-        this.user = yield this.passport.user;   
+      if(isPromise(this.passport.user)) {
+        this.user = yield this.passport.user;
       }
       yield next;
     } else {
       if(this.request.header.accept === 'application/json'){
-        this.dsp_env.status = 400;
+        this.dsp_env.status = 401;
       }
-      this.status = 400;
-      this.dsp_env.msg = 'Not Authenticated!!';
+      this.setError(this.errors.LOGIN_ERROR);
     }
   },
 
