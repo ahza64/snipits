@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 
 // Components
 import DefaultNavbar from '../navbar/DefaultNavbar';
-import Creation from './creation';
+import CreationStepper from './stepper';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -19,7 +19,7 @@ export default class Admin extends React.Component {
     return (
       <div>
         <Row><DefaultNavbar /></Row>
-        <Row><Creation /></Row>
+        <Row><CreationStepper /></Row>
       </div>
     );
   }
