@@ -1,10 +1,11 @@
-// Modules
+// Module
 const koa = require('koa');
 const mount = require('koa-mount');
 const bodyParser = require('koa-body-parser');
 const session = require('koa-session');
 const cors = require('kcors');
-const models = require('../model/tables');
+const models = require('./model/tables');
+const authMiddle = require('./middleware/auth');
 
 // App
 const app = koa();
@@ -23,19 +24,12 @@ app.use(cors({
 }));
 app.use(bodyParser());
 
-// Routes
-app.use(mount('/', require('./auth')));
-app.use(function*(next) {
-  if(this.isAuthenticated()) {
-    this.user = this.passport.user;
-    yield next;
-  } else {
-    this.throw(401);
-  }
-});
-app.use(mount('/', require('./upload')));
-app.use(mount('/', require('./company')));
-app.use(mount('/', require('./user')));
+// Router
+app.use(mount('/', require('./router/auth')));
+app.use(authMiddle.auth);
+app.use(mount('/', require('./router/upload')));
+app.use(mount('/', require('./router/company')));
+app.use(mount('/', require('./router/user')));
 
 // Port
 app.listen(3000);
