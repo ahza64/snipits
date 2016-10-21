@@ -119,7 +119,7 @@ function *updateTree(treeId, treeUpdates, instance){
  */
 function *addTreeToWorkorder(userId, woId, treeId){
   try {
-    
+
     //check if tree already exists
     var user = yield Cuf.findOne({_id: userId});
     var workOrder = _.find(user.workorder, wo => {
@@ -244,18 +244,25 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
   try {
     var user = yield User.findOne({_id: userId}).select(user_exclude);
     var tree = yield Tree.findOne({_id:treeId});
-    //if existing tree is marked as done
-    result = yield updateTree(treeId, treeUpdates, this);
 
     if(treeDone) {
       treeUpdates.assigned_user_id = null;
       yield removeTreeFromWorkorder(userId, woId, treeId);
       this.dsp_env.msg = 'Tree Successfully Completed';
     } else {
-      yield addTreeToWorkorder(userId, woId, result._id.toString());
+      treeUpdates.assigned_user_id = userId;
+      yield addTreeToWorkorder(userId, woId, treeId);
       this.dsp_env.msg = 'Tree Successfully Updated';
     }
-    this.body = result;
+    
+    //if existing tree is marked as done
+    try{
+      result = yield updateTree(treeId, treeUpdates, this);
+      this.body = result;
+    } catch(e) {
+      console.log('EXCEPTION: ', e.message, result);
+      this.setError(this.errors.UPDATE_ERROR);
+    }
 
     //add to histories
     try{

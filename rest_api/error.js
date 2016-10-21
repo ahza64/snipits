@@ -4,6 +4,7 @@ const STATUS_RESOURCE = deepFreeze({
   LOGIN_ERROR: { status: 401, message: 'Login Failure. Not Authenticated!'},
   DUPLICATE_TREE: { status: 409, message: 'Tree already exists at this location'},
   GEOCODE_ERROR: { status: 201, message: 'No Address found at location'},
+  UPDATE_ERROR: { status: 500, message: 'Update Failed'},
   NOT_ADDED: {status: 400, message: 'not added'},
   NOT_FOUND: {status: 404, message: 'not found'},
   INTERNAL_SERVER_ERROR: {status: 500, message: 'Internal Server Error'},
