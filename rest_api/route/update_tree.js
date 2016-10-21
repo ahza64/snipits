@@ -119,8 +119,19 @@ function *updateTree(treeId, treeUpdates, instance){
  */
 function *addTreeToWorkorder(userId, woId, treeId){
   try {
-    var data = yield Cuf.update({_id: userId, 'workorder._id': woId}, {'$push': {'workorder.$.tasks': treeId}});
-    console.log('Tree ' + treeId + ' added and Workorder ' + woId + ' updated', data);
+    
+    //check if tree already exists
+    var user = yield Cuf.findOne({_id: userId});
+    var workOrder = _.find(user.workorder, wo => {
+      if(wo._id === woId){
+        return wo;
+      }
+    });
+    var tree = _.find(workOrder.tasks, treeId);
+    if(!tree){
+      var data = yield Cuf.update({_id: userId, 'workorder._id': woId}, {'$push': {'workorder.$.tasks': treeId}});
+      console.log('Tree ' + treeId + ' added and Workorder ' + woId + ' updated', data);
+    }
   } catch (err) {
     console.log(err);
   }
@@ -234,13 +245,14 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
     var user = yield User.findOne({_id: userId}).select(user_exclude);
     var tree = yield Tree.findOne({_id:treeId});
     //if existing tree is marked as done
+    result = yield updateTree(treeId, treeUpdates, this);
+
     if(treeDone) {
       treeUpdates.assigned_user_id = null;
-      result = yield updateTree(treeId, treeUpdates, this);
       yield removeTreeFromWorkorder(userId, woId, treeId);
       this.dsp_env.msg = 'Tree Successfully Completed';
     } else {
-      result = yield updateTree(treeId, treeUpdates, this);
+      yield addTreeToWorkorder(userId, woId, result._id.toString());
       this.dsp_env.msg = 'Tree Successfully Updated';
     }
     this.body = result;
