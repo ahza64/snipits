@@ -30,7 +30,7 @@ var treeSchema = new mongoose.Schema({
   riparian: Boolean,
   //added things below
   inc_id: {type: Number, index: { unique: true}},
-  localId: {type: String, index: { unique: true}},
+  local_id: {type: String, index: { unique: true}},
   region: {type: String, index: true},
   qsi_id: {type: String, index: true},
   assigned_user_id: String,
