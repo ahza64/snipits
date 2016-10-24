@@ -1,19 +1,17 @@
 // Modules
 const koa = require('koa');
 const router = require('koa-router')();
-const authRole = require('../middleware/auth').authRole;
 
 // App
 const app = koa();
 
 // Collection
-const Users = require('../model/tables').users;
-const Companies = require('../model/tables').companies;
+const Users = require('dsp_shared/database/model/ingestion/tables').users;
+const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
 
 // Create a user
 router.post(
   '/user',
-  authRole,
   function*() {
     var temp = this.request.body;
     var company = temp.company;

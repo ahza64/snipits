@@ -1,10 +1,11 @@
 // Modules
 import React from 'react';
 import * as request from 'superagent';
-import { displayFilesUrl, fileHistoryUrl, deleteFileUrl } from '../../config';
+import { fileHistoryUrl, deleteFileUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
+import UploadLib from './uploadLib';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -18,14 +19,10 @@ const deleteStyle = {
   'color': 'white'
 };
 
-export default class UploadedFiles extends React.Component {
+export default class UploadedFiles extends UploadLib {
   constructor() {
     super();
-    this.state = {
-      files: [],
-      open: false
-    };
-    this.getUploadedFiles = this.getUploadedFiles.bind(this);
+
     this.handleDelete = this.handleDelete.bind(this);
   }
 
@@ -35,21 +32,6 @@ export default class UploadedFiles extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({ files: nextProps.data });
-  }
-
-  getUploadedFiles() {
-    var company = authRedux.getState()['company.name'];
-
-    request
-    .get(displayFilesUrl + company)
-    .withCredentials()
-    .end((err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        this.setState({ files: res.body });
-      }
-    });
   }
 
   handleDelete(fileName) {
@@ -68,20 +50,7 @@ export default class UploadedFiles extends React.Component {
       } else {
         this.getUploadedFiles();
         this.setState({ open: true });
-
-        request
-        .post(fileHistoryUrl)
-        .withCredentials()
-        .send({
-          email: authRedux.getState().email,
-          file: fileName,
-          action: 'delete'
-        })
-        .end(err => {
-          if (err) {
-            console.error(err);
-          }
-        });
+        this.writeHistory(fileName, 'delete');
       }
     });
   }
@@ -95,6 +64,7 @@ export default class UploadedFiles extends React.Component {
               <TableHeaderColumn>ID</TableHeaderColumn>
               <TableHeaderColumn>File</TableHeaderColumn>
               <TableHeaderColumn>Last Modified Time</TableHeaderColumn>
+              <TableHeaderColumn>Status</TableHeaderColumn>
               <TableHeaderColumn>Action</TableHeaderColumn>
             </TableRow>
           </TableHeader>
@@ -106,6 +76,7 @@ export default class UploadedFiles extends React.Component {
                     <TableRowColumn>{ idx }</TableRowColumn>
                     <TableRowColumn>{ file.Key }</TableRowColumn>
                     <TableRowColumn>{ file.LastModified }</TableRowColumn>
+                    <TableRowColumn>{ file.status }</TableRowColumn>
                     <TableRowColumn>
                       <FloatingActionButton mini={ true } secondary={ true } onClick={ () => this.handleDelete(file.Key) }>
                         <Glyphicon glyph='trash' style={ deleteStyle } />

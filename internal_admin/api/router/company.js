@@ -2,18 +2,16 @@
 const koa = require('koa');
 const router = require('koa-router')();
 const s3 = require('dsp_shared/aws/s3');
-const authRole = require('../middleware/auth').authRole;
 
 // App
 const app = koa();
 
 // Collection
-const Companies = require('../model/tables').companies;
+const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
 
 // Get all companies
 router.get(
   '/company',
-  authRole,
   function*() {
     var companies = yield Companies.findAll({ raw: true });
     console.log('Get all companies: ', companies);
@@ -24,7 +22,6 @@ router.get(
 // Create a company
 router.post(
   '/company',
-  authRole,
   function*() {
     var company = this.request.body;
     var exists = yield Companies.count({

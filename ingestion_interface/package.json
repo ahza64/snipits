@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "webserver": "node api/server.js",
-    "dev-web": "nodemon api/server.js",
+    "dev-server": "nodemon api/server.js",
     "build": "node_modules/.bin/webpack",
-    "dev": "node_modules/.bin/webpack-dev-server"
+    "dev-web": "node_modules/.bin/webpack-dev-server"
   },
   "author": "dispatchr",
   "license": "ISC",

@@ -3,7 +3,7 @@
  */
 
 // Base Url
-const port = '3000';
+const port = '3333';
 const base = 'http://localhost:' + port;
 
 // API
@@ -14,6 +14,7 @@ const fileHistoryUrl = base + '/history';
 const s3authUrl = base + '/s3auth';
 const companyUrl = base + '/company';
 const userUrl = base + '/user';
+const ingestionRecordUrl = base + '/ingestions';
 
 export {
   loginUrl,
@@ -23,4 +24,5 @@ export {
   s3authUrl,
   companyUrl,
   userUrl,
+  ingestionRecordUrl,
 };

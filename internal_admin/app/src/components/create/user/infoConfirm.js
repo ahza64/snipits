@@ -19,13 +19,6 @@ const confirmContainerStyle = {
   'padding': 25
 };
 
-// Role Name Lib
-const roleNameLib = {
-  DA: 'Dispatchr Admin',
-  DI: 'Dispatchr Ingestor',
-  CU: 'Customer User',
-};
-
 export default class InfoConfirm extends React.Component {
   constructor() {
     super();   
@@ -61,9 +54,6 @@ export default class InfoConfirm extends React.Component {
           <Row>
             <Col xs={6} sm={6} md={6} lg={6}>
               <TextField defaultValue={ this.state.user.company } floatingLabelText='Company' disabled={ true } />
-            </Col>
-            <Col xs={6} sm={6} md={6} lg={6}>
-              <TextField defaultValue={ roleNameLib[this.state.user.role] } floatingLabelText='Role' disabled={ true } />
             </Col>
           </Row>
         </Paper>
