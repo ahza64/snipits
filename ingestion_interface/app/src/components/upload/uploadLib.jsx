@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import request from 'superagent';
-import { displayFilesUrl } from '../../config';
+import { displayFilesUrl, fileHistoryUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth'; 
@@ -15,6 +15,7 @@ export default class UploadLib extends React.Component {
       open: false
     };
 
+    this.writeHistory = this.writeHistory.bind(this);
     this.getFileStatus = this.getFileStatus.bind(this);
     this.getUploadedFiles = this.getUploadedFiles.bind(this);
   }
@@ -45,6 +46,22 @@ export default class UploadLib extends React.Component {
           f.status = this.getFileStatus(f.ingestion);
         });
         this.setState({ files: files });
+      }
+    });
+  }
+
+  writeHistory(fileName, action) {
+    request
+    .post(fileHistoryUrl)
+    .withCredentials()
+    .send({
+      email: authRedux.getState().email,
+      file: fileName,
+      action: action
+    })
+    .end(err => {
+      if (err) {
+        console.error(err);
       }
     });
   }

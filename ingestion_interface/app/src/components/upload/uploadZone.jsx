@@ -2,7 +2,7 @@
 import React from 'react';
 import * as request from 'superagent';
 import Dropzone from 'react-dropzone';
-import { displayFilesUrl, fileHistoryUrl, s3authUrl, ingestionRecordUrl } from '../../config';
+import { s3authUrl, ingestionRecordUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -20,25 +20,8 @@ export default class UploadZone extends UploadLib {
   constructor() {
     super();
 
-    this.writeHistory = this.writeHistory.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
     this.onDrop = this.onDrop.bind(this);
-  }
-
-  writeHistory(file) {
-    request
-    .post(fileHistoryUrl)
-    .withCredentials()
-    .send({
-      email: authRedux.getState().email,
-      file: file.name,
-      action: 'upload'
-    })
-    .end(err => {
-      if (err) {
-        console.error(err);
-      }
-    });
   }
 
   createIngestionRecord(file) {
@@ -70,7 +53,7 @@ export default class UploadZone extends UploadLib {
       } else {
         this.getUploadedFiles();
         this.setState({ open: true });
-        this.writeHistory(file);
+        this.writeHistory(file.name, 'upload');
         this.createIngestionRecord(file);
       }
     });
