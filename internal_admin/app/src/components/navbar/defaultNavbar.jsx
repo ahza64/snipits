@@ -3,7 +3,6 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import * as request from 'superagent';
 import authRedux from '../../reduxes/auth';
-import { isRoleAuthorizedTo } from '../auth/auth';
 
 // Styles
 import Nav from 'react-bootstrap/lib/Nav';
@@ -21,8 +20,6 @@ export default class DefaultNavbar extends React.Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.goToIngest = this.goToIngest.bind(this);
     this.goToCreate = this.goToCreate.bind(this);
-    this.showIngest = this.showIngest.bind(this);
-    this.showCreate = this.showCreate.bind(this);
   }
 
   handleLogout(event) {
@@ -51,18 +48,6 @@ export default class DefaultNavbar extends React.Component {
     browserHistory.push('/create');
   }
 
-  showIngest() {
-    if (isRoleAuthorizedTo('ingest')) {
-      return (<MenuItem eventKey={1.1} onClick={ this.goToIngest }>Ingest</MenuItem>);
-    }
-  }
-
-  showCreate() {
-    if (isRoleAuthorizedTo('create')) {
-      return (<MenuItem eventKey={1.2} onClick={ this.goToCreate }>Create</MenuItem>);
-    }
-  }
-
   render() {
     return (  
       <Navbar>
@@ -77,8 +62,8 @@ export default class DefaultNavbar extends React.Component {
         <Navbar.Collapse>
           <Nav pullRight>
             <NavDropdown eventKey={1} title='Menu' id='basic-nav-dropdown'>
-              { this.showIngest() }
-              { this.showCreate() }
+              <MenuItem eventKey={1.1} onClick={ this.goToIngest }>Ingest</MenuItem>
+              <MenuItem eventKey={1.2} onClick={ this.goToCreate }>Create</MenuItem>
               <MenuItem divider />
               <MenuItem eventKey={1.3} onClick={ this.handleLogout }>Logout</MenuItem>
             </NavDropdown>

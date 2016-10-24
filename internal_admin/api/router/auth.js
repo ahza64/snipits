@@ -5,8 +5,7 @@ const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 // Collection
-const Users = require('dsp_shared/database/model/ingestion/tables').users;
-const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
+const Admins = require('dsp_shared/database/model/ingestion/tables').admins;
 
 // App
 const app = koa();
@@ -20,7 +19,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-  Users.findOne({
+  Admins.findOne({
     where: { id: user.id },
     raw: true
   }).then(user => {
@@ -31,10 +30,9 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
-  Users.findOne({
+  Admins.findOne({
     where: { email: email }, 
-    raw: true,
-    include: [Companies]
+    raw: true
   }).then(user => {
     if (user.password === password) {
       done(null, user);

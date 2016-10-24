@@ -28,7 +28,8 @@ app.use(bodyParser());
 // Router
 app.use(mount('/', require('./router/auth')));
 app.use(authMiddleware);
-app.use(mount('/', require('./router/upload')));
+app.use(mount('/', require('./router/company')));
+app.use(mount('/', require('./router/user')));
 app.use(mount('/', require('./router/ingestion')));
 
 // Port
