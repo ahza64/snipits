@@ -6,6 +6,7 @@ const s3 = require('dsp_shared/aws/s3');
 // Collection
 const Histories = require('../model/tables').histories;
 const Users = require('../model/tables').users;
+const Ingestions = require('../model/tables').ingestions;
 
 // App
 const app = koa();
@@ -16,6 +17,19 @@ router.get('/displayUpload/:company', function*() {
   var bucket = company.toLowerCase() + '.ftp';
   var res = yield s3.list(bucket);
   var files = res.Contents;
+
+  for (var i = 0; i < files.length; i++) {
+    var file = files[i];
+    var fileName = file.Key;
+    var ingestion = yield Ingestions.findOne({
+      where: {
+        fileName: fileName
+      },
+      raw: true
+    });
+    file.ingestion = ingestion;
+  }
+
   console.log('Files already uploaded: ', files);
   this.body = files;
 });

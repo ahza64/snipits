@@ -2,12 +2,13 @@
 import React from 'react';
 import * as request from 'superagent';
 import Dropzone from 'react-dropzone';
-import { displayFilesUrl, fileHistoryUrl, s3authUrl } from '../../config';
+import { displayFilesUrl, fileHistoryUrl, s3authUrl, ingestionRecordUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
 import DefaultNavbar from '../navbar/DefaultNavbar';
 import UploadedFiles from './uploadedFiles';
+import UploadLib from './uploadLib';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -15,27 +16,66 @@ import Col from 'react-bootstrap/lib/Col';
 import Snackbar from 'material-ui/Snackbar';
 require('../../../styles/dropzone.scss');
 
-export default class UploadZone extends React.Component {
+export default class UploadZone extends UploadLib {
   constructor() {
     super();
     this.state = {
       files: [],
       open: false
     };
+
+    this.writeHistory = this.writeHistory.bind(this);
+    this.uploadFile = this.uploadFile.bind(this);
     this.onDrop = this.onDrop.bind(this);
   }
 
-  getUploadedFiles() {
-    var company = authRedux.getState()['company.name'];
+  writeHistory(file) {
+    request
+    .post(fileHistoryUrl)
+    .withCredentials()
+    .send({
+      email: authRedux.getState().email,
+      file: file.name,
+      action: 'upload'
+    })
+    .end(err => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  }
+
+  createIngestionRecord(file) {
+    var companyId = authRedux.getState()['company.id'];
 
     request
-    .get(displayFilesUrl + company)
+    .post(ingestionRecordUrl)
     .withCredentials()
-    .end((err, res) => {
+    .send({
+      fileName: file.name,
+      ingestEmail: 'tech@dispatchr.co',
+      companyId: companyId
+    })
+    .end(err => {
+      if (err) {
+        console.error(err);
+      }
+    });
+  }
+
+  uploadFile(file, signedUrl) {
+    request
+    .put(signedUrl)
+    .set('Content-Type', file.type)
+    .send(file)
+    .end(err => {
       if (err) {
         console.error(err);
       } else {
-        this.setState({ files: res.body });
+        this.getUploadedFiles();
+        this.setState({ open: true });
+        this.writeHistory(file);
+        this.createIngestionRecord(file);
       }
     });
   }
@@ -57,34 +97,7 @@ export default class UploadZone extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        var signedUrl = res.text;
-
-        request
-        .put(signedUrl)
-        .set('Content-Type', file.type)
-        .send(file)
-        .end(err => {
-          if (err) {
-            console.error(err);
-          } else {
-            this.getUploadedFiles();
-            this.setState({ open: true });
-
-            request
-            .post(fileHistoryUrl)
-            .withCredentials()
-            .send({
-              email: authRedux.getState().email,
-              file: file.name,
-              action: 'upload'
-            })
-            .end(err => {
-              if (err) {
-                console.error(err);
-              }
-            });
-          }
-        });
+        this.uploadFile(file, res.text);
       }
     });
   }
