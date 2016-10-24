@@ -19,10 +19,6 @@ require('../../../styles/dropzone.scss');
 export default class UploadZone extends UploadLib {
   constructor() {
     super();
-    this.state = {
-      files: [],
-      open: false
-    };
 
     this.writeHistory = this.writeHistory.bind(this);
     this.uploadFile = this.uploadFile.bind(this);

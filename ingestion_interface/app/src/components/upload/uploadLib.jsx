@@ -9,6 +9,12 @@ import authRedux from '../../reduxes/auth';
 export default class UploadLib extends React.Component {
   constructor() {
     super();
+
+    this.state = {
+      files: [],
+      open: false
+    };
+
     this.getFileStatus = this.getFileStatus.bind(this);
     this.getUploadedFiles = this.getUploadedFiles.bind(this);
   }

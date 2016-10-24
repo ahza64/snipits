@@ -22,10 +22,7 @@ const deleteStyle = {
 export default class UploadedFiles extends UploadLib {
   constructor() {
     super();
-    this.state = {
-      files: [],
-      open: false
-    };
+
     this.handleDelete = this.handleDelete.bind(this);
   }
 
