@@ -2,14 +2,14 @@ var log = require('dsp_config/config').get().getLogger('['+__filename+']');
 var _ = require('underscore');
 var timer = require('co-timer');
 
-var EsriToken = require('./token');
-var Route = require('./route');
-var util = require('./util');
+var EsriToken = require('dsp_lib/gis/esri/token');
+var Route = require('dsp_lib/gis/esri/route');
+var util = require('dsp_lib/gis/esri/util');
 var http_get = util.http_get;
 var http_post = util.http_post;
 
-require('../starts_with');
-var compGeo = require("./compressed_geometry");
+require('dsp_lib/starts_with');
+var compGeo = require("dsp_lib/gis/esri/compressed_geometry");
 var manueverEnum = {
     esriDMTUnknown:	0,
     esriDMTStop: 1,

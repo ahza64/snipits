@@ -1,12 +1,12 @@
 
-var Route = require("./esri/route");
-var Routing = require("./esri/routing");
+var Route = require("dsp_lib/gis/esri/route");
+var Routing = require("dsp_lib/gis/esri/routing");
 
 module.exports.Route = Route;
 module.exports.Routing = Routing;
-module.exports.EsriToken = require("./esri/token");
-module.exports.FeatureService = require('./esri/feature_service');
-module.exports.Geocoding = require("./esri/geocode");
+module.exports.EsriToken = require("dsp_lib/gis/esri/token");
+module.exports.FeatureService = require('dsp_lib/gis/esri/feature_service');
+module.exports.Geocoding = require("dsp_lib/gis/esri/geocode");
 
 if (require.main === module) {
   var co = require("co");
