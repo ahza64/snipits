@@ -41,7 +41,7 @@ module.exports = {
     hot: true,
     inline: true,
     progress: true,
-    port: 8888
+    port: require('dsp_shared/conf.d/config').admin.web_port
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()

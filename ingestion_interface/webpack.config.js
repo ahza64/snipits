@@ -40,7 +40,8 @@ module.exports = {
     historyApiFallback: true,
     hot: true,
     inline: true,
-    progress: true
+    progress: true,
+    port: require('dsp_shared/conf.d/config').ingestionPostgres.web_port
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
