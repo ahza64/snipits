@@ -3,7 +3,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 
 // Components
-import DefaultNavbar from '../navbar/DefaultNavbar';
+import DefaultNavbar from '../navbar/defaultNavbar';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
