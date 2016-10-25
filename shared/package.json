@@ -25,13 +25,18 @@
     "node-geocoder": "^3.11.0",
     "pg": "^6.1.0",
     "pg-native": "^1.10.0",
+    "request": "^2.75.0",
+    "request-promise": "^4.1.1",
     "restler": "^3.4.0",
     "sequelize": "^3.24.0",
+    "sha1": "^1.1.1",
     "sugar": "^1.4.1",
     "tree-status-codes": "https://github.com/Dispatchr/tree-status-codes.git",
     "underscore": "^1.8.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "should": "^11.1.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
