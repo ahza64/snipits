@@ -40,7 +40,6 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
           log.error('Error:', error);
         }
         if(isMatch) {
-          log.info('GOT USER', user);
           return done(null, user);
         }
         return done(null, false);
@@ -57,9 +56,17 @@ app.use(passport.session());
 router.post('/login',
   passport.authenticate('local', {}),
   function *() {
-
-    log.info("USER LOG IN", this.passport.user["email"], this.host, this.hostname, "https://"+this.host+"/login");
-
+    log.info("USER LOG IN", this.passport.user.uniq_id, this.host, this.hostname, "https://"+this.host+"/api/v3/login");
+    var log_me = {
+      method: this.method,
+      id: this.id,
+      host: this.request.host,
+      url: this.originalUrl,
+      body: this.request.body,
+      user: this.passport.user,
+      "user-agent": this.request.header['user-agent']
+    };
+    log.info(log_me);
     this.status = 200;
     this.body = this.passport.user;
   }
