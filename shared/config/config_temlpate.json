@@ -25,23 +25,34 @@
     },
     "corsWhitelist": ["http://dispatchr.com", "http://dispatchr.co", "http://localhost:80"],
     "dispatchr":{
-                "mongo_db_host": "localhost",
-                "mongo_db_port": 27017,
-                "mongo_db_name":"prod_trans",
-                "name":"dispatchr"
+        "mongo_db_host": "localhost",
+        "mongo_db_port": 27017,
+        "mongo_db_name": "prod_trans",
+        "name":"dispatchr"
     },
-     "meteor":{
-                "mongo_db_host": "localhost",
-                "mongo_db_name": "dev_meteor",
-                "mongo_db_port": 27017,
-                "name":"meteor"
+    "meteor":{
+        "mongo_db_host": "localhost",
+        "mongo_db_name": "dev_meteor",
+        "mongo_db_port": 27017,
+        "name":"meteor"
     },
     "postgres":{
-      "name":"postgres",
-      "db_host":"localhost",
-      "db_name": "postgres",
-      "db_user": "hasnain",
-      "db_pass": ""
+        "name": "postgres",
+        "db_host": "localhost",
+        "db_name": "postgres",
+        "db_user": "hasnain",
+        "db_pass": ""
+    },
+    "ingestionPostgres": {
+        "db_username": "postgres",
+        "db_password": "465tenth",
+        "db_name": "platform",
+        "api_port": "3333",
+        "web_port": "3334"
+    },
+    "admin": {
+        "api_port": "3335",
+        "web_port": "3336"
     },
     "run_as_root": false
 }

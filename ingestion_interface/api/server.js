@@ -6,7 +6,7 @@ const session = require('koa-session');
 const cors = require('kcors');
 const models = require('dsp_shared/database/model/ingestion/tables');
 const authMiddleware = require('./middleware/auth');
-const port = require('./config').port;
+const port = require('dsp_shared/conf.d/config').ingestionPostgres.api_port;
 
 // App
 const app = koa();
