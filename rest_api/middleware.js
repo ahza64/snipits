@@ -54,9 +54,9 @@ module.exports = {
     if(this.request.connection) {
       ip = this.request.connection.remoteAddress;
     }
-
     var log_me = {
       method: this.method,
+      id: this.id,
       host: this.request.host,
       url: this.originalUrl,
       body: this.request.body,
@@ -64,7 +64,7 @@ module.exports = {
       user_ip: ip,
       "user-agent": this.request.header['user-agent']
     };
-    request_log.info(JSON.stringify(log_me));
+    request_log.info(log_me);
 
     yield next;
   }
