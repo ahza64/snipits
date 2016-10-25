@@ -75,9 +75,10 @@ const TREE_WORK_COMP = {                  //<TreeWorkComp>
 var TreeWorkComplete = function(tree, trimmer, image, test_email) {
   if(tree.tc_image && !image) {
     console.error("ERROR tree image missing", tree._id, tree.tc_image);
-    throw new Error("tree image missing");
+    tree.tc_image = null;
+    //throw new Error("tree image missing");
   }
-  
+  this.tree = tree;  
   this.statusFlags = TreeStates.fetchStatusFlags(tree.status);
   
 
@@ -185,7 +186,7 @@ function isNumeric( obj ) {
 
 
 TreeWorkComplete.prototype.get = function(key) {
-  return this.work_complete[key];
+  return this.work_complete[key] || this.tree[key];
 };
 
 TreeWorkComplete.prototype._testValue = function(key, options) {

@@ -151,8 +151,8 @@ function *generateWorkComplete(startDate, endDate, includeExported, treeIds, exp
   var export_warnings = 0;
   var tree_count = 0;
   for(var i = 0; i < aggregates.length; i++) {
-    console.log("Grouping ", i, "of", aggregates.length);
     var aggr = aggregates[i];
+    console.log("Grouping ", i, "of", aggregates.length, aggr._id);
     
     var trees = aggr.trees;
     var results = yield createGroups(trees, cufs, email);

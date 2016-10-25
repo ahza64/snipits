@@ -20,11 +20,11 @@ TreeWorkCompleteGroup.prototype.addWorkComplete = function(work_complete) {
   if(this.work_completes.length === 0) {
     this.contractor = work_complete.get("ExternalWRParam-sContCode");
     this.division   = work_complete.get("ExternalWRParam-sDivCode");
-    this.pmd_num    = work_complete.get("ExternalWRParam-iProjNum");
+    this.pmd_num    = work_complete.get("pge_pmd_num");
   } else {
     assert(this.contractor === work_complete.get("ExternalWRParam-sContCode"), "sContCode missmatch "+work_complete.get("ExternalTreeID"));
     assert(this.division   === work_complete.get("ExternalWRParam-sDivCode"), "sDivCode missmatch "+work_complete.get("ExternalTreeID"));
-    assert(this.pmd_num    === work_complete.get("ExternalWRParam-iProjNum"), "iProjNum missmatch "+work_complete.get("ExternalTreeID"));
+    assert(this.pmd_num    === work_complete.get("pge_pmd_num"), "iProjNum missmatch "+work_complete.get("ExternalTreeID"));
   }
   
   assert(this.contractor);
