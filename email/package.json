@@ -1,0 +1,19 @@
+{
+  "name": "email",
+  "version": "1.0.0",
+  "description": "Send email service.",
+  "main": "null",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "google-auth-library": "^0.9.8",
+    "googleapis": "^14.0.0",
+    "mailcomposer": "^3.12.0",
+    "mustache": "^2.2.1",
+    "sequelize-cli": "^2.4.0"
+  }
+}
