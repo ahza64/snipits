@@ -41,6 +41,7 @@ module.exports = {
     hot: true,
     inline: true,
     progress: true,
+    host: require('dsp_shared/conf.d/config').ingestionPostgres.host,
     port: require('dsp_shared/conf.d/config').ingestionPostgres.web_port
   },
   plugins: [
