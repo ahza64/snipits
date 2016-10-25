@@ -6,8 +6,6 @@
 
 var utils = require('dsp_shared/lib/cmd_utils');
 utils.connect(['meteor']);
-var esri_util = require("dsp_shared/lib/gis/esri_util");
-var http_get = esri_util.http_get;
 var assert = require('assert');
 var _ = require('underscore');
 var migrate_util = require('dsp_shared/lib/migrate');
@@ -21,6 +19,10 @@ var TreeStates = require('tree-status-codes');
 var geocode = require("dsp_shared/lib/gis/google_geocode");
 
 var Ingest = require('dsp_shared/database/model/ingest');
+
+const ArcServer = require("dsp_shared/lib/gis/esri/arcserver");
+const ArcServerToken = require("dsp_shared/lib/gis/esri/arcserver/token");
+
 
 var dsp_project = "transmission_2015";
 
@@ -47,13 +49,12 @@ var detection_priorities = {
  * Entry point of script
  */
 function *run(service_name, force, block_create){
-  console.log("RUNNING arcgis ingest");
+  console.log("RUNNING arcgis ingest", service_name, force, block_create);
   var project = dsp_project.toUpperCase();
+  
+
   var host = "https://esri.dispatchr.co:6443";
-  var folder_path = ["/arcgis/rest/services", project].join("/");
-  var base_params = {
-   f: "pjson"
-  };
+  var base_url = host+"/arcgis/rest/services";
   
   var latest = yield Ingest.findOne({latest: true});
   if(!latest) {
@@ -67,68 +68,63 @@ function *run(service_name, force, block_create){
   latest.details = [];
   yield latest.save();
   
-  if(service_name) {
-    service_name = [project, service_name].join('/');
-  }
-  
-  
-  console.log("folder", folder_path);
-  var base_url = [host, folder_path].join('/');  
-  console.log("FOLDER", base_url);  
-  var folder = yield http_get(base_url, base_params);  
-  
-  var server = ArcGISServer(base_url);
-  console.log("FOLDER", folder);
-  for(var s = 0; s < folder.services.length; s++){
-    var service = folder.services[s];    
-    console.log("LOOKING FOR ", service_name);
-    console.log("LOOKING FOR ", service.name);
-    if(!service_name || service_name === service.name ){
-
-      console.log("service", folder.services[s]);
-      var service_path = ["/arcgis/rest/services", service.name, service.type].join("/");
-
-      base_url = [host, service_path].join('/');
-      console.log("service url PATH", base_url);
- 
-      service = yield http_get(base_url, base_params);
-      for(var i = 0; i < service.layers.length; i++) {
-        var layer_group = service.layers[i];
-        if(layer_group.subLayerIds && layer_group.parentLayerId === -1) {
-          var ingest = yield ingestGroup(layer_group, service, base_url, force, block_create);
-          latest.details.push(ingest);
-        }
-      }      
+  var server = new ArcServer(base_url);
+  var token = new ArcServerToken(host, "system", "465tenth");
+  server.setToken(token);
+    
+  var folder = yield server.getFolder(project);
+  var services = yield folder.services();
+  for(var i = 0; i < services.length; i++) {
+    if(service_name) {
+      console.log("LOOKING FOR SERVICE", service_name, services[i]);
     }
+    if(!service_name || service_name === services[i] ){
+      console.log("PROCESSING SERVICE", services[i]);
+      var service = yield folder.getService(services[i]);      
+      var layers = yield service.layers();
+      for(var j = 0; j < layers.length; j++) {
+        var layer_name = layers[j];
+        if( service.layerHasSubLayers(layer_name)) {
+          var layer = yield service.getLayer(layer_name);
+          if(layer.type === "Group Layer") {
+            console.log("LAYER", layer.name);
+            var group_service = yield layer.getSubLayerService();
+            var ingest = yield ingestGroup(group_service, force, block_create);
+            latest.details.push(ingest);
+          }          
+        }
+      }        
+    }      
   }
   latest.status = "complete";
   yield latest.save();
 }
 
 
-function *ingestGroup(layer_group, service, base_url, force, block_create){
-  console.log("check ingested", {name: layer_group.name, script: "arcgis_ingest", status: "complete"});
-  var ingest = yield Ingest.findOne({name: layer_group.name, script: "arcgis_ingest", status: "complete"}).sort({date: -1});
+function *ingestGroup(group_service, force, block_create){
+  // console.log("check ingested", {name: group_service.name, script: "arcgis_ingest", status: "complete"});
+  var ingest = yield Ingest.findOne({name: group_service.name, script: "arcgis_ingest", status: "complete"}).sort({date: -1});
   if(ingest && !force) {
-    console.log("Layer group previously ingested", layer_group.name);
+    console.log("Layer group previously ingested", group_service.name);
   } else {
-    console.log("Ingesting...", layer_group.name);
+    console.log("Ingesting...", group_service.name);
     ingest = yield Ingest.create({
-      name: layer_group.name,
+      name: group_service.name,
       status: "running",
       script: "arcgis_ingest", 
       date: new Date()
     });
 
-    console.log("LAYER GROUP", layer_group.name, layer_group.id);
-    for(var j = 0; j < layer_group.subLayerIds.length; j++) {
-      var layer_id = layer_group.subLayerIds[j];
-      console.log("LAYERS", layer_id);
-      var layer = service.layers[layer_id];
+    console.log("LAYER GROUP", group_service.name);
+    var layers = yield group_service.layers();
+    for(var i = 0; i < layers.length; i++) {
+      console.log("LAYERS", layers[i]);      
+      var layer = yield group_service.getLayer(layers[i]);
+      console.log("GOT LAYER", layer.name);
       if(layer.name.endsWith("TreeTops")) {
-        yield processLayer(base_url, layer, block_create);
+        yield processLayer(layer, block_create);
       }else if(layer.name.endsWith("Spans")) {
-        yield processSpansLayer(base_url, layer);
+        yield processSpansLayer(layer);
       } 
       console.log("ingested", trees_ingested, "ignored", trees_ignored, "total", total_trees);
     }
@@ -140,55 +136,25 @@ function *ingestGroup(layer_group, service, base_url, force, block_create){
 }
 
 /**
- * @description queries the Map Service for all feature ids for all the features in the layer
- * @param {String} base_url the url for ESRI Map Service
- * @param {Object} layer layer object from a ESRI MapService 
- */
-function *getFeatureIds(base_url, layer) {
-  var url = [base_url, layer.id, "query"].join("/");
-  var params = {
-    where:"1=1", 
-    f: "pjson", 
-    outFields: '*',
-    outSR: "4326",
-    returnIdsOnly: true
-  };
-  var ids = yield http_get(url, params);
-  ids = ids.objectIds || [];
-  return ids;
-}
-
-/**
  * @description Process Spans Layer to create or update a Circuit info
  * @param {String} base_url paramDescription
  * @param {Object} layer layer object from a ESRI MapService 
  */
-function *processSpansLayer(base_url, layer) {
-  var span_ids = yield getFeatureIds(base_url, layer);
-  var batch_size = 500;
-  var params = {
-    where:"1=1", 
-    f: "pjson", 
-    outFields: '*',
-    outSR: "4326",
-  };  
-  var url = [base_url, layer.id, "query"].join("/");
-  var line = {project: dsp_project, url: url};
-  for(var i = 0; i <= span_ids.length; i+=batch_size){ 
-    var ids = span_ids.slice(i, i+batch_size);
-    params.objectIds = ids.join(",");
-    var spans = yield http_get(url, params);    
-    _.each(spans.features, function(span){
+function *processSpansLayer(layer) {
+  var line = {project: dsp_project, url: layer.getURL()};
+  for(var feature of layer.streamFeatures()) {
+    var span = yield feature;
+    if(span) {
       line.name = sanitizeLineName(span.attributes.LINE_NAME);
       line.voltage = span.attributes.VOLTAGE;
       line.line_number = span.attributes.LINE_NBR;
       line.division = span.attributes.DIVISION;
       line.region = span.attributes.REGION;
       line.length = line.length || 0;
-      line.length += span.attributes["SHAPE.STLength()"];
-    });
+      line.length += span.attributes["SHAPE.STLength()"];      
+    }
   }
-  
+    
 
   var doc = yield Circuit.findOne({name: line.name});
   if(!doc) {
@@ -208,28 +174,22 @@ function *processSpansLayer(base_url, layer) {
  * @param {String} base_url paramDescription
  * @param {Object} layer layer object from a ESRI MapService 
  */
-function *processLayer(base_url, layer, block_create) {
-  var tree_ids = yield getFeatureIds(base_url, layer);
-  var tree_count = tree_ids.length;
-  console.log("Process Tree Layer", layer.name, layer.id, tree_count);           
-  
-  
-  var params = {
-    where:"1=1", 
-    f: "pjson", 
-    outFields: '*',
-    outSR: "4326"
-  };
-  
+function *processLayer(layer, block_create) {
+  var trees = [];
   var batch_size = 500;
-  var url = [base_url, layer.id, "query"].join("/");
-  for(var i = 0; i <= tree_count; i+=batch_size){ 
-    var ids = tree_ids.slice(i, i+batch_size);
-    params.objectIds = ids.join(",");
-    var trees = yield http_get(url, params);    
-    assert(trees.features.length === batch_size || i+trees.features.length === tree_count);
-    yield processTrees(trees.features, block_create);
-  }  
+  for(var feature of layer.streamFeatures()) {
+    var tree = yield feature;
+    if(tree) {
+      trees.push(tree);
+    }
+    
+    
+    if(trees.length === batch_size) {
+      yield processTrees(trees, block_create);
+      trees = [];
+    }    
+  }
+  yield processTrees(trees, block_create);
 }
 
 /**
@@ -264,38 +224,43 @@ function *processTrees(trees, block_create) {
     }
     var tree = yield translateTree(trees[i], address);
     if(shouldIngest(tree)){
+      yield ingestTree(tree, doc, block_create);
       trees_ingested++;
-      try{
-        if(!doc) {
-          if(!block_create) {
-            doc = yield TreeV3.create(tree);
-            console.log("Created Tree", doc.qsi_id);
-          }
-        } else {
-          var doc_pri = detection_priorities[doc.pge_detection_type];
-          var tree_pri = detection_priorities[tree.pge_detection_type];
-
-          if(tree_pri < doc_pri || doc.circuit_name === tree.circuit_name && 
-            (tree.pge_pmd_num !== doc.pge_pmd_num || tree.division !== doc.division)) {
-            console.log("Updated Tree", doc.qsi_id);
-            //override particular values (don't override user entered values)
-            doc.pge_detection_type = tree.pge_detection_type;
-            doc.division = tree.division;
-            doc.pge_pmd_num = tree.pge_pmd_num;
-            doc.span_name = tree.span_name;
-            doc.circuit_name = tree.circuit_name;
-            doc.save();
-          }
-        }
-      }catch(e) {
-        console.error("ERROR", e.message);
-        throw(e);
-      }
     } else {
       trees_ignored++;
     }
   }
 }
+function *ingestTree(tree, doc, block_create) {
+  console.log("Ingest Tree", tree.qsi_id, doc.qsi_id);
+  try{
+    if(!doc) {
+      if(!block_create) {
+        doc = yield TreeV3.create(tree);
+        console.log("Created Tree", doc.qsi_id);
+      }
+    } else {
+      var doc_pri = detection_priorities[doc.pge_detection_type];
+      var tree_pri = detection_priorities[tree.pge_detection_type];
+
+      if(tree_pri < doc_pri || doc.circuit_name === tree.circuit_name && 
+        (tree.pge_pmd_num !== doc.pge_pmd_num || tree.division !== doc.division)) {
+        console.log("Updated Tree", doc.qsi_id);
+        //override particular values (don't override user entered values)
+        doc.pge_detection_type = tree.pge_detection_type;
+        doc.division = tree.division;
+        doc.pge_pmd_num = tree.pge_pmd_num;
+        doc.span_name = tree.span_name;
+        doc.circuit_name = tree.circuit_name;
+        yield doc.save();
+      }
+    }
+  }catch(e) {
+    console.error("ERROR", e.message);
+    throw(e);
+  }    
+}
+
 
 var pmd_projects = {};
 

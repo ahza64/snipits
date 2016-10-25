@@ -12,7 +12,7 @@ require("should");
 describe('ESRI ArcServer Tokens', function() {
   var token;
   before(function(done) {
-    token = new Token("https://esri.dispatchr.co:6443/arcgis", "system", "465tenth");
+    token = new Token("https://esri.dispatchr.co:6443", "system", "465tenth");
     if(fs.existsSync(token.tokenFileName())) {
       fs.unlinkSync(token.tokenFileName());
     }
@@ -45,7 +45,7 @@ describe('ESRI ArcServer Tokens', function() {
     token.writeToken();
     
     //create new token from file system;
-    var read_token = new Token("https://esri.dispatchr.co:6443/arcgis", "system", "465tenth");
+    var read_token = new Token("https://esri.dispatchr.co:6443", "system", "465tenth");
     read_token.getTokenData().then(function(){
       read_token.token_data.token.should.be.eql("UPDATED");
       done();    
@@ -59,7 +59,7 @@ describe('ESRI ArcServer Tokens', function() {
     fs.existsSync(token.tokenFileName()).should.eql(true);
     token.token_data.expires = cur_time-1;
     token.writeToken().then(function(){
-      read_token = new Token("https://esri.dispatchr.co:6443/arcgis", "system", "465tenth");    
+      read_token = new Token("https://esri.dispatchr.co:6443", "system", "465tenth");    
       return read_token.getTokenData()
     }).then(function(){
       read_token.token_data.expires.should.be.above(cur_time);

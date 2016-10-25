@@ -2,9 +2,8 @@ var co_iterator = require("dsp_lib/co_iterator");
 var rp = require('request-promise');
 var _ = require('underscore');
 
+function api_generate_url(base_url, options) {
 
-function api_request(base_url, options, params) {
-  // console.log("api_request", base_url, options, params);
   var url = [base_url];
   options = options || {};
   if(options.folder) {
@@ -24,15 +23,22 @@ function api_request(base_url, options, params) {
   }  
   
   
+  url = url.join('/');
+  return url;
+}
+
+function api_request(base_url, options, params) {
+  // console.log("api_request", base_url, options, params);
+
+  options = options || {};
   params = params || {};
   params.f =  "pjson";
   if(options.token) {
     params.token = options.token;
-  }
-  url = url.join('/');
-  console.log('ArcServerAPI Request', url, params);
-
-
+  }  
+  
+  var url = api_generate_url(base_url, options);
+  // console.log('ArcServerAPI Request', url, params);
   return rp({
     uri: url,
     qs:  params,
@@ -91,7 +97,7 @@ Server.prototype.getService = function(service_name) {
   if(!this._services) {
     get_services = this.services();
   } else {
-    get_services = Promise.reslove(this._services);
+    get_services = Promise.resolve(this._services);
   }
   
   return get_services.then(function(){
@@ -104,7 +110,7 @@ Server.prototype.getService = function(service_name) {
         folder: self.folder
       };
       return self.api_request(api_opts).then(function(service){
-        return new Service(self, null, service_name, self._services[service_name].type, service);
+        return new Service(self, self.folder, service_name, self._services[service_name].type, service);
       });       
     }
   });
@@ -133,29 +139,45 @@ Server.prototype.getFolder = function(folder_name) {
   return Promise.resolve(new Server(this.base_url, this.token, folder_name));
 };
 
-var Service = function(server, folder_name, service_name, service_type, service) {
+Server.prototype.getURL = function(options) {
+  options = options || {};
+  if(this.folder) {
+    options.folder = this.folder;
+  }  
+  return api_generate_url(this.base_url, options);
+};
+
+var Service = function(server, folder_name, service_name, service_type, service, layer_ids) {
   this.server = server;
   this.folder_name = folder_name;
   this.name = service_name;
   this.type = service_type;
-  this.service = service;
+  this.service = JSON.parse(JSON.stringify(service));
   
+  if(layer_ids) {
+    this.service.layers = _.filter(this.service.layers, layer => _.contains(layer_ids, layer.id));
+  }
   
-  this.layer_ids = {};
+  this.layer_by_id = {};
   _.each(this.service.layers, layer => { 
-    this.layer_ids[layer.name] = layer.id;} );
+    this.layer_by_id[layer.name] = layer;
+  });
 };
 
 
 Service.prototype.layers = function() {
-  return _.map(this.service.layers, "name");
+  return Promise.resolve(_.map(this.service.layers, "name"));
 };
 
 Service.prototype.getLayer = function(layer_name) {
   var self = this;
-  return this.api_request(this.layer_ids[layer_name]).then(function(layer){
+  return this.api_request(this.layer_by_id[layer_name].id).then(function(layer){
     return new Layer(self, layer_name, layer);
   });
+};
+
+Service.prototype.layerHasSubLayers = function(layer_name) {
+  return this.layer_by_id[layer_name].subLayerIds && this.layer_by_id[layer_name].subLayerIds.length > 0;
 };
 
 Service.prototype.api_request = function(layer_id, params) {
@@ -173,10 +195,27 @@ Service.prototype.api_request = function(layer_id, params) {
   return this.server.api_request(api_options, params);
 };
 
+Service.prototype.getURL = function(layer_id) {
+  var api_options = {
+    folder: this.folder_name, 
+    service_name: this.name, 
+    service_type: this.type, 
+    layer_id: layer_id, 
+  };
+  
+  
+  return this.server.getURL(api_options);
+};
+
+Service.prototype.getLayerFilterService = function(layer_ids) {
+  return Promise.resolve(new Service(this.server, this.folder_name, this.name, this.type, this.service, layer_ids));
+};
+
 var Layer = function(service, layer_name, layer) {
   this.service = service;
   this.name = layer_name;
   this.layer = layer;
+  this.type = layer.type;
 };
 
 /**
@@ -193,6 +232,12 @@ Layer.prototype.getFeatureIds = function() {
     return response.objectIds || [];
   });
 };
+
+
+Layer.prototype.getSubLayerService = function() {  
+  return this.service.getLayerFilterService(_.map(this.layer.subLayers, layer => layer.id));
+};
+
 
 
 /**
@@ -245,33 +290,9 @@ Layer.prototype.query = function(params) {
 };
 
 
-
-// var Folder = function(folder_name) {
-//
-// };
-
-
-
-// function groupIter(base_url, service, layer_group) {
-//   return co_iterator(function*(handleNext){
-//     console.log("LAYER GROUP", layer_group.name, layer_group.id, layer_group.subLayerIds.length);
-//     for(var j = 0; j < layer_group.subLayerIds.length; j++) {
-//       var layer_id = layer_group.subLayerIds[j];
-//       console.log("LAYER ID", layer_id);
-//       var layer = service.layers[layer_id];
-//
-//       for(var feature of featureIter(base_url, layer) ) {
-//         feature = yield feature;
-//         // console.log("feature", feature)
-//         yield handleNext(feature);
-//         // console.log("CONTINUE")
-//       }
-//       // console.log("SDFD", j);
-//     }
-//   });
-// }
-
-
+Layer.prototype.getURL = function() {
+  return this.service.getURL(this.layer.id);
+};
 
 
 module.exports = Server;

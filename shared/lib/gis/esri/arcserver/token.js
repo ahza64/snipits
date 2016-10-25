@@ -20,12 +20,12 @@ var BPromise = require("bluebird");
 BPromise.promisifyAll(fs);
 
 
-var ArcServerToken = function(base_url, username, password, options) {
-  base_url = base_url || "https://esri.dispatchr.co:6443/arcgis";
+var ArcServerToken = function(host, username, password, options) {
+  host = host || "https://esri.dispatchr.co:6443";
   options = options || {};
   
-  this.base_url = base_url;
-  this.url = this.base_url + "/tokens/generateToken";
+  this.host = host;
+  this.url = this.host + "/arcgis/tokens/generateToken";
   
   this.username = username;
   this.password = password;
@@ -47,7 +47,7 @@ ArcServerToken.prototype.getTokenData = function() {
     }
     return token_data;
   }).catch(function(error){
-    if(error === "TOKEN EXPIRED" || error === "NO CACHED FILE") {
+    if(error === "TOKEN EXPIRED" || error === "NO CACHED FILE" || error === "FILE CONTENT ERROR") {
       return self.requestToken();
     }
     console.error("ArcServerToken.getTokenData", error);
@@ -96,7 +96,13 @@ ArcServerToken.prototype.requestToken = function(){
 ArcServerToken.prototype.readToken = function(){
   if(fs.existsSync(this.tokenFileName())) {
     return fs.readFileAsync(this.tokenFileName()).then(function(file){
-      return JSON.parse(file);
+      try {
+        return JSON.parse(file);
+      } catch(err) {
+        console.error("Token File Error", err);
+        return Promise.reject("FILE CONTENT ERROR");
+      }
+      
     });
   } else {
     return Promise.reject("NO CACHED FILE");
