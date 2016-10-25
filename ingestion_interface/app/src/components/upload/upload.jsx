@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Components
-import DefaultNavbar from '../navbar/DefaultNavbar';
+import DefaultNavbar from '../navbar/defaultNavbar';
 import UploadZone from '../upload/uploadZone';
 
 // Styles
