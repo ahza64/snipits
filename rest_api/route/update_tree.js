@@ -161,7 +161,7 @@ function *removeTreeFromWorkorder(userId, woId, treeId){
  * @return {Number}
  */
 function *checkLocation(location){
-  return yield Tree.find({'location.coordinates': location}).count();
+  return yield Tree.find({'location.coordinates': location, status: /^[^06]/}).count();
 }
 
 /**
@@ -254,7 +254,7 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
       yield addTreeToWorkorder(userId, woId, treeId);
       this.dsp_env.msg = 'Tree Successfully Updated';
     }
-    
+
     //if existing tree is marked as done
     try{
       result = yield updateTree(treeId, treeUpdates, this);
