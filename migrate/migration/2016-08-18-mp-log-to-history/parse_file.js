@@ -23,6 +23,7 @@ String.prototype.replaceAll = function(search, replacement) {
  * @param {String} line a line from the file
  */
 function LineParser(line) {
+  this.raw_line = line;
   this.line = stripAnsi(line);
   this.parseDate();
 }
@@ -69,72 +70,241 @@ LineParser.prototype.split = function(delimiter) {
   return this;
 };
 
-// I20160706-22:28:33.564(0)? TREES Assign/Unassign/Push
-// I20160706-22:28:33.565(0)? USER ID:  YApnWLeCzCBTFpmth
-// I20160706-22:28:33.566(0)? USER EMAIL:  elhj@pge.com
-// I20160706-22:28:33.566(0)? Assignee/Unassignee/Pushee ID:  ff9dCbxMCrMsPLk9n
-// I20160706-22:28:33.570(0)? Assignee/Unassignee/Pushee EMAIL:  pxwx@pge.com
-// I20160706-22:28:33.570(0)? Assigned Trees ID/ Trees ID /Pushed Trees ID:  [ '567a8282d45c85303a37158c',
-function *parsePushAssign(lines, line) {
 
-  var types = {
-    "TREES Assign": "assign",
-    "TREES Unassign": "unassign",
-    "TREES Push": "push"
-  };
-  
-  var result = {type: types[line.content]};
-  
-  var labels = {
-    assign: {target_user: "Assignee ID", target_email: "Assignee EMAIL", tree_ids: "Assigned Trees ID"},
-    unassign: {target_user: "Unassignee ID", target_email: "Unassignee EMAIL", tree_ids: "Unassigned Trees ID"},
-    push: {target_user: "Pushee ID", target_email: "Pushee EMAIL", tree_ids: "Pushed Trees ID"},
-  };
-  
-  yield findValue(lines, "USER ID", "user_id", result);
-  yield findValue(lines, "USER EMAIL", "user_email", result);
-  yield findValue(lines, labels[result.type].target_user, "target_id", result);
-  yield findValue(lines, labels[result.type].target_email, "target_email", result);
-  yield findArray(lines, labels[result.type].tree_ids, "tree_ids", result);  
-  return result;
+
+
+
+
+
+function ParserBackupError(message, push_back_lines) {
+    this.name = "ParserBackupError";
+    this.message = (message || "");
+    this.push_back_lines = push_back_lines;
+}
+ParserBackupError.prototype = Error.prototype;
+
+
+
+
+var skipable_lines = ["Fetching batch", "Cufs published", "Divisions published", "Pmds published",
+"(STDERR) Trying to assign already assgined trees.", "generateTileCache", "ADMIN Cufs",
+"Drilldown Published", "Exception while ", "at ", "- - - - -", "Exception from sub divisions",
+"source: 'subscription", "Testing - createTileDir", "testGenerateTileCache"];
+function isSkipable(line) {
+  for(var i = 0; i < skipable_lines.length; i++) {
+    var prefix = skipable_lines[i];
+    if(line.content.startsWith(prefix)) {
+      return true;
+    }
+  }
+  return false;
+}
+// var not_skipable_lines = ["TREES Assign", "TREES Unassign", "TREES Push", "TREE EDIT", "Update Routine",
+// "Assignee ID", "Assignee EMAIL", "Assigned Trees ID", "Unassignee ID", "Unassignee EMAIL", "Unassigned Trees ID",
+// "Pushee ID", "Pushee EMAIL", "Pushed Trees ID", "'", "USER ID", "USER EMAIL", "Status:", "Tree ID"
+// // "   { _str: ", "Update Routine Value for"
+// ];
+// function isSkipable(line) {
+//
+//   for(var i = 0; i < not_skipable_lines.length; i++) {
+//     var prefix = not_skipable_lines[i];
+//     if(line.content.startsWith(prefix)) {
+//       return false;
+//     }
+//   }
+//   return true;
+// }
+
+
+
+var parser_types = {
+  "TREES Assign": 'assign',
+  "TREES Unassign": 'unassign',
+  "TREES Push": 'push',
+  "TREE EDIT": 'edit',
+  "Update Routine": 'routine'
+};
+
+var parsers = {
+  "assign": PushAssignParser,
+  "unassign": PushAssignParser,
+  "push": PushAssignParser,
+  "edit": EditParser,
+  // "routine": parseRoutine
+};
+
+
+
+
+function getParser(line) {
+  var type = getParserType(line);
+  if(parsers[type]) {
+    return new parsers[type]();
+  }
+  return null;  
+}
+
+function getParserType(line) {
+  for(var starter in parser_types) {        
+    if(line.content.startsWith(starter)) {
+      return parser_types[starter];
+    }
+  }
+  return null;  
+}
+// function isStarterLine(line) {
+//   return getParserType(line) !== null;
+// }
+
+
+function PushBackStreamer(file_path) {
+  var s = fs.createReadStream(file_path).pipe(es.split());
+  this.saved = [];
+  this.readable = [];
+  var _this = this;
+  function *lines_gen(){
+    var lines = stream_gen(s);
+    while(true) {
+      if(_this.readable.length > 0) {
+        var raw_line = _this.readable.shift();
+        // console.log("READING BACK LINE", raw_line);
+        yield Promise.resolve(raw_line);
+      } else {
+        var line = lines.next();
+        if(!line.done) {
+          yield line.value;
+        } else {
+          return;
+        }
+      } 
+    }
+  }
+  this.gen = lines_gen();
 } 
 
-// I20160706-20:20:49.264(0)? TREE EDIT
-// I20160706-20:20:49.265(0)? USER ID:  6HA8XRpemHsB8ej3K
-// I20160706-20:20:49.265(0)? USER EMAIL:  mime@pge.com
-// I20160706-20:20:49.265(0)? Tree ID:  56980abed9bfa5c61e093c57
-// I20160706-20:20:49.266(0)? Status:  notready  -->  ready
-/**
- * parseEdit - Parsing logs looking like above
- */
-function *parseEdit(lines) {
-  var result = {type: "edit"};
-  yield findValue(lines, "USER ID", "user_id", result);
-  yield findValue(lines, "USER EMAIL", "user_email", result);
-  yield findValue(lines, "Tree ID", "tree_id", result);
-  yield findValue(lines, "Status", "to_from", result);
+PushBackStreamer.prototype.pushBackLine = function(line){
+  this.saved.push(line);
+  // console.warn("PUSHING BACK LINE",this.saved.length, line);
+};
+PushBackStreamer.prototype.readBackLines = function() {
+  if(this.saved.length > 0) {
+    var ordered = this.saved.slice(0).sort();
+    if(this.read_back) {
+      var is_same = (this.read_back.length === ordered.length) && this.read_back.every(function(element, index) {
+          return element === ordered[index]; 
+      });
+      if(is_same) {
+        throw new Error('Reading back same lines a second time.');
+      }
+    }
+    this.readable = ordered;
+    
+    this.readable = this.saved;    
+    this.saved = [];
+    console.info('Read back lines', this.readable.length);
+    console.info('Read back lines', this.readable);
+  }
+};
 
-  result.to_from = result.to_from.split("-->");
-  assert(result.to_from.length === 2);
-  result.from = result.to_from[0].trim();
-  result.to = result.to_from[1].trim();
-  return result;
-}
 
-// I20160706-20:44:06.177(0)? Update Routine Value for:  [ { _str: '56abad6b21186723291505cf' },
-// I20160706-20:44:06.178(0)?   { _str: '56abad6b21186723291505d6' },
-// I20160706-20:44:06.178(0)?   { _str: '56abad6b21186723291505d8' },
-// I20160706-20:44:06.178(0)?   { _str: '56abad6b21186723291505da' },
-// I20160706-20:44:06.179(0)?   { _str: '56abad6c21186723291505e3' },
-function *parseRoutine(lines, line) {
-  var result = {type: "routine_flag"};
-  yield findArray(lines, "Update Routine Value for", "tree_ids", result, line, true);
+
+
+
+
+function *process_file(file_path) {
+  console.log("RUNNING", file_path);
+  var lines = new PushBackStreamer(file_path);
+  var parsed_results = [];
   
-  //"{ _str: '56abad70211867232915062a' }"
-  result.tree_ids = _.map(result.tree_ids, tree_id => tree_id.slice(9, -3));
-  return result;
+  var parsers = [];
+  for(var line of lines.gen) {
+    line = yield line;
+    if(line) {
+      var line_consumed = false;
+      line = stripAnsi(line);
+      if(line.startsWith("I201")) {
+        line = new LineParser(line);
+        var parser = getParser(line);
+        
+        if(parser) {          
+          parsers.push(parser);
+        }
+        if(!isSkipable(line)) {
+          
+          for(var i = 0; i < parsers.length; i++) {
+            parser = parsers[i];
+            line_consumed = parser.addLine(line);
+            // console.log("TEST LINE", line.raw_line, line_consumed, parser.result.type);
+            if(line_consumed) {
+              if(parser.result_ready) {              
+                parsed_results.push(parser.result);
+                parsers.splice(i, 1);
+              }                        
+              break;
+            }
+            //  else {
+            //   console.log("Skipping", line);
+            // }
+          }
+          // console.log("LINE", line.content, line_consumed, i);
+          if(!line_consumed && parsers.length > 0) {    
+            if(parsers.length > 2) {
+              console.log('Bad logging: ', line.raw_line, line_consumed);
+              throw new Error("Trying to parse more than two events at a time.  Parser logic is not work for this situation.");
+            }
+                    
+            console.log("LINE OUT OF ORDER");
+            //Found a line that was out of order.  Let's try to parse them in a different order.
+          
+            while(parsers.length > 0) {
+              parser = parsers.pop();
+              // console.log("LINES", parser.lines);
+              for(var j = 0; j < parser.lines.length; j++) {
+                lines.pushBackLine(parser.lines[j].raw_line);
+              }
+            }
+            lines.pushBackLine(line.raw_line);
+            lines.readBackLines();
+            // throw new Error("Unhandleable line");
+          }
+        }
+      }
+    }
+  }
+  console.log("PROCESSED");
+  return parsed_results;
 }
 
+
+function Parser() {  
+  this.gens = null;
+  this.result = {};
+  this.lines = [];
+  this.result_ready = false;
+}
+Parser.prototype.addLine = function(line) {
+  if(!this.gen) {
+    this.gen = this.parserGen(line);
+  }
+  
+  var line_consumed = this.gen.next(line);
+  if(line_consumed.done) {
+    this.result_ready = true;
+  }
+  return line_consumed.value;
+};
+
+Parser.prototype.consumeValue = function(line, label, field_name) {
+  if(line.content.startsWith(label)) {
+    this.lines = this.lines || [];
+    this.lines.push(line);
+    line.split(":", "label", field_name);
+    assert(line.label === label);
+    this.result[field_name] = line[field_name];
+    return {values_consumed: true, line_consumed: true};
+  } 
+  return  {values_consumed: false, line_consumed: false};
+};  
 
 /**
  * @function findArray - parses a multi line array 
@@ -144,116 +314,187 @@ function *parseRoutine(lines, line) {
  * @param {String} first_line if the frist line has already been read pass it in here
  * @param {Boolean} wrap When parsing the array should I wrap the coma delimited elements with a quote.
  */
-function *findArray(lines, label, field_name, result, first_line, wrap) {
+Parser.prototype.consumeArray = function(line, label, field_name, first_line, wrap) {
   wrap = wrap || false;
-  if(first_line) {
-    first_line.split(":", "label", field_name);
-    assert(first_line.label === label);
-    result[field_name] = first_line[field_name]; 
+  this.lines = this.lines || [];
+  // console.log("LINE", line);
+  
+  // if(first_line) {
+  //   result.lines.push(first_line);
+  //   first_line.split(":", "label", field_name);
+  //   assert(first_line.label === label);
+  //   result[field_name] = first_line[field_name];
+  // } else {
+    
+  // }
+  
+  if(!this.result[field_name]) {
+    this.consumeValue(line, label, field_name);
   } else {
-    yield findValue(lines, label, field_name, result);
+    this.lines.push(line);
+    this.result[field_name] += line.content; 
   }
-  
-  
-  var arr = result[field_name];
-  while(!arr.endsWith(']')) {
-    var line = new LineParser(yield lines.next().value);    
-    arr += line.content;    
-  }
-  if(wrap) {
-    //wrap each element of array in quotes 
-    arr = arr.replaceAll(",", '","');
-    arr = arr.replaceAll('[[]', '["');
-    arr = arr.replaceAll(']', '"]');
+  var arr = this.result[field_name];
 
-    arr = JSON.parse(arr);
-    arr = _.map(arr, val=>val.trim());
-    if(arr.length === 1 && arr[0] === "") {
-      arr = [];
-    }
-    result[field_name] = arr;
+  if(!arr.endsWith(']')) {
+    return {line_consumed:true, values_consumed: false};
+  } else {    
+    if(wrap) {
+      //wrap each element of array in quotes 
+      arr = arr.replaceAll(",", '","');
+      arr = arr.replaceAll('[[]', '["');
+      arr = arr.replaceAll(']', '"]');
 
-  } else {
-    arr = arr.replaceAll("'", '"');
-    result[field_name] = JSON.parse(arr);
-  }
-  
-  
-}
-
-
-function *findValue(lines, label, field_name, result) {
-  for(var line of lines) {
-    line = yield line;
-    if(line) {
-      line = new LineParser(line);
-      if(line.content.startsWith(label)) {
-        line.split(":", "label", field_name);
-        assert(line.label === label);
-        result[field_name] = line[field_name];
-        return line;
-      } else {        
-        if(!isSkipable(line.content)) {
-          console.log("Skipping", line.date, line.content, label, line.line);
-          process.exit();          
-        }
+      arr = JSON.parse(arr);
+      arr = _.map(arr, val=>val.trim());
+      if(arr.length === 1 && arr[0] === "") {
+        arr = [];
       }
+      this.result[field_name] = arr;
+
+    } else {
+      arr = arr.replaceAll("'", '"');
+      this.result[field_name] = JSON.parse(arr);
     }
+    
+    return {line_consumed:true, values_consumed: true};
   }
+  
+};  
+ 
+ 
+Parser.prototype.parseValue = function(line, value_type, prefix, field_name) {
+  var result;
+  
+  if(value_type === "value") {
+    result = this.consumeValue(line, prefix, field_name);          
+  } else if(value_type === "array") {
+    result = this.consumeArray(line, prefix, field_name);
+  }
+  return result;
+};
+  
+function PushAssignParser()  {
+  Parser.call(this);
 }
+PushAssignParser.prototype = Object.create(Parser.prototype);
+  
+// I20160706-22:28:33.564(0)? TREES Assign/Unassign/Push
+// I20160706-22:28:33.565(0)? USER ID:  YApnWLeCzCBTFpmth
+// I20160706-22:28:33.566(0)? USER EMAIL:  elhj@pge.com
+// I20160706-22:28:33.566(0)? Assignee/Unassignee/Pushee ID:  ff9dCbxMCrMsPLk9n
+// I20160706-22:28:33.570(0)? Assignee/Unassignee/Pushee EMAIL:  pxwx@pge.com
+// I20160706-22:28:33.570(0)? Assigned Trees ID/ Trees ID /Pushed Trees ID:  [ '567a8282d45c85303a37158c',
+PushAssignParser.prototype.parserGen = function*(line) {
 
+  var types = {
+    "TREES Assign": "assign",
+    "TREES Unassign": "unassign",
+    "TREES Push": "push"
+  };
+  
+  this.result.type =  types[line.content];
+  this.result.date = line.date;
+  this.lines.push(line);
+  
+  var labels = {
+    assign: {target_user: "Assignee ID", target_email: "Assignee EMAIL", tree_ids: "Assigned Trees ID"},
+    unassign: {target_user: "Unassignee ID", target_email: "Unassignee EMAIL", tree_ids: "Unassigned Trees ID"},
+    push: {target_user: "Pushee ID", target_email: "Pushee EMAIL", tree_ids: "Pushed Trees ID"},
+  };
 
-
-var skipable = ["Fetching batch", "Cufs published", "Divisions published", "Pmds published",
-"(STDERR) Trying to assign already assgined trees.", "generateTileCache", "ADMIN Cufs",
-"Drilldown Published", "Exception while ", "at ", "- - - - -"];
-function isSkipable(line) {
-  for(var i = 0; i < skipable.length; i++) {
-    var prefix = skipable[i];          
-    if(line.startsWith(prefix)) {
-      return true;
+  var values = [
+    ['value', "USER ID", "user_id"],
+    ['value', "USER EMAIL", "user_email"],
+    ['value', labels[this.result.type].target_user, "target_id"],
+    ['value', labels[this.result.type].target_email, "target_email"],
+    ['array', labels[this.result.type].tree_ids, "tree_ids"]
+  ];
+  line = yield true;
+  var i = 0;
+  while(true) {
+    
+    var result = this.parseValue(line, values[i][0], values[i][1], values[i][2]);
+    if(result.values_consumed) {
+      i++;
     }
-  }
-  return false;
+    
+    if(i < values.length) {
+      line = yield result.line_consumed;
+    } else {
+      return result.line_consumed;
+    }
+  }  
+}; 
+
+
+
+function EditParser()  {
+  Parser.call(this);
 }
-
-
-
-
-
-var parsers = {
-  "TREES Assign": parsePushAssign,
-  "TREES Unassign": parsePushAssign,
-  "TREES Push": parsePushAssign,
-  "TREE EDIT": parseEdit,
-  "Update Routine": parseRoutine
+EditParser.prototype = Object.create(Parser.prototype);
+  
+// I20160706-20:20:49.264(0)? TREE EDIT
+// I20160706-20:20:49.265(0)? USER ID:  6HA8XRpemHsB8ej3K
+// I20160706-20:20:49.265(0)? USER EMAIL:  mime@pge.com
+// I20160706-20:20:49.265(0)? Tree ID:  56980abed9bfa5c61e093c57
+// I20160706-20:20:49.266(0)? Status:  notready  -->  ready
+/**
+ * parseEdit - Parsing logs looking like above
+ */
+EditParser.prototype.parserGen = function*(line) {
+  this.result.type = "edit";
+  
+  
+  this.result.date = line.date;
+  this.lines.push(line);
+  line = yield true;
+  
+  var values = [
+    ['value', "USER ID", "user_id"],
+    ['value', "USER EMAIL", "user_email"],
+    ['value', "Tree ID", "tree_id"],
+    ['value', "Status", "to_from"],        
+  ];
+  
+  var i = 0;
+  while(true) {
+    var result = this.parseValue(line, values[i][0], values[i][1], values[i][2]);    
+    if(result.values_consumed) {
+      i++;
+    }
+    
+    if(i < values.length) {
+      line = yield result.line_consumed;
+    } else {
+      this.result.to_from = this.result.to_from.split("-->");
+      assert(this.result.to_from.length === 2);
+      this.result.from = this.result.to_from[0].trim();
+      this.result.to = this.result.to_from[1].trim();
+      
+      return result.line_consumed;
+    }
+  }  
 };
 
+// I20160706-20:44:06.177(0)? Update Routine Value for:  [ { _str: '56abad6b21186723291505cf' },
+// I20160706-20:44:06.178(0)?   { _str: '56abad6b21186723291505d6' },
+// I20160706-20:44:06.178(0)?   { _str: '56abad6b21186723291505d8' },
+// I20160706-20:44:06.178(0)?   { _str: '56abad6b21186723291505da' },
+// I20160706-20:44:06.179(0)?   { _str: '56abad6c21186723291505e3' },
+// function *parseRoutine(lines, line) {
+//   var result = {type: "routine_flag"};
+//   console.log("READING", "Update Routine");
+//   yield findArray(lines, "Update Routine Value for", "tree_ids", result, line, true);
+//
+//   //"{ _str: '56abad70211867232915062a' }"
+//   result.tree_ids = _.map(result.tree_ids, tree_id => tree_id.slice(9, -3));
+//   lines.readBackLines();
+//   return result;
+// }
 
-function *process_file(file_path) {
-  var s = fs.createReadStream(file_path).pipe(es.split());
-  var lines = stream_gen(s);
-  var parsed_results = [];
-  for(var line of lines) {
-    line = yield line;
-    if(line) {
-      line = stripAnsi(line);
-      
-      if(line.startsWith("I201")) {
-        line = new LineParser(line);
-        for(var starter in parsers) {        
-          if(line.content.startsWith(starter)) {
-            var result = yield parsers[starter](lines, line);
-            result.date = line.date;
-            parsed_results.push(result);
-          } 
-        }
-      }
-    }
-  }
-  console.log("PROCESSED");
-  return parsed_results;
-}
+
+
 
 
 module.exports = process_file;

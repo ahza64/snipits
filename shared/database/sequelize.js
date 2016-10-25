@@ -25,7 +25,7 @@ function setConnection(con_name, con) {
 
 
 function createConnection(config) {
-  console.log("CREATING CONNECTION", config);
+  console.log("Trying: Connecting to PostgreSQL(postgres):  mongodb://localhost:27017/prod_meteor", config);
   const POSTGRES_SERVER = config.db_host;
   const POSTGRES_DB = config.db_name;
   const POSTGRES_USER = config.db_user;

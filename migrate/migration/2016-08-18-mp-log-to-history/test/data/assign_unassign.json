@@ -1,0 +1,41 @@
+{
+    "log_file": "logs/assign_unassign.testlog",
+    "expected": [
+        { 
+          "type": "unassign",
+          "user_id": "DycKBjqqB2NcN97re",
+          "user_email": "d1kp@pge.com",
+          "target_id": "yG7MJ55KTQGWp4YCa",
+          "target_email": "pmay@pge.com",
+          "tree_ids": [ 
+               "575faee7e047bdb034f836db"
+           ],
+          "date": "2016-07-25T15:11:20.084Z"
+        },
+        { 
+            "type": "assign",
+            "user_id": "BycKBjqqB2NcN97re",
+            "user_email": "d1kp2@pge.com",
+            "target_id": "yG7MJ55KTQGWp4YCA",
+            "target_email": "pmay2@pge.com",
+            "tree_ids": [ 
+                "575faee7e047bdb034f836db",
+                "575faee7e047bdb034f836dd",
+                "575faee7e047bdb034f836de",
+                "575faee7e047bdb034f836df",
+                "575faee8e047bdb034f836e1",
+                "575faee8e047bdb034f836e5",
+                "575faeebe047bdb034f8370c",
+                "575faeece047bdb034f83710",
+                "575faeede047bdb034f83713",
+                "575faeede047bdb034f83714",
+                "575faeede047bdb034f83715",
+                "575faeede047bdb034f83716",
+                "575faeefe047bdb034f8372c",
+                "575faeefe047bdb034f8372d",
+                "575faeefe047bdb034f8372e"                 
+            ],
+            "date": "2016-07-25T15:11:20.086Z"
+        }
+    ]
+}

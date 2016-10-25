@@ -1,0 +1,18 @@
+{
+    "log_file": "logs/assign.testlog",
+    "expected": [
+        { "type": "assign",
+          "user_id": "DycKBjqqB2NcN97re",
+          "user_email": "d1kp@pge.com",
+          "target_id": "3AHNcnnaWDCebsrMw",
+          "target_email": "dow2@pge.com",
+          "tree_ids": [ 
+               "575fae95e047bdb034f832c7",
+               "575fae95e047bdb034f832ce",
+               "575fae95e047bdb034f832cf",
+               "577e3297bbf5a3119891bcd1" 
+           ],
+          "date": "2016-07-25T15:11:20.086Z"
+        }
+    ]
+}
