@@ -6,7 +6,7 @@ import { s3authUrl, ingestionRecordUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
-import DefaultNavbar from '../navbar/DefaultNavbar';
+import DefaultNavbar from '../navbar/defaultNavbar';
 import UploadedFiles from './uploadedFiles';
 import UploadLib from './uploadLib';
 
