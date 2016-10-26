@@ -3,11 +3,12 @@
  */
 
 // Base Url
-const port = '3333';
+const port = require('dsp_shared/conf.d/config.json').mooncake.api_port;
 const base = 'http://localhost:' + port;
 
 // API
 const loginUrl = base + '/login';
+const logoutUrl = base + '/logout';
 const displayFilesUrl = base + '/displayUpload/';
 const deleteFileUrl = base + '/delete';
 const fileHistoryUrl = base + '/history';
@@ -18,6 +19,7 @@ const ingestionRecordUrl = base + '/ingestions';
 
 export {
   loginUrl,
+  logoutUrl,
   displayFilesUrl,
   deleteFileUrl,
   fileHistoryUrl,

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
-const config = require('../../../../conf.d/config.json').ingestionPostgres;
+const config = require('../../../../conf.d/config.json').mooncake;
 const sequelize = new Sequelize(
   'postgres://' + config.db_username + ':' + config.db_password + '@localhost:5432/' + config.db_name
 );

@@ -20,26 +20,18 @@ export default class UploadZone extends UploadLib {
   constructor() {
     super();
 
+    this.state = {
+      files: [],
+      open: false
+    };
+
+    this.setFiles = this.setFiles.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
     this.onDrop = this.onDrop.bind(this);
   }
 
-  createIngestionRecord(file) {
-    var companyId = authRedux.getState()['company.id'];
-
-    request
-    .post(ingestionRecordUrl)
-    .withCredentials()
-    .send({
-      fileName: file.name,
-      ingestEmail: 'tech@dispatchr.co',
-      companyId: companyId
-    })
-    .end(err => {
-      if (err) {
-        console.error(err);
-      }
-    });
+  setFiles(files) {
+    this.setState({ files: files });
   }
 
   uploadFile(file, signedUrl) {
@@ -51,7 +43,7 @@ export default class UploadZone extends UploadLib {
       if (err) {
         console.error(err);
       } else {
-        this.getUploadedFiles();
+        this.getUploadedFiles(this.setFiles);
         this.setState({ open: true });
         this.writeHistory(file.name, 'upload');
         this.createIngestionRecord(file);
@@ -82,7 +74,7 @@ export default class UploadZone extends UploadLib {
   }
 
   componentDidMount() {
-    this.getUploadedFiles();
+    this.getUploadedFiles(this.setFiles);
   }
 
   render() {
