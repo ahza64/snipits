@@ -50,7 +50,7 @@ var treeSchema = new mongoose.Schema({
   notify_customer_value: {type: String},
   comments: {type: String},
   access_code_value: {type: String},
-  health: {type: Number, default: 100},
+  health: {type: Number, default: null},
   height: {type: Number, default: null},
   dbh: {type: Number, default: null},
 
