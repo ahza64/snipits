@@ -15,6 +15,7 @@ var _ = require('underscore');
 var app = koa();
 var TreeHistory = require('dsp_shared/database/model/tree-history');
 var config = require('../routes_config').update;
+var project = require('dsp_shared/conf.d/config').project;
 var MIN_DISTANCE = 0.125;
 var RETRIES = 2;
 var DELAY = 1000;
@@ -57,6 +58,7 @@ function *addMissingFields(treeObj, woId, user) {
   treeObj.span_name = workOrder.span_name || pmd.span_name;
   treeObj.division = workOrder.division || pmd.division;
   treeObj.region = workOrder.region || pmd.region;
+  treeObj.project = project;
   if(nearbyTree.length > 0){
     treeObj.circuit_name = nearbyTree[0].obj.circuit_name;
   } else {
