@@ -56,5 +56,6 @@
         "api_port": "3335",
         "web_port": "3336"
     },
-    "run_as_root": false
+    "run_as_root": false,
+    "project": "transmission_2015"
 }

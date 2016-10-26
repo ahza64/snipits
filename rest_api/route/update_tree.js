@@ -15,6 +15,7 @@ var _ = require('underscore');
 var app = koa();
 var TreeHistory = require('dsp_shared/database/model/tree-history');
 var config = require('../routes_config').update;
+var project = require('dsp_shared/conf.d/config').project;
 var MIN_DISTANCE = 0.125;
 var RETRIES = 2;
 var DELAY = 1000;
@@ -53,10 +54,21 @@ function *addMissingFields(treeObj, woId, user) {
   };
   var treeFromWorkorder = yield crud_opts.read(treeId);
   var nearbyTree = yield Tree.findNear(treeObj.location, MIN_DISTANCE, 'miles', query, 1);
+
+  //add assigned_user_id to new trees
+  treeObj.assigned_user_id = user._id;
+
+  //add project to new trees if it doesn't exist
+  if(!treeObj.project){
+    treeObj.project = project;
+  }
+
+  //other missing fields
   treeObj.pge_pmd_num = workOrder.pge_pmd_num;
   treeObj.span_name = workOrder.span_name || pmd.span_name;
   treeObj.division = workOrder.division || pmd.division;
   treeObj.region = workOrder.region || pmd.region;
+
   if(nearbyTree.length > 0){
     treeObj.circuit_name = nearbyTree[0].obj.circuit_name;
   } else {

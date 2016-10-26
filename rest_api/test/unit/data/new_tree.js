@@ -4,7 +4,8 @@ module.exports = {
     'location': {
       'type': 'Point',
       'coordinates': [ -121, 37 ]
-    }
+    },
+    "status": "1110000000000"
   },
 
   complete: {
@@ -13,6 +14,7 @@ module.exports = {
     'location': {
       'type': 'Point',
       'coordinates': [ -121, 36 ]
-    }
+    },
+    "status": "1110000000000"
   }
 };

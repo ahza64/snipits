@@ -24,13 +24,12 @@ app.use(bodyParser());
 app.use(requestId());
 app.keys = ['dispatchr_cookie::ius45jbipsdhip42oj59g'];
 app.use(session({ key: 'dispatchr:sess' }, app));
+// Error
+app.use(error);
 app.use(middleware.headerAccept);
 app.use(middleware.envelope);
 app.use(mount('/api/test', require('../../auth/auth')));
 app.use(middleware.auth);
-
-// Error
-app.use(error);
 
 // Test Router
 console.log("FILENMAE", __filename)
