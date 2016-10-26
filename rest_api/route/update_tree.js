@@ -58,15 +58,17 @@ function *addMissingFields(treeObj, woId, user) {
   //add assigned_user_id to new trees
   treeObj.assigned_user_id = user._id;
 
-  //add project to new trees
-  treeObj.project = project;
+  //add project to new trees if it doesn't exist
+  if(!treeObj.project){
+    treeObj.project = project;
+  }
 
   //other missing fields
   treeObj.pge_pmd_num = workOrder.pge_pmd_num;
   treeObj.span_name = workOrder.span_name || pmd.span_name;
   treeObj.division = workOrder.division || pmd.division;
   treeObj.region = workOrder.region || pmd.region;
-  
+
   if(nearbyTree.length > 0){
     treeObj.circuit_name = nearbyTree[0].obj.circuit_name;
   } else {
