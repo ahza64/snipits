@@ -24,6 +24,10 @@ module.exports = {
         test: /\.(png|jpg)$/, 
         loader: 'url-loader?limit=20000',
         include: path.resolve(ROOT_PATH, 'app/styles/assets') 
+      },
+      {
+        test: /\.json$/,
+        loaders: ['json']
       }
     ]
   },
@@ -41,8 +45,8 @@ module.exports = {
     hot: true,
     inline: true,
     progress: true,
-    host: require('dsp_shared/conf.d/config').ingestionPostgres.host,
-    port: require('dsp_shared/conf.d/config').ingestionPostgres.web_port
+    host: require('dsp_shared/conf.d/config').mooncake.host,
+    port: require('dsp_shared/conf.d/config').mooncake.web_port
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()

@@ -24,6 +24,10 @@ module.exports = {
         test: /\.(png|jpg)$/, 
         loader: 'url-loader?limit=20000',
         include: path.resolve(ROOT_PATH, 'app/styles/assets') 
+      },
+      {
+        test: /\.json$/,
+        loaders: ['json']
       }
     ]
   },

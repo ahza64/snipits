@@ -1,71 +1,67 @@
 // Modules
 import React from 'react';
 import * as request from 'superagent';
-import { fileHistoryUrl, deleteFileUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
 import UploadLib from './uploadLib';
+import ActionMenu from './actionMenu';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Snackbar from 'material-ui/Snackbar';
-const deleteStyle = {
-  'color': 'white'
-};
 
 export default class UploadedFiles extends UploadLib {
   constructor() {
     super();
 
-    this.handleDelete = this.handleDelete.bind(this);
+    this.state = {
+      files: [],
+      open: false,
+      ingestors: [],
+    };
+
+    this.setFiles = this.setFiles.bind(this);
+    this.setDelNotification = this.setDelNotification.bind(this);
+    this.setIngestorEmail = this.setIngestorEmail.bind(this);
   }
 
   componentWillMount() {
     this.setState({ files: this.props.data });
+    this.getIngestorEmail(this.setIngestorEmail);
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({ files: nextProps.data });
   }
 
-  handleDelete(fileName) {
-    var company = authRedux.getState()['company.name'];
-    
-    request
-    .post(deleteFileUrl)
-    .withCredentials()
-    .send({
-      file: fileName,
-      company: company
-    })
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        this.getUploadedFiles();
-        this.setState({ open: true });
-        this.writeHistory(fileName, 'delete');
-      }
-    });
+  setFiles(files) {
+    this.setState({ files: files });
+  }
+
+  setDelNotification() {
+    this.setState({ open: true });
+  }
+
+  setIngestorEmail(ingestors) {
+    this.setState({ ingestors: ingestors });
   }
 
   render() {
     return (
       <div>
-        <Table>
+        <Table selectable={ false }>
           <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
             <TableRow>
               <TableHeaderColumn>ID</TableHeaderColumn>
               <TableHeaderColumn>File</TableHeaderColumn>
               <TableHeaderColumn>Last Modified Time</TableHeaderColumn>
               <TableHeaderColumn>Status</TableHeaderColumn>
-              <TableHeaderColumn>Action</TableHeaderColumn>
+              <TableHeaderColumn>Menu</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={ false } selectable={ false }>
@@ -78,9 +74,12 @@ export default class UploadedFiles extends UploadLib {
                     <TableRowColumn>{ file.LastModified }</TableRowColumn>
                     <TableRowColumn>{ file.status }</TableRowColumn>
                     <TableRowColumn>
-                      <FloatingActionButton mini={ true } secondary={ true } onClick={ () => this.handleDelete(file.Key) }>
-                        <Glyphicon glyph='trash' style={ deleteStyle } />
-                      </FloatingActionButton>
+                      <ActionMenu
+                        setDelNotification={ this.setDelNotification }
+                        setFiles={ this.setFiles }
+                        files={ file.Key }
+                        ingestors={ this.state.ingestors }
+                      />
                     </TableRowColumn>
                   </TableRow>
                 );

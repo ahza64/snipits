@@ -1,4 +1,5 @@
 // Modules
+const urlPrefix = require('dsp_shared/conf.d/config.json').admin.url_prefix;
 import React from 'react';
 import { browserHistory } from 'react-router';
 import * as request from 'superagent';
@@ -63,7 +64,7 @@ export default class Login extends React.Component {
           type: 'LOGIN',
           user: res.body
         });
-        browserHistory.push('/ingest');
+        browserHistory.push(urlPrefix + 'ingest/');
       }
     });
   }

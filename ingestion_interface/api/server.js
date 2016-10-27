@@ -6,7 +6,8 @@ const session = require('koa-session');
 const cors = require('kcors');
 const models = require('dsp_shared/database/model/ingestion/tables');
 const authMiddleware = require('./middleware/auth');
-const port = require('dsp_shared/conf.d/config').ingestionPostgres.api_port;
+const config = require('dsp_shared/conf.d/config').mooncake;
+const port = config.api_port;
 
 // App
 const app = koa();
@@ -26,10 +27,10 @@ app.use(cors({
 app.use(bodyParser());
 
 // Router
-app.use(mount('/', require('./router/auth')));
+app.use(mount(config.url_prefix, require('./router/auth')));
 app.use(authMiddleware);
-app.use(mount('/', require('./router/upload')));
-app.use(mount('/', require('./router/ingestion')));
+app.use(mount(config.url_prefix, require('./router/upload')));
+app.use(mount(config.url_prefix, require('./router/ingestion')));
 
 // Port
 app.listen(port);

@@ -4,6 +4,10 @@ logs
 npm-debug.log*
 rest_api/test/logs/log.txt
 
+# build
+ingestion_interface/app/build/bundle.js
+internal_admin/app/build/bundle.js
+
 # Runtime data
 pids
 *.pid

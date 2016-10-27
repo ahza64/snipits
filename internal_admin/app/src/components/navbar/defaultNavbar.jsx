@@ -1,8 +1,10 @@
 // Modules
+const urlPrefix = require('dsp_shared/conf.d/config.json').admin.url_prefix;
 import React from 'react';
 import { browserHistory } from 'react-router';
 import * as request from 'superagent';
 import authRedux from '../../reduxes/auth';
+import { logoutUrl } from '../../config';
 
 // Styles
 import Nav from 'react-bootstrap/lib/Nav';
@@ -26,7 +28,7 @@ export default class DefaultNavbar extends React.Component {
     event.preventDefault();
 
     request
-    .get('http://localhost:3000/logout')
+    .get(logoutUrl)
     .withCredentials()
     .end(err => {
       if (err) {
@@ -35,17 +37,17 @@ export default class DefaultNavbar extends React.Component {
         authRedux.dispatch({
           type: 'LOGOUT'
         });
-        browserHistory.push('/');
+        browserHistory.push(urlPrefix);
       }
     });
   }
 
   goToIngest() {
-    browserHistory.push('/ingest');
+    browserHistory.push(urlPrefix + 'ingest/');
   }
 
   goToCreate() {
-    browserHistory.push('/create');
+    browserHistory.push(urlPrefix + 'create/');
   }
 
   render() {

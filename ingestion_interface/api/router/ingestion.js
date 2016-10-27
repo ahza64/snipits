@@ -7,6 +7,7 @@ const app = koa();
 
 // Collection
 const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestions;
+const Admins = require('dsp_shared/database/model/ingestion/tables').admins;
 
 // Create a file record for ingestions
 router.post(
@@ -56,6 +57,24 @@ router.put(
     }
 
     this.throw(200);
+  }
+);
+
+// Get ingestors' email
+router.get(
+  '/ingestions',
+  function*() {
+    try {
+      var ingestors = yield Admins.find({ where: { status: 'active' }, raw: true });
+    } catch(e) {
+      console.error(e);
+    }
+
+    if (Array.isArray(ingestors)) {
+      this.body = ingestors;
+    } else {
+      this.body = [ingestors];
+    }
   }
 );
 
