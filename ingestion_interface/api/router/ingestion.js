@@ -39,16 +39,19 @@ router.put(
   function*() {
     var body = this.request.body;
     var updateObj = {
+      fileName: body.fileName,
       notified: body.notified,
-      ingested: body.ingested
-    }; 
+      ingested: body.ingested,
+      ingestEmail: body.ingestEmail,
+      companyId: body.companyId
+    };
 
     try {
       yield Ingestions.update(
         updateObj,
         {
-          fields: ['notified', 'ingested'],
-          where: { id: body.ingestionsId }
+          fields: ['notified', 'ingested', 'ingestEmail', 'companyId'],
+          where: { fileName: body.fileName, companyId: body.companyId }
         }
       );
     } catch(e) {
@@ -56,7 +59,7 @@ router.put(
       this.throw(500);
     }
 
-    this.throw(200);
+    this.body = updateObj;
   }
 );
 

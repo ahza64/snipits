@@ -17,20 +17,30 @@ export default class IngestorNotification extends UploadLib {
   constructor() {
     super();
 
-    this.state = { ingestors: [] };
+    this.state = {
+      selectedIngestor: '',
+      ingestors: []
+    };
 
-    this.setIngestorEmail = this.setIngestorEmail.bind(this);
+    this.handleChangeIngestor = this.handleChangeIngestor.bind(this);
+    this.handleSubmitIngestor = this.handleSubmitIngestor.bind(this);
   }
 
   componentWillMount() {
     this.setState({ ingestors: this.props.ingestors });
   }
 
-  setIngestorEmail(event, idx, value) {
-    console.log('selected ', value);
-    
+  handleChangeIngestor(event, idx, value) {
+    this.setState({ selectedIngestor: value });
+  }
+
+  handleSubmitIngestor() {
     var fileName = this.props.files;
-    this.setIngestorEmail(fileName);
+    var ingestEmail = this.state.selectedIngestor;
+    this.setIngestorEmail(fileName, ingestEmail, () => {
+      this.getUploadedFiles(this.props.setFiles);
+      this.props.setClose();
+    });
   }
 
   render() {
@@ -38,7 +48,7 @@ export default class IngestorNotification extends UploadLib {
       <FlatButton
         label='Submit'
         primary={ true }
-        onClick={ this.props.setClose }
+        onClick={ this.handleSubmitIngestor }
       />,
       <FlatButton
         label='Cancel'
@@ -62,7 +72,8 @@ export default class IngestorNotification extends UploadLib {
       >
         <SelectField
           floatingLabelText='Ingestors'
-          onChange={ this.setIngestorEmail }
+          onChange={ this.handleChangeIngestor }
+          value={ this.state.selectedIngestor }
         >
           { menuItems }
         </SelectField>
