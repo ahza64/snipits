@@ -2,6 +2,25 @@ var fs = require("fs");
 var BPromise = require("bluebird");
 var parse = require('csv-parse');
 
+/**
+ * {@code
+ *     if (require.main === module) {
+ *       co(function*() {
+ *         var count = 0;
+ *         var csv_stream = streamCSV(file_name, {});
+ *         for(var line_obj of csv_stream) {
+ *           line_obj = yield line_obj;
+ *           console.log("Line", line_obj, count);
+ *           count++;
+ *         }      
+ *       }).then(function(){
+ *         console.log("DONE");
+ *       });
+ *     }
+ * }
+ */
+
+
 function *streamCSV(file_path) {
   console.log("streamCSV", file_path);
   var parser = parse({columns: true});      

@@ -2,7 +2,7 @@ var co = require('co');
 var esri_util = require("dsp_shared/lib/gis/esri_util");
 var http_get = esri_util.http_get;
 var assert = require('assert');
-var co_iterator = require("./co_iterator");
+var co_iterator = require("dsp_shared/lib/co_iterator");
 
 
 function groupIter(base_url, service, layer_group) {
