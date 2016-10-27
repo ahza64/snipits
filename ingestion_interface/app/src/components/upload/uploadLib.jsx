@@ -101,7 +101,7 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  setIngestorEmail(fileName) {
+  setIngestorEmail(fileName, ingestEmail, callback) {
     var companyId = authRedux.getState()['company.id'];
 
     request
@@ -109,11 +109,16 @@ export default class UploadLib extends React.Component {
     .withCredentials()
     .send({
       fileName: fileName,
+      notified: true,
+      ingested: false,
+      ingestEmail: ingestEmail,
       companyId: companyId
     })
-    .end(err => {
+    .end((err, res) => {
       if (err) {
         console.error(err);
+      } else {
+        callback();
       }
     });
   }

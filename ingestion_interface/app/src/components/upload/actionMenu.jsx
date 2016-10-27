@@ -55,7 +55,8 @@ export default class ActionMenu extends UploadLib {
           />
           <MenuItem primaryText='Set Watchers' />
         </IconMenu>
-        <IngestorNotification 
+        <IngestorNotification
+          setFiles={ this.props.setFiles }
           showModal={ this.state.showModal }
           setClose={ this.close }
           ingestors={ this.props.ingestors }
