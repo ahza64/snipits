@@ -32,6 +32,34 @@ router.put(
   }
 );
 
+// Set ingestion notification
+router.put(
+  '/ingestions',
+  function*() {
+    var body = this.request.body;
+    var updateObj = {
+      fileName: body.fileName,
+      ingested: body.ingested,
+      companyId: body.companyId
+    };
+
+    try {
+      yield Ingestions.update(
+        updateObj,
+        {
+          fields: ['ingested'],
+          where: { fileName: body.fileName, companyId: body.companyId }
+        }
+      );
+    } catch(e) {
+      console.error(e);
+      this.throw(500);
+    }
+
+    this.body = updateObj;
+  }
+);
+
 app.use(router.routes());
 
 module.exports = app;

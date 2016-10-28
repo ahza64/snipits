@@ -15,21 +15,11 @@ export default class UploadLib extends React.Component {
     this.getUploadedFiles = this.getUploadedFiles.bind(this);
     this.deleteUploadedFile = this.deleteUploadedFile.bind(this);
     this.createIngestionRecord = this.createIngestionRecord.bind(this);
-    this.getIngestorEmail = this.getIngestorEmail.bind(this);
-    this.setIngestorEmail = this.setIngestorEmail.bind(this);
     this.setWatcherEmail = this.setWatcherEmail.bind(this);
   }
 
   getFileStatus(ingestion) {
-    if (!ingestion.notified && !ingestion.ingested) {
-      return 'NOT NOTIFIED';
-    } else if (ingestion.notified && ingestion.ingested) {
-      return 'INGESTED';
-    } else if (ingestion.notified && !ingestion.ingested) {
-      return 'NOTIFIED';
-    } else {
-      return 'INGESTED';
-    }
+    return ingestion.ingested ? 'INGESTED' : 'NOT INGESTED';
   }
 
   getUploadedFiles(callback) {
@@ -79,47 +69,11 @@ export default class UploadLib extends React.Component {
     .withCredentials()
     .send({
       fileName: file.name,
-      ingestEmail: '',
       companyId: companyId
     })
     .end(err => {
       if (err) {
         console.error(err);
-      }
-    });
-  }
-
-  getIngestorEmail(callback) {
-    request
-    .get(ingestionRecordUrl)
-    .withCredentials()
-    .end((err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        callback(res.body);
-      }
-    });
-  }
-
-  setIngestorEmail(fileName, ingestEmail, callback) {
-    var companyId = authRedux.getState()['company.id'];
-
-    request
-    .put(ingestionRecordUrl)
-    .withCredentials()
-    .send({
-      fileName: fileName,
-      notified: true,
-      ingested: false,
-      ingestEmail: ingestEmail,
-      companyId: companyId
-    })
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        callback();
       }
     });
   }
