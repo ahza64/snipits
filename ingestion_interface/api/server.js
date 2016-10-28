@@ -31,6 +31,7 @@ app.use(mount(config.url_prefix, require('./router/auth')));
 app.use(authMiddleware);
 app.use(mount(config.url_prefix, require('./router/upload')));
 app.use(mount(config.url_prefix, require('./router/ingestion')));
+app.use(mount(config.url_prefix, require('./router/watcher')));
 
 // Port
 app.listen(port);

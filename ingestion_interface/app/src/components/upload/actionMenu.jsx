@@ -7,6 +7,7 @@ import { fileHistoryUrl, deleteFileUrl } from '../../config';
 import authRedux from '../../reduxes/auth';
 import UploadLib from './uploadLib';
 import IngestorNotification from './ingestorNotification';
+import WatcherNotification from './watcherNotification';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -20,18 +21,25 @@ export default class ActionMenu extends UploadLib {
   constructor() {
     super();
 
-    this.state = { showModal: false };
+    this.state = {
+      showIngestorModal: false,
+      showWatcherModal: false
+    };
 
     this.close = this.close.bind(this);
     this.open = this.open.bind(this);
   }
 
-  close() {
-    this.setState({ showModal: false });
+  close(modalName) {
+    var stateObj = {};
+    stateObj[modalName] = false;
+    this.setState(stateObj);
   }
 
-  open() {
-    this.setState({ showModal: true });
+  open(modalName) {
+    var stateObj = {};
+    stateObj[modalName] = true;
+    this.setState(stateObj);
   }
 
   render() {
@@ -51,15 +59,24 @@ export default class ActionMenu extends UploadLib {
           />
           <MenuItem
             primaryText='Notify Ingestors'
-            onClick={ this.open }
+            onClick={ () => this.open('showIngestorModal') }
           />
-          <MenuItem primaryText='Set Watchers' />
+          <MenuItem
+            primaryText='Set Watchers'
+            onClick={ () => this.open('showWatcherModal') }
+          />
         </IconMenu>
         <IngestorNotification
           setFiles={ this.props.setFiles }
-          showModal={ this.state.showModal }
-          setClose={ this.close }
+          showModal={ this.state.showIngestorModal }
+          setClose={ () => this.close('showIngestorModal') }
           ingestors={ this.props.ingestors }
+          files={ this.props.files }
+        />
+        <WatcherNotification
+          setFiles={ this.props.setFiles }
+          showModal={ this.state.showWatcherModal }
+          setClose={ () => this.close('showWatcherModal') }
           files={ this.props.files }
         />
       </div>

@@ -8,13 +8,14 @@ const app = koa();
 // Collection
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
 const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
+const Admins = require('dsp_shared/database/model/ingestion/tables').admins;
 
 // Create a user
 router.post(
   '/user',
   function*() {
-    var temp = this.request.body;
-    var company = temp.company;
+    var body = this.request.body;
+    var company = body.company;
 
     company = yield Companies.findOne({ 
       where: { name: company },
@@ -23,15 +24,20 @@ router.post(
     var companyId = company.id;
 
     var user = {
-      name: temp.firstname + ' ' + temp.lastname,
-      email: temp.email,
-      password: temp.password,
-      role: temp.role,
+      name: body.firstname + ' ' + body.lastname,
+      email: body.email,
+      password: body.password,
       status: 'active',
       companyId: companyId
     };
 
-    yield Users.create(user);
+    if (body.role) {
+      user.role = body.role;
+      yield Admins.create(user);
+    } else {
+      yield Users.create(user);
+    }
+
     this.body = user;
   }
 );

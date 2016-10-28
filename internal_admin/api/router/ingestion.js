@@ -8,21 +8,18 @@ const app = koa();
 // Collection
 const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestions;
 
-// Set ingestion / ingested notification
+// Set ingestion notification
 router.put(
   '/ingestions',
   function*() {
     var body = this.request.body;
-    var updateObj = {
-      notified: body.notified,
-      ingested: body.ingested
-    }; 
+    var updateObj = { ingested: true};
 
     try {
       yield Ingestions.update(
         updateObj,
         {
-          fields: ['notified', 'ingested'],
+          fields: ['ingested'],
           where: { id: body.ingestionsId }
         }
       );

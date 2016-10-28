@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import request from 'superagent';
-import { displayFilesUrl, fileHistoryUrl, deleteFileUrl, ingestionRecordUrl } from '../../config';
+import { displayFilesUrl, fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth'; 
@@ -17,6 +17,7 @@ export default class UploadLib extends React.Component {
     this.createIngestionRecord = this.createIngestionRecord.bind(this);
     this.getIngestorEmail = this.getIngestorEmail.bind(this);
     this.setIngestorEmail = this.setIngestorEmail.bind(this);
+    this.setWatcherEmail = this.setWatcherEmail.bind(this);
   }
 
   getFileStatus(ingestion) {
@@ -114,7 +115,27 @@ export default class UploadLib extends React.Component {
       ingestEmail: ingestEmail,
       companyId: companyId
     })
-    .end((err, res) => {
+    .end(err => {
+      if (err) {
+        console.error(err);
+      } else {
+        callback();
+      }
+    });
+  }
+
+  setWatcherEmail(fileName, watcherEmails, callback) {
+    var companyId = authRedux.getState()['company.id'];
+
+    request
+    .post(watcherUrl)
+    .withCredentials()
+    .send({
+      fileName: fileName,
+      watcherEmails: watcherEmails,
+      companyId: companyId
+    })
+    .end(err => {
       if (err) {
         console.error(err);
       } else {
