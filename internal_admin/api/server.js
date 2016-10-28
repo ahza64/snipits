@@ -21,7 +21,7 @@ models.sequelize.sync().then(function() {
 app.keys = ['dispatchr_cookie::ius45jbipsdhip42oj59g'];
 app.use(session({ key: 'dispatchr:sess' }, app));
 app.use(cors({
-  allowMethods: ['GET', 'POST', 'PUT'],
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 app.use(bodyParser());

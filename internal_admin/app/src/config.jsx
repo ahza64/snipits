@@ -15,6 +15,10 @@ const fileHistoryUrl = base + '/history';
 const s3authUrl = base + '/s3auth';
 const companyUrl = base + '/company';
 const userUrl = base + '/user';
+const usersUrl = base + '/users';
+const activateUserUrl = base + '/users/:id/activate';
+const deactivateUserUrl = base + '/users/:id/deactivate';
+const deleteUserUrl = base + '/users/:id';
 
 export {
   loginUrl,
@@ -25,4 +29,8 @@ export {
   s3authUrl,
   companyUrl,
   userUrl,
+  usersUrl,
+  activateUserUrl,
+  deactivateUserUrl,
+  deleteUserUrl
 };
