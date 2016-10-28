@@ -2,6 +2,8 @@
 const koa = require('koa');
 const router = require('koa-router')();
 const s3 = require('dsp_shared/aws/s3');
+const config = require('dsp_shared/conf.d/config.json').mooncake;
+const s3Prefix = config.env + '.';
 
 // Collection
 const Histories = require('dsp_shared/database/model/ingestion/tables').histories;
@@ -16,7 +18,7 @@ router.get(
   '/displayUpload/:company',
   function*() {
     var company = this.params.company;
-    var bucket = company.toLowerCase() + '.ftp';
+    var bucket = s3Prefix + company.toLowerCase() + '.ftp';
     var res = yield s3.list(bucket);
     var files = res.Contents;
 
@@ -45,7 +47,7 @@ router.post(
     var fileType = this.request.body.type;
     var company = this.request.body.company.toLowerCase();
     var action = this.request.body.action;
-    var signedUrl = yield s3.sign(action, company + '.ftp', fileName, fileType);
+    var signedUrl = yield s3.sign(action, s3Prefix + company + '.ftp', fileName, fileType);
     this.body = signedUrl;
   }
 );
@@ -54,7 +56,7 @@ router.post(
 router.post(
   '/delete',
   function*() {
-    var bucketName = this.request.body.company.toLowerCase() + '.ftp';
+    var bucketName = s3Prefix + this.request.body.company.toLowerCase() + '.ftp';
     var fileName = this.request.body.file;
     console.log('Deleted file ' + fileName + ' from ' + bucketName);
     yield s3.delete(bucketName, [fileName]);

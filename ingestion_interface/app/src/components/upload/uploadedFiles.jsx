@@ -21,18 +21,15 @@ export default class UploadedFiles extends UploadLib {
 
     this.state = {
       files: [],
-      open: false,
-      ingestors: [],
+      open: false
     };
 
     this.setFiles = this.setFiles.bind(this);
     this.setDelNotification = this.setDelNotification.bind(this);
-    this.setIngestorEmail = this.setIngestorEmail.bind(this);
   }
 
   componentWillMount() {
     this.setState({ files: this.props.data });
-    this.getIngestorEmail(this.setIngestorEmail);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,10 +42,6 @@ export default class UploadedFiles extends UploadLib {
 
   setDelNotification() {
     this.setState({ open: true });
-  }
-
-  setIngestorEmail(ingestors) {
-    this.setState({ ingestors: ingestors });
   }
 
   render() {
@@ -78,7 +71,6 @@ export default class UploadedFiles extends UploadLib {
                         setDelNotification={ this.setDelNotification }
                         setFiles={ this.setFiles }
                         files={ file.Key }
-                        ingestors={ this.state.ingestors }
                       />
                     </TableRowColumn>
                   </TableRow>
