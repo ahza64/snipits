@@ -2,6 +2,7 @@
 const koa = require('koa');
 const router = require('koa-router')();
 const s3 = require('dsp_shared/aws/s3');
+const config = require('dsp_shared/conf.d/config.json').admin;
 
 // App
 const app = koa();
@@ -34,7 +35,7 @@ router.post(
     }
     
     yield Companies.create(company);
-    yield s3.createBucket(company.name.toLowerCase() + '.ftp');
+    yield s3.createBucket(config.env + '.' + company.name.toLowerCase() + '.ftp');
     this.body = true;
   }
 );

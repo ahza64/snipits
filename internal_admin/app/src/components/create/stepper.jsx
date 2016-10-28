@@ -54,6 +54,7 @@ export default class CreationStepper extends React.Component {
           console.error(err);
         } else {
           userCreateRedux.dispatch({ type: 'CREATED' });
+          console.log(userCreateRedux.getState());
         }
       });
     }

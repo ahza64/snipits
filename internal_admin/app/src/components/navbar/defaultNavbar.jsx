@@ -22,6 +22,7 @@ export default class DefaultNavbar extends React.Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.goToIngest = this.goToIngest.bind(this);
     this.goToCreate = this.goToCreate.bind(this);
+    this.showCreate = this.showCreate.bind(this);
   }
 
   handleLogout(event) {
@@ -50,6 +51,12 @@ export default class DefaultNavbar extends React.Component {
     browserHistory.push(urlPrefix + 'create/');
   }
 
+  showCreate() {
+    if (authRedux.getState().role === 'DA') {
+      return <MenuItem eventKey={1.2} onClick={ this.goToCreate }>Create</MenuItem>;
+    }
+  }
+
   render() {
     return (  
       <Navbar>
@@ -65,7 +72,7 @@ export default class DefaultNavbar extends React.Component {
           <Nav pullRight>
             <NavDropdown eventKey={1} title='Menu' id='basic-nav-dropdown'>
               <MenuItem eventKey={1.1} onClick={ this.goToIngest }>Ingest</MenuItem>
-              <MenuItem eventKey={1.2} onClick={ this.goToCreate }>Create</MenuItem>
+              { this.showCreate() }
               <MenuItem divider />
               <MenuItem eventKey={1.3} onClick={ this.handleLogout }>Logout</MenuItem>
             </NavDropdown>

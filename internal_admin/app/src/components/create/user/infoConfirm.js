@@ -55,6 +55,9 @@ export default class InfoConfirm extends React.Component {
             <Col xs={6} sm={6} md={6} lg={6}>
               <TextField defaultValue={ this.state.user.company } floatingLabelText='Company' disabled={ true } />
             </Col>
+            <Col xs={6} sm={6} md={6} lg={6}>
+              <TextField defaultValue={ this.state.user.role } floatingLabelText=' Role' disabled={ true } />
+            </Col>
           </Row>
         </Paper>
       </div>

@@ -3,7 +3,14 @@ module.exports = function(sequelize, DataTypes) {
     name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING },
-    status: { type: DataTypes.STRING }
+    status: { type: DataTypes.STRING },
+    role: { type: DataTypes.STRING }
+  }, {
+    classMethods: {
+      associate: function(models) {
+        Admins.belongsTo(models.companies);
+      }
+    }
   });
 
   return Admins;

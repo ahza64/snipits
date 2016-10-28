@@ -10,6 +10,7 @@ import Col from 'react-bootstrap/lib/Col';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
 const userCreationContainerStyle = {
   'borderRadius': 2,
   'height': 500,
@@ -23,17 +24,20 @@ const userCreationContainerStyle = {
 export default class UserCreation extends React.Component {
   constructor() {
     super();
+
     this.handleFirstChange = this.handleFirstChange.bind(this);
     this.handleLastChange = this.handleLastChange.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleRoleChange = this.handleRoleChange.bind(this);
+
     this.state = { 
-      value: 0,
       firstname: '',
       lastname: '',
       email: '',
       password: '',
-      company: ''
+      company: '',
+      role: ''
     };
   }
 
@@ -58,6 +62,10 @@ export default class UserCreation extends React.Component {
     this.setState({ password: value });
   }
 
+  handleRoleChange(event, idx, value) {
+    this.setState({ role: value });
+  }
+
   componentWillUnmount() {
     var action = {
       type: 'ADDUSER',
@@ -67,6 +75,21 @@ export default class UserCreation extends React.Component {
   }
 
   render() {
+    const roleOptions = [
+      {
+        value: null,
+        display: 'Customer User'
+      },
+      {
+        value: 'DI',
+        display: 'Dispatchr Ingestor'
+      },
+      {
+        value: 'DA',
+        display: 'Dispatchr Admin'
+      },
+    ];
+
     return (
       <div>
         <Row>
@@ -96,6 +119,21 @@ export default class UserCreation extends React.Component {
               <Row>
                 <Col xs={6} sm={6} md={6} lg={6}>
                   <TextField defaultValue={ this.state.company } floatingLabelText='Company' disabled={ true } />
+                </Col>
+                <Col xs={6} sm={6} md={6} lg={6}>
+                  <SelectField
+                    floatingLabelText='Role'
+                    value={this.state.role}
+                    onChange={this.handleRoleChange}
+                  >
+                    { 
+                      roleOptions.map((role, idx) => {
+                        return (
+                          <MenuItem key={idx} value={role.value} primaryText={role.display} />
+                        );
+                      })
+                    }
+                  </SelectField>
                 </Col>
               </Row>
             </Paper>
