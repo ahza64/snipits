@@ -13,7 +13,7 @@ const TreeHistory = require('dsp_shared/database/model/tree-history');
 
 String.prototype.replaceAt=function(index, character) {
     return this.substr(0, index) + character + this.substr(index+character.length);
-}
+};
 
 function *run(fix) {
   var query = {status: /^[1-5]/, pge_pmd_num: null, circuit_name: "EXCHEQUER_YOSEMITE"};
@@ -27,9 +27,10 @@ function *run(fix) {
       if(fix) {
         tree.status = tree.status.replaceAt(0, '0');
         tree.comments = "Tree not routine.  No PMD via QSI: Jamie and Tarin";
-        console.log("OLD", tree._id, old_tree.status, old_tree.comments)
-        console.log("NEW", tree._id, tree.status, tree.comments)
-        yield TreeHistory.recordTreeHistory(old_tree, tree, {_id: "mark_tree_as_ignored", type: "Migration"});
+        console.log("OLD", tree._id, old_tree.status, old_tree.comments);
+        console.log("NEW", tree._id, tree.status, tree.comments);
+        var mig_user = {_id: "mark_tree_as_ignored", type: "Migration"};
+        yield TreeHistory.recordTreeHistory(old_tree, tree, mig_user, null, 'mark_tree_as_ignored_migration');
         yield tree.save();
       }
     }

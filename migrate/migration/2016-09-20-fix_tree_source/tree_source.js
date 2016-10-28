@@ -42,7 +42,7 @@ function *run(fix){
         if(fix) {
           yield tree.save();
           var mig_user = {_id: 'fix_tree_soruce', type:"Migration"};
-          yield TreeHistory.recordTreeHistory(old_tree, tree, mig_user);
+          yield TreeHistory.recordTreeHistory(old_tree, tree, mig_user, null, 'fix_tree_soruce_migration');
         }      
       } else {
         assert(tree.status[SOURCE_INDEX] === new_source, "Trying to change source from something other than LiDAR: "+tree._id+" "+tree.status);
