@@ -25,8 +25,8 @@ function *run(fix){
         var old_tree = utils.toJSON(tree);
         tree.pi_complete_time = tree.pi_start_time;
         yield tree.save();
-        var mig_user = {_id: 'fix_tree_soruce', type:"Migration"};
-        yield TreeHistory.recordTreeHistory(old_tree, tree, mig_user);
+        var mig_user = {_id: 'set_pi_complete_time', type:"Migration"};
+        yield TreeHistory.recordTreeHistory(old_tree, tree, mig_user, null, 'set_pi_complete_time_migraton');
       }
     }
   }

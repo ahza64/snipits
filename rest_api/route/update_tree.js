@@ -223,7 +223,7 @@ router.post('/workorder/:woId/tree', function *(){
 
     //add to histories
     try {
-      yield TreeHistory.recordTreeHistory({}, result, user);
+      yield TreeHistory.recordTreeHistory({}, result, user, null, "api_v3");
     } catch(e) {
       console.log('EXCEPTION: ', e.message, result);
       this.setError(this.errors.HISTORIES_ERROR);
@@ -278,7 +278,7 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
 
     //add to histories
     try{
-      yield TreeHistory.recordTreeHistory(tree, result, user);
+      yield TreeHistory.recordTreeHistory(tree, result, user, null, "api_v3");
     } catch(e){
       console.log('EXCEPTION: ', e.message, result);
       this.setError(this.errors.HISTORIES_ERROR);
@@ -325,7 +325,7 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
 
     //add to histories
     try{
-      yield TreeHistory.recordTreeHistory(tree, result, user);
+      yield TreeHistory.recordTreeHistory(tree, result, user, null, 'api_v3');
     } catch(e){
       console.log('EXCEPTION: ', e.message, result);
       this.setError(this.errors.HISTORIES_ERROR);
