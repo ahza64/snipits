@@ -10,6 +10,7 @@ import App from './components/App.jsx';
 import Login from './components/login/login.jsx';
 import Create from './components/create/create.jsx';
 import Ingest from './components/ingest/ingest.jsx';
+import Users from './components/users/users.jsx';
 
 // Router
 ReactDOM.render(
@@ -18,6 +19,7 @@ ReactDOM.render(
       <IndexRoute component={ Login } />
       <Route onEnter={ isRouteAuthorized } path='create/' component={ Create }></Route>
       <Route onEnter={ isRouteAuthorized } path='ingest/' component={ Ingest }></Route>
+      <Route onEnter={ isRouteAuthorized } path='users/' component={ Users }></Route>
     </Route>
   </Router>,
 document.getElementById('app'));

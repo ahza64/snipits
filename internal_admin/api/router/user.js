@@ -1,6 +1,8 @@
 // Modules
 const koa = require('koa');
 const router = require('koa-router')();
+const ACTIVE = 'active';
+const INACTIVE = 'inactive';
 
 // App
 const app = koa();
@@ -27,7 +29,7 @@ router.post(
       name: body.firstname + ' ' + body.lastname,
       email: body.email,
       password: body.password,
-      status: 'active',
+      status: ACTIVE,
       companyId: companyId
     };
 
@@ -41,6 +43,57 @@ router.post(
     this.body = user;
   }
 );
+
+router.put(
+  '/users/:id/deactivate',
+  function*() {
+    try {
+      var user = yield Users.find({ id: this.params.id })
+      yield user.updateAttributes({ status: INACTIVE })
+      this.body = user;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+)
+
+router.put(
+  '/users/:id/activate',
+  function*() {
+    try {
+      var user = yield Users.find({ id: this.params.id })
+      yield user.updateAttributes({ status: ACTIVE })
+      this.body = user;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+)
+
+router.delete(
+  '/users/:id',
+  function*() {
+    try {
+      var user = yield Users.find({ id: this.params.id });
+      this.body = yield user.updateAttributes({ deleted: true, deletedAt: new Date()});
+    } catch (err) {
+      console.error(err);
+    }
+  }
+)
+
+router.get(
+  '/users',
+  function*() {
+    try {
+      this.body = yield Users.findAll({
+        include: [ { model: Companies, attributes: ['name'] } ]
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+)
 
 app.use(router.routes());
 

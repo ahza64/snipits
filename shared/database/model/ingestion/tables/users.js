@@ -3,7 +3,9 @@ module.exports = function(sequelize, DataTypes) {
     name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING },
-    status: { type: DataTypes.STRING }
+    status: { type: DataTypes.STRING },
+    deleted: { type: DataTypes.BOOLEAN },
+    deletedAt: { type: DataTypes.TIME }
   }, {
     classMethods: {
       associate: function(models) {
