@@ -21,11 +21,13 @@ export default class ActionMenu extends UploadLib {
     super();
 
     this.state = {
-      showWatcherModal: false
+      showWatcherModal: false,
+      watchers: []
     };
 
     this.close = this.close.bind(this);
     this.open = this.open.bind(this);
+    this.getWatchers = this.getWatchers.bind(this);
   }
 
   close(modalName) {
@@ -38,6 +40,12 @@ export default class ActionMenu extends UploadLib {
     var stateObj = {};
     stateObj[modalName] = true;
     this.setState(stateObj);
+  }
+
+  getWatchers() {
+    this.getWatcherEmail(this.props.files, (emails) => {
+      this.setState({ watchers: emails });
+    });
   }
 
   render() {
@@ -57,7 +65,12 @@ export default class ActionMenu extends UploadLib {
           />
           <MenuItem
             primaryText='Set Watchers'
-            onClick={ () => this.open('showWatcherModal') }
+            onClick={
+              () => {
+                this.open('showWatcherModal');
+                this.getWatchers();
+              } 
+            }
           />
         </IconMenu>
         <WatcherNotification
@@ -65,6 +78,7 @@ export default class ActionMenu extends UploadLib {
           showModal={ this.state.showWatcherModal }
           setClose={ () => this.close('showWatcherModal') }
           files={ this.props.files }
+          watchers={ this.state.watchers }
         />
       </div>
     );

@@ -27,6 +27,10 @@ export default class WatcherNotification extends UploadLib {
     this.handleSubmitWatcher = this.handleSubmitWatcher.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ watchers: nextProps.watchers });
+  }
+
   handleInputWatcher(event) {
     this.setState({
       newWatcher: event.target.value
@@ -36,10 +40,13 @@ export default class WatcherNotification extends UploadLib {
   handleAddWatcher() {
     var curWatchers = [...this.state.watchers, this.state.newWatcher];
     this.setState({ watchers: curWatchers });
+    this.setState({ newWatcher: '' });
   }
 
   handleSubmitWatcher() {
-    console.log('--> ', this.state.watchers);
+    var fileName = this.props.files;
+    var watcherEmails = this.state.watchers;
+    this.setWatcherEmail(fileName, watcherEmails, this.props.setClose);
   }
 
   render() {
@@ -62,6 +69,7 @@ export default class WatcherNotification extends UploadLib {
         actions={ actions }
         modal={ true }
         open={ this.props.showModal }
+        autoScrollBodyContent={ true }
       >
         <Row>
           <Col xs={12} sm={12} md={8} lg={8} >
