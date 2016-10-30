@@ -48,27 +48,27 @@ router.put(
   '/users/:id/deactivate',
   function*() {
     try {
-      var user = yield Users.find({ id: this.params.id })
-      yield user.updateAttributes({ status: INACTIVE })
+      var user = yield Users.find({ id: this.params.id });
+      yield user.updateAttributes({ status: INACTIVE });
       this.body = user;
     } catch (err) {
       console.error(err);
     }
   }
-)
+);
 
 router.put(
   '/users/:id/activate',
   function*() {
     try {
-      var user = yield Users.find({ id: this.params.id })
-      yield user.updateAttributes({ status: ACTIVE })
+      var user = yield Users.find({ id: this.params.id });
+      yield user.updateAttributes({ status: ACTIVE });
       this.body = user;
     } catch (err) {
       console.error(err);
     }
   }
-)
+);
 
 router.delete(
   '/users/:id',
@@ -80,7 +80,7 @@ router.delete(
       console.error(err);
     }
   }
-)
+);
 
 router.get(
   '/users',
@@ -93,7 +93,7 @@ router.get(
       console.error(err);
     }
   }
-)
+);
 
 app.use(router.routes());
 
