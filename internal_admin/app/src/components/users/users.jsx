@@ -20,7 +20,12 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 export default class Users extends React.Component {
   constructor() {
     super();
+
     this.state = { users: [] };
+
+    this.toggleUserStatus = this.toggleUserStatus.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.fetchUser = this.fetchUser.bind(this);
   }
 
   componentWillMount() {
@@ -88,14 +93,6 @@ export default class Users extends React.Component {
     );
   }
 
-  renderUserInfo(user) {
-    return (
-      <p>
-        <span> { user.email } </span> -- { user.status } -- { user.company.name } { user.deleted ? ' -- deleted' : '' }
-      </p>
-    );
-  }
-
   render() {
     return (
       <div>
@@ -107,10 +104,12 @@ export default class Users extends React.Component {
               <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
                 <TableRow>
                   <TableHeaderColumn>#</TableHeaderColumn>
-                  <TableHeaderColumn>NAME</TableHeaderColumn>
-                  <TableHeaderColumn>INFO</TableHeaderColumn>
-                  <TableHeaderColumn>STATUS</TableHeaderColumn>
-                  <TableHeaderColumn>DELETE</TableHeaderColumn>
+                  <TableHeaderColumn>Name</TableHeaderColumn>
+                  <TableHeaderColumn>Email</TableHeaderColumn>
+                  <TableHeaderColumn>Company</TableHeaderColumn>
+                  <TableHeaderColumn>Status</TableHeaderColumn>
+                  <TableHeaderColumn>Active/Inactive</TableHeaderColumn>
+                  <TableHeaderColumn>Delete</TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={ false } selectable={ false }>
@@ -120,7 +119,9 @@ export default class Users extends React.Component {
                       <TableRow key={ idx }>
                         <TableRowColumn>{ idx }</TableRowColumn>
                         <TableRowColumn>{ user.name }</TableRowColumn>
-                        <TableRowColumn>{ this.renderUserInfo(user) }</TableRowColumn>
+                        <TableRowColumn>{ user.email }</TableRowColumn>
+                        <TableRowColumn>{ user.company.name }</TableRowColumn>
+                        <TableRowColumn>{ user.status }</TableRowColumn>
                         <TableRowColumn>{ this.renderToggle(user) }</TableRowColumn>
                         <TableRowColumn>
                           <RaisedButton label='DELETE' secondary={ true } onClick={ (event) => this.deleteUser(user) } />
