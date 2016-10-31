@@ -3,7 +3,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import * as request from 'superagent';
 import { usersUrl, activateUserUrl, deactivateUserUrl, deleteUserUrl } from '../../config';
-import {List, ListItem, MakeSelectable} from 'material-ui/List';
+//import {List, ListItem, MakeSelectable} from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
 import Toggle from 'material-ui/Toggle';
 
@@ -13,6 +13,9 @@ import DefaultNavbar from '../navbar/defaultNavbar';
 // Styles
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
+import RaisedButton from 'material-ui/RaisedButton';
+import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 export default class Users extends React.Component {
   constructor() {
@@ -97,24 +100,40 @@ export default class Users extends React.Component {
     return (
       <div>
         <Row><DefaultNavbar /></Row>
-        <Row><h2>This is list of Users</h2></Row>
-        <List style={{ width: '500px' }}>
-        {
-          this.state.users.map((user, idx) => {
-            return (
-              <ListItem
-                key={ idx } value={ idx } primaryText={ user.name }
-                secondaryText={ this.renderUserInfo(user) }
-                rightIconButton={
-                  <IconButton style={{ height: 20, width: 20, marginTop: 15, backgroundColor: 'black' }}
-                  onClick={ (event) => this.deleteUser(user) } />
+        <Row>
+          <Col xs={0} sm={0} md={2} lg={2} ></Col>
+          <Col xs={12} sm={12} md={8} lg={8} >
+            <Table selectable={ false }>
+              <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
+                <TableRow>
+                  <TableHeaderColumn>#</TableHeaderColumn>
+                  <TableHeaderColumn>NAME</TableHeaderColumn>
+                  <TableHeaderColumn>INFO</TableHeaderColumn>
+                  <TableHeaderColumn>STATUS</TableHeaderColumn>
+                  <TableHeaderColumn>DELETE</TableHeaderColumn>
+                </TableRow>
+              </TableHeader>
+              <TableBody displayRowCheckbox={ false } selectable={ false }>
+                { 
+                  this.state.users.map((user, idx) => {
+                    return (
+                      <TableRow key={ idx }>
+                        <TableRowColumn>{ idx }</TableRowColumn>
+                        <TableRowColumn>{ user.name }</TableRowColumn>
+                        <TableRowColumn>{ this.renderUserInfo(user) }</TableRowColumn>
+                        <TableRowColumn>{ this.renderToggle(user) }</TableRowColumn>
+                        <TableRowColumn>
+                          <RaisedButton label='DELETE' secondary={ true } onClick={ (event) => this.deleteUser(user) } />
+                        </TableRowColumn>
+                      </TableRow>
+                    );
+                  })
                 }
-                rightToggle={ this.renderToggle(user) }
-              />
-            );
-          })
-        }
-        </List>
+              </TableBody>
+            </Table>
+          </Col>
+          <Col xs={0} sm={0} md={2} lg={2} ></Col>
+        </Row>
       </div>
     );
   }
