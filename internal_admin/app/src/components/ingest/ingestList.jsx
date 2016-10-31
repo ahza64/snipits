@@ -6,6 +6,7 @@ import * as request from 'superagent';
 // Components
 import { ingestionUrl } from '../../config';
 import authRedux from '../../reduxes/auth';
+import IngestLib from './ingestLib';
 import ActionMenu from './actionMenu';
 
 // Styles
@@ -13,7 +14,7 @@ import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
-export default class IngestList extends React.Component {
+export default class IngestList extends IngestLib {
   constructor() {
     super();
 
@@ -22,22 +23,17 @@ export default class IngestList extends React.Component {
     };
 
     this.getIngestionStatus = this.getIngestionStatus.bind(this);
+    this.resetIngestionList = this.resetIngestionList.bind(this);
   }
 
   componentWillMount() {
-    var companyId = authRedux.getState().companyId;
-    if (companyId) {
-      request
-      .get(ingestionUrl + '/' + companyId)
-      .withCredentials()
-      .end((err, res) => {
-        if (err) {
-          console.error(err);
-        } else {
-          this.setState({ ingestions: res.body });
-        }
-      });
-    }
+    this.getIngestions((res) => {
+      this.setState({ ingestions: res.body });
+    });
+  }
+
+  resetIngestionList(ingestions) {
+    this.setState({ ingestions: ingestions });
   }
 
   getIngestionStatus(ingested) {
@@ -67,7 +63,12 @@ export default class IngestList extends React.Component {
                     <TableRowColumn>{ ingestion.updatedAt }</TableRowColumn>
                     <TableRowColumn>{ this.getIngestionStatus(ingestion.ingested) }</TableRowColumn>
                     <TableRowColumn>
-                      <ActionMenu />
+                      <ActionMenu
+                        ingestions={ this.state.ingestions }
+                        idx={ idx }
+                        ingestion={ ingestion }
+                        resetIngestionList={ this.resetIngestionList }
+                      />
                     </TableRowColumn>
                   </TableRow>
                 );

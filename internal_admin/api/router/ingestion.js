@@ -7,20 +7,21 @@ const app = koa();
 
 // Collection
 const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestions;
+const Admins = require('dsp_shared/database/model/ingestion/tables').admins;
+const Histories = require('dsp_shared/database/model/ingestion/tables').histories;
 
 // Set ingestion notification
 router.put(
   '/ingestions',
   function*() {
     var body = this.request.body;
-    var updateObj = { ingested: true};
 
     try {
       yield Ingestions.update(
-        updateObj,
+        { ingested: true },
         {
           fields: ['ingested'],
-          where: { id: body.ingestionsId }
+          where: { id: body.ingestionId }
         }
       );
     } catch(e) {
@@ -52,6 +53,37 @@ router.get(
     }
 
     this.body = ingestions;
+  }
+);
+
+// Upload/Delete/Ingest history
+router.post(
+  '/history',
+  function*() {
+    var body = this.request.body;
+    var email = body.email;
+    var fileName = body.file;
+    var action = body.action;
+
+    // Check whether the admin exists
+    var admin = yield Admins.findOne({ where: { email: email }, raw: true });
+    var adminId = admin.id;
+    if (!adminId) { this.throw(403); }
+
+    var obj = {
+      fileName: fileName,
+      action: action,
+      time: new Date(),
+      adminId: adminId
+    };
+    try {
+      yield Histories.create(obj);  
+    } catch (e) {
+      console.error(e);
+      this.throw(500);
+    }
+    
+    this.throw(200);
   }
 );
 
