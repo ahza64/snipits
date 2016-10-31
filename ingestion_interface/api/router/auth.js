@@ -21,7 +21,11 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(user, done) {
   Users.findOne({
-    where: { id: user.id },
+    where: {
+      id: user.id,
+      status: 'active',
+      deleted: false
+    },
     raw: true
   }).then(user => {
     done(null, user);
@@ -32,11 +36,15 @@ passport.deserializeUser(function(user, done) {
 
 passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
   Users.findOne({
-    where: { email: email }, 
+    where: {
+      email: email,
+      status: 'active',
+      deleted: false
+    },
     raw: true,
     include: [Companies]
   }).then(user => {
-    if (user.password === password) {
+    if (user && user.password === password) {
       done(null, user);
     } else {
       done(null, false);
