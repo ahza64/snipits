@@ -25,6 +25,20 @@ router.post(
       var ingestionId = ingestion.id;
 
       if (ingestionId) {
+        var existingWatchers = yield Watchers.findAll({
+          where: { ingestionId: ingestionId },
+          raw: true
+        });
+
+        // Delete existing watchers
+        if (existingWatchers.length) {
+          yield Watchers.destroy({
+            where: { ingestionId: ingestionId },
+            force: true
+          });
+        }
+
+        // Create new watchers
         var objs = [];
         watcherEmails.forEach(email => {
           objs.push({
@@ -51,11 +65,16 @@ router.get(
   function*() {
     var fileName = this.params.fileName;
     try {
-      var watchers = yield Watchers.find({
+      var ingestion = yield Ingestions.findOne({
+        where: { fileName: fileName },
+        raw: true
+      });
+      var ingestionId = ingestion.id;
+      var watchers = yield Watchers.findAll({
         include: [
           {
             model: Ingestions,
-            where: { fileName: fileName }
+            where: { id: ingestionId }
           } 
         ],
         raw: true

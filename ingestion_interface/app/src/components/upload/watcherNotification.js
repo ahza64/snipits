@@ -1,5 +1,6 @@
 // Modules
 import React from 'react';
+import _ from 'underscore';
 
 // Components
 import UploadLib from './uploadLib';
@@ -25,6 +26,7 @@ export default class WatcherNotification extends UploadLib {
     this.handleInputWatcher = this.handleInputWatcher.bind(this);
     this.handleAddWatcher = this.handleAddWatcher.bind(this);
     this.handleSubmitWatcher = this.handleSubmitWatcher.bind(this);
+    this.handleRemoveWatcher = this.handleRemoveWatcher.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -47,6 +49,11 @@ export default class WatcherNotification extends UploadLib {
     var fileName = this.props.files;
     var watcherEmails = this.state.watchers;
     this.setWatcherEmail(fileName, watcherEmails, this.props.setClose);
+  }
+
+  handleRemoveWatcher(watcher) {
+    var curWatchers = _.difference(this.state.watchers, [watcher]);
+    this.setState({ watchers: curWatchers });
   }
 
   render() {
@@ -104,7 +111,7 @@ export default class WatcherNotification extends UploadLib {
                       <TableRowColumn>{ idx }</TableRowColumn>
                       <TableRowColumn>{ watcher }</TableRowColumn>
                       <TableRowColumn>
-                        <RaisedButton label='Remove' />
+                        <RaisedButton label='Remove' onClick={ () => this.handleRemoveWatcher(watcher) } />
                       </TableRowColumn>
                     </TableRow>
                   );
