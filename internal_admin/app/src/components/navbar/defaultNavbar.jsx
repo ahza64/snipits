@@ -49,6 +49,12 @@ export default class DefaultNavbar extends React.Component {
     browserHistory.push(urlPrefix + 'ingest/');
   }
 
+  showIngest() {
+    if (authRedux.getState().role === 'DI') {
+      return (<MenuItem eventKey={1.1} onClick={ this.goToIngest }>Ingest</MenuItem>);
+    }
+  }
+
   goToCreate() {
     browserHistory.push(urlPrefix + 'create/');
   }
@@ -83,7 +89,7 @@ export default class DefaultNavbar extends React.Component {
         <Navbar.Collapse>
           <Nav pullRight>
             <NavDropdown eventKey={1} title='Menu' id='basic-nav-dropdown'>
-              <MenuItem eventKey={1.1} onClick={ this.goToIngest }>Ingest</MenuItem>
+              { this.showIngest() }
               { this.showCreate() }
               { this.showUsers() }
               <MenuItem divider />

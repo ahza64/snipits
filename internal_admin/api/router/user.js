@@ -30,7 +30,8 @@ router.post(
       email: body.email,
       password: body.password,
       status: ACTIVE,
-      companyId: companyId
+      companyId: companyId,
+      deleted: false
     };
 
     if (body.role) {

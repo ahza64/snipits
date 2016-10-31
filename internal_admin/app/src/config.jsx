@@ -19,6 +19,7 @@ const usersUrl = base + '/users';
 const activateUserUrl = base + '/users/:id/activate';
 const deactivateUserUrl = base + '/users/:id/deactivate';
 const deleteUserUrl = base + '/users/:id';
+const ingestionUrl = base + '/ingestions';
 
 export {
   loginUrl,
@@ -32,5 +33,6 @@ export {
   usersUrl,
   activateUserUrl,
   deactivateUserUrl,
-  deleteUserUrl
+  deleteUserUrl,
+  ingestionUrl
 };

@@ -9,6 +9,9 @@ module.exports = function(sequelize, DataTypes) {
         Histories.belongsTo(models.users, {
           as: 'user'
         });
+        Histories.belongsTo(models.admins, {
+          as: 'admin'
+        });
       }
     }
   });
