@@ -5,6 +5,7 @@ import { browserHistory } from 'react-router';
 import * as request from 'superagent';
 import authRedux from '../../reduxes/auth';
 import { loginUrl } from '../../config';
+import { getDefaultRoute } from '../auth/auth';
 
 // Styles
 import Paper from 'material-ui/Paper';
@@ -64,7 +65,7 @@ export default class Login extends React.Component {
           type: 'LOGIN',
           user: res.body
         });
-        browserHistory.push(urlPrefix + 'ingest/');
+        browserHistory.push(urlPrefix + getDefaultRoute());
       }
     });
   }

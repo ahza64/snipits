@@ -4,7 +4,7 @@ import authRedux from '../../reduxes/auth';
 import * as _ from 'underscore';
 
 const roleLib = {
-  'DA': ['/create/', '/ingest/', '/users/'],
+  'DA': ['/create/', '/users/'],
   'DI': ['/ingest/']
 };
 
@@ -18,8 +18,18 @@ var isRouteAuthorized = (nextState, replace) => {
     replace(urlPrefix);  
   } else if (!_.contains(roleLib[role], nextState.location.pathname)) {
     // check if role has the rights
-    replace(urlPrefix + 'ingest/');
+    var initRoute = roleLib[role][0].slice(1);
+    replace(urlPrefix + initRoute);
   }
 };
 
-export { isRouteAuthorized };
+// Give default route
+var getDefaultRoute = () => {
+  var user = authRedux.getState();
+  var role = user.role;
+  var initRoute = roleLib[role][0].slice(1);
+
+  return initRoute;
+};
+
+export { isRouteAuthorized, getDefaultRoute };

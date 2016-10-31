@@ -32,31 +32,26 @@ router.put(
   }
 );
 
-// Set ingestion notification
-router.put(
-  '/ingestions',
+// Get ingestion records
+router.get(
+  '/ingestions/:companyId',
   function*() {
-    var body = this.request.body;
-    var updateObj = {
-      fileName: body.fileName,
-      ingested: body.ingested,
-      companyId: body.companyId
-    };
+    var companyId = this.params.companyId;
+    if (!companyId) {
+      return this.body = [];
+    }
 
     try {
-      yield Ingestions.update(
-        updateObj,
-        {
-          fields: ['ingested'],
-          where: { fileName: body.fileName, companyId: body.companyId }
-        }
-      );
+      var ingestions = yield Ingestions.findAll({
+        where: { companyId: companyId },
+        raw: true
+      });
     } catch(e) {
       console.error(e);
       this.throw(500);
     }
 
-    this.body = updateObj;
+    this.body = ingestions;
   }
 );
 
