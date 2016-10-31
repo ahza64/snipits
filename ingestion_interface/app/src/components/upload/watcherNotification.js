@@ -1,5 +1,6 @@
 // Modules
 import React from 'react';
+import _ from 'underscore';
 
 // Components
 import UploadLib from './uploadLib';
@@ -25,6 +26,11 @@ export default class WatcherNotification extends UploadLib {
     this.handleInputWatcher = this.handleInputWatcher.bind(this);
     this.handleAddWatcher = this.handleAddWatcher.bind(this);
     this.handleSubmitWatcher = this.handleSubmitWatcher.bind(this);
+    this.handleRemoveWatcher = this.handleRemoveWatcher.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ watchers: nextProps.watchers });
   }
 
   handleInputWatcher(event) {
@@ -36,10 +42,18 @@ export default class WatcherNotification extends UploadLib {
   handleAddWatcher() {
     var curWatchers = [...this.state.watchers, this.state.newWatcher];
     this.setState({ watchers: curWatchers });
+    this.setState({ newWatcher: '' });
   }
 
   handleSubmitWatcher() {
-    console.log('--> ', this.state.watchers);
+    var fileName = this.props.files;
+    var watcherEmails = this.state.watchers;
+    this.setWatcherEmail(fileName, watcherEmails, this.props.setClose);
+  }
+
+  handleRemoveWatcher(watcher) {
+    var curWatchers = _.difference(this.state.watchers, [watcher]);
+    this.setState({ watchers: curWatchers });
   }
 
   render() {
@@ -62,6 +76,7 @@ export default class WatcherNotification extends UploadLib {
         actions={ actions }
         modal={ true }
         open={ this.props.showModal }
+        autoScrollBodyContent={ true }
       >
         <Row>
           <Col xs={12} sm={12} md={8} lg={8} >
@@ -96,7 +111,7 @@ export default class WatcherNotification extends UploadLib {
                       <TableRowColumn>{ idx }</TableRowColumn>
                       <TableRowColumn>{ watcher }</TableRowColumn>
                       <TableRowColumn>
-                        <RaisedButton label='Remove' />
+                        <RaisedButton label='Remove' onClick={ () => this.handleRemoveWatcher(watcher) } />
                       </TableRowColumn>
                     </TableRow>
                   );

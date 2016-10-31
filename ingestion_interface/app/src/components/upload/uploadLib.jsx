@@ -16,6 +16,7 @@ export default class UploadLib extends React.Component {
     this.deleteUploadedFile = this.deleteUploadedFile.bind(this);
     this.createIngestionRecord = this.createIngestionRecord.bind(this);
     this.setWatcherEmail = this.setWatcherEmail.bind(this);
+    this.getWatcherEmail = this.getWatcherEmail.bind(this);
   }
 
   getFileStatus(ingestion) {
@@ -74,6 +75,19 @@ export default class UploadLib extends React.Component {
     .end(err => {
       if (err) {
         console.error(err);
+      }
+    });
+  }
+
+  getWatcherEmail(fileName, callback) {
+    request
+    .get(watcherUrl + '/' + fileName)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        callback(res.body);
       }
     });
   }

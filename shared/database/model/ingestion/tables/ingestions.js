@@ -6,6 +6,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Ingestions.belongsTo(models.companies);
+        Ingestions.hasMany(models.watchers);
       }
     }
   });
