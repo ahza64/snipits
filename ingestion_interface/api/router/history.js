@@ -72,7 +72,7 @@ var historyMassage = (histories) => {
     if (histories.hasOwnProperty(key)) {
       var temp = key.split('|').map(x => parseInt(x));
       var weekNum = temp[0];
-      var weekDay = temp[1];
+      var weekDay = temp[1] - 1;
       var idx = (weekNum - 1) * 7 + weekDay;
       heatmapData[idx][2] = histories[key].length;
     }

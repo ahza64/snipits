@@ -60,7 +60,15 @@ export default class ActionMenu extends UploadLib {
           <MenuItem 
             primaryText='Delete'
             onClick={
-              () => this.deleteUploadedFile(this.props.files, this.props.setFiles, this.props.setDelNotification)
+              () => this.deleteUploadedFile(this.props.files, () => {
+                this.getUploadedFiles(this.props.setFiles);
+                this.props.setDelNotification();
+                this.writeHistory(this.props.files, 'delete', () => {
+                  this.getHistory((heatmapData, historiesData) => {
+                    this.props.setHistories(heatmapData, historiesData);
+                  });
+                });
+              })
             }
           />
           <MenuItem

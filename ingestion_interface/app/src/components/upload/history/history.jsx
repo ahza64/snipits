@@ -9,7 +9,7 @@ const historyUtil = require('./historyUtil');
 // Components
 import authRedux from '../../../reduxes/auth';
 import { fileHistoryUrl } from '../../../config';
-//import UploadLib from '../uploadLib';
+import UploadLib from '../uploadLib';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -20,7 +20,7 @@ const heatmapStyle = {
     height: '200px'
 };
 
-export default class History extends React.Component {
+export default class History extends UploadLib {
   constructor() {
     super();
 
@@ -84,25 +84,25 @@ export default class History extends React.Component {
   }
 
   componentWillMount() {
-    var companyId = authRedux.getState()['company.id'];
+    var heatmapData = this.props.heatmap;
+    var historiesData = this.props.histories;
 
-    request
-    .get(fileHistoryUrl + '/' + companyId)
-    .withCredentials()
-    .end((err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        var body = res.body;
-        var config = this.hmConfig;
-        config.series[0].data = body.heatmapData;
-        this.setState({
-          heatmap: config,
-          histories: body.historiesData
-        });
-      }
+    this.hmConfig.series[0].data = heatmapData;
+    this.setState({
+      heatmap: this.hmConfig,
+      histories: historiesData
     });
+  }
 
+  componentWillReceiveProps(nextProps) {
+    var heatmapData = nextProps.heatmap;
+    var historiesData = nextProps.histories;
+
+    this.hmConfig.series[0].data = heatmapData;
+    this.setState({
+      heatmap: this.hmConfig,
+      histories: historiesData
+    });
   }
 
   render() {

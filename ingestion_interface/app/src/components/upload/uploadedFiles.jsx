@@ -70,6 +70,7 @@ export default class UploadedFiles extends UploadLib {
                       <ActionMenu
                         setDelNotification={ this.setDelNotification }
                         setFiles={ this.setFiles }
+                        setHistories={ this.props.setHistories }
                         files={ file.Key }
                       />
                     </TableRowColumn>
