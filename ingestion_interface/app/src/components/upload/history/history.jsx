@@ -1,6 +1,7 @@
 // Modules
 import React from 'react';
 import * as request from 'superagent';
+const moment = require('moment');
 const ReactHighcharts = require('react-highcharts');
 require('highcharts-more')(ReactHighcharts.Highcharts);
 require('highcharts/modules/heatmap')(ReactHighcharts.Highcharts);
@@ -20,10 +21,21 @@ const heatmapStyle = {
     height: '200px'
 };
 
+const weekDayLib = {
+  Mon: '1',
+  Tue: '2',
+  Wed: '3',
+  Thu: '4',
+  Fri: '5',
+  Sat: '6',
+  Sun: '7'
+};
+
 export default class History extends UploadLib {
   constructor() {
     super();
 
+    var self = this;
     this.hmConfig = {
       chart: {
         type: 'heatmap',
@@ -47,7 +59,7 @@ export default class History extends UploadLib {
 
       colorAxis: {
         min: 0,
-        minColor: '#FFFFFF',
+        minColor: '#F8F8F8',
         maxColor: '#2DD48B'
       },
 
@@ -62,9 +74,26 @@ export default class History extends UploadLib {
 
       tooltip: {
         formatter: function () {
-          return this.point.value + ' action on ' +
-                this.series.xAxis.categories[this.point.x] + 'th week ' +
-                this.series.yAxis.categories[this.point.y];
+          var week = this.series.xAxis.categories[this.point.x];
+          var weekday = weekDayLib[this.series.yAxis.categories[this.point.y]];
+          var key = week + ' ' + weekday;
+          var history = self.state.histories;
+          var str = '';
+
+          if (history[key]) {
+            history[key].forEach(record => {
+              var name = record.name;
+              var action = record['histories.action'];
+              var fileName = record['histories.fileName'];
+              var time = record['histories.time'];
+
+              str += name + ' ' + action + ' ' + fileName + ' on ' + moment(time).format('MMM DD hh:mm:ss') + '<br>';
+            });
+
+            return str;
+          } else {
+            return 'no history';
+          }
         }
       },
 
@@ -111,7 +140,11 @@ export default class History extends UploadLib {
         <Col xs={0} sm={0} md={1} lg={1} ></Col>
         <Col xs={12} sm={12} md={10} lg={10} >
           <Row>
-            <ReactHighcharts style={ heatmapStyle } config={ this.state.heatmap }></ReactHighcharts>
+            <ReactHighcharts
+              style={ heatmapStyle }
+              config={ this.state.heatmap }
+            >
+            </ReactHighcharts>
           </Row>
         </Col>
         <Col xs={0} sm={0} md={1} lg={1} ></Col>
