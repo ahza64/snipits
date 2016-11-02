@@ -4,6 +4,7 @@ import React from 'react';
 // Components
 import DefaultNavbar from '../navbar/defaultNavbar';
 import UploadZone from '../upload/uploadZone';
+import History from './history/history';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -19,6 +20,7 @@ export default class Upload extends React.Component {
       <div>
         <Row><DefaultNavbar /></Row>
         <Row><UploadZone /></Row>
+        <Row><History /></Row>
       </div>
     );
   }
