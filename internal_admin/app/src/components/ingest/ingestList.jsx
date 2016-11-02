@@ -75,7 +75,7 @@ export default class IngestList extends IngestLib {
               })
             }
           </TableBody>
-        </Table>       
+        </Table>
       </div>
     );
   }

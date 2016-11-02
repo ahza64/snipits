@@ -17,6 +17,7 @@ export default class UploadLib extends React.Component {
     this.createIngestionRecord = this.createIngestionRecord.bind(this);
     this.setWatcherEmail = this.setWatcherEmail.bind(this);
     this.getWatcherEmail = this.getWatcherEmail.bind(this);
+    this.getHistory = this.getHistory.bind(this);
   }
 
   getFileStatus(ingestion) {
@@ -41,7 +42,7 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  deleteUploadedFile(fileName, fileCallback, notiCallBack) {
+  deleteUploadedFile(fileName, callback) {
     var company = authRedux.getState()['company.name'];
     
     request
@@ -55,9 +56,7 @@ export default class UploadLib extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        this.getUploadedFiles(fileCallback);
-        notiCallBack();
-        this.writeHistory(fileName, 'delete');
+        callback();
       }
     });
   }
@@ -112,7 +111,7 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  writeHistory(fileName, action) {
+  writeHistory(fileName, action, callback) {
     request
     .post(fileHistoryUrl)
     .withCredentials()
@@ -124,6 +123,24 @@ export default class UploadLib extends React.Component {
     .end(err => {
       if (err) {
         console.error(err);
+      } else {
+        callback();
+      }
+    });
+  }
+
+  getHistory(callback) {
+    var companyId = authRedux.getState()['company.id'];
+
+    request
+    .get(fileHistoryUrl + '/' + companyId)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        var body = res.body;
+        callback(body.heatmapData, body.historiesData);
       }
     });
   }

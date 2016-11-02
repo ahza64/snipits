@@ -9,6 +9,7 @@ import authRedux from '../../reduxes/auth';
 import DefaultNavbar from '../navbar/defaultNavbar';
 import UploadedFiles from './uploadedFiles';
 import UploadLib from './uploadLib';
+import History from './history/history';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -22,16 +23,33 @@ export default class UploadZone extends UploadLib {
 
     this.state = {
       files: [],
-      open: false
+      open: false,
+      heatmap: {},
+      histories: {},
     };
 
     this.setFiles = this.setFiles.bind(this);
+    this.setHistories = this.setHistories.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
     this.onDrop = this.onDrop.bind(this);
   }
 
+  componentWillMount() {
+    this.getUploadedFiles(this.setFiles);
+    this.getHistory((heatmapData, historiesData) => {
+      this.setHistories(heatmapData, historiesData);
+    });
+  }
+
   setFiles(files) {
     this.setState({ files: files });
+  }
+
+  setHistories(heatmapData, historiesData) {
+    this.setState({
+      heatmap: heatmapData,
+      histories: historiesData
+    });
   }
 
   uploadFile(file, signedUrl) {
@@ -45,7 +63,11 @@ export default class UploadZone extends UploadLib {
       } else {
         this.getUploadedFiles(this.setFiles);
         this.setState({ open: true });
-        this.writeHistory(file.name, 'upload');
+        this.writeHistory(file.name, 'upload', () => {
+          this.getHistory((heatmapData, historiesData) => {
+            this.setHistories(heatmapData, historiesData);
+          });
+        });
         this.createIngestionRecord(file);
       }
     });
@@ -73,27 +95,34 @@ export default class UploadZone extends UploadLib {
     });
   }
 
-  componentDidMount() {
-    this.getUploadedFiles(this.setFiles);
-  }
-
   render() {
     return (
-      <Row>
-        <Col xs={6} sm={6} md={6} lg={6} >
-          <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
-            <div className='dropzone-text'>Drop Your File Here</div>
-          </Dropzone>
-        </Col>
-        <Col xs={6} sm={6} md={6} lg={6} >
-          <UploadedFiles data={ this.state.files } />
-        </Col>
-        <Snackbar
-          open={ this.state.open }
-          message='File Uploaded Successfully'
-          autoHideDuration={ 2500 }
-        />
-      </Row>
+      <div>
+        <Row>
+          <Col xs={6} sm={6} md={6} lg={6} >
+            <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
+              <div className='dropzone-text'>Drop Your File Here</div>
+            </Dropzone>
+          </Col>
+          <Col xs={6} sm={6} md={6} lg={6} >
+            <UploadedFiles
+              data={ this.state.files }
+              setHistories={ this.setHistories }
+            />
+          </Col>
+          <Snackbar
+            open={ this.state.open }
+            message='File Uploaded Successfully'
+            autoHideDuration={ 2500 }
+          />
+        </Row>
+        <Row>
+          <History
+            heatmap={ this.state.heatmap }
+            histories={ this.state.histories }
+          />
+        </Row>
+      </div>
     );
   }
 }

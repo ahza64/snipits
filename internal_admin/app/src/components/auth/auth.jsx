@@ -4,7 +4,7 @@ import authRedux from '../../reduxes/auth';
 import * as _ from 'underscore';
 
 const roleLib = {
-  'DA': ['/create/', '/users/'],
+  'DA': ['/users/', '/create/'],
   'DI': ['/ingest/']
 };
 
