@@ -1,9 +1,8 @@
 // Module
 const koa = require('koa');
 const router = require('koa-router')();
-//const s3 = require('dsp_shared/aws/s3');
-//const config = require('dsp_shared/conf.d/config.json').mooncake;
-//const s3Prefix = config.env + '.';
+const moment = require('moment');
+const _ = require('underscore');
 
 // Collection
 const Histories = require('dsp_shared/database/model/ingestion/tables').histories;
@@ -44,6 +43,47 @@ router.post(
   }
 );
 
+var historyMassage = (histories) => {
+  const WEEKS = 53;
+  const WEEKDAYS = 7;
+
+  // Mock up data
+  var heatmapData = [];
+  for (var x = 0; x < WEEKS; x++) {
+    var slot = [];
+    slot.push(x);
+
+    for (var y = 0; y < WEEKDAYS; y++) {
+      slot.push(y);
+      slot.push(0);
+      heatmapData.push(slot);
+      slot = [x];
+    }
+  }
+
+  histories.forEach(h => {
+    var time = h['histories.time'];
+    h['histories.time'] = moment(time).format('ww|e');
+  });
+
+  histories = _.groupBy(histories, 'histories.time');
+
+  for (var key in histories) {
+    if (histories.hasOwnProperty(key)) {
+      var temp = key.split('|').map(x => parseInt(x));
+      var weekNum = temp[0];
+      var weekDay = temp[1];
+      var idx = (weekNum - 1) * 7 + weekDay;
+      heatmapData[idx][2] = histories[key].length;
+    }
+  }
+
+  return {
+    heatmapData: heatmapData,
+    historiesData: histories
+  };
+};
+
 // Get histories
 router.get(
   '/history/:companyId',
@@ -65,6 +105,8 @@ router.get(
           raw: true
         })
       ];
+
+      histories = historyMassage(histories);
     } catch(e) {
       console.error(e);
       this.throw(500);
