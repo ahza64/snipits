@@ -5,7 +5,7 @@ if (require.main === module) {
   var config = require('dsp_shared/config/config').get();
   require('dsp_shared/database/database')(config.meteor);
 }
-const MIN_DISTANCE = 0.125; //in miles
+const MIN_DISTANCE = 0.062; //in miles
 var koa = require('koa');
 var router = require('koa-router')();
 var User = require('dsp_shared/database/model/cufs');
