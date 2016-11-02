@@ -18,8 +18,19 @@ var cufSchema = new mongoose.Schema({
   company: {type: String},
   workorder: [],
   password: String,
-  last_sent_at: {type: Date}
+  last_sent_at: {type: Date},
+
+  //new fields
+  last_login_time: {type: Date},
+  last_exit_time: {type: Date},
+  pulse: {type: Date},
+  tablet_phone_number: {type: String},
+  unsynced_requests: {type: Number},
+  app_version: {type: String},
+  location: { type: {}, index: '2dsphere' }
 });
+
+cufSchema.index({location: '2dsphere'});
 
 cufSchema.methods.comparePassword = function(candidatePassword, cb) {
   //get a user object with password here
