@@ -3,7 +3,7 @@ import React from 'react';
 import _ from 'underscore';
 
 // Components
-import UploadLib from './uploadLib';
+import UploadLib from '../uploadLib';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';

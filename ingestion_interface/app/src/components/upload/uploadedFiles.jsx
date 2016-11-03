@@ -5,7 +5,7 @@ import * as request from 'superagent';
 // Components
 import authRedux from '../../reduxes/auth';
 import UploadLib from './uploadLib';
-import ActionMenu from './actionMenu';
+import ActionMenu from './menu/actionMenu';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
