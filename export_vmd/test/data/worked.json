@@ -154,7 +154,8 @@
     "results": {
       "sBillingCode": "XX",
       "iBillingRate": 1,
-      "nQty": "3"
+      "nQty": "3",
+      "sComments": "some comemment ##3# or another"
     }
 
 }
