@@ -67,12 +67,12 @@ describe('Get package', function() {
       .set('Cookie', cookie)
       .end(function (err, res) {
         expect(err).to.equal(null);
-        
+
         // Check package
         var dataPackage = res.body.data;
         expect(dataPackage).to.be.an('object');
         expect(dataPackage).to.have.all.keys([
-          'updated', 'user', 'workorders', 'trees', 'map_features'
+          'updated', 'user', 'workorders', 'trees', 'map_features', 'map_annotations'
         ]);
 
         // Check user
@@ -85,7 +85,7 @@ describe('Get package', function() {
         // Check workorder
         expect(dataPackage.workorders).to.be.instanceof(Array);
         expect(dataPackage.workorders[0]).to.have.all.keys([
-          'tasks', 'name', 'work_type', 'priority', 'status', 
+          'tasks', 'name', 'work_type', 'priority', 'status',
           'circuit_names', 'location', 'span_name', '_id'
         ]);
 
