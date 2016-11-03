@@ -57,11 +57,19 @@ historySchema.statics.buildVersion = function(type, id, date) {
       return 0;
     });
 
+    console.log("GOT HISTORIES", histories.length); 
+
     //reconstitue
     var result = {};
     for(var i = 0; i < histories.length; i++) {
       _.extend(result, histories[i].action_value);
+      for(var key in result) {
+        if(result.hasOwnProperty(key) && result[key] === DELETED) {
+          delete result[key];
+        }
+      }      
     }
+    return result;
 
   });
 };
