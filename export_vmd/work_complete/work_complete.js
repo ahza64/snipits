@@ -118,6 +118,7 @@ var TreeWorkComplete = function(tree, trimmer, image, test_email) {
     this.work_complete.sBillingCode = "XX";
   }
       
+  this.work_complete.sComments = tree.comments || null;
   if(tree.comments) {
     var matches = tree.comments.match(/#([0-9]+)#/);
     if(matches) {
