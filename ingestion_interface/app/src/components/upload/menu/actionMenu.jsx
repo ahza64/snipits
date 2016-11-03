@@ -1,12 +1,13 @@
 // Modules
 import React from 'react';
 import * as request from 'superagent';
-import { fileHistoryUrl, deleteFileUrl } from '../../config';
+import { fileHistoryUrl, deleteFileUrl } from '../../../config';
 
 // Components
-import authRedux from '../../reduxes/auth';
-import UploadLib from './uploadLib';
+import authRedux from '../../../reduxes/auth';
+import UploadLib from '../uploadLib';
 import WatcherNotification from './watcherNotification';
+import DescriptionBox from './descriptionBox';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -22,12 +23,15 @@ export default class ActionMenu extends UploadLib {
 
     this.state = {
       showWatcherModal: false,
-      watchers: []
+      showDescriptionModal: false,
+      watchers: [],
+      ingestions: {}
     };
 
     this.close = this.close.bind(this);
     this.open = this.open.bind(this);
     this.getWatchers = this.getWatchers.bind(this);
+    this.getIngestion = this.getIngestion.bind(this);
   }
 
   close(modalName) {
@@ -48,6 +52,12 @@ export default class ActionMenu extends UploadLib {
     });
   }
 
+  getIngestion() {
+    this.getIngestionRecord(this.props.files, (res) => {
+      this.setState({ ingestions: res.body });
+    });
+  }
+
   render() {
     return (
       <div>
@@ -57,6 +67,24 @@ export default class ActionMenu extends UploadLib {
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
         >
+          <MenuItem
+            primaryText='Set Description'
+            onClick={
+              () => {
+                this.getIngestion();
+                this.open('showDescriptionModal');
+              } 
+            }
+          />
+          <MenuItem
+            primaryText='Set Watchers'
+            onClick={
+              () => {
+                this.open('showWatcherModal');
+                this.getWatchers();
+              } 
+            }
+          />
           <MenuItem 
             primaryText='Delete'
             onClick={
@@ -71,15 +99,6 @@ export default class ActionMenu extends UploadLib {
               })
             }
           />
-          <MenuItem
-            primaryText='Set Watchers'
-            onClick={
-              () => {
-                this.open('showWatcherModal');
-                this.getWatchers();
-              } 
-            }
-          />
         </IconMenu>
         <WatcherNotification
           setFiles={ this.props.setFiles }
@@ -87,6 +106,13 @@ export default class ActionMenu extends UploadLib {
           setClose={ () => this.close('showWatcherModal') }
           files={ this.props.files }
           watchers={ this.state.watchers }
+        />
+        <DescriptionBox
+          setFiles={ this.props.setFiles }
+          showModal={ this.state.showDescriptionModal }
+          setClose={ () => this.close('showDescriptionModal') }
+          files={ this.props.files }
+          ingestions={ this.state.ingestions }
         />
       </div>
     );

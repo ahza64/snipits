@@ -63,7 +63,9 @@ var historyMassage = (histories) => {
 
   histories.forEach(h => {
     var time = h['histories.time'];
-    h.timeKey = moment(time).format('ww e');
+    if (time) {
+      h.timeKey = moment(time).format('ww e');
+    }
   });
 
   histories = _.groupBy(histories, 'timeKey');
@@ -105,6 +107,13 @@ router.get(
           raw: true
         })
       ];
+      
+      if (histories.length === 1 && !histories['histories.id']) {
+        return this.body = {
+          heatmapData: [],
+          historiesData: {}
+        };
+      }
 
       histories = historyMassage(histories);
     } catch(e) {

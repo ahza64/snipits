@@ -4,7 +4,7 @@ import request from 'superagent';
 import { displayFilesUrl, fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl } from '../../config';
 
 // Components
-import authRedux from '../../reduxes/auth'; 
+import authRedux from '../../reduxes/auth';
 
 export default class UploadLib extends React.Component {
   constructor() {
@@ -74,6 +74,21 @@ export default class UploadLib extends React.Component {
     .end(err => {
       if (err) {
         console.error(err);
+      }
+    });
+  }
+
+  getIngestionRecord(fileName, callback) {
+    var companyId = authRedux.getState()['company.id'];
+
+    request
+    .get(ingestionRecordUrl + '/' + fileName + '/' + companyId)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        callback(res);
       }
     });
   }
