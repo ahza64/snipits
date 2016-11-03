@@ -11,6 +11,7 @@ var router = require('koa-router')();
 var User = require('dsp_shared/database/model/cufs');
 var Tree = require('dsp_shared/database/model/tree');
 var MapFeature = require('dsp_shared/database/model/mapfeatures');
+var MapAnnotation = require('dsp_shared/database/model/map_annotations');
 var _ = require("underscore");
 var config = require('../routes_config').package.exclude;
 var app = koa();
@@ -47,7 +48,7 @@ router.get('/workr/package', function*() {
     //filter out workorders with no trees
     var workorders = user.workorder.filter(wo => wo.tasks.length !== 0);
 
-    var map_features =[];
+    var map_features = [];
     var tree_ids = [];
 
     for (var i = 0; i < workorders.length; ++i) {
@@ -59,6 +60,8 @@ router.get('/workr/package', function*() {
           workorder.circuit_names = yield extractCircuitNamesFromWO(workorder);
         }
     }
+
+    var map_annotations = yield MapAnnotation.find({tree_id : {$in: tree_ids}});
 
     //optimizaton - make one db request for trees
     var trees = yield Tree.find({_id: {$in: tree_ids}, status:/^[^06]/}).select(tree_exclude);
@@ -81,7 +84,8 @@ router.get('/workr/package', function*() {
       user: userObject,
       workorders: workorders,
       trees: trees,
-      map_features: map_features
+      map_features: map_features,
+      map_annotations: map_annotations
     };
   } catch(e) {
     console.log('Exception: ', e.message);
