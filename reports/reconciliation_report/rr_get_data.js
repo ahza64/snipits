@@ -8,30 +8,44 @@ const Cuf = require('dsp_shared/database/model/cufs');
 const Export = require('dsp_shared/database/model/export');
 const Tree = require('dsp_shared/database/model/tree');
 
-module.exports = co.wrap(function*(startTime, endTime) {
+module.exports = co.wrap(function*(startTime, endTime, crewType, exportType) {
   
   var csvData = [];
-  var companies = yield Cuf.find().distinct('company');
-  
+  var workType = crewType === 'tc' ? 'tree_trim' : 'tree_inspect';
+  var companies = yield Cuf.find({ work_type: workType }).distinct('company');
+  var findDBTreeCount = 0;
+  var foundTreeCount = 0;
+  var missExportDataCount = 0;
+
   for (var i = 0; i < companies.length; i++) {
     var crewData = yield Cuf.find({ company: companies[i] });
-    var crewType = crewData[0].work_type[0];
     var crewIds = crewData.map(x => x._id);
-    var query = {};
-    crewType = crewType === 'tree_inspect' ? 'pi' : 'tc';
+    var query = {
+      project: 'transmission_2015',
+      status: new RegExp('^[^06]'),
+      exported: { $exists: true } // Check if the tree got exported
+    };
     var id_key = crewType + '_user_id';
     var time_key = crewType + '_complete_time';
     query[id_key] = { $in: crewIds };
     query[time_key] = { $gt: startTime, $lt: endTime };
     var trees = yield Tree.find(query);
+    findDBTreeCount += trees.length;
 
     for (var j = 0; j < trees.length; j++) {
+      foundTreeCount++;
       var tree = trees[j];
       var crew = yield Cuf.findOne({ _id: tree[id_key] });
-      var exportData = yield Export.findOne({ tree_id: tree._id });
+      var exportData = yield Export.findOne({ tree_id: tree._id, type: exportType });
+      // Check if has data in exports collection
+      if (!exportData) {
+        missExportDataCount++;
+        continue;
+      }
       var quantity = 0;
       if (tree.comments) {
-        quantity = tree.comments.split('#')[1] || 0;
+        var matches = tree.comments.match(/#([0-9]+)#/);
+        quantity = matches ? matches[1] : 0;
       }
 
       var temp = {
@@ -71,15 +85,23 @@ module.exports = co.wrap(function*(startTime, endTime) {
         // CREW
         company: crew.company,
         crew: crew.name,
+        tc_overtime: tree.tc_overtime || '',
         complete_time: tree[time_key],
         comments: tree.comments || '',
         quantity: quantity
       };
-      
+
       csvData.push(temp);
       console.log(temp);
     }
   }
+
+  console.log('===============================');
+  console.log('companies: ', companies);
+  console.log('DB Find: ', findDBTreeCount);
+  console.log('Found: ', foundTreeCount);
+  console.log('Excluded: ', missExportDataCount);
+  console.log('CSV: ', csvData.length);
 
   return csvData;
 });

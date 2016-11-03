@@ -130,13 +130,18 @@ module.exports = [
   },
   // CREW
   {
-    label: 'COMPANY',
+    label: 'TREE COMPANY',
     value: 'company',
     default: ''
   },
   {
     label: 'TREE CREW',
     value: 'crew',
+    default: ''
+  },
+  {
+    label: 'TC OVERTIME',
+    value: 'tc_overtime',
     default: ''
   },
   {
