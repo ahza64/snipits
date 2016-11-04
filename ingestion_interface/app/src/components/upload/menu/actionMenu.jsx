@@ -5,6 +5,7 @@ import { fileHistoryUrl, deleteFileUrl } from '../../../config';
 
 // Components
 import authRedux from '../../../reduxes/auth';
+import pageRedux from '../../../reduxes/page';
 import UploadLib from '../uploadLib';
 import WatcherNotification from './watcherNotification';
 import DescriptionBox from './descriptionBox';
@@ -25,13 +26,19 @@ export default class ActionMenu extends UploadLib {
       showWatcherModal: false,
       showDescriptionModal: false,
       watchers: [],
-      ingestions: {}
+      ingestions: {},
+      fileName: ''
     };
 
     this.close = this.close.bind(this);
     this.open = this.open.bind(this);
     this.getWatchers = this.getWatchers.bind(this);
     this.getIngestion = this.getIngestion.bind(this);
+    this.handleDeleteIngestion = this.handleDeleteIngestion.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ fileName: nextProps.files });
   }
 
   close(modalName) {
@@ -55,6 +62,22 @@ export default class ActionMenu extends UploadLib {
   getIngestion() {
     this.getIngestionRecord(this.props.files, (res) => {
       this.setState({ ingestions: res.body });
+    });
+  }
+
+  handleDeleteIngestion() {
+    var offset = pageRedux.getState();
+
+    this.deleteUploadedFile(this.state.fileName, () => {
+      this.getUploadedFiles(offset, (files) => {
+        this.props.setFiles(files);
+        this.writeHistory(this.state.fileName, 'delete', () => {
+          this.getHistory((heatmapData, historiesData) => {
+            this.props.setHistories(heatmapData, historiesData);
+            this.props.setDelNotification();
+          });
+        });
+      });
     });
   }
 
@@ -87,17 +110,7 @@ export default class ActionMenu extends UploadLib {
           />
           <MenuItem 
             primaryText='Delete'
-            onClick={
-              () => this.deleteUploadedFile(this.props.files, () => {
-                this.getUploadedFiles(this.props.setFiles);
-                this.props.setDelNotification();
-                this.writeHistory(this.props.files, 'delete', () => {
-                  this.getHistory((heatmapData, historiesData) => {
-                    this.props.setHistories(heatmapData, historiesData);
-                  });
-                });
-              })
-            }
+            onClick={ this.handleDeleteIngestion }
           />
         </IconMenu>
         <WatcherNotification
