@@ -53,12 +53,16 @@ router.post(
     var fileType = this.request.body.type;
     var company = this.request.body.company.toLowerCase();
     var action = this.request.body.action;
+    var bucket = s3Prefix + company + '.ftp';
+
     try {
-      var signedUrl = yield s3.sign(action, s3Prefix + company + '.ftp', fileName, fileType);
+      yield s3.list(bucket);
+      var signedUrl = yield s3.sign(action, bucket, fileName, fileType);
     } catch(e) {
       console.error(e);
       this.throw(500);
     }
+
     this.body = signedUrl;
   }
 );
