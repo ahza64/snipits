@@ -85,7 +85,7 @@ router.post(
         },
         force: true
       });
-      console.log('==========================> ', companyId);
+
       console.log('Deleted file ' + fileName + ' from ' + bucketName);
     } catch(e) {
       console.error(e);

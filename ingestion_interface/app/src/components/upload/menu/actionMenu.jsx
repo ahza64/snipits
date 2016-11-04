@@ -70,7 +70,6 @@ export default class ActionMenu extends UploadLib {
 
     this.deleteUploadedFile(this.state.fileName, () => {
       this.getUploadedFiles(offset, (files) => {
-        console.log('DELETE -> ', offset, files);
         this.props.setFiles(files);
         this.writeHistory(this.state.fileName, 'delete', () => {
           this.getHistory((heatmapData, historiesData) => {

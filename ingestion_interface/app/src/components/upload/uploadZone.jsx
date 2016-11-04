@@ -135,6 +135,7 @@ export default class UploadZone extends UploadLib {
             <UploadedFiles
               files={ this.state.files }
               setHistories={ this.setHistories }
+              setFiles={ this.setFiles }
               total={ this.state.total }
             />
           </Col>

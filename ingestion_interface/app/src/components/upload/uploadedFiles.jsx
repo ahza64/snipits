@@ -31,14 +31,16 @@ export default class UploadedFiles extends UploadLib {
       total: 0
     };
 
-    this.setFiles = this.setFiles.bind(this);
     this.setDelNotification = this.setDelNotification.bind(this);
     this.changePage = this.changePage.bind(this);
     this.renderPage = this.renderPage.bind(this);
   }
 
   componentWillMount() {
-    this.setState({ files: this.state.files });
+    this.setState({
+      files: this.props.files,
+      total: this.props.total
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,10 +48,6 @@ export default class UploadedFiles extends UploadLib {
       files: nextProps.files,
       total: nextProps.total
     });
-  }
-
-  setFiles(files) {
-    this.setState({ files: files });
   }
 
   setDelNotification() {
@@ -68,7 +66,7 @@ export default class UploadedFiles extends UploadLib {
     } else if (offset < 0) {
       pageRedux.dispatch({ type: 'NEXT' });
     } else {
-      this.getUploadedFiles(offset, this.setFiles);
+      this.getUploadedFiles(offset, this.props.setFiles);
     }
   }
 
@@ -102,7 +100,7 @@ export default class UploadedFiles extends UploadLib {
                       <TableRowColumn>
                         <ActionMenu
                           setDelNotification={ this.setDelNotification }
-                          setFiles={ this.setFiles }
+                          setFiles={ this.props.setFiles }
                           setHistories={ this.props.setHistories }
                           files={ file.fileName }
                         />
