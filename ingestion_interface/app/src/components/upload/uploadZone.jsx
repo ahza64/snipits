@@ -6,6 +6,7 @@ import { s3authUrl, ingestionRecordUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
+import pageRedux from '../../reduxes/page';
 import DefaultNavbar from '../navbar/defaultNavbar';
 import UploadedFiles from './uploadedFiles';
 import UploadLib from './uploadLib';
@@ -23,19 +24,33 @@ export default class UploadZone extends UploadLib {
 
     this.state = {
       files: [],
-      open: false,
+      uploadNotice: false,
       heatmap: {},
       histories: {},
+      total: 0
     };
 
     this.setFiles = this.setFiles.bind(this);
     this.setHistories = this.setHistories.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
     this.onDrop = this.onDrop.bind(this);
+    this.setUploadNotice = this.setUploadNotice.bind(this);
   }
 
   componentWillMount() {
-    this.getUploadedFiles(this.setFiles);
+    var companyId = authRedux.getState()['company.id'];
+
+    request
+    .get(ingestionRecordUrl + '/total/' + companyId)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        this.setState({ total: res.body });
+      }
+    });
+    this.getUploadedFiles(0, this.setFiles);
     this.getHistory((heatmapData, historiesData) => {
       this.setHistories(heatmapData, historiesData);
     });
@@ -52,7 +67,16 @@ export default class UploadZone extends UploadLib {
     });
   }
 
+  setUploadNotice() {
+    this.setState({ uploadNotice: true });
+    setTimeout(() => {
+      this.setState({ uploadNotice: false });
+    }, 2500);
+  }
+
   uploadFile(file, signedUrl) {
+    var offset = pageRedux.getState();
+
     request
     .put(signedUrl)
     .set('Content-Type', file.type)
@@ -61,14 +85,17 @@ export default class UploadZone extends UploadLib {
       if (err) {
         console.error(err);
       } else {
-        this.getUploadedFiles(this.setFiles);
-        this.setState({ open: true });
-        this.writeHistory(file.name, 'upload', () => {
-          this.getHistory((heatmapData, historiesData) => {
-            this.setHistories(heatmapData, historiesData);
+        this.createIngestionRecord(file, () => {
+          this.getUploadedFiles(offset, (files) => {
+            this.setFiles(files);
+            this.writeHistory(file.name, 'upload', () => {
+              this.getHistory((heatmapData, historiesData) => {
+                this.setHistories(heatmapData, historiesData);
+                this.setUploadNotice();
+              });
+            });
           });
         });
-        this.createIngestionRecord(file);
       }
     });
   }
@@ -106,12 +133,14 @@ export default class UploadZone extends UploadLib {
           </Col>
           <Col xs={6} sm={6} md={6} lg={6} >
             <UploadedFiles
-              data={ this.state.files }
+              files={ this.state.files }
               setHistories={ this.setHistories }
+              setFiles={ this.setFiles }
+              total={ this.state.total }
             />
           </Col>
           <Snackbar
-            open={ this.state.open }
+            open={ this.state.uploadNotice }
             message='File Uploaded Successfully'
             autoHideDuration={ 2500 }
           />
