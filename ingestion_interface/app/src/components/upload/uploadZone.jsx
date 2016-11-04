@@ -11,6 +11,7 @@ import DefaultNavbar from '../navbar/defaultNavbar';
 import UploadedFiles from './uploadedFiles';
 import UploadLib from './uploadLib';
 import History from './history/history';
+import FileExistsWarn from './notification/FileExistsWarn';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -25,6 +26,7 @@ export default class UploadZone extends UploadLib {
     this.state = {
       files: [],
       uploadNotice: false,
+      fileExistsWarn: false,
       heatmap: {},
       histories: {},
       total: 0
@@ -35,6 +37,7 @@ export default class UploadZone extends UploadLib {
     this.uploadFile = this.uploadFile.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.setUploadNotice = this.setUploadNotice.bind(this);
+    this.setFileExistsWarn = this.setFileExistsWarn.bind(this);
   }
 
   componentWillMount() {
@@ -72,6 +75,10 @@ export default class UploadZone extends UploadLib {
     setTimeout(() => {
       this.setState({ uploadNotice: false });
     }, 2500);
+  }
+
+  setFileExistsWarn() {
+    this.setState({ fileExistsWarn: false });
   }
 
   uploadFile(file, signedUrl) {
@@ -131,6 +138,7 @@ export default class UploadZone extends UploadLib {
           });
         } else {
           console.log('Can not upload the same file');
+          this.setState({ fileExistsWarn: true });
         }
       }
     });
@@ -165,6 +173,10 @@ export default class UploadZone extends UploadLib {
             histories={ this.state.histories }
           />
         </Row>
+        <FileExistsWarn
+          open={ this.state.fileExistsWarn }
+          setClose={ this.setFileExistsWarn }
+        />
       </div>
     );
   }
