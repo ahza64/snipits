@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import request from 'superagent';
-import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl } from '../../config';
+import { displayFilesUrl, fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -24,11 +24,10 @@ export default class UploadLib extends React.Component {
     return ingestion.ingested ? 'INGESTED' : 'NOT INGESTED';
   }
 
-  getUploadedFiles(offset, callback) {
-    var companyId = authRedux.getState()['company.id'];
-
+  getUploadedFiles(callback) {
+    var company = authRedux.getState()['company.name'];
     request
-    .get(ingestionRecordUrl + '/all/' + companyId + '/' + offset)
+    .get(displayFilesUrl + company)
     .withCredentials()
     .end((err, res) => {
       if (err) {
@@ -36,7 +35,7 @@ export default class UploadLib extends React.Component {
       } else {
         var files = res.body;
         files.forEach(f => {
-          f.status = this.getFileStatus(f);
+          f.status = this.getFileStatus(f.ingestion);
         });
         callback(files);
       }
@@ -62,7 +61,7 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  createIngestionRecord(file, callback) {
+  createIngestionRecord(file) {
     var companyId = authRedux.getState()['company.id'];
 
     request
@@ -75,8 +74,6 @@ export default class UploadLib extends React.Component {
     .end(err => {
       if (err) {
         console.error(err);
-      } else {
-        callback();
       }
     });
   }
