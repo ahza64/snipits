@@ -9,7 +9,6 @@ const s3Prefix = config.env + '.';
 const Histories = require('dsp_shared/database/model/ingestion/tables').histories;
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
 const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestions;
-const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
 
 // App
 const app = koa();
@@ -20,24 +19,19 @@ router.get(
   function*() {
     var company = this.params.company;
     var bucket = s3Prefix + company.toLowerCase() + '.ftp';
-    try {
-      var res = yield s3.list(bucket);
-      var files = res.Contents;
+    var res = yield s3.list(bucket);
+    var files = res.Contents;
 
-      for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        var fileName = file.Key;
-        var ingestion = yield Ingestions.findOne({
-          where: {
-            fileName: fileName
-          },
-          raw: true
-        });
-        file.ingestion = ingestion;
-      }
-    } catch(e) {
-      console.error(e);
-      this.throw(500);
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+      var fileName = file.Key;
+      var ingestion = yield Ingestions.findOne({
+        where: {
+          fileName: fileName
+        },
+        raw: true
+      });
+      file.ingestion = ingestion;
     }
 
     console.log('Files already uploaded: ', files);
@@ -53,12 +47,7 @@ router.post(
     var fileType = this.request.body.type;
     var company = this.request.body.company.toLowerCase();
     var action = this.request.body.action;
-    try {
-      var signedUrl = yield s3.sign(action, s3Prefix + company + '.ftp', fileName, fileType);
-    } catch(e) {
-      console.error(e);
-      this.throw(500);
-    }
+    var signedUrl = yield s3.sign(action, s3Prefix + company + '.ftp', fileName, fileType);
     this.body = signedUrl;
   }
 );
@@ -67,31 +56,10 @@ router.post(
 router.post(
   '/delete',
   function*() {
-    var company = this.request.body.company;
+    var bucketName = s3Prefix + this.request.body.company.toLowerCase() + '.ftp';
     var fileName = this.request.body.file;
-    var bucketName = s3Prefix + company.toLowerCase() + '.ftp';
-
-    try {
-      var companyId = yield Companies.findOne({
-        where: { name: company },
-        raw: true
-      });
-      companyId = companyId.id;
-      yield s3.delete(bucketName, [fileName]);
-      yield Ingestions.destroy({
-        where: {
-          fileName: fileName,
-          companyId: companyId
-        },
-        force: true
-      });
-
-      console.log('Deleted file ' + fileName + ' from ' + bucketName);
-    } catch(e) {
-      console.error(e);
-      this.throw(500);
-    }
-
+    console.log('Deleted file ' + fileName + ' from ' + bucketName);
+    yield s3.delete(bucketName, [fileName]);
     this.throw(200);
   }
 );
@@ -106,12 +74,7 @@ router.post(
     var action = body.action;
 
     // Check whether the user exists
-    try {
-      var user = yield Users.findOne({ where: { email: email }, raw: true });
-    } catch(e) {
-      console.error(e);
-      this.throw(500);
-    }
+    var user = yield Users.findOne({ where: { email: email }, raw: true });
     var userId = user.id;
     if (!userId) { this.throw(403); }
 

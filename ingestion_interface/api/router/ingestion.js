@@ -62,48 +62,6 @@ router.put(
   }
 );
 
-// Get the total number of the record
-router.get(
-  '/ingestions/total/:companyId',
-  function*() {
-    var companyId = this.params.companyId;
-
-    try {
-      var total = yield Ingestions.count({
-        where: { companyId: companyId }
-      });
-    } catch(e) {
-      console.error(e);
-      this.throw(500);
-    }
-
-    this.body = total;
-  }
-);
-
-// Get all ingestion record
-router.get(
-  '/ingestions/all/:companyId/:offset',
-  function*() {
-    var companyId = this.params.companyId;
-    var offset = this.params.offset;
-
-    try {
-      var ingestions = yield Ingestions.findAll({
-        limit: 5,
-        offset: offset,
-        where: { companyId: companyId },
-        raw: true
-      });
-    } catch(e) {
-      console.error(e);
-      this.throw(500);
-    }
-
-    this.body = ingestions;
-  }
-);
-
 // Get the ingestion record
 router.get(
   '/ingestions/:fileName/:companyId',
