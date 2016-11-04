@@ -1,0 +1,8 @@
+{
+    "subject": "Test Email",
+    "body": {
+        "text": "Hi,\n\nThis is an email template.\n\nYou're value is {{value}}\n\nThanks,\n\n- Template Test",
+        "html": "<html>This is the html <b>version</b><br>template value: <i>{{value}}</i></html>"
+    }    
+}
+

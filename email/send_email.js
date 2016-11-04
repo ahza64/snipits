@@ -39,6 +39,7 @@ function sendMessage(raw_email) {
 }
 
 
+module.exports = sendMessage
 
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');
