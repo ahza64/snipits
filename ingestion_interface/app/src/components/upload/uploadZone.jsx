@@ -2,7 +2,7 @@
 import React from 'react';
 import * as request from 'superagent';
 import Dropzone from 'react-dropzone';
-import { s3authUrl, ingestionRecordUrl } from '../../config';
+import { s3authUrl, ingestionRecordUrl, fileCheckUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -11,6 +11,7 @@ import DefaultNavbar from '../navbar/defaultNavbar';
 import UploadedFiles from './uploadedFiles';
 import UploadLib from './uploadLib';
 import History from './history/history';
+import FileExistsWarn from './notification/FileExistsWarn';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -25,6 +26,7 @@ export default class UploadZone extends UploadLib {
     this.state = {
       files: [],
       uploadNotice: false,
+      fileExistsWarn: false,
       heatmap: {},
       histories: {},
       total: 0
@@ -35,6 +37,7 @@ export default class UploadZone extends UploadLib {
     this.uploadFile = this.uploadFile.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.setUploadNotice = this.setUploadNotice.bind(this);
+    this.setFileExistsWarn = this.setFileExistsWarn.bind(this);
   }
 
   componentWillMount() {
@@ -74,6 +77,10 @@ export default class UploadZone extends UploadLib {
     }, 2500);
   }
 
+  setFileExistsWarn() {
+    this.setState({ fileExistsWarn: false });
+  }
+
   uploadFile(file, signedUrl) {
     var offset = pageRedux.getState();
 
@@ -102,22 +109,37 @@ export default class UploadZone extends UploadLib {
 
   onDrop(files) {
     var company = authRedux.getState()['company.name'];
+    var companyId = authRedux.getState()['company.id'];
     var file = files[0];
 
     request
-    .post(s3authUrl)
-    .send({
-      name: file.name,
-      type: file.type,
-      company: company,
-      action: 'putObject'
-    })
+    .get(fileCheckUrl + '/' + companyId + '/' + file.name)
     .withCredentials()
     .end((err, res) => {
       if (err) {
         console.error(err);
       } else {
-        this.uploadFile(file, res.text);
+        if (!res.body) {
+          request
+          .post(s3authUrl)
+          .send({
+            name: file.name,
+            type: file.type,
+            company: company,
+            action: 'putObject'
+          })
+          .withCredentials()
+          .end((err, res) => {
+            if (err) {
+              console.error(err);
+            } else {
+              this.uploadFile(file, res.text);
+            }
+          });
+        } else {
+          console.log('Can not upload the same file');
+          this.setState({ fileExistsWarn: true });
+        }
       }
     });
   }
@@ -125,7 +147,7 @@ export default class UploadZone extends UploadLib {
   render() {
     return (
       <div>
-        <Row>
+        <Row style={{ height: '50%' }}>
           <Col xs={6} sm={6} md={6} lg={6} >
             <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
               <div className='dropzone-text'>Drop Your File Here</div>
@@ -145,12 +167,16 @@ export default class UploadZone extends UploadLib {
             autoHideDuration={ 2500 }
           />
         </Row>
-        <Row>
+        <Row style={{ height: '40%' }}>
           <History
             heatmap={ this.state.heatmap }
             histories={ this.state.histories }
           />
         </Row>
+        <FileExistsWarn
+          open={ this.state.fileExistsWarn }
+          setClose={ this.setFileExistsWarn }
+        />
       </div>
     );
   }

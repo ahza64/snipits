@@ -1,6 +1,7 @@
 // Module
 const koa = require('koa');
 const router = require('koa-router')();
+const _ = require('underscore');
 const s3 = require('dsp_shared/aws/s3');
 const config = require('dsp_shared/conf.d/config.json').mooncake;
 const s3Prefix = config.env + '.';
@@ -42,6 +43,30 @@ router.get(
 
     console.log('Files already uploaded: ', files);
     this.body = files;
+  }
+);
+
+// Check if same file exists
+router.get(
+  '/check/same/:companyId/:fileName',
+  function*() {
+    var companyId = this.params.companyId;
+    var fileName = this.params.fileName;
+
+    try {
+      var ingestions = yield Ingestions.findAll({
+        where: { companyId: companyId },
+        raw: true
+      });
+    } catch(e) {
+      console.error(e);
+      this.throw(500);
+    }
+
+    ingestions = ingestions.map(x => x.fileName);
+    var exists = _.contains(ingestions, fileName);
+
+    this.body = exists;
   }
 );
 
