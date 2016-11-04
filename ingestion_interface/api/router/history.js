@@ -69,9 +69,8 @@ var historyMassage = (histories) => {
   });
 
   histories = _.groupBy(histories, 'timeKey');
-
   for (var key in histories) {
-    if (histories.hasOwnProperty(key)) {
+    if (histories.hasOwnProperty(key) && key !== 'undefined') {
       var temp = key.split(' ').map(x => parseInt(x));
       var weekNum = temp[0];
       var weekDay = temp[1] - 1;

@@ -102,6 +102,7 @@ export default class UploadedFiles extends UploadLib {
                           setDelNotification={ this.setDelNotification }
                           setFiles={ this.props.setFiles }
                           setHistories={ this.props.setHistories }
+                          setTotal={ this.props.setTotal }
                           files={ file.fileName }
                         />
                       </TableRowColumn>
