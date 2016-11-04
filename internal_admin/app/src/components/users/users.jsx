@@ -107,6 +107,7 @@ export default class Users extends React.Component {
                   <TableHeaderColumn>Name</TableHeaderColumn>
                   <TableHeaderColumn>Email</TableHeaderColumn>
                   <TableHeaderColumn>Company</TableHeaderColumn>
+                  <TableHeaderColumn>Role</TableHeaderColumn>
                   <TableHeaderColumn>Status</TableHeaderColumn>
                   <TableHeaderColumn>Active/Inactive</TableHeaderColumn>
                   <TableHeaderColumn>Delete</TableHeaderColumn>
@@ -117,10 +118,11 @@ export default class Users extends React.Component {
                   this.state.users.map((user, idx) => {
                     return (
                       <TableRow key={ idx }>
-                        <TableRowColumn>{ idx }</TableRowColumn>
+                        <TableRowColumn>{ idx + 1 }</TableRowColumn>
                         <TableRowColumn>{ user.name }</TableRowColumn>
                         <TableRowColumn>{ user.email }</TableRowColumn>
-                        <TableRowColumn>{ user.company.name }</TableRowColumn>
+                        <TableRowColumn>{ user.company && user.company.name || 'Dispatchr' }</TableRowColumn>
+                        <TableRowColumn>{ user.role || 'CU' }</TableRowColumn>
                         <TableRowColumn>{ user.status }</TableRowColumn>
                         <TableRowColumn>{ this.renderToggle(user) }</TableRowColumn>
                         <TableRowColumn>

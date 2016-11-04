@@ -86,13 +86,21 @@ router.delete(
 router.get(
   '/users',
   function*() {
+    var users = [];
     try {
-      this.body = yield Users.findAll({
-        include: [ { model: Companies, attributes: ['name'] } ]
-      });
+      users = [
+        ...yield Users.findAll({
+          include: [ { model: Companies, attributes: ['name'] } ]
+        }),
+        ...yield Admins.findAll({
+          include: [ { model: Companies, attributes: ['name'] } ]
+        })
+      ];
     } catch (err) {
       console.error(err);
     }
+
+    this.body = users;
   }
 );
 
