@@ -9,7 +9,8 @@ const base = 'http://localhost:' + port;
 // API
 const loginUrl = base + '/login';
 const logoutUrl = base + '/logout';
-const displayFilesUrl = base + '/displayUpload/';
+//const displayFilesUrl = base + '/displayUpload/';
+const fileCheckUrl = base + '/check/same';
 const deleteFileUrl = base + '/delete';
 const fileHistoryUrl = base + '/history';
 const s3authUrl = base + '/s3auth';
@@ -21,7 +22,8 @@ const watcherUrl = base + '/watchers';
 export {
   loginUrl,
   logoutUrl,
-  displayFilesUrl,
+  //displayFilesUrl,
+  fileCheckUrl,
   deleteFileUrl,
   fileHistoryUrl,
   s3authUrl,
