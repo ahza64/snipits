@@ -38,6 +38,7 @@ export default class UploadZone extends UploadLib {
     this.onDrop = this.onDrop.bind(this);
     this.setUploadNotice = this.setUploadNotice.bind(this);
     this.setFileExistsWarn = this.setFileExistsWarn.bind(this);
+    this.setTotal = this.setTotal.bind(this);
   }
 
   componentWillMount() {
@@ -57,6 +58,11 @@ export default class UploadZone extends UploadLib {
     this.getHistory((heatmapData, historiesData) => {
       this.setHistories(heatmapData, historiesData);
     });
+  }
+
+  setTotal(bool) {
+    var curTotal = this.state.total;
+    this.setState({ total: bool ? curTotal + 1 : curTotal - 1 });
   }
 
   setFiles(files) {
@@ -99,6 +105,7 @@ export default class UploadZone extends UploadLib {
               this.getHistory((heatmapData, historiesData) => {
                 this.setHistories(heatmapData, historiesData);
                 this.setUploadNotice();
+                this.setTotal(true);
               });
             });
           });
@@ -158,6 +165,7 @@ export default class UploadZone extends UploadLib {
               files={ this.state.files }
               setHistories={ this.setHistories }
               setFiles={ this.setFiles }
+              setTotal={ this.setTotal }
               total={ this.state.total }
             />
           </Col>

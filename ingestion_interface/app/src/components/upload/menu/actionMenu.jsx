@@ -75,6 +75,7 @@ export default class ActionMenu extends UploadLib {
           this.getHistory((heatmapData, historiesData) => {
             this.props.setHistories(heatmapData, historiesData);
             this.props.setDelNotification();
+            this.props.setTotal(false);
           });
         });
       });
