@@ -17,6 +17,7 @@ import FileExistsWarn from './notification/FileExistsWarn';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import Snackbar from 'material-ui/Snackbar';
+import LinearProgress from 'material-ui/LinearProgress';
 require('../../../styles/dropzone.scss');
 
 export default class UploadZone extends UploadLib {
@@ -29,7 +30,8 @@ export default class UploadZone extends UploadLib {
       fileExistsWarn: false,
       heatmap: {},
       histories: {},
-      total: 0
+      total: 0,
+      percent: 0,
     };
 
     this.setFiles = this.setFiles.bind(this);
@@ -39,6 +41,7 @@ export default class UploadZone extends UploadLib {
     this.setUploadNotice = this.setUploadNotice.bind(this);
     this.setFileExistsWarn = this.setFileExistsWarn.bind(this);
     this.setTotal = this.setTotal.bind(this);
+    this.displayProgressBar = this.displayProgressBar.bind(this);
   }
 
   componentWillMount() {
@@ -76,11 +79,8 @@ export default class UploadZone extends UploadLib {
     });
   }
 
-  setUploadNotice() {
-    this.setState({ uploadNotice: true });
-    setTimeout(() => {
-      this.setState({ uploadNotice: false });
-    }, 2500);
+  setUploadNotice(bool) {
+    this.setState({ uploadNotice: bool });
   }
 
   setFileExistsWarn() {
@@ -89,11 +89,15 @@ export default class UploadZone extends UploadLib {
 
   uploadFile(file, signedUrl) {
     var offset = pageRedux.getState();
-
+    this.setUploadNotice(true);
+    
     request
     .put(signedUrl)
     .set('Content-Type', file.type)
     .send(file)
+    .on('progress', (event) => {
+      this.setState({ percent: event.percent });
+    })
     .end(err => {
       if (err) {
         console.error(err);
@@ -104,8 +108,9 @@ export default class UploadZone extends UploadLib {
             this.writeHistory(file.name, 'upload', () => {
               this.getHistory((heatmapData, historiesData) => {
                 this.setHistories(heatmapData, historiesData);
-                this.setUploadNotice();
                 this.setTotal(true);
+                this.setUploadNotice(false);
+                this.setState({ percent: 0 });
               });
             });
           });
@@ -151,13 +156,30 @@ export default class UploadZone extends UploadLib {
     });
   }
 
+  displayProgressBar() {
+    if (this.state.percent === 0 || this.state.percent === 100) {
+      return 'none';
+    } else {
+      return '';
+    }
+  }
+
   render() {
     return (
       <div>
         <Row style={{ height: '50%' }}>
           <Col xs={6} sm={6} md={6} lg={6} >
             <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
-              <div className='dropzone-text'>Drop Your File Here</div>
+              <div className='dropzone-text'>
+                Drop Your File Here
+                <LinearProgress
+                  mode='determinate'
+                  value={ this.state.percent }
+                  max={ 100 }
+                  min={ 0 }
+                  style={{ display: this.displayProgressBar() }}
+                />
+              </div>
             </Dropzone>
           </Col>
           <Col xs={6} sm={6} md={6} lg={6} >
@@ -171,9 +193,9 @@ export default class UploadZone extends UploadLib {
           </Col>
           <Snackbar
             open={ this.state.uploadNotice }
-            message='File Uploaded Successfully'
-            autoHideDuration={ 2500 }
-          />
+            message='File Uploading'
+          >
+          </Snackbar>
         </Row>
         <Row style={{ height: '40%' }}>
           <History
