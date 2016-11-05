@@ -81,21 +81,21 @@ export default class UploadedFiles extends UploadLib {
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
-                <TableHeaderColumn>#</TableHeaderColumn>
-                <TableHeaderColumn>File</TableHeaderColumn>
-                <TableHeaderColumn>Last Modified Time</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '5px' }}>#</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '350px' }}>File</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '200px' }}>Last Modified Time</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Menu</TableHeaderColumn>
               </TableRow>
-            </TableHeader>
+            </TableHeader> 
             <TableBody displayRowCheckbox={ false } selectable={ false }>
               { 
                 this.state.files.map((file, idx) => {
                   return (
                     <TableRow key={ idx }>
-                      <TableRowColumn>{ pageRedux.getState() + idx + 1 }</TableRowColumn>
-                      <TableRowColumn>{ file.fileName }</TableRowColumn>
-                      <TableRowColumn>{ file.updatedAt }</TableRowColumn>
+                      <TableRowColumn style={{ width: '5px' }}>{ pageRedux.getState() + idx + 1 }</TableRowColumn>
+                      <TableRowColumn style={{ width: '350px' }}>{ file.fileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '200px' }}>{ file.updatedAt }</TableRowColumn>
                       <TableRowColumn>{ file.status }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
