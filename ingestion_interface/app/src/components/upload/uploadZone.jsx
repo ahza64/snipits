@@ -168,7 +168,7 @@ export default class UploadZone extends UploadLib {
     return (
       <div>
         <Row style={{ height: '50%' }}>
-          <Col xs={6} sm={6} md={6} lg={6} >
+          <Col xs={4} sm={4} md={4} lg={4} >
             <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
               <div className='dropzone-text'>
                 Drop Your File Here
@@ -182,7 +182,7 @@ export default class UploadZone extends UploadLib {
               </div>
             </Dropzone>
           </Col>
-          <Col xs={6} sm={6} md={6} lg={6} >
+          <Col xs={8} sm={8} md={8} lg={8} >
             <UploadedFiles
               files={ this.state.files }
               setHistories={ this.setHistories }
