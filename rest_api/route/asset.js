@@ -51,7 +51,7 @@ router.post('/asset', function*(next) {
     this.body = {_id:result._id};
     this.status = 200;
   } catch(e) {
-    console.log('Exception:', e.message);
+    console.log('Exception:', this.id, e.message);
     this.setError(this.errors.NOT_ADDED);
   }
   yield next;
@@ -66,7 +66,7 @@ router.get('/asset/:id', function*() {
       this.type = "image/jpeg";
     }
   } catch(e) {
-    console.log('Exception:', e.message);
+    console.log('Exception:', this.id, e.message);
     this.setError(this.errors.NOT_FOUND);
   }
 });
