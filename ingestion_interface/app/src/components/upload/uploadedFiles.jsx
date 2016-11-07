@@ -1,6 +1,7 @@
 // Modules
 import React from 'react';
 import * as request from 'superagent';
+const moment = require('moment');
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -83,7 +84,7 @@ export default class UploadedFiles extends UploadLib {
               <TableRow>
                 <TableHeaderColumn style={{ width: '5px' }}>#</TableHeaderColumn>
                 <TableHeaderColumn style={{ width: '350px' }}>File</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '200px' }}>Last Modified Time</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '150px' }}>Last Modified Time</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Menu</TableHeaderColumn>
               </TableRow>
@@ -95,7 +96,7 @@ export default class UploadedFiles extends UploadLib {
                     <TableRow key={ idx }>
                       <TableRowColumn style={{ width: '5px' }}>{ pageRedux.getState() + idx + 1 }</TableRowColumn>
                       <TableRowColumn style={{ width: '350px' }}>{ file.fileName }</TableRowColumn>
-                      <TableRowColumn style={{ width: '200px' }}>{ file.updatedAt }</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
                       <TableRowColumn>{ file.status }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
