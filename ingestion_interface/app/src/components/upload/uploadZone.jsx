@@ -167,7 +167,7 @@ export default class UploadZone extends UploadLib {
   render() {
     return (
       <div>
-        <Row style={{ height: '50%' }}>
+        <Row style={{ height: '50%', height: '375px' }}>
           <Col xs={4} sm={4} md={4} lg={4} >
             <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
               <div className='dropzone-text'>
@@ -191,11 +191,6 @@ export default class UploadZone extends UploadLib {
               total={ this.state.total }
             />
           </Col>
-          <Snackbar
-            open={ this.state.uploadNotice }
-            message='File Uploading'
-          >
-          </Snackbar>
         </Row>
         <Row style={{ height: '40%' }}>
           <History
@@ -207,6 +202,11 @@ export default class UploadZone extends UploadLib {
           open={ this.state.fileExistsWarn }
           setClose={ this.setFileExistsWarn }
         />
+        <Snackbar
+          open={ this.state.uploadNotice }
+          message='File Uploading'
+        >
+        </Snackbar>
       </div>
     );
   }
