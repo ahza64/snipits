@@ -22,7 +22,7 @@
     "options": {
       "model": "circuit",
       "read_only": true,
-      "accepted_filters": ["project", "name"]
+      "accepted_filters": ["project", "name"],
       "excluded_fields": ["__v"]
     }
   },
