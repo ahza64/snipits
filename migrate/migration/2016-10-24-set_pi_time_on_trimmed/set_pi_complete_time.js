@@ -1,7 +1,7 @@
 #!/bin/env node
 /*
    @author gabe@dispatchr.com
-   @fileoverview sets source to mobile for all tree histories that do not have a source attribute.
+   @fileoverview sets pi_complete_time for trees where there is a start_time and the tree is already trimmed
 */
 var utils = require('dsp_shared/lib/cmd_utils');
 utils.connect(['meteor', 'postgres']);
@@ -10,7 +10,7 @@ var stream = require("dsp_shared/database/stream");
 var TreeHistory = require("dsp_shared/database/model/tree-history");
 
 function *run(fix){
-  console.log("Setting tree history source");
+  console.log("Setting tree complete times");
   var query = {pi_complete_time: null, pi_start_time: {$ne: null}, status: /^5/};
   var count = yield Tree.find(query).count();
   console.log("Fixing Trees", count);
@@ -18,7 +18,7 @@ function *run(fix){
   for(var tree of stream(Tree, query)) {
     tree = yield tree;
     if(tree) {
-      console.log("Setting compete date", tree.status, tree.pi_start_time, tree.pi_complete_time);
+      console.log("Setting compete date", tree._id, tree.status, tree.pi_start_time, tree.pi_complete_time);
       tree_count++;
       
       if(fix) {

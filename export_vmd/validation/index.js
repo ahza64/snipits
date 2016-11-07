@@ -23,6 +23,7 @@ function *fixes() {
   yield require("dsp_migration/2016-06-09_user_company_migration/migrate_all")();
   yield require("dsp_migration/2016-09-20-fix_tree_source/tree_source")(true);
   yield require("dsp_migration/2016-09-20-add_pi_to_tc_added_tree/add_pi_data")(true);
+  yield require("dsp_migration/2016-10-24-set_pi_time_on_trimmed/set_pi_complete_time")(true);
 }
 
 //baker module
