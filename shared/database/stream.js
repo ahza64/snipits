@@ -65,11 +65,19 @@ function *stream(Model, query, sort) {
 
   _stream.on('close', function () {
     // all done
+    cleanup();
+  });
+  _stream.on('end', function () {
+    // all done
+    cleanup();
+  });
+
+  function cleanup() {
     done = true;
     if(next_resolve) {
       next_resolve(null);
-    }
-  });
+    }    
+  }
 
   while(!done || next) {
     yield new BPromse(function(resolve, reject) {
