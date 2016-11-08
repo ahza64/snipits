@@ -12,7 +12,7 @@ const STATUS_RESOURCE = deepFreeze({
 });
 
 function handleError(context, error, message) {
-  console.log('EXCEPTION: ', error, context);
+  console.log('EXCEPTION: ', context.id, error, context);
   if(typeof error  === 'string') {
     error = STATUS_RESOURCE[error];
   }

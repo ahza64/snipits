@@ -88,7 +88,7 @@ router.get('/workr/package', function*() {
       map_annotations: map_annotations
     };
   } catch(e) {
-    console.log('Exception: ', e.message);
+    console.log('Exception: ', this.id, e.message);
     this.dsp_env.msg = 'Error';
     this.dsp_env.error = e.message;
     this.dsp_env.status = 500;

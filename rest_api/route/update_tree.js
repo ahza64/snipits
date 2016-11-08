@@ -225,11 +225,11 @@ router.post('/workorder/:woId/tree', function *(){
     try {
       yield TreeHistory.recordTreeHistory({}, result, user, null, "api_v3");
     } catch(e) {
-      console.log('EXCEPTION: ', e.message, result);
+      console.log('EXCEPTION: ', this.id, e.message, result);
       this.setError(this.errors.HISTORIES_ERROR);
     }
   } catch(e) {
-    console.log('Exception:', e.message);
+    console.log('Exception:', this.id, e.message);
     this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
 });
@@ -272,7 +272,7 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
       result = yield updateTree(treeId, treeUpdates, this);
       this.body = result;
     } catch(e) {
-      console.log('EXCEPTION: ', e.message, result);
+      console.log('EXCEPTION: ', this.id, e.message, result);
       this.setError(this.errors.UPDATE_ERROR);
     }
 
@@ -280,11 +280,11 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
     try{
       yield TreeHistory.recordTreeHistory(tree, result, user, null, "api_v3");
     } catch(e){
-      console.log('EXCEPTION: ', e.message, result);
+      console.log('EXCEPTION: ', this.id, e.message, result);
       this.setError(this.errors.HISTORIES_ERROR);
     }
   } catch(e) {
-    console.log('Exception:', e.message);
+    console.log('Exception:', this.id, e.message);
     this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
   return result;
@@ -327,11 +327,11 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
     try{
       yield TreeHistory.recordTreeHistory(tree, result, user, null, 'api_v3');
     } catch(e){
-      console.log('EXCEPTION: ', e.message, result);
+      console.log('EXCEPTION: ', this.id, e.message, result);
       this.setError(this.errors.HISTORIES_ERROR);
     }
   } catch(e) {
-    console.log('Exception:', e.message);
+    console.log('Exception:', this.id, e.message);
     this.setError(this.errors.INTERNAL_SERVER_ERROR, e.message);
   }
   return result;
