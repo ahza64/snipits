@@ -2,82 +2,80 @@
 const co = require('co');
 const mongoose = require('mongoose');
 const moment = require('moment');
-const utils = require('dsp_shared/lib/cmd_utils');
-utils.connect(['meteor']);
+const config = require('dsp_shared/config/config').get({ log4js: false });
+require('dsp_shared/database/database')(config.meteor);
 const Trees = require('dsp_shared/database/model/tree');
-var logs = require('./logs/missing_patch_log.json');
+const genTcImgGrep = require('./gen_tc_grep');
 const treeIdPos = 2;
+const treeObjPos = 3;
 
 // Results container
-var missPatchedTrees = [];
-var nullTrees = [];
-var badImageTrees = [];
+var treeLib = {};
+var unpatchedTrees = [];
 var badTcImageTrees = [];
-var badNtwImageTrees = [];
+var allLocalIds = [];
 
+
+// Check trees that missing patch
 var check = co.wrap(function*() {
+  var logs = require('./logs/missing_patch_log.json');
 
   // Sort by time
   logs = logs.sort((a, b) => {
     return moment(a.date).valueOf() - moment(b.date).valueOf();
   });
 
-  var treeLib = {};
+  // Create hashtable
   logs.forEach(l => {
     var id = l.data[treeIdPos];
     treeLib[id] = l;
   });
 
   for (var treeId in treeLib) {
-    if (treeLib.hasOwnProperty(treeId)) {
-      try {
-        var treeInDb = yield Trees.findOne({ _id: mongoose.Types.ObjectId(treeId) });
-        if (!treeInDb) {
-          nullTrees.push(treeId);
-          continue;
-        }
-      } catch(e) {
-        console.error(e);
-      }
+    if (!treeLib.hasOwnProperty(treeId)) { continue; }
 
-      var imageId = treeInDb.image || '';
-      var tcImageId = treeInDb.tc_image || '';
-      var ntwImageId = treeInDb.ntw_image || '';
-      var treeUpdateAt = moment(treeInDb.updated).valueOf() + 7 * 3600 * 1000;
-      var treePatchedAt = moment(treeLib[treeId].date).valueOf();
-      var isPatchWorking = treeUpdateAt > treePatchedAt;
+    var logTree = treeLib[treeId].data[treeObjPos];
 
-      var isImageIdCorrect = imageId.toString().match(/image/g) ? false : true;
+    try {
+      var dbTree = yield Trees.findOne({ _id: mongoose.Types.ObjectId(treeId) });
+      if (!dbTree) { continue; }
+    } catch(e) {
+      console.error(e);
+    }
+
+    var dbTreeUpdate = moment(dbTree.updated).valueOf();
+    var logTreeUpdate = moment(treeLib[treeId].date).valueOf();
+    if (dbTreeUpdate < logTreeUpdate) {
+      var tcImageId = dbTree.tc_image || '';
       var isTcImageIdCorrect = tcImageId.toString().match(/tc_image/g) ? false : true;
-      var isNtwImageIdCorrect = ntwImageId.toString().match(/ntw_image/g) ? false : true;
 
-      if (!isImageIdCorrect) {
-        badImageTrees.push(treeId);
-      } else if (!isTcImageIdCorrect) {
+      // Mssing or bad tc_image id
+      if (!tcImageId || (tcImageId && !isTcImageIdCorrect)) {
         badTcImageTrees.push(treeId);
-      } else if (!isNtwImageIdCorrect) {
-        badNtwImageTrees.push(treeId);
-      } else if (!isPatchWorking) {
-        missPatchedTrees.push(treeId);
+        if (logTree.local_id) {
+          allLocalIds.push(logTree.local_id);
+        }
       }
+
+      // Missing patch
+      unpatchedTrees.push(treeId);
     }
   }
 
-  console.log('-----> null trees are: ', nullTrees);
-  console.log('=====> missed patch trees are: ', missPatchedTrees);
-  console.log('=====> bad image trees are: ', badImageTrees);
-  console.log('=====> bad tc image trees are: ', badTcImageTrees);
-  console.log('=====> bad ntw image trees are: ', badNtwImageTrees);
+  console.log('missed patch trees are: \n', unpatchedTrees);
+  console.log('bad/missing tc image trees are: \n', badTcImageTrees);
+  console.log('local ids for tc image: \n', allLocalIds);
+  console.log('tc img grep: \n', genTcImgGrep(allLocalIds, 'tc_image', 'tc_img_log'));
 
   return {
-    patch: missPatchedTrees,
-    image: badImageTrees,
+    patch: unpatchedTrees,
     tcImage: badTcImageTrees,
-    ntwImage: badNtwImageTrees,
     treeLib: treeLib
   };
 });
 
-//check();
+if (require.main === module) {
+  check();
+}
 
 module.exports = check;
