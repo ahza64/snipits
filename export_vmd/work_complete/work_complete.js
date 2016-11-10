@@ -45,6 +45,9 @@ const TREE_WORK_COMP = {                  //<TreeWorkComp>
   // mCost: null,                         //   <mCost>                          money         Optional - Fixed price for work
   sBillingCode: null,                     //   ** <sBillingCode>                varchar(2)    *Billing code determines price for unit of work
   iBillingRate: null,                     //   ** <iBillingRate>                tinyint       Billing method (0=std, 1=overtime, 2=double, 7=time/material, 8=Non-Billable)
+                                                                                              // time/materials - R4 only - blocked off in VMD
+                                                                                              // t&m uses the TMC - seperate billing system 
+                                                                                              // Contractors - need to know when there is a T/M
                                           //   
   sComments: null,                        //   <sComments>                      varchar(255)  Optional - billing notes to document unusual situations
 
