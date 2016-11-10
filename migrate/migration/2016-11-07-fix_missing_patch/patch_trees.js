@@ -1,5 +1,6 @@
 // Dependencies
 const co = require('co');
+const _ = require('underscore');
 const BPromise = require('bluebird');
 const mongoose = require('mongoose');
 const config = require('dsp_shared/config/config').get({ log4js: false });
@@ -11,7 +12,7 @@ var getDiff = require('./get_diff');
 var tcAssetsLib = require('./gen_tc_asset_lib')();
 
 // Patch Trees
-var patchMissedPatch = co.wrap(function*() {
+var patchMissedPatch = co.wrap(function*(run) {
   var lib = yield require('./find_missing_patch.js')();
   var treeIds = lib.patch;
   var treeLib = lib.treeLib;
@@ -32,18 +33,23 @@ var patchMissedPatch = co.wrap(function*() {
       }
       
       var diffs = getDiff(logTree, dbTree);
+      
       // Add local_id
       if (dbRrcId) {
         diffs.local_id = dbRrcId;
       }
+
       // Add tc_image
       if (tcAssetId) {
         diffs.tc_image = tcAssetId;
       }
 
-      yield Trees.findOneAndUpdateAsync({ _id: mongoId }, { $set: diffs });
+      if (run) {
+        yield Trees.findOneAndUpdateAsync({ _id: mongoId }, { $set: diffs });
+      }
       console.log('------------------');
       console.log('tree id -> \n', id);
+      console.log('before -> \n', _.pick(dbTree, Object.keys(diffs)));
       console.log('updates -> \n', diffs);
     } catch(e) {
       console.error(e);
@@ -53,4 +59,4 @@ var patchMissedPatch = co.wrap(function*() {
   console.log('DONE');
 });
 
-patchMissedPatch();
+module.exports = patchMissedPatch;

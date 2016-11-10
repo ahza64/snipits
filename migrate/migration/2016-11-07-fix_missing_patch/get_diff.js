@@ -1,7 +1,8 @@
 const _ = require('underscore');
 const excludedKeys = ['image', 'tc_image', 'ntw_image', 'assignment_complete'];
 const timeKeys = [
-  'tc_start_time', 'tc_complete_time', 'pi_start_time', 'pi_complete_time', 
+  'tc_start_time', 'tc_complete_time',
+  'pi_start_time', 'pi_complete_time', 
   'commented_at', 'updated', 'created'
 ];
 

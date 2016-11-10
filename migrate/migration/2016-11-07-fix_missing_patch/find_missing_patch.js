@@ -1,10 +1,10 @@
 // Dependencies
 const co = require('co');
 const mongoose = require('mongoose');
-const moment = require('moment');
 const config = require('dsp_shared/config/config').get({ log4js: false });
 require('dsp_shared/database/database')(config.meteor);
 const Trees = require('dsp_shared/database/model/tree');
+const Histories = require('dsp_shared/database/model/histories');
 const genTcImgGrep = require('./gen_tc_grep');
 const treeIdPos = 2;
 const treeObjPos = 3;
@@ -18,11 +18,11 @@ var allLocalIds = [];
 
 // Check trees that missing patch
 var check = co.wrap(function*() {
-  var logs = require('./logs/missing_patch_log.json');
+  var logs = require('./log2json')('./logs/missing_patch_log');
 
   // Sort by time
   logs = logs.sort((a, b) => {
-    return moment(a.date).valueOf() - moment(b.date).valueOf();
+    return new Date(a.date) - new Date(b.date);
   });
 
   // Create hashtable
@@ -43,8 +43,10 @@ var check = co.wrap(function*() {
       console.error(e);
     }
 
-    var dbTreeUpdate = moment(dbTree.updated).valueOf();
-    var logTreeUpdate = moment(treeLib[treeId].date).valueOf();
+    var patchHistory = yield Histories.find({ object_id: treeId }).sort({ created: -1 });
+    var dbTreeUpdate = new Date(patchHistory[0].created);
+    var logTreeUpdate = new Date(treeLib[treeId].date);
+    console.log('TREE ID: ', treeId, ' DB: ', dbTreeUpdate, ' LOG: ', logTreeUpdate);
     if (dbTreeUpdate < logTreeUpdate) {
       var tcImageId = dbTree.tc_image || '';
       var isTcImageIdCorrect = tcImageId.toString().match(/tc_image/g) ? false : true;

@@ -2,7 +2,7 @@ const moment = require('moment');
 
 module.exports = function() {
   var tcAssetsLib = {};
-  var logTcAssets = require('./logs/tc_img_log.json');
+  var logTcAssets = require('./log2json')('./logs/tc_img_log');
   logTcAssets = logTcAssets.sort(function(a, b) {
     return moment(a.date).valueOf() - moment(b.date).valueOf();
   });
