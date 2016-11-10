@@ -1,6 +1,6 @@
-var log = require('dsp_config/config').get().getLogger('['+__filename+']');
-var mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
+var log = require("dsp_config/config").get().getLogger("["+__filename+"]");
+var mongoose = require("mongoose");
+mongoose.Promise = require("bluebird");
 require("dsp_lib/starts_with");
 
 
@@ -40,11 +40,30 @@ module.exports = function init_db(config) {
     }
     
     var url = "mongodb://"+user_pass+config.mongo_db_host+":"+config.mongo_db_port+"/"+config.mongo_db_name;
-
     var options = {
-        server: {socketOptions: {keepAlive: 1 }},
-        replset: {socketOptions: {keepAlive: 1}}
+        server: {
+          socketOptions: {
+            keepAlive: 1 
+          }
+        },
+        replset: {
+          socketOptions: {
+            keepAlive: 1
+          },
+          auto_reconnect:false,
+          poolSize: 10,
+          strategy: "ping",
+          connectWithNoPrimary: true,
+          slaveOk: true,
+        }
       };
+
+
+    if(config.mongo_use_repl_sec){
+      url = url + "?readPreference=secondary";
+      options.replset.rs_name = config.mongo_rs_name;
+    }
+    
 
     var connection;
     var db = getConnection(config.name, false);
@@ -73,8 +92,9 @@ module.exports = function init_db(config) {
 
 function retryConnection(db_name, url, options, error_count, error_max, resolve, reject) {
   log.info("Trying: Connecting to MongoDb(mongoose): ", url);
+  log.debug("using options to connect: ", options);
   var db = mongoose.createConnection(url,options);
-  db.on('error', function(err) {
+  db.on("error", function(err) {
     log.error("Error: MongoDb error", error_count, url, err.message, db.readyState);
     if(db.readyState === 0) {//disconnected
       error_count++;        
@@ -88,7 +108,7 @@ function retryConnection(db_name, url, options, error_count, error_max, resolve,
     }
   });
 
-  db.once('open', function() {
+  db.once("open", function() {
     error_count = 0;
     log.info("Success: Connected to MongoDb(mongoose) ", url);
     resolve(db);
