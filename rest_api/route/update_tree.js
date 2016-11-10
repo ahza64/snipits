@@ -74,6 +74,7 @@ function *addMissingFields(treeObj, woId, user) {
   } else {
     treeObj.circuit_name = (workOrder.circuit_names && workOrder.circuit_names[0]) || treeFromWorkorder.circuit_name;
   }
+
   return treeObj;
 }
 
@@ -203,6 +204,8 @@ router.post('/workorder/:woId/tree', function *(){
       return null;
     }
 
+    //update timestamp
+    treeObj.updated = Date.now();
     //get address from google reverse geocode
     try {
       treeObj = yield setAddress(treeObj);
@@ -267,6 +270,9 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
       this.dsp_env.msg = 'Tree Successfully Updated';
     }
 
+    //update timestamp
+    treeUpdates.updated = Date.now();
+
     //if existing tree is marked as done
     try{
       result = yield updateTree(treeId, treeUpdates, this);
@@ -312,7 +318,8 @@ router.delete('/workorder/:woId/tree/:treeId', function *(){
     var tree = yield crud_opts.read(treeId);
     var oldTreeStatus = tree.status;
     var newTreeStatus = {
-      status: oldTreeStatus.replaceAt(0, '6')
+      status: oldTreeStatus.replaceAt(0, '6'),
+      updated: Date.now()
     };
     result = yield crud_opts.patch(treeId, newTreeStatus, this.header['content-type']);
     this.body = result;
