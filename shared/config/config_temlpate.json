@@ -34,9 +34,7 @@
         "mongo_db_host": "localhost",
         "mongo_db_name": "dev_meteor",
         "mongo_db_port": 27017,
-        "name":"meteor",
-        "mongo_use_repl_sec": false, // set if you want to connect only to a replica set
-        "mongo_rs_name": "rs0" // name of the replicaset
+        "name":"meteor"
     },
     "postgres":{
         "name": "postgres",
