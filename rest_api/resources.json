@@ -30,7 +30,7 @@
     "name": "user",
     "options": {
       "model": "cufs",
-      "read_only": true,
+      "read_only": false,
       "accepted_filters": ["uniq_id", "scuf"],
       "excluded_fields": ["__v", "workorder", "project", "assigned_workorders", "division_data", "scheduled_workorders", "scheduled_data", "password", "checksum"]
     }
