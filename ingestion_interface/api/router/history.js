@@ -22,7 +22,12 @@ router.post(
     var action = body.action;
 
     // Check whether the user exists
-    var user = yield Users.findOne({ where: { email: email }, raw: true });
+    try {
+      var user = yield Users.findOne({ where: { email: email }, raw: true });
+    } catch(e) {
+      console.error(e);
+      this.throw(500);
+    }
     var userId = user.id;
     if (!userId) { this.throw(403); }
 
