@@ -45,6 +45,10 @@ export default class DefaultNavbar extends React.Component {
     browserHistory.push(urlPrefix + 'upload/');
   }
 
+  goToFind() {
+    browserHistory.push(urlPrefix + 'find/');
+  }
+
   render() {
     return (
       <Navbar>
@@ -60,8 +64,9 @@ export default class DefaultNavbar extends React.Component {
           <Nav pullRight>
             <NavDropdown eventKey={1} title='Menu' id='basic-nav-dropdown'>
               <MenuItem eventKey={1.1} onClick={ this.goToUpload }>Upload</MenuItem>
+              <MenuItem eventKey={1.2} onClick={ this.goToFind }>Find</MenuItem>
               <MenuItem divider />
-              <MenuItem eventKey={1.2} onClick={ this.handleLogout }>Logout</MenuItem>
+              <MenuItem eventKey={1.3} onClick={ this.handleLogout }>Logout</MenuItem>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
