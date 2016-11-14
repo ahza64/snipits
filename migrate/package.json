@@ -13,7 +13,7 @@
     "csv": "0.2.*",
     "csv-parse": "^1.1.1",
     "dispatchr-javascript-utils": "https://github.com/Dispatchr/javascript-utils.git",
-    "json2csv": "^3.6.3",
+    "json2csv": "^3.7.1",
     "moment": "^2.14.1",
     "mongoose": "^4.6.6",
     "node-geocoder": "^3.11.0",
