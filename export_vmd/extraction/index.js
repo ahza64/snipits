@@ -240,7 +240,19 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
   console.log("QUERY", query);
   var aggregates = TreeModel.aggregate([{ $match: query }, 
     { $group: { 
-      _id: { pge_pmd_num: '$pge_pmd_num', pi_user_id: '$pi_user_id', division: '$division' }, 
+      _id: { 
+	pge_pmd_num: '$pge_pmd_num', 
+	pi_user_id: '$pi_user_id', 
+	division: '$division', 
+	source_tc: { 
+	  $eq: [
+	    {
+		$substr:[ "$status", 1, 1 ]
+	    }, 
+            '3'
+          ] 
+        }
+      },  
       trees: { $push: "$$ROOT" }
     }}]);
   aggregates.options = { allowDiskUse: true }; 
@@ -251,7 +263,7 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
 
   for(var i = 0; i < aggregates.length; i++) {
     var aggr = aggregates[i];
-    console.log("Processing Packet", i, "of", aggregates.length);
+    console.log("Processing Packet", i, "of", aggregates.length, aggregates[i]._id);
 
     var pmd = _.find(projects, prj => prj.pge_pmd_num === aggr._id.pge_pmd_num);
     var packet = new WorkPacket(email);
@@ -272,7 +284,7 @@ function *generateWorkPacket(startDate,endDate, includeExported, treeIds, export
     }
 
 
-    var filename = "vmd_export_"+pmd.pge_pmd_num + "_" + cuf.uniq_id + "_" + aggr._id.division.replace(' ', '') + "_" +"_"+exportName+".WP";
+    var filename = "vmd_export_"+pmd.pge_pmd_num + "_" + cuf.uniq_id +"_"+ (aggregates[i]._id.source_tc?"TREE":"PI")+ "_" + aggr._id.division.replace(' ', '') + "_" +"_"+exportName+".WP";
     if(!fs.existsSync(export_dir)){
       fs.mkdir(export_dir);
     }
