@@ -99,6 +99,7 @@ class MDPBroker(object):
                               }
         self.hb_check_timer = PeriodicCallback(self.on_timer, HB_INTERVAL)
         self.hb_check_timer.start()
+        print "Broker Started"
         return
 
     def register_worker(self, wid, service):
@@ -116,13 +117,18 @@ class MDPBroker(object):
         if wid in self._workers:
             return
         self._workers[wid] = WorkerRep(self.WORKER_PROTO, wid, service, self.main_stream)
+        
+        
+        
         if service in self._services:
             wq, wr = self._services[service]
-            wq.put(wid)
         else:
-            q = self.service_q()
-            q.put(wid)
-            self._services[service] = (q, [])
+            wq = self.service_q()
+            self._services[service] = (wq, [])
+        wq.put(wid)
+        print "Worker Connected", service, [wid], len(wq)
+        
+            
         return
 
     def unregister_worker(self, wid):
@@ -148,6 +154,7 @@ class MDPBroker(object):
             wq, wr = self._services[service]
             wq.remove(wid)
         del self._workers[wid]
+        print "WORKER LOST", service, [wid]
         return
 
     def disconnect(self, wid):
@@ -185,6 +192,7 @@ class MDPBroker(object):
         to_send = rp[:]
         to_send.extend([b'', self.CLIENT_PROTO, service])
         to_send.extend(msg)
+        print "Sending Response: ", service, "To:", rp, msg
         self.client_stream.send_multipart(to_send)
         return
 
@@ -255,7 +263,7 @@ class MDPBroker(object):
 
         :rtype: None
         """
-        print "REPLY", rp, msg
+        
         ret_id = rp[0]
         wrep = self._workers.get(ret_id)
         if not wrep:
@@ -376,6 +384,7 @@ class MDPBroker(object):
         if service.startswith(b'mmi.'):
             self.on_mmi(rp, service, msg)
             return
+
         try:
             wq, wr = self._services[service]
             wid = wq.get()
@@ -390,11 +399,12 @@ class MDPBroker(object):
             to_send.extend(rp)
             to_send.append(b'')
             to_send.extend(msg)
+            print 'Sending Message:', service, "To:", [wid], msg
             self.main_stream.send_multipart(to_send)
         except KeyError:
             # unknwon service
             # ignore request
-            print 'broker has no service "%s"' % service
+            print 'Can not forward message.  No service:', service, msg
         return
 
     def on_worker(self, proto, rp, msg):
@@ -439,7 +449,7 @@ class MDPBroker(object):
 
         :rtype: None
         """
-        print "RAW MESSAGE", msg
+
         rp, msg = split_address(msg)
         # dispatch on first frame after path
         t = msg.pop(0)
