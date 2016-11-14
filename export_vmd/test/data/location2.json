@@ -1,7 +1,8 @@
 {
     "trees": ["velb"],
     "results": {
-        "sInsp": "NOEMAIL : NO ONE",
+        "sInsp": "TREE",
+        "sInspComp": "PGE",
         "sStreetNum": "3925",
         "sStreet" : "Power Inn Road",
         "sCity": "West Sacram",

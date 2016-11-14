@@ -149,8 +149,16 @@ TreeLocation.prototype.addTree = function(tree){
   
   var div_code = vmd.division_codes[tree.get("pmd_division")];
   this.set("sDivCode", div_code);
-  this.set("sInspComp", vmd.company_codes[tree.get("inspector_company")]);
-  this.set("sInsp", tree.get("inspector"));
+  
+  
+  if(tree.statusFlags.source === 'tc') {
+    this.set("sInsp", "TREE");
+    this.set("sInspComp", "PGE");
+  } else {
+    this.set("sInsp", tree.get("inspector"));
+    this.set("sInspComp", vmd.company_codes[tree.get("inspector_company")]);
+  }
+  
 
   this.pmd_num = tree.get("pge_pmd_num");
   if(this.pmd_num.endsWith("BLM")) {
