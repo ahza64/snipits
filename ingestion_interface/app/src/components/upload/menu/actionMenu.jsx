@@ -27,7 +27,9 @@ export default class ActionMenu extends UploadLib {
       showDescriptionModal: false,
       watchers: [],
       ingestions: {},
-      fileName: ''
+      fileName: '',
+      type: 'UPLOAD',
+      token: '',
     };
 
     this.close = this.close.bind(this);
@@ -37,8 +39,20 @@ export default class ActionMenu extends UploadLib {
     this.handleDeleteIngestion = this.handleDeleteIngestion.bind(this);
   }
 
+  componentWillMount() {
+    this.setState({
+      fileName: this.props.files,
+      type: this.props.type,
+      token: this.props.token,
+    });
+  }
+
   componentWillReceiveProps(nextProps) {
-    this.setState({ fileName: nextProps.files });
+    this.setState({
+      fileName: nextProps.files,
+      type: nextProps.type,
+      token: nextProps.token,
+    });
   }
 
   close(modalName) {
@@ -66,20 +80,30 @@ export default class ActionMenu extends UploadLib {
   }
 
   handleDeleteIngestion() {
-    var offset = pageRedux.getState();
+    var type = this.state.type;
 
-    this.deleteUploadedFile(this.state.fileName, () => {
-      this.getUploadedFiles(offset, (files) => {
-        this.props.setFiles(files);
-        this.writeHistory(this.state.fileName, 'delete', () => {
-          this.getHistory((heatmapData, historiesData) => {
-            this.props.setHistories(heatmapData, historiesData);
-            this.props.setDelNotification();
-            this.props.setTotal(false);
+    if (type === 'UPLOAD') {
+      // In upload page
+      var offset = pageRedux.getState();
+      this.deleteUploadedFile(this.state.fileName, () => {
+        this.getUploadedFiles(offset, (files) => {
+          this.props.setFiles(files);
+          this.writeHistory(this.state.fileName, 'delete', () => {
+            this.getHistory((heatmapData, historiesData) => {
+              this.props.setHistories(heatmapData, historiesData);
+              this.props.setTotal(false);
+            });
           });
         });
       });
-    });
+    } else if (type === 'SEARCH') {
+      // In search page
+      this.deleteUploadedFile(this.state.fileName, () => {
+        this.getSearchResults(this.state.token, this.props.setFiles);
+      });
+    }
+
+    this.props.setDelNotification();
   }
 
   render() {

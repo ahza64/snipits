@@ -125,42 +125,6 @@ router.post(
   }
 );
 
-// Upload/Delete/Ingest history
-router.post(
-  '/history',
-  function*() {
-    var body = this.request.body;
-    var email = body.email;
-    var fileName = body.file;
-    var action = body.action;
-
-    // Check whether the user exists
-    try {
-      var user = yield Users.findOne({ where: { email: email }, raw: true });
-    } catch(e) {
-      console.error(e);
-      this.throw(500);
-    }
-    var userId = user.id;
-    if (!userId) { this.throw(403); }
-
-    var obj = {
-      fileName: fileName,
-      action: action,
-      time: new Date(),
-      userId: userId
-    };
-    try {
-      yield Histories.create(obj);  
-    } catch (e) {
-      console.error(e);
-      this.throw(500);
-    }
-    
-    this.throw(200);
-  }
-);
-
 app.use(router.routes());
 
 module.exports = app;

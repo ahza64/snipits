@@ -56,6 +56,6 @@ var genCsv = co.wrap(function*(startTimeStr, endTimeStr) {
   }
 });
 
-genCsv('2016-08-01', '2016-10-31');
+genCsv('2016-11-7', '2016-11-11');
 
 module.exports = genCsv;

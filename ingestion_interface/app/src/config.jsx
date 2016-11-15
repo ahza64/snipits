@@ -18,6 +18,7 @@ const companyUrl = base + '/company';
 const userUrl = base + '/user';
 const ingestionRecordUrl = base + '/ingestions';
 const watcherUrl = base + '/watchers';
+const searchUrl = base + '/searchingestions';
 
 export {
   loginUrl,
@@ -31,4 +32,5 @@ export {
   userUrl,
   ingestionRecordUrl,
   watcherUrl,
+  searchUrl,
 };

@@ -9,6 +9,7 @@ import { isRouteAuthorized } from './components/auth/auth';
 import App from './components/App.jsx';
 import Upload from './components/upload/upload.jsx';
 import Login from './components/login/login.jsx';
+import FindMain from './components/find/findMain.jsx';
 
 // Router
 ReactDOM.render(
@@ -16,6 +17,7 @@ ReactDOM.render(
     <Route path={ urlPrefix } component={ App }>
       <IndexRoute component={ Login } />
       <Route onEnter={ isRouteAuthorized } path='upload/' component={ Upload }></Route>
+      <Route onEnter={ isRouteAuthorized } path='find/' component={ FindMain }></Route>
     </Route>
   </Router>,
 document.getElementById('app'));

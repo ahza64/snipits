@@ -6,6 +6,7 @@ const router = require('koa-router')();
 const app = koa();
 
 // Collection
+const sequelize = require('dsp_shared/database/model/ingestion/tables').sequelize;
 const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestions;
 
 // Create a file record for ingestions
@@ -125,6 +126,29 @@ router.get(
     }
 
     this.body = ingestion;
+  }
+);
+
+// Search the ingestion record
+router.get(
+  '/searchingestions/:companyId/:token',
+  function*() {
+    var companyId = this.params.companyId;
+    var token = this.params.token;
+
+    try {
+      var res = yield sequelize.query(
+        'SELECT * FROM ingestions INNER JOIN companies ' +
+        'ON ingestions."companyId" = companies.id ' +
+        'WHERE ingestions."fileName" LIKE \'%' + token + '%\' ' +
+        'AND companies.id = ' + companyId + ';'
+      );
+    } catch(e) {
+      console.error(e);
+      this.throw(500);
+    }
+
+    this.body = res[0];
   }
 );
 

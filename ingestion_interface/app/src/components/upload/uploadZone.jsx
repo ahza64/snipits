@@ -205,8 +205,7 @@ export default class UploadZone extends UploadLib {
         <Snackbar
           open={ this.state.uploadNotice }
           message='File Uploading'
-        >
-        </Snackbar>
+        />
       </div>
     );
   }

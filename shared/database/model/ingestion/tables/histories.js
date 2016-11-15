@@ -6,12 +6,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Histories.belongsTo(models.users, {
-          as: 'user'
-        });
-        Histories.belongsTo(models.admins, {
-          as: 'admin'
-        });
+        Histories.belongsTo(models.users);
+        Histories.belongsTo(models.admins);
       }
     }
   });

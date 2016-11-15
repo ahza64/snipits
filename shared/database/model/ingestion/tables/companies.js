@@ -5,6 +5,9 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Companies.hasMany(models.users);
+        Companies.hasMany(models.admins);
+        Companies.hasMany(models.ingestions);
+        Companies.hasMany(models.watchers);
       }
     }
   });
