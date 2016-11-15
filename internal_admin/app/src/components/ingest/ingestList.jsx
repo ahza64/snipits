@@ -2,6 +2,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import * as request from 'superagent';
+const _ = require('underscore');
 
 // Components
 import { ingestionUrl } from '../../config';
@@ -50,11 +51,19 @@ export default class IngestList extends IngestLib {
 
   isMatchSearchRegex(ingestion) {
     var search = this.state.search;
-    var regexp = new RegExp('.' + search + '.', 'i');
+    var regexp = new RegExp(search, 'i');
     return ingestion.fileName.match(regexp);
   }
 
   render() {
+    var ingestions = this.state.ingestions;
+    ingestions = ingestions.filter(i => {
+      return this.isMatchSearchRegex(i);
+    });
+    var ingestedCount = _.countBy(ingestions, i => {
+      return i.ingested ? 'ingested' : 'uningested';
+    });
+
     return (
       <div>
         <Row>
@@ -64,6 +73,11 @@ export default class IngestList extends IngestLib {
             value={ this.state.search }
             onChange={ this.handleSearch }
           />
+        </Row>
+        <Row>
+          <h5>
+            { ingestions.length } files found / { ingestedCount.ingested | 0 } ingested
+          </h5>
         </Row>
         <Row>
           <Table selectable={ false }>
@@ -78,10 +92,7 @@ export default class IngestList extends IngestLib {
             </TableHeader>
             <TableBody displayRowCheckbox={ false } selectable={ false }>
               { 
-                this.state.ingestions.map((ingestion, idx) => {
-                  if (!this.isMatchSearchRegex(ingestion)) {
-                    return;
-                  }
+                ingestions.map((ingestion, idx) => {
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn>{ idx }</TableRowColumn>
