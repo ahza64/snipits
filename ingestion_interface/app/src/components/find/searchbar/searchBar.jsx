@@ -3,7 +3,7 @@ import React from 'react';
 import request from 'superagent';
 
 // Components
-import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl } from '../../../config';
+import UploadLib from '../../upload/uploadLib';
 
 
 // Styles
@@ -12,12 +12,13 @@ import Col from 'react-bootstrap/lib/Col';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-export default class SearchBar extends React.Component {
+export default class SearchBar extends UploadLib {
   constructor() {
     super();
 
     this.state = {
-      search: ''
+      token: '',
+      searching: 0,
     };
 
     this.handleSearchInput = this.handleSearchInput.bind(this);
@@ -25,11 +26,13 @@ export default class SearchBar extends React.Component {
   }
 
   handleSearchInput(event, value) {
-    this.setState({ search: value });
+    this.setState({ token: value });
+    this.props.setToken(value);
   }
 
   handleSearch() {
-
+    var token = this.state.token;
+    this.getSearchResults(token, this.props.setFiles);
   }
 
   render() {
@@ -38,7 +41,7 @@ export default class SearchBar extends React.Component {
         <TextField
           hintText='Search for ingestion files ... '
           fullWidth={true}
-          value={ this.state.search }
+          value={ this.state.token }
           onChange={ this.handleSearchInput }
         />
         <RaisedButton

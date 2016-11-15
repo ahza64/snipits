@@ -131,13 +131,17 @@ router.get(
 
 // Search the ingestion record
 router.get(
-  '/searchingestions/:token',
+  '/searchingestions/:companyId/:token',
   function*() {
+    var companyId = this.params.companyId;
     var token = this.params.token;
 
     try {
       var res = yield sequelize.query(
-        'SELECT * FROM ingestions WHERE "fileName" LIKE \'%' + token + '%\';'
+        'SELECT * FROM ingestions INNER JOIN companies ' +
+        'ON ingestions."companyId" = companies.id ' +
+        'WHERE ingestions."fileName" LIKE \'%' + token + '%\' ' +
+        'AND companies.id = ' + companyId + ';'
       );
     } catch(e) {
       console.error(e);

@@ -15,14 +15,20 @@ export default class FindMain extends React.Component {
     super();
 
     this.state = {
-      results: [],
+      files: [],
+      token: ''
     };
 
-    this.setResults = this.setResults.bind(this);
+    this.setFiles = this.setFiles.bind(this);
+    this.setToken = this.setToken.bind(this);
   }
 
-  setResults(results) {
-    this.setState({ results: results });
+  setFiles(files) {
+    this.setState({ files: files });
+  }
+
+  setToken(token) {
+    this.setState({ token: token }); 
   }
 
   render() {
@@ -32,8 +38,19 @@ export default class FindMain extends React.Component {
         <Row>
           <Col xs={2} sm={2} md={2} lg={2} ></Col>
           <Col xs={8} sm={8} md={8} lg={8} >
-            <Row><SearchBar setResults={ this.setResults } /></Row>
-            <Row><ResultList setResults={ this.setResults } /></Row>
+            <Row>
+              <SearchBar
+                setFiles={ this.setFiles }
+                setToken={ this.setToken }
+              />
+            </Row>
+            <Row>
+              <ResultList
+                files={ this.state.files }
+                token={ this.state.token }
+                setFiles={ this.setFiles }
+              />
+            </Row>
           </Col>
           <Col xs={2} sm={2} md={2} lg={2} ></Col>
         </Row>

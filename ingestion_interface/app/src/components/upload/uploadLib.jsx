@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import request from 'superagent';
-import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl } from '../../config';
+import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl, searchUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -18,6 +18,7 @@ export default class UploadLib extends React.Component {
     this.setWatcherEmail = this.setWatcherEmail.bind(this);
     this.getWatcherEmail = this.getWatcherEmail.bind(this);
     this.getHistory = this.getHistory.bind(this);
+    this.getSearchResults = this.getSearchResults.bind(this);
   }
 
   getFileStatus(ingestion) {
@@ -43,9 +44,27 @@ export default class UploadLib extends React.Component {
     });
   }
 
+  getSearchResults(token, callback) {
+    var companyId = authRedux.getState()['company.id'];
+
+    request
+    .get(searchUrl + '/' + companyId + '/' + token)
+    .withCredentials()
+    .on('progress', (event) => {
+      this.setState({ searching: event.percent });
+    })
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        callback(res.body);
+      }
+    });
+  }
+
   deleteUploadedFile(fileName, callback) {
     var company = authRedux.getState()['company.name'];
-    
+
     request
     .post(deleteFileUrl)
     .withCredentials()

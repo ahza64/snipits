@@ -13,7 +13,7 @@ import ActionMenu from './menu/actionMenu';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Snackbar from 'material-ui/Snackbar';
 import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
@@ -105,6 +105,7 @@ export default class UploadedFiles extends UploadLib {
                           setHistories={ this.props.setHistories }
                           setTotal={ this.props.setTotal }
                           files={ file.fileName }
+                          type={ 'UPLOAD' }
                         />
                       </TableRowColumn>
                     </TableRow>
