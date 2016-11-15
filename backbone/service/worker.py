@@ -25,6 +25,8 @@ __license__ = """
 __author__ = 'Guido Goldstein'
 __email__ = 'gst-py@a-nugget.de'
 
+import sys
+sys.path.append('..')
 
 import sys
 import time
@@ -34,7 +36,7 @@ import zmq
 from zmq.eventloop.zmqstream import ZMQStream
 from zmq.eventloop.ioloop import IOLoop, DelayedCallback, PeriodicCallback
 
-from util import split_address
+from backbone.util import split_address
 
 ###
 

@@ -65,12 +65,7 @@ def service(name, host="127.0.0.1", port="5555", *args):
     # print 'worker ready to shutdown'
     # worker.shutdown()
     
-@baker.command
-def test():
-    pwd = sh.Command('pwd')
-    print pwd()
-    print pwd([])
-    
+
 
 if __name__ == '__main__':
     baker.run()

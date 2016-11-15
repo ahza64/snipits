@@ -25,6 +25,7 @@ __email__ = 'gst-py@a-nugget.de'
 import zmq
 from zmq.eventloop.zmqstream import ZMQStream
 from zmq.eventloop.ioloop import PeriodicCallback
+from zmq.eventloop.ioloop import IOLoop
 
 from util import split_address
 
@@ -77,6 +78,7 @@ class MDPBroker(object):
         else:
             self.service_q = service_q
         socket = context.socket(zmq.ROUTER)
+        print main_ep
         socket.bind(main_ep)
         self.main_stream = ZMQStream(socket)
         self.main_stream.on_recv(self.on_message)
@@ -567,10 +569,25 @@ class ServiceQueue(object):
         if not self.q:
             return None
         return self.q.pop(0)
-#
+
+
+
+from broker import MDPBroker
+
 ###
 
-### Local Variables:
-### buffer-file-coding-system: utf-8
-### mode: python
-### End:
+class MyBroker(MDPBroker):
+
+    pass
+if __name__ == '__main__':
+    import baker
+    
+    @baker.command
+    def start(host="127.0.0.1", port="5555"):
+        endpoint = "tcp://"+host+":"+port
+        context = zmq.Context()
+        broker = MyBroker(context, endpoint)
+        IOLoop.instance().start()
+        broker.shutdown()
+        
+    baker.run()
