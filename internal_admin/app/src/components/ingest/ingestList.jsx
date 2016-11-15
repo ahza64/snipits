@@ -76,7 +76,7 @@ export default class IngestList extends IngestLib {
         </Row>
         <Row>
           <h5>
-            { ingestions.length } files found / { ingestedCount.ingested | 0 } ingested
+            { ingestions.length } found / { ingestedCount.ingested | 0 } ingested
           </h5>
         </Row>
         <Row>

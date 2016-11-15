@@ -1,6 +1,7 @@
 // Modules
 import React from 'react';
 const moment = require('moment');
+const _  = require('underscore');
 
 // Components
 import ActionMenu from '../../upload/menu/actionMenu';
@@ -39,10 +40,15 @@ export default class ResultList extends React.Component {
   }
 
   render() {
+    var files = this.state.files;
+    var filesCount = _.countBy(files, f => {
+      return f.ingested ? 'ingested' : 'uningested';
+    });
+
     return (
       <div>
         <Row>
-          <h4>{ this.state.files.length } has been found.</h4>
+          <h5>{ this.state.files.length } found / { filesCount.ingested | 0 } ingested</h5>
         </Row>
         <Row>
           <Table selectable={ false }>
@@ -57,13 +63,13 @@ export default class ResultList extends React.Component {
             </TableHeader> 
             <TableBody displayRowCheckbox={ false } selectable={ false }>
               { 
-                this.state.files.map((file, idx) => {
+                files.map((file, idx) => {
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn style={{ width: '5px' }}>{ idx + 1 }</TableRowColumn>
                       <TableRowColumn style={{ width: '350px' }}>{ file.fileName }</TableRowColumn>
                       <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
-                      <TableRowColumn>{ file.status ? 'INGESTED' : 'NOT INGESTED' }</TableRowColumn>
+                      <TableRowColumn>{ file.ingested ? 'INGESTED' : 'NOT INGESTED' }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
                           setDelNotification={ this.setDelNotification }

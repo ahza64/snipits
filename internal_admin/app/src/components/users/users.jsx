@@ -137,7 +137,7 @@ export default class Users extends React.Component {
             </Row>
             <Row>
               <h5>
-                { users.length } users found / { usersCount.active | 0 } active
+                { users.length } found / { usersCount.active | 0 } active
               </h5>
             </Row>
             <Row>
