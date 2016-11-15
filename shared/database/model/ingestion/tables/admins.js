@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt-nodejs');
+
 module.exports = function(sequelize, DataTypes) {
   var Admins = sequelize.define('admins', {
     name: { type: DataTypes.STRING },
@@ -11,6 +13,14 @@ module.exports = function(sequelize, DataTypes) {
         Admins.belongsTo(models.companies);
         Admins.hasMany(models.histories);
       }
+    },
+    instanceMethods: {
+      generateHash: function(password) {
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+      },
+      validPassword: function(password) {
+        return bcrypt.compareSync(password, this.password);
+      },
     }
   });
 

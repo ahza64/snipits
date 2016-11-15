@@ -28,7 +28,7 @@ router.post(
     var user = {
       name: body.firstname + ' ' + body.lastname,
       email: body.email,
-      password: body.password,
+      password: Users.build().generateHash(body.password),
       status: ACTIVE,
       companyId: companyId,
       deleted: false
@@ -90,6 +90,7 @@ router.get(
     try {
       users = [
         ...yield Users.findAll({
+          where: { deleted: false },
           include: [ { model: Companies, attributes: ['name'] } ]
         }),
         ...yield Admins.findAll({
