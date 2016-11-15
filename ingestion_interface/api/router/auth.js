@@ -44,7 +44,8 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
     raw: true,
     include: [Companies]
   }).then(user => {
-    if (user && user.password === password) {
+    var isAuthenticated = Users.build(user).validPassword(password);
+    if (user && isAuthenticated) {
       done(null, user);
     } else {
       done(null, false);
