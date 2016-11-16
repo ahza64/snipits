@@ -201,6 +201,8 @@ def mdp_request(socket, service, msg, timeout=None):
 
     :rtype list of str:
     """
+    if timeout:
+        timeout = float(timeout)
     if not timeout or timeout < 0.0:
         timeout = None
     if type(msg) in (bytes, unicode):
@@ -208,16 +210,43 @@ def mdp_request(socket, service, msg, timeout=None):
     to_send = [PROTO_VERSION, service]
     to_send.extend(msg)
     socket.send_multipart(to_send)
-    ret = None
+    ret = "------TIMEOUT------"
     rlist, _, _ = select([socket], [], [], timeout)
     if rlist and rlist[0] == socket:
         ret = socket.recv_multipart()
         ret.pop(0) # remove service from reply
     return ret
-#
-###
 
-### Local Variables:
-### buffer-file-coding-system: utf-8
-### mode: python
-### End:
+
+def request(name, host="127.0.0.1", port="5555", socket=None, timeout=None, *args, **opts):
+    args = list(args)
+    for key in opts:
+        args.append('--'+key)
+        args.append(str(opts[key]))
+    
+    if not socket: 
+        print name, host, port, args
+        context = zmq.Context()
+        socket = context.socket(zmq.REQ)
+        socket.setsockopt(zmq.LINGER, 0)
+        socket.connect("tcp://"+host+":"+port)
+    res = mdp_request(socket, name, args, timeout)
+    print "RAW RESPONSE", res
+    if res == "------TIMEOUT------":
+        print 'Timeout!'
+        res = None        
+    else:
+        assert(name == res[0])
+        if len(res) > 1:
+            res = res[1]
+        # print "Reply:", res
+        
+    socket.close()
+    return res
+
+
+
+if __name__ == '__main__':
+    import baker
+    baker.command(request)
+    baker.run()

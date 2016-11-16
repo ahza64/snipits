@@ -123,11 +123,13 @@ function mdp_request(socket, service, msg, timeout, cb) {
 }
 
 
+module.exports = BackboneClient;
+
 
 //baker module
 if (require.main === module) {
  var baker = require('dsp_shared/lib/baker');
- baker.command(function send_message(service, message, timeout, host, port, opts){
+ baker.command(function send(service, message, timeout, host, port, opts){
    var full_message = [];
    for(var key in opts) {
      var opt = '';

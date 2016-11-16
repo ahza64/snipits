@@ -21,13 +21,16 @@ __license__ = """
 __author__ = 'Guido Goldstein'
 __email__ = 'gst-py@a-nugget.de'
 
+import sys
+sys.path.append('..')
+
+
+from backbone.util import split_address, socketid2hex
 
 import zmq
 from zmq.eventloop.zmqstream import ZMQStream
 from zmq.eventloop.ioloop import PeriodicCallback
 from zmq.eventloop.ioloop import IOLoop
-
-from util import split_address
 
 ###
 
@@ -128,7 +131,7 @@ class MDPBroker(object):
             wq = self.service_q()
             self._services[service] = (wq, [])
         wq.put(wid)
-        print "Worker Connected", service, [wid], len(wq)
+        print "Worker Connected", service, socketid2hex(wid), len(wq)
         
             
         return
@@ -156,7 +159,7 @@ class MDPBroker(object):
             wq, wr = self._services[service]
             wq.remove(wid)
         del self._workers[wid]
-        print "WORKER LOST", service, [wid]
+        print "Worker Lost", service, socketid2hex(wid)
         return
 
     def disconnect(self, wid):
@@ -582,7 +585,7 @@ class MyBroker(MDPBroker):
 if __name__ == '__main__':
     import baker
     
-    @baker.command
+    @baker.command(default=True)
     def start(host="127.0.0.1", port="5555"):
         endpoint = "tcp://"+host+":"+port
         context = zmq.Context()

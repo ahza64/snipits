@@ -89,7 +89,6 @@ class MDPWorker(object):
     def _create_stream(self):
         """Helper to create the socket and the stream.
         """
-        print "connecting"
         socket = self.context.socket(zmq.DEALER)
         ioloop = IOLoop.instance()
         self.stream = ZMQStream(socket, ioloop)
@@ -112,9 +111,8 @@ class MDPWorker(object):
     def _tick(self):
         """Method called every HB_INTERVAL milliseconds.
         """
-        print "tick",self.curr_liveness
         self.curr_liveness -= 1
-##         print '%.3f tick - %d' % (time.time(), self.curr_liveness)
+        # print '%.3f tick - %d' % (time.time(), self.curr_liveness)
         self.send_hb()
         if self.curr_liveness >= 0:
             return
