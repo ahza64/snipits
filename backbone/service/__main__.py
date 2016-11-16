@@ -1,4 +1,4 @@
-from service import *
+from cmd import *
 import baker
 
 @baker.command(default=True)
@@ -9,7 +9,7 @@ def service(name, host="127.0.0.1", port="5555", *args, **opts):
         args.append(str(opts[key]))
     print name, host, port, args    
     context = zmq.Context()
-    worker = Service(context, "tcp://"+host+":"+port, name, args)
+    worker = CmdService(context, "tcp://"+host+":"+port, name, args)
     print 'service starting', name, args
     IOLoop.instance().start()
     # print 'worker ready to shutdown'

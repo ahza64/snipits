@@ -41,7 +41,7 @@ from backbone.util import split_address
 ###
 
 class ConnectionNotReadyError(RuntimeError):
-    """Exception raised when attempting to use the MDPWorker before the handshake took place.
+    """Exception raised when attempting to use the Service before the handshake took place.
     """
     pass
 #
@@ -53,7 +53,7 @@ class MissingHeartbeat(UserWarning):
 #
 ###
 
-class MDPWorker(object):
+class Service(object):
 
     """Class for the MDP worker side.
 
@@ -69,13 +69,12 @@ class MDPWorker(object):
     HB_INTERVAL = 1000  # in milliseconds
     HB_LIVENESS = 3    # HBs to miss before connection counts as dead
 
-    def __init__(self, context, endpoint, service):
-        """Initialize the MDPWorker.
+    def __init__(self, endpoint, service):
+        """Initialize the CmdService.
 
         context is the zmq context to create the socket from.
         service is a byte-string with the service name.
-        """
-        self.context = context
+        """        
         self.endpoint = endpoint
         self.service = service
         self.stream = None
@@ -89,7 +88,8 @@ class MDPWorker(object):
     def _create_stream(self):
         """Helper to create the socket and the stream.
         """
-        socket = self.context.socket(zmq.DEALER)
+        context = zmq.Context()
+        socket = context.socket(zmq.DEALER)
         ioloop = IOLoop.instance()
         self.stream = ZMQStream(socket, ioloop)
         self.stream.on_recv(self._on_message)
@@ -207,27 +207,5 @@ class MDPWorker(object):
         pass
 
 
-if __name__ == '__main__':
-    import baker
-    class TestService(MDPWorker):
-        def __init__(self):
-            context = zmq.Context()        
-            super(TestService, self).__init__(context, "tcp://127.0.0.1:5555", 'test')
 
-        def on_request(self, msg):
-            try:
-                self.reply(['test', 'reply'])
-            except Exception as e:
-                print "Caught Exception", type(e), e
-                self.reply("Exception")
-            except TypeError as e:
-                print "Caught Error", str(e)
-                self.reply("ERROR")
-                
-    @baker.command
-    def test():
-        t = TestService()
-        IOLoop.instance().start()
-    
-    baker.run()
     

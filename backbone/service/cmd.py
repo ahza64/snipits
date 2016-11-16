@@ -6,11 +6,11 @@ __email__ = 'gabe@dispatchr.co'
 import zmq
 import sh
 
-from worker import MDPWorker
+from service import Service
 from zmq.eventloop.ioloop import IOLoop
 ###
 
-class Service(MDPWorker):
+class CmdService(Service):
 
     HB_INTERVAL = 1000
     HB_LIVENESS = 3
@@ -19,7 +19,7 @@ class Service(MDPWorker):
     cmd = None
     options = ""
     def __init__(self, context, endpoint, service, cmd):
-        super(Service, self).__init__(context, endpoint, service)
+        super(Service, self).__init__(endpoint, service)
         self.cmd = cmd[0]
         self.options = " ".join(list(cmd[1:]))
         
