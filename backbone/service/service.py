@@ -69,27 +69,34 @@ class Service(object):
     HB_INTERVAL = 1000  # in milliseconds
     HB_LIVENESS = 3    # HBs to miss before connection counts as dead
 
-    def __init__(self, endpoint, service):
+    def __init__(self, service, host='127.0.0.1', port='5555'):
         """Initialize the CmdService.
 
         context is the zmq context to create the socket from.
         service is a byte-string with the service name.
         """        
-        self.endpoint = endpoint
+        self.host = host
+        self.port = port
+        self.endpoint = 'tcp://'+host+":"+port
         self.service = service
         self.stream = None
         self._tmo = None
         self.need_handshake = True
         self.ticker = None
         self._delayed_cb = None
+        
+        
+        self.context = zmq.Context()
+        self._socket = self.context.socket(zmq.DEALER)
         self._create_stream()
         return
+
 
     def _create_stream(self):
         """Helper to create the socket and the stream.
         """
-        context = zmq.Context()
-        socket = context.socket(zmq.DEALER)
+        print "Create Stream"
+        socket = self.context.socket(zmq.DEALER)
         ioloop = IOLoop.instance()
         self.stream = ZMQStream(socket, ioloop)
         self.stream.on_recv(self._on_message)
@@ -99,6 +106,10 @@ class Service(object):
         self._send_ready()
         self.ticker.start()
         return
+
+    def start(self):        
+        print "Starting Service:", self.endpoint, self.service
+        IOLoop.instance().start()
 
     def _send_ready(self):
         """Helper method to prepare and send the workers READY message.
@@ -116,7 +127,7 @@ class Service(object):
         self.send_hb()
         if self.curr_liveness >= 0:
             return
-        print '%.3f lost connection' % time.time()
+        print 'Lost Connection'
         # ouch, connection seems to be dead
         self.shutdown()
         # try to recreate it
@@ -163,7 +174,7 @@ class Service(object):
             to_send.extend(msg)
         else:
             to_send.append(msg)
-        print "REPLY", to_send
+        print "Reply:   ", to_send
         self.stream.send_multipart(to_send)
         return
 
@@ -172,14 +183,8 @@ class Service(object):
 
         msg is a list w/ the message parts
         """
-        # 1st part is empty
-        msg.pop(0)
-        # 2nd part is protocol version
-        # TODO: version check
-        proto = msg.pop(0)
-        # 3rd part is message type
-        msg_type = msg.pop(0)
-        # XXX: hardcoded message types!
+        msg_type = msg[2]
+
         # any message resets the liveness counter
         self.need_handshake = False
         self.curr_liveness = self.HB_LIVENESS
@@ -187,11 +192,18 @@ class Service(object):
             self.curr_liveness = 0 # reconnect will be triggered by hb timer
         elif msg_type == b'\x02': # request
             # remaining parts are the user message
+            print "Request: ", msg
+            msg.pop(0)
+            # 2nd part is protocol version
+            # TODO: version check
+            proto = msg.pop(0)
+            # 3rd part is message type
+            msg_type = msg.pop(0)
             envelope, msg = split_address(msg)
             envelope.append(b'')
             envelope = [ b'', self._proto_version, b'\x03'] + envelope # REPLY
-            print "ENVELOPE", envelope
             self.envelope = envelope
+            
             self.on_request(msg)
         else:
             # invalid message

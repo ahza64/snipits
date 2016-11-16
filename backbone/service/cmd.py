@@ -3,12 +3,9 @@
 __author__ = 'Gabriel Littman'
 __email__ = 'gabe@dispatchr.co'
 
-import zmq
 import sh
-
 from service import Service
-from zmq.eventloop.ioloop import IOLoop
-###
+
 
 class CmdService(Service):
 
@@ -18,24 +15,21 @@ class CmdService(Service):
     count = 0
     cmd = None
     options = ""
-    def __init__(self, context, endpoint, service, cmd):
-        super(Service, self).__init__(endpoint, service)
+    def __init__(self, service, cmd, host='127.0.0.1', port='5555'):
+        super(CmdService, self).__init__(service, host, port)
         self.cmd = cmd[0]
         self.options = " ".join(list(cmd[1:]))
         
     def on_request(self, msg):
         try:
             opts = " ".join([self.options]+msg).strip()
+            cmd = sh.Command(self.cmd)
             if opts == '':
-                opts = []
+                msg = cmd()
             else:
                 opts = opts.split(' ')
-            print "REQUEST:", self.service, self.cmd, opts  
-              
-            cmd = sh.Command(self.cmd)
-            msg = cmd(opts)
-            print "REPLY:"
-            print msg            
+                msg = cmd(opts)
+
             self.reply(str(msg))
 
         except Exception as e:
