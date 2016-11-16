@@ -197,7 +197,7 @@ class MDPBroker(object):
         to_send = rp[:]
         to_send.extend([b'', self.CLIENT_PROTO, service])
         to_send.extend(msg)
-        print "Sending Response: ", service, "To:", rp, msg
+        print "Sending Response:", service, "To:", socketid2hex(rp[0]), msg
         self.client_stream.send_multipart(to_send)
         return
 
@@ -404,7 +404,7 @@ class MDPBroker(object):
             to_send.extend(rp)
             to_send.append(b'')
             to_send.extend(msg)
-            print 'Sending Message:', service, "To:", [wid], msg
+            print 'Sending Message: ', service, "To:", socketid2hex(wid), msg
             self.main_stream.send_multipart(to_send)
         except KeyError:
             # unknwon service

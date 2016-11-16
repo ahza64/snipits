@@ -205,9 +205,29 @@ class MDPWorker(object):
         Must be overloaded!
         """
         pass
-#
 
-### Local Variables:
-### buffer-file-coding-system: utf-8
-### mode: python
-### End:
+
+if __name__ == '__main__':
+    import baker
+    class TestService(MDPWorker):
+        def __init__(self):
+            context = zmq.Context()        
+            super(TestService, self).__init__(context, "tcp://127.0.0.1:5555", 'test')
+
+        def on_request(self, msg):
+            try:
+                self.reply(['test', 'reply'])
+            except Exception as e:
+                print "Caught Exception", type(e), e
+                self.reply("Exception")
+            except TypeError as e:
+                print "Caught Error", str(e)
+                self.reply("ERROR")
+                
+    @baker.command
+    def test():
+        t = TestService()
+        IOLoop.instance().start()
+    
+    baker.run()
+    
