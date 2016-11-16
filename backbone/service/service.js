@@ -17,7 +17,7 @@ const MESSAGE_HEARTBEAT  = '\x04';
 const MESSAGE_DISCONNECT = '\x05';
 
 /**
- * This cla
+ * This class is an abstract class that creates a service
  */
 class BackboneWorker {
   constructor(service, on_request, options) {
@@ -171,19 +171,6 @@ function split_address(msg) {
   return [ret_ids, msg.slice(i+1)];
 }
 
-module.eports = BackboneWorker;
+module.exports = BackboneWorker;
 
 
-if (require.main === module) {
-  var baker = require('dsp_shared/lib/baker');  
-  baker.command(function test() {
-    console.log("TESTING");
-    var backbone = new BackboneWorker('test', function(message, reply){
-      console.log("MESSAGE", message);
-      reply(['test-test', 'reply']);
-    });
-    backbone.connect();
-    
-  }, {default: true});
-  baker.run();
-}

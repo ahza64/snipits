@@ -79,11 +79,16 @@ function run() {
 }
 
 function parseValue(value) {
-  if(value === "true") {
-    return true;
-  }
-  if(value === "false") {
-    return false;
+  if(typeof(value) === 'string') {
+    if(value === "true") {
+      return true;
+    }
+    if(value === "false") {
+      return false;
+    }
+    // if(value.indexOf('\\\\-') === 0){
+    //   value = value.substring(1);
+    // }
   }
   return value;
 }
@@ -92,6 +97,7 @@ function assembleArgument(argv, command_data) {
   var required = command_data.required;
   var parameters = command_data.parameters;
   var opts = null;
+  var extra_args = null;
   
   var param_count = parameters.length;
   if(command_data.opts_key) {
@@ -99,6 +105,13 @@ function assembleArgument(argv, command_data) {
     argv[command_data.opts_key] = opts;
     param_count--;
   }
+
+  if(command_data.args_key) {
+    extra_args = [];
+    argv[command_data.args_key] = extra_args;
+    param_count--;
+  }
+
   
   var args = [];
   
@@ -127,8 +140,10 @@ function assembleArgument(argv, command_data) {
         break;
       }
     }
-    if(param_count <= i) {
+    if(i < param_count) {
       args.push(value);
+    } else if(extra_args){
+      extra_args.push(value);
     }    
   });
   
@@ -140,7 +155,7 @@ function assembleArgument(argv, command_data) {
     }
   }
   
-  if(args.length > parameters.length) {
+  if(!command_data.args_key && args.length > parameters.length) {
     console.error("Too many arguments to", "'"+command_data.command+"':", args.splice(parameters.length, args.length-parameters.length));
     return null;
   }
