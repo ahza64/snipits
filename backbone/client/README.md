@@ -2,7 +2,7 @@
 
 ##Javascript
 
-```
+```js
 var BackboneClient = require('dsp_backbone/client');
 
 var bbc = new BackboneClient();
@@ -15,7 +15,7 @@ bbc.send('ls-service', '/tmp').then(reply => {
 
 ##Python
 Objects of this class are ment to be integrated into the asynchronous IOLoop of pyzmq.
-```
+```py
 from client import Service
 def on_message(message):
 	print message      
