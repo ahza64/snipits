@@ -32,12 +32,12 @@ backbone.start()
 
 ```
 
-##Query Service
+##Example Output
 ```
-//command line requwest
+//command line request
 $ node backbone/client request test 'message to test'
 
-//server log
+//service log
 Create Stream
 Starting Service: tcp://127.0.0.1:5555 test
 Request:  ['', 'MDPW01', '\x02', '\x00\x80\x00A\xce', '', 'message to test']
