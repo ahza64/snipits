@@ -76,8 +76,10 @@ function *generateEmail(to, from, template, values, subject, text, html, send) {
   
   if(from) {
     message.from = from;
+    message.replyTo = from;
   } else {
     message.from = "Dispatchr <no-reply@dispatchr.co>";
+    message.replyTo = from;
   }
 
   if(to) {
@@ -112,11 +114,14 @@ function *generateEmail(to, from, template, values, subject, text, html, send) {
 
   if(send) {
     var encoded = new Buffer(raw_msg).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
-    send_email(encoded);
-    console.log("SENT");
+    return yield send_email(encoded).then((result) => {
+      return [true, raw_msg, result];
+    }).catch(error => {
+      return [false, raw_msg, error];
+    })    
   }
   
-  return raw_msg;
+  return [false, raw_msg, 'Send Not Requested'];
 }
 
 module.exports = generateEmail;

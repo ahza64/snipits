@@ -1,7 +1,8 @@
-var service = require('dsp_backbone/service/node/service');
-var BackboneClient = require('dsp_backbone/client/node/client');
+var BackboneService = require('dsp_backbone/service');
+var BackboneClient = require('dsp_backbone/client');
+var mail = require('./create_mail');
 var _ = require('underscore');
-var path = require('path');
+var co = require('co');
 
 var SERVICE_NAME = 'email';
 
@@ -17,40 +18,57 @@ function request(options){
   
   if(!client) {
     client = new BackboneClient(options.host, options.port);
-    client.connect();    
+    client.connect();
   }
   
   options = _.omit(options, ['client', 'host', 'port', 'timeout', 'disconnect']);
-  var message = compose_message(options);
   
-  return client.send(SERVICE_NAME, message, timeout).finally(() => {
+  var message = JSON.stringify(options);
+  return client.send(SERVICE_NAME, message, timeout).then(result => {
+    result[0] = JSON.parse(result[0]);
+    result[2] = JSON.parse(result[2]);
+    return result;
+  }).finally(() => {
     if(disconnect) {
       client.disconnect();
     }
   });
 }
 
-function compose_message(options) {
-  var message = [];
-  for(var key in options) {
-    if(options.hasOwnProperty(key)) {
-      message.push("--"+key);
-      message.push(options[key]);
-    }
-  }
-  
-  return message;
-}
 
-
-function start(host, port, opts) {
-  var mail_cmd_file = path.dirname(__filename)+'/create_mail.js';
-  service.start_node(SERVICE_NAME, mail_cmd_file, opts, host, port);
+function start(host, port, options) {
+  console.log("STARTING ", SERVICE_NAME, host, port, options);
+  var service = new BackboneService(SERVICE_NAME, (msg, reply) => {
+    msg = JSON.parse(msg);    
+    var m = co.wrap(mail);
+    
+    
+    var params = ['to', 'from', 'template', 'subject', 'text', 'html', 'send'];
+    var opts = _.extend({}, msg, options);
+    var values = _.omit(opts, params);    
+    opts = _.pick(opts, params);
+    m(
+      opts.to, 
+      opts.from, 
+      opts.template, 
+      values,
+      opts.subject, 
+      opts.text, 
+      opts.html, 
+      opts.send
+    ).then(result => {
+      result[0] = JSON.stringify(result[0]);
+      result[2] = JSON.stringify(result[2]);
+      reply(result);
+    });
+    
+  },{host: host, port:port});
+  service.connect();
 }
 
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');  
   baker.command(request, {default: true, opts: 'options'});
-  baker.command(start, {});
+  baker.command(start, {opts: 'options'});
   baker.run();
 }

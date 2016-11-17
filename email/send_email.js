@@ -23,23 +23,25 @@ function makeBody(to, from, subject, message) {
 function sendMessage(raw_email) {
   var gmail = google.gmail('v1');
   var email_auth = auth.authorize(credentials, token);
-  gmail.users.messages.send({
-      auth: email_auth,
-      userId: 'me',
-      resource: {
-          raw: raw_email
+  return new Promise((resolve, reject) => {
+    gmail.users.messages.send({
+        auth: email_auth,
+        userId: 'me',
+        resource: {
+            raw: raw_email
+        }
+    }, function(err, response) {
+      if(err) {
+        reject(err);
+      } else {
+        resolve(response);
       }
-  }, function(err, response) {
-    if(err) {
-      console.error(err);
-    } else {
-      console.log("GTO RESPONSE", response);
-    }
+    });
   });
 }
 
 
-module.exports = sendMessage
+module.exports = sendMessage;
 
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');
