@@ -16,11 +16,11 @@ class CmdService(Service):
     cmd = None
     options = ""
     def __init__(self, service, cmd, host='127.0.0.1', port='5555'):
-        super(CmdService, self).__init__(service, host, port)
+        super(CmdService, self).__init__(service, self.on_request, host, port)
         self.cmd = cmd[0]
         self.options = " ".join(list(cmd[1:]))
         
-    def on_request(self, msg):
+    def on_request(self, msg, reply):
         try:
             opts = " ".join([self.options]+msg).strip()
             cmd = sh.Command(self.cmd)
@@ -30,14 +30,14 @@ class CmdService(Service):
                 opts = opts.split(' ')
                 msg = cmd(opts)
 
-            self.reply(str(msg))
+            reply(str(msg))
 
         except Exception as e:
             print "Caught Exception", type(e), e
-            self.reply("Exception")
+            reply("Exception")
         except TypeError as e:
             print "Caught Error", str(e)
-            self.reply("ERROR")
+            reply("ERROR")
         
         return
 

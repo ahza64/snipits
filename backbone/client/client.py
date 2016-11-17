@@ -3,6 +3,7 @@
 """Module containing client functionality for the MDP implementation.
 
 For the MDP specification see: http://rfc.zeromq.org/spec:7
+https://github.com/guidog/pyzmq-mdp
 """
 
 __license__ = """
@@ -48,7 +49,7 @@ class RequestTimeout(UserWarning):
 #
 ###
 
-class MDPClient(object):
+class BackboneClient(object):
 
     """Class for the MDP client side.
 
@@ -68,20 +69,22 @@ class MDPClient(object):
 
     _proto_version = b'MDPC01'
 
-    def __init__(self, context, endpoint, service):
-        """Initialize the MDPClient.
+    def __init__(self, host='127.0.0.1', port='5555'):
+        """Initialize the BackboneClient.
         """
-        socket = context.socket(zmq.REQ)
+        context = zmq.Context()
+        self.socket = context.socket(zmq.REQ)
         ioloop = IOLoop.instance()
-        self.service = service
-        self.endpoint = endpoint
-        self.stream = ZMQStream(socket, ioloop)
+        self.host = host
+        self.port = port
+        self.endpoint = "tcp://"+host+":"+port
+        self.stream = ZMQStream(self.socket, ioloop)
         self.stream.on_recv(self._on_message)
         self.can_send = True
-        self._proto_prefix = [ PROTO_VERSION, service]
+        self._proto_prefix = [ PROTO_VERSION ]
         self._tmo = None
         self.timed_out = False
-        socket.connect(endpoint)
+        self.socket.connect(self.endpoint)
         return
 
     def flush(self):
@@ -104,7 +107,7 @@ class MDPClient(object):
         self.stream = None
         return
 
-    def request(self, msg, timeout=None):
+    def send(self, service, msg, on_message, timeout=None):
         """Send the given message.
 
         :param msg:     message parts to send.
@@ -114,15 +117,16 @@ class MDPClient(object):
         
         :rtype None:
         """
-        print "sending request", msg, timeout
         if not self.can_send:
             raise InvalidStateError()
         if type(msg) in (bytes, unicode):
             msg = [msg]
         # prepare full message
         to_send = self._proto_prefix[:]
+        to_send.append(service)
         to_send.extend(msg)
-        print "SEND TO", to_send    
+        
+        self.on_message = on_message  
         self.stream.send_multipart(to_send)
         self.can_send = False
         if timeout:
@@ -153,15 +157,22 @@ class MDPClient(object):
         :param msg:   list of message parts.
         :type msg:    list of str
         """
-        print "GOT MESSAGE"
+
         if self._tmo:
             # disable timout
             self._tmo.stop()
             self._tmo = None
         # setting state before invoking on_message, so we can request from there
         self.can_send = True
-        self.on_message(msg)
-        return
+        
+        service = msg.pop(0)
+        protocol = msg.pop(0)
+
+        if len(msg) == 1:
+            self.on_message(msg[0])
+        else: 
+            self.on_message(msg)
+
 
     def on_message(self, msg):
         """Public method called when a message arrived.
@@ -218,20 +229,20 @@ def mdp_request(socket, service, msg, timeout=None):
     return ret
 
 
-def request(name, host="127.0.0.1", port="5555", timeout=None, *args, **opts):
+def request_raw(name, host="127.0.0.1", port="5555", timeout=None, *args, **opts):
     args = list(args)
     for key in opts:
         args.append('--'+key)
         args.append(str(opts[key]))
     
 
-    print name, host, port, args
+    # print name, host, port, args
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
     socket.setsockopt(zmq.LINGER, 0)
     socket.connect("tcp://"+host+":"+port)
     res = mdp_request(socket, name, args, timeout)
-    print "RAW RESPONSE", res
+    # print "RAW RESPONSE", res
     if res == "------TIMEOUT------":
         print 'Timeout!'
         res = None        
@@ -244,6 +255,24 @@ def request(name, host="127.0.0.1", port="5555", timeout=None, *args, **opts):
     socket.close()
     return res
 
+def request(name, host="127.0.0.1", port="5555", timeout=None, *args, **opts):
+    msg = list(args)
+    for key in opts:
+        msg.append('--'+key)
+        msg.append(str(opts[key]))
+    
+    client = None
+    res = [None] 
+    def on_message(message):
+        res[0] = message
+        IOLoop.instance().stop()
+        
+        
+    client = BackboneClient(host, port)
+    client.send(name, msg, on_message)
+
+    IOLoop.instance().start()
+    return res[0]
 
 
 if __name__ == '__main__':

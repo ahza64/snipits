@@ -2,7 +2,7 @@
 var BackboneClient = require('./client');
 
 function request(service, args, opts){
-  console.log('request', service, args, opts);
+  // console.log('request', service, args, opts);
   var host = opts.host;
   var port = opts.port;
   var timeout = opts.timeout;
@@ -25,7 +25,7 @@ function request(service, args, opts){
   }
 
   var message = full_message.join(' ');
-  console.log("Message", message);
+  // console.log("Message", message);
   var bbc = new BackboneClient(host, port);
   bbc.connect();
   return bbc.send(service, message, timeout).finally(() => {

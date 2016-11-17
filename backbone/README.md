@@ -91,7 +91,7 @@ Variable arguments:
 (specifying a double hyphen (--) in the argument list means all subsequent arguments are treated as bare arguments, not options)
 ```
 
-example
+####Python Example
 ```
 $ python -m backbone.client request ls-service 
 README.md	base_attempt	client		sample		util.py
@@ -99,3 +99,14 @@ __init__.py	broker		gabe_sample	service		util.pyc
 __init__.pyc	broker.pyc	node_modules	test		worker.pyc
 
 ```
+
+####Node Example
+```
+$ node backbone/client request ls-service 
+README.md	base_attempt	client		sample		util.py
+__init__.py	broker		gabe_sample	service		util.pyc
+__init__.pyc	broker.pyc	node_modules	test		worker.pyc
+
+```
+
+

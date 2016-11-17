@@ -69,7 +69,7 @@ class Service(object):
     HB_INTERVAL = 1000  # in milliseconds
     HB_LIVENESS = 3    # HBs to miss before connection counts as dead
 
-    def __init__(self, service, host='127.0.0.1', port='5555'):
+    def __init__(self, service, on_request, host='127.0.0.1', port='5555'):
         """Initialize the CmdService.
 
         context is the zmq context to create the socket from.
@@ -84,7 +84,7 @@ class Service(object):
         self.need_handshake = True
         self.ticker = None
         self._delayed_cb = None
-        
+        self.on_request = on_request
         
         self.context = zmq.Context()
         self._socket = self.context.socket(zmq.DEALER)
@@ -204,20 +204,10 @@ class Service(object):
             envelope = [ b'', self._proto_version, b'\x03'] + envelope # REPLY
             self.envelope = envelope
             
-            self.on_request(msg)
+            self.on_request(msg, self.reply)
         else:
             # invalid message
             # ignored
             pass
         return
 
-    def on_request(self, msg):
-        """Public method called when a request arrived.
-
-        Must be overloaded!
-        """
-        pass
-
-
-
-    
