@@ -31,7 +31,7 @@ $ python broker/broker.py start --host 127.0.0.1 --port 5555
 
 ##Service
 A service registers itself with the the Broker.  Service API libraries exist for Javascript and Python so that Services can be written in either.
-More Service Docs: [backbone/service/README.md]
+[More Service Docs Here](backbone/service/README.md)
 ###Command Service
 The command line service exists to allow any command to be easily turned into a service.
 ```
@@ -65,7 +65,7 @@ Starting Service: tcp://127.0.0.1:5555 ls-service
 
 ##Client
 A client connects to the broker and allows you make requests to Services. Client API libraries exist for Javascript and Python so that clients can be written in either.
-More Client Docs: [backbone/client/README.md]
+[More Client Docs Here](client/README.md)
 
 ###Commnadl Line Request
 The Command Line Request utility allows you to send easily send requests to 
