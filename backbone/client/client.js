@@ -2,7 +2,6 @@
  * @fileoverview This is is a generic broker client api for javascript
  */
 var zmq = require('zmq'); //https://github.com/JustinTulloss/zeromq.node/blob/master/README.md
-var baker = require('dsp_shared/lib/baker');
 var BPromise = require('bluebird');
 var Message = require('./mdc_protocol');
 
@@ -126,31 +125,5 @@ function mdp_request(socket, service, msg, timeout, cb) {
 module.exports = BackboneClient;
 
 
-//baker module
-if (require.main === module) {
- var baker = require('dsp_shared/lib/baker');
- baker.command(function send(service, message, timeout, host, port, opts){
-   var full_message = [];
-   for(var key in opts) {
-     var opt = '';
-     if(key.length > 1) {
-       opt += "--";
-     } else {
-       opt += "-";
-     }
-     opt += key; 
-     full_message.push(opt);
-   }
-   if(message) {
-     full_message.push(message);
-   }
-   message = full_message.join(' ')
-   
-   var bbc = new BackboneClient(host, port);
-   bbc.connect();
-   return bbc.send(service, message, timeout).finally(() => {
-     bbc.disconnect();
-   });
- }, {opts: "opts"});
- baker.run();
-}
+
+

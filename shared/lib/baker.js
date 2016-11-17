@@ -51,6 +51,7 @@ function run() {
     var args = assembleArgument(argv, commands[command]);
     if(args) {
       if(commands[command].func.constructor.name === 'GeneratorFunction') {
+        //run generator
         co(function*(){
           var result = yield commands[command].func.apply(this, args);
           console.log(result);
@@ -60,6 +61,7 @@ function run() {
           process.exit(1);
         });
       } else {
+        //run function
         var result = commands[command].func.apply(this, args);        
         if(result){
           if(typeof result.then === "function") {
@@ -86,9 +88,9 @@ function parseValue(value) {
     if(value === "false") {
       return false;
     }
-    // if(value.indexOf('\\\\-') === 0){
-    //   value = value.substring(1);
-    // }
+    if(value.indexOf('\\-') === 0){
+      value = value.substring(1);
+    }
   }
   return value;
 }
