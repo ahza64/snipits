@@ -218,18 +218,18 @@ def mdp_request(socket, service, msg, timeout=None):
     return ret
 
 
-def request(name, host="127.0.0.1", port="5555", socket=None, timeout=None, *args, **opts):
+def request(name, host="127.0.0.1", port="5555", timeout=None, *args, **opts):
     args = list(args)
     for key in opts:
         args.append('--'+key)
         args.append(str(opts[key]))
     
-    if not socket: 
-        print name, host, port, args
-        context = zmq.Context()
-        socket = context.socket(zmq.REQ)
-        socket.setsockopt(zmq.LINGER, 0)
-        socket.connect("tcp://"+host+":"+port)
+
+    print name, host, port, args
+    context = zmq.Context()
+    socket = context.socket(zmq.REQ)
+    socket.setsockopt(zmq.LINGER, 0)
+    socket.connect("tcp://"+host+":"+port)
     res = mdp_request(socket, name, args, timeout)
     print "RAW RESPONSE", res
     if res == "------TIMEOUT------":
