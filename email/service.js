@@ -24,6 +24,7 @@ function request(options){
   options = _.omit(options, ['client', 'host', 'port', 'timeout', 'disconnect']);
   
   var message = JSON.stringify(options);
+
   return client.send(SERVICE_NAME, message, timeout).then(result => {
     result[0] = JSON.parse(result[0]);
     result[2] = JSON.parse(result[2]);
@@ -47,8 +48,7 @@ function start(host, port, options) {
     var opts = _.extend({}, msg, options);
     var values = _.omit(opts, params);    
     opts = _.pick(opts, params);
-    m(
-      opts.to, 
+    m(opts.to, 
       opts.from, 
       opts.template, 
       values,
@@ -65,6 +65,8 @@ function start(host, port, options) {
   },{host: host, port:port});
   service.connect();
 }
+
+module.exports = {request: request};
 
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');  

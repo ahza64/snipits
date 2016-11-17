@@ -12,7 +12,7 @@ Dispatchr Backbone message passing utilities
 
 
 ##Broker
-Broker is written in Python.  It is a standalone process:
+Broker is written in Python.  It acts as a middle man between the clients and services.  It is a standalone process:
 ```
 $ python -m backbone.broker start  --help
 Usage: backbone/broker/__main__.py start [<host>] [<port>]
@@ -68,7 +68,7 @@ A client connects to the broker and allows you make requests to Services. Client
 [More Client Docs Here](client/README.md)
 
 ###Commnadl Line Request
-The Command Line Request utility allows you to send easily send requests to 
+The Command Line Request utility allows you to send easily send requests to services from the command line 
 ```
 $ python -m backbone.client request --help
 Usage: /Users/gabriellittman/Development/services/backbone/client/__main__.py request <name> [<host>] [<port>] [<timeout>] [<args>...]
