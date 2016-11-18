@@ -2,7 +2,7 @@
     "opts": {
         "recurse": true,
         "destination": "./docs",
-        "template": "./node_modules/ink-docstrap/template"
+        "template": "./node_modules/minami"
     },
     "tags": {
         "allowUnknownTags": true,

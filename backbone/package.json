@@ -1,0 +1,24 @@
+{
+  "name": "backbone",
+  "version": "1.0.0",
+  "description": "Dispatchr Backbone message passing utilities",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "underscore": "^1.8.3",
+    "dsp_shared": "^1.0.0",
+    "minami": "^1.1.1",
+    "zmq": "^2.15.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs": "jsdoc -c jsdoc_conf.json"
+  },
+  "author": "",
+  "license": "ISC"
+}
