@@ -27,7 +27,7 @@ Options:
 
 example
 ```
-$ python broker/broker.py start --host 127.0.0.1 --port 5555
+$ python -m backbone.broker start --host 127.0.0.1 --port 5555
 ```
 
 ## Service
