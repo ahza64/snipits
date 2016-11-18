@@ -1,6 +1,11 @@
 /**
  * @fileoverview Utilities to start a command through the python command line service implementation
  */
+
+
+
+
+
 var process = require('process');
 var spawn = require('child_process').spawn;
 var _ = require('underscore');
@@ -28,9 +33,6 @@ function compose_message(options) {
 }
 
 
-/**
- * 
- */
 function start_service(service_name, command, options, host, port) {
   var py_options = ['host', 'port'];
   var cmd_argv;

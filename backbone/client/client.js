@@ -1,5 +1,7 @@
 /**
  * @fileoverview This is is a generic broker client api for javascript
+ * 
+ * 
  */
 var zmq = require('zmq'); //https://github.com/JustinTulloss/zeromq.node/blob/master/README.md
 var BPromise = require('bluebird');
@@ -8,7 +10,12 @@ var Message = require('./mdc_protocol');
 const DEFAULT_HOST = '127.0.0.1';
 const DEFAULT_PORT = '5555';
 
-
+/**
+ * @constructor
+ * @description test {@link README.md readme}
+ * @param {String}                    host   host to connect to backbone
+ * @param {String}                    port   port to connect to backbone
+ */  
 function BackboneClient(host, port) {
   this.host = host || DEFAULT_HOST;
   this.port = port || DEFAULT_PORT;
@@ -16,7 +23,10 @@ function BackboneClient(host, port) {
 }
 
 /**
- * get endpoint url
+ * @function getEndpoint
+ * @description get endpoint url
+ * @memberof BackboneClient
+ * @instance
  * @returns {String} The url of the endpoint
  */
 BackboneClient.prototype.getEndpoint = function(){
@@ -50,8 +60,12 @@ BackboneClient.prototype.disconnect = function() {
 };
 
 /**
- * Sends a message to a service on the backbone
- */
+ * @param {String}          service name of service to send message to 
+ * @param {String|Array}    port    port to connect to backbone
+ * @param {Number}          timeout amount of time in milliseconds to wait for response before giving up
+ *
+ * @return {Promise}        response promise
+ */  
 BackboneClient.prototype.send = function(service, message, timeout) {
   message = message || [];
   timeout = timeout || 3000;
@@ -89,24 +103,20 @@ BackboneClient.prototype.send = function(service, message, timeout) {
 
 
 /**
- *    MDP request.
+ * @function mdp_request
+ * @private
+ * @description MDP request.
  *    This function sends a request to the given service and
  *    waits for a reply.
  *
  *    If timeout is set and no reply received in the given time
  *    the function will return `None`.
  *
- *    :param socket:    zmq REQ socket to use.
- *    :type socket:     zmq.Socket
- *    :param service:   service id to send the msg to.
- *    :type service:    str
- *    :param msg:       list of message parts to send.
- *    :type msg:        list of str
- *    :param timeout:   time to wait for answer in seconds.
- *    :type timeout:    float
- *    :param cb         callbac
- *    :type cb: f
- *    :rtype list of str:
+ * @param {Object} socket    zmq REQ socket to use. zmq.Socket
+ * @param {String} service   service id to send the msg to.
+ * @param {String} msg       list of message parts to send.
+ * @param {Number} timeout    time to wait for answer in milliseconds.
+ * @param {Function} cb       callback
  */
 function mdp_request(socket, service, msg, timeout, cb) {
     if(!timeout || timeout < 0.0) {

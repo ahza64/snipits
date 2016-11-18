@@ -1,0 +1,34 @@
+{
+    "opts": {
+        "recurse": true,
+        "destination": "./docs",
+        "template": "./node_modules/ink-docstrap/template"
+    },
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc","closure"]
+    },
+    "source": {
+        "include": [".", "README.md"],
+        "exclude": ["node_modules"]        
+    },
+    "plugins": [],
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "systemName": "Dispatchr Backbone",
+        "footer": "",
+        "copyright":  "",
+        "includeDate": true,
+        "navType": "vertical",
+        "theme": "Spacelab",
+        "linenums": true,
+        "collapseSymbols": false,
+        "inverseNav": true,
+        "outputSourceFiles": true,
+        "outputSourcePath": false,
+        "syntaxTheme": "default",
+        "sort": true,
+        "search": true 
+    }
+}

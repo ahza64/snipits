@@ -1,5 +1,6 @@
 "use strict";
 /**
+ * @fileoverview Service that takes a command line and arguments and turns it into a service
  * @author <gabe@dispatchr.co> (Gabriel Littman)
  */
 

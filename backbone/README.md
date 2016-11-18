@@ -1,8 +1,9 @@
-#Dispatchr Backbone
+# Dispatchr Backbone
 
 Dispatchr Backbone message passing utilities
 
-##Installation
+## Installation
+
 ### on Mac OSX
 - brew install zeromq
 - brew install pkgconfig
@@ -11,7 +12,7 @@ Dispatchr Backbone message passing utilities
 - npm install
 
 
-##Broker
+## Broker
 Broker is written in Python.  It acts as a middle man between the clients and services.  It is a standalone process:
 ```
 $ python -m backbone.broker start  --help
@@ -29,10 +30,10 @@ example
 $ python broker/broker.py start --host 127.0.0.1 --port 5555
 ```
 
-##Service
+## Service
 A service registers itself with the the Broker.  Service API libraries exist for Javascript and Python so that Services can be written in either.
 [More Service Docs Here](service/README.md)
-###Command Service
+### Command Service
 The command line service exists to allow any command to be easily turned into a service.
 ```
 services$ python -m backbone.service cmd-service --help
@@ -63,11 +64,11 @@ Starting Service: tcp://127.0.0.1:5555 ls-service
 ```
 
 
-##Client
+## Client
 A client connects to the broker and allows you make requests to Services. Client API libraries exist for Javascript and Python so that clients can be written in either.
 [More Client Docs Here](client/README.md)
 
-###Commnadl Line Request
+### Commnadl Line Request
 The Command Line Request utility allows you to send easily send requests to services from the command line 
 ```
 $ python -m backbone.client request --help
@@ -91,7 +92,7 @@ Variable arguments:
 (specifying a double hyphen (--) in the argument list means all subsequent arguments are treated as bare arguments, not options)
 ```
 
-####Python Example
+#### Python Example
 ```
 $ python -m backbone.client request ls-service 
 README.md	base_attempt	client		sample		util.py
@@ -100,7 +101,7 @@ __init__.pyc	broker.pyc	node_modules	test		worker.pyc
 
 ```
 
-####Node Example
+#### Node Example
 ```
 $ node backbone/client request ls-service 
 README.md	base_attempt	client		sample		util.py

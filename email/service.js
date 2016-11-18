@@ -1,3 +1,7 @@
+/**
+ * @fileoverview This is a service to send email via templates and distribution lists
+ * @author <gabe@dispatchr.com> (Gabriel Littman) 
+ */
 var BackboneService = require('dsp_backbone/service');
 var BackboneClient = require('dsp_backbone/client');
 var mail = require('./create_mail');
@@ -6,6 +10,20 @@ var co = require('co');
 
 var SERVICE_NAME = 'email';
 
+/**
+ * @function request
+ * @param {Object}  options            options
+ * @param {Object}  options.client     backbone client, if not provided client will be created
+ * @param {Boolean} options.disconnect if true disconnect from client when done
+ * @param {Number}  options.timeout    millisecond timeout for the request
+ * @param {String}  options.to         email address or distribution list 
+ * @param {String}  options.from       from who is the email from
+ * @param {String}  options.template   template name
+ * @param {String}  options.subject    email subject, template takes presidence
+ * @param {String}  options.text       text email body , template takes presidence
+ * @param {String}  options.html       html email body, template takes presidence
+ * @param {Boolean} options.send       if true email service will attempt to send email else just return what would have been sent
+ */
 function request(options){
   var timeout = options.timeout;
   var client = options.client;
@@ -36,7 +54,22 @@ function request(options){
   });
 }
 
-
+/**
+ * @function request
+ * @param {String}  host               ip or host name to connect to backbone
+ * @param {String}  port               port to connect to backbone
+ * @param {Object}  options            options - these options will override what is sent in requests
+ * @param {Object}  options.client     backbone client, if not provided client will be created
+ * @param {Boolean} options.disconnect if true disconnect from client when done
+ * @param {Number}  options.timeout    millisecond timeout for the request
+ * @param {String}  options.to         email address or distribution list 
+ * @param {String}  options.from       from who is the email from
+ * @param {String}  options.template   template name
+ * @param {String}  options.subject    email subject, template takes presidence
+ * @param {String}  options.text       text email body , template takes presidence
+ * @param {String}  options.html       html email body, template takes presidence
+ * @param {Boolean} options.send       if true email service will attempt to send email else just return what would have been sent
+ */
 function start(host, port, options) {
   console.log("STARTING ", SERVICE_NAME, host, port, options);
   var service = new BackboneService(SERVICE_NAME, (msg, reply) => {
