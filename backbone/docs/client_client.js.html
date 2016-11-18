@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>client/client.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackboneClient.html">BackboneClient</a><ul class='methods'><li data-type='method'><a href="BackboneClient.html#connect">connect</a></li><li data-type='method'><a href="BackboneClient.html#disconnect">disconnect</a></li><li data-type='method'><a href="BackboneClient.html#getEndpoint">getEndpoint</a></li><li data-type='method'><a href="BackboneClient.html#send">send</a></li></ul></li><li><a href="BackboneClientMessage.html">BackboneClientMessage</a><ul class='methods'><li data-type='method'><a href="BackboneClientMessage.html#getReply">getReply</a></li><li data-type='method'><a href="BackboneClientMessage.html#parseReply">parseReply</a></li><li data-type='method'><a href="BackboneClientMessage.html#parseResponse">parseResponse</a></li><li data-type='method'><a href="BackboneClientMessage.html#serialize">serialize</a></li></ul></li><li><a href="BackboneService.html">BackboneService</a><ul class='methods'><li data-type='method'><a href="BackboneService.html#connect">connect</a></li></ul></li><li><a href="CmdService.html">CmdService</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">client/client.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview This is is a generic broker client api for javascript
+ * 
+ * 
+ */
+var zmq = require('zmq'); //https://github.com/JustinTulloss/zeromq.node/blob/master/README.md
+var BPromise = require('bluebird');
+var Message = require('./mdc_protocol');
+
+const DEFAULT_HOST = '127.0.0.1';
+const DEFAULT_PORT = '5555';
+
+/**
+ * @constructor
+ * @description test {@link README.md readme}
+ * @param {String}                    host   host to connect to backbone
+ * @param {String}                    port   port to connect to backbone
+ */  
+function BackboneClient(host, port) {
+  this.host = host || DEFAULT_HOST;
+  this.port = port || DEFAULT_PORT;
+  this._socket = zmq.socket('req');
+}
+
+/**
+ * @function getEndpoint
+ * @description get endpoint url
+ * @memberof BackboneClient
+ * @instance
+ * @returns {String} The url of the endpoint
+ */
+BackboneClient.prototype.getEndpoint = function(){
+  return `tcp://${this.host}:${this.port}`;
+};
+
+/**
+ * Connect to the BackboneClient.
+ */
+BackboneClient.prototype.connect = function() {
+  this._socket.connect(this.getEndpoint());
+  
+  return new BPromise((resolve, reject) =>  {
+    //Events here: https://github.com/JustinTulloss/zeromq.node/blob/master/README.md
+    this._socket.on('connect', () => { resolve(this); });
+    this._socket.on('bind_error', () => { reject(new Error("ZMQ_EVENT_BIND_FAILED")); });
+  });
+};
+
+/**
+ * Disconnect this conection to the BackboneClient.
+ */
+BackboneClient.prototype.disconnect = function() {
+  this._socket.disconnect(this.getEndpoint()); 
+  
+  return new BPromise((resolve, reject) =>  {
+    //Events here: https://github.com/JustinTulloss/zeromq.node/blob/master/README.md
+    this._socket.on('disconnect', () => { resolve(this); });
+    this._socket.on('bind_error', () => { reject(new Error("ZMQ_EVENT_BIND_FAILED")); });
+  });
+};
+
+/**
+ * @param {String}          service name of service to send message to 
+ * @param {String|Array}    port    port to connect to backbone
+ * @param {Number}          timeout amount of time in milliseconds to wait for response before giving up
+ *
+ * @return {Promise}        response promise
+ */  
+BackboneClient.prototype.send = function(service, message, timeout) {
+  message = message || [];
+  timeout = timeout || 3000;
+  if(!Array.isArray(message)) {
+    message = [message];
+  }
+  
+  return new BPromise((resolve, reject) => {
+    var timer = null;
+    
+    //setup timeout if needed
+    if(timeout) {
+      timeout = parseInt(timeout);
+      if(timeout > 0) {
+        timer = setTimeout(() => {
+          timer = -1; //timed out
+          reject("Request Timeout");
+        },timeout);            
+      }      
+    }
+    
+    //send request
+    mdp_request(this._socket, service, message, timeout, function(reply) {
+      // console.log("GOT REPLY", service, message, reply);
+      if(timer !== -1) { //not timed out 
+         resolve(reply); 
+      }
+      if(timer) {
+        clearTimeout(timer);
+      }
+    });
+  });  
+};
+
+
+
+/**
+ * @function mdp_request
+ * @private
+ * @description MDP request.
+ *    This function sends a request to the given service and
+ *    waits for a reply.
+ *
+ *    If timeout is set and no reply received in the given time
+ *    the function will return `None`.
+ *
+ * @param {Object} socket    zmq REQ socket to use. zmq.Socket
+ * @param {String} service   service id to send the msg to.
+ * @param {String} msg       list of message parts to send.
+ * @param {Number} timeout    time to wait for answer in milliseconds.
+ * @param {Function} cb       callback
+ */
+function mdp_request(socket, service, msg, timeout, cb) {
+    if(!timeout || timeout &lt; 0.0) {
+      timeout = null;
+    }            
+    var to_send = new Message(service, msg);
+    socket.send(to_send.serialize());
+
+    socket.on('message', function() {//prot_ver, service) {
+      var reply = to_send.parseReply(arguments);
+      cb(reply);
+    });
+}
+
+
+module.exports = BackboneClient;
+
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Nov 17 2016 16:49:04 GMT-0800 (PST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

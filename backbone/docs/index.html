@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BackboneClient.html">BackboneClient</a><ul class='methods'><li data-type='method'><a href="BackboneClient.html#connect">connect</a></li><li data-type='method'><a href="BackboneClient.html#disconnect">disconnect</a></li><li data-type='method'><a href="BackboneClient.html#getEndpoint">getEndpoint</a></li><li data-type='method'><a href="BackboneClient.html#send">send</a></li></ul></li><li><a href="BackboneClientMessage.html">BackboneClientMessage</a><ul class='methods'><li data-type='method'><a href="BackboneClientMessage.html#getReply">getReply</a></li><li data-type='method'><a href="BackboneClientMessage.html#parseReply">parseReply</a></li><li data-type='method'><a href="BackboneClientMessage.html#parseResponse">parseResponse</a></li><li data-type='method'><a href="BackboneClientMessage.html#serialize">serialize</a></li></ul></li><li><a href="BackboneService.html">BackboneService</a><ul class='methods'><li data-type='method'><a href="BackboneService.html#connect">connect</a></li></ul></li><li><a href="CmdService.html">CmdService</a></li></ul>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>Dispatchr Backbone</h1><p>Dispatchr Backbone message passing utilities</p>
+<h2>Installation</h2><h3>on Mac OSX</h3><ul>
+<li>brew install zeromq</li>
+<li>brew install pkgconfig</li>
+<li>easy_install pyzmq</li>
+<li>easy_install baker</li>
+<li>npm install</li>
+</ul>
+<h2>Broker</h2><p>Broker is written in Python.  It acts as a middle man between the clients and services.  It is a standalone process:</p>
+<pre class="prettyprint source"><code>$ python -m backbone.broker start  --help
+Usage: backbone/broker/__main__.py start [&lt;host>] [&lt;port>]
+
+
+Options:
+
+   --host [default: 127.0.0.1]
+   --port [default: 5555]</code></pre><p>example</p>
+<pre class="prettyprint source"><code>$ python broker/broker.py start --host 127.0.0.1 --port 5555</code></pre><h2>Service</h2><p>A service registers itself with the the Broker.  Service API libraries exist for Javascript and Python so that Services can be written in either.
+<a href="service/README.md">More Service Docs Here</a></p>
+<h3>Command Service</h3><p>The command line service exists to allow any command to be easily turned into a service.</p>
+<pre class="prettyprint source"><code>services$ python -m backbone.service cmd-service --help
+Usage: /Users/gabriellittman/Development/services/backbone/service/__main__.py cmd-service &lt;name> [&lt;host>] [&lt;port>] [&lt;args>...]
+
+
+Required Arguments:
+
+  name   
+
+Options:
+
+   --host  
+   --port  
+
+Variable arguments:
+
+   *args</code></pre><p>example</p>
+<pre class="prettyprint source"><code>services$ python -m backbone.service ls-service ls
+Create Stream
+Command Service: ls-service ['ls']
+Starting Service: tcp://127.0.0.1:5555 ls-service</code></pre><h2>Client</h2><p>A client connects to the broker and allows you make requests to Services. Client API libraries exist for Javascript and Python so that clients can be written in either.
+<a href="client/README.md">More Client Docs Here</a></p>
+<h3>Commnadl Line Request</h3><p>The Command Line Request utility allows you to send easily send requests to services from the command line </p>
+<pre class="prettyprint source"><code>$ python -m backbone.client request --help
+Usage: /Users/gabriellittman/Development/services/backbone/client/__main__.py request &lt;name> [&lt;host>] [&lt;port>] [&lt;timeout>] [&lt;args>...]
+
+
+Required Arguments:
+
+  name   
+
+Options:
+
+   --host     
+   --port     
+   --timeout  
+
+Variable arguments:
+
+   *args 
+
+(specifying a double hyphen (--) in the argument list means all subsequent arguments are treated as bare arguments, not options)</code></pre><h4>Python Example</h4><pre class="prettyprint source"><code>$ python -m backbone.client request ls-service 
+README.md    base_attempt    client        sample        util.py
+__init__.py    broker        gabe_sample    service        util.pyc
+__init__.pyc    broker.pyc    node_modules    test        worker.pyc</code></pre><h4>Node Example</h4><pre class="prettyprint source"><code>$ node backbone/client request ls-service 
+README.md    base_attempt    client        sample        util.py
+__init__.py    broker        gabe_sample    service        util.pyc
+__init__.pyc    broker.pyc    node_modules    test        worker.pyc</code></pre></article>
+    </section>
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        client/client.js
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">This is is a generic broker client api for javascript</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client_client.js.html">client/client.js</a>, <a href="client_client.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        client/mdc_protocol.js
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">MajorDomo Client Protocol this helper class serializes client messages and replys</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client_mdc_protocol.js.html">client/mdc_protocol.js</a>, <a href="client_mdc_protocol.js.html#line2">line 2</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        service/cmd.js
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Service that takes a command line and arguments and turns it into a service</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>&lt;gabe@dispatchr.co> (Gabriel Littman)</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="service_cmd.js.html">service/cmd.js</a>, <a href="service_cmd.js.html#line2">line 2</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        service/py_cmd.js
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Utilities to start a command through the python command line service implementation</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="service_py_cmd.js.html">service/py_cmd.js</a>, <a href="service_py_cmd.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        service/service.js
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">This is is a generic broker woker api for javascript</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="service_service.js.html">service/service.js</a>, <a href="service_service.js.html#line2">line 2</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Nov 17 2016 16:49:04 GMT-0800 (PST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
