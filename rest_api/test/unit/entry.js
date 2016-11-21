@@ -37,6 +37,7 @@ console.log("asdf", path.dirname(__filename) + "/" + testConfig.route_dir)
 var route_dir = path.dirname(__filename) + "/" + testConfig.route_dir;
 var routesFile = fs.readdirSync(route_dir);
 routesFile.forEach(f => {
+  console.log('Filename---->', f);
   app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, f))));
 });
 

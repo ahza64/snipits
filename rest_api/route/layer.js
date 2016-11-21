@@ -16,8 +16,7 @@ const Server = require('dsp_shared/lib/gis/esri/arcserver/index');
 const Token = require('dsp_shared/lib/gis/esri/arcserver/token');
 
 router.get('/workr/layer/:type', function*(){
-
-  try {
+  //try {
     var userId = this.req.user._id;
     var type = this.params.type;
     var trees = [];
@@ -85,13 +84,13 @@ router.get('/workr/layer/:type', function*(){
 
     this.body = {};
     this.body.lines = lines;
-    this.body.extent = extent;
-    this.body.params = params;
+    //this.body.extent = extent;
+    //this.body.params = params;
     this.body.count = data.features.length;
     this.body[type] = data.features;
-  } catch(e) {
+  /*} catch(e) {
     this.dsp_env.error_message = e.message;
-  }
+  }*/
 });
 
 app.use(router.routes());

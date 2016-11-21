@@ -29,6 +29,7 @@ function *middleware(next) {
     };
     yield next;
   } catch (e) {
+    console.log('ERROR', e.message);
     handleError(this, STATUS_RESOURCE.INTERNAL_SERVER_ERROR);
   }
 }
