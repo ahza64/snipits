@@ -16,7 +16,8 @@ templates/test.json
 ```
 
 #### Database Template
-|template | subject    | body_type | body|
+|template | subject    | body_type | body |
+| ------- | ---------- | --------- | ---- | 
 |test     | Test Email | text      | Hi,\n\nThis is an email template.\n\nYou're value is {{value}}\n\nThanks,\n\n- Template Test |
 |test     | Test Email | html      | <html>This is the html <b>version</b><br>template value: <i>{{value}}</i></html> |
 
@@ -45,6 +46,7 @@ distribution_lists/musketeers.json
 ```
 #### Database Distribution List
 | list       | name    | email |
+| ---------- | ------- | ----- | 
 | musketeers | Tejas   | tejas@dispatchr.com | 
 | musketeers | Xuchang | xuchang@dispatchr.com | 
 | musketeers | Rahul   | rahul@dispatchr.com | 
@@ -53,7 +55,7 @@ distribution_lists/musketeers.json
 Library can create and send email.
 
 ```js
-var create_mail = require('./email/create_mail);
+var create_mail = require('./email/create_mail');
 
 //yield create_mail(to, from, template, values, subject, text, html, send);
 yield create_mail('musketeers', gabe@dispatchr, 'test', {value: "TEMPLATE VALUE"}, undefined, undefined, undefined, true);
@@ -63,6 +65,8 @@ yield create_mail('musketeers', gabe@dispatchr, undefined, undefined, "TEXT EMAI
 
 ## Start The Service
 Create Mail is wrapped up in a service is wrapped up in a service that can run as a deamon
+
+**NOTE: Be sure to have started the [Backbone Service](https://github.com/Dispatchr/services/tree/develop/backbone) as well.**
 
 ```
 $ node email/service.js start --help
