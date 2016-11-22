@@ -37,13 +37,16 @@ BackboneClient.prototype.getEndpoint = function(){
  * Connect to the BackboneClient.
  */
 BackboneClient.prototype.connect = function() {
+  var self = this;
   this._socket.connect(this.getEndpoint());
-  
-  return new BPromise((resolve, reject) =>  {
+  this._socket.monitor(500, 0);    
+  var p = new BPromise((resolve, reject) =>  {
     //Events here: https://github.com/JustinTulloss/zeromq.node/blob/master/README.md
-    this._socket.on('connect', () => { resolve(this); });
-    this._socket.on('bind_error', () => { reject(new Error("ZMQ_EVENT_BIND_FAILED")); });
+    self._socket.on('connect', () => { resolve(this); });
+    self._socket.on('bind_error', () => { reject(new Error("ZMQ_EVENT_BIND_FAILED")); });
   });
+  
+  return p;
 };
 
 /**
@@ -82,7 +85,7 @@ BackboneClient.prototype.send = function(service, message, timeout) {
       if(timeout > 0) {
         timer = setTimeout(() => {
           timer = -1; //timed out
-          reject("Request Timeout");
+          reject(new Error("Request Timeout"));
         },timeout);            
       }      
     }

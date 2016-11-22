@@ -16,6 +16,41 @@ const MESSAGE_REPLY      = '\x03';
 const MESSAGE_HEARTBEAT  = '\x04';
 const MESSAGE_DISCONNECT = '\x05';
 
+/*
+ * Exception raised when attempting to use the Service before the handshake took place.
+ */
+function ConnectionNotReadyError(message) {
+  this.message = message;
+  // Use V8's native method if available, otherwise fallback
+  if ("captureStackTrace" in Error){
+    Error.captureStackTrace(this, ConnectionNotReadyError);
+  } else {
+    this.stack = (new Error()).stack;
+  }
+}
+ConnectionNotReadyError.prototype = Object.create(Error.prototype);
+ConnectionNotReadyError.prototype.name = "ConnectionNotReadyError";
+ConnectionNotReadyError.prototype.constructor = ConnectionNotReadyError;
+
+
+/*
+ * Exception raised when a heartbeat was not received on time.
+ */
+function MissingHeartbeat(message) {
+  this.message = message;
+  // Use V8's native method if available, otherwise fallback
+  if ("captureStackTrace" in Error){
+    Error.captureStackTrace(this, MissingHeartbeat);
+  } else{
+    this.stack = (new Error()).stack;
+  }
+}
+
+MissingHeartbeat.prototype = Object.create(Error.prototype);
+MissingHeartbeat.prototype.name = "MissingHeartbeat";
+MissingHeartbeat.prototype.constructor = MissingHeartbeat;
+
+
 
 /**
  * This function is called whenever the service recieves a message.
@@ -46,12 +81,11 @@ class BackboneService {
     this.port = options.port || "5555";
     this.service = service;
     this.on_request = on_request;
-    this.stream = null;
     this._tmo = null;
     this.need_handshake = true;
     this.ticker = null;
     this._delayed_cb = null;
-    
+    this.socket_connected = false;
     var self = this;
     var endpoint = this.getEndpoint();
     this._socket = zmq.socket('dealer');
@@ -61,10 +95,12 @@ class BackboneService {
       self._on_message(args);
     });    
     this._socket.on('connect', function(){
-      console.log("Connected: ", endpoint);
+      console.log("Service Connected: ", service, endpoint);
+      this.socket_connected = true;
     });    
     this._socket.on('disconnect', function(){
-      console.log("Disconnected:  ", endpoint);
+      console.log("Service Disconnected:  ", service, endpoint);
+      this.socket_connected = false;
     });
   }
   
@@ -87,7 +123,6 @@ class BackboneService {
     this.ticker = setInterval(function() {
       self._tick();
     }, HB_INTERVAL);
-
   }
   
   _send_ready() {
@@ -95,13 +130,25 @@ class BackboneService {
     this._socket.send(ready_msg);
     this.curr_liveness = HB_LIVENESS;
   }
+
+
+
+  _send_disconnect() {
+     var msg = [ '', PROTO_VERSION, MESSAGE_DISCONNECT, this.service ];
+     this._socket.send(msg);
+     this.curr_liveness = 0;     
+  }
   
+  _send_heartbeat(){
+    var msg = [ '', PROTO_VERSION, '\x04' ];
+    this._socket.send(msg);
+  }
   
   _tick(){
     var self = this;
     this.curr_liveness -= 1;
     // console.log('%.3f tick - %d' % (time.time(), self.curr_liveness);
-    this.send_heartbeat();
+    this._send_heartbeat();
     if(this.curr_liveness < 0){
       console.log('Connection Lost');
       // ouch, connection seems to be dead
@@ -113,35 +160,34 @@ class BackboneService {
     }
   }
 
-  send_heartbeat(){
-    var msg = [ '', PROTO_VERSION, '\x04' ];
-    this._socket.send(msg);
-  }
   
   shutdown() {
     if(this.ticker){
       clearInterval(this.ticker);
       this.ticker = null;
-      if(this.stream) {
+      if(this._socket) {
+        this._send_disconnect();
         this._socket.close();
         this.timed_out = false;
         this.need_handshake = true;
-        this.connected = true;
       }
     }
   }
   
   reply(envelope, msg){
-    // if self.need_handshake:
-    //   raise ConnectionNotReadyError()
+    if( this.need_handshake ) {
+      throw new ConnectionNotReadyError();
+    }
     // prepare full message
     var to_send = envelope;
+    console.log("Service Response", this.service, socketid2hex(envelope[3]), msg);
+    
     if(Array.isArray(msg)) {
       to_send.push.apply(to_send, msg);
     } else {
       to_send.push(msg);
     }
-    console.log("REPLY", envelope, msg);
+    
     this._socket.send(to_send);
   }
   
@@ -171,7 +217,10 @@ class BackboneService {
         var envelope = split[0];
         msg = split[1];
         envelope.push('');
+        
+        
         envelope = [ '', PROTO_VERSION, MESSAGE_REPLY].concat(envelope); // REPLY
+        console.log("Service Request", this.service, socketid2hex(envelope[3]), msg.toString());
         msg = _.each(msg, item => item.toString());
         this.on_request(msg, function(reply_msg){          
           self.reply(envelope, reply_msg);
@@ -183,6 +232,16 @@ class BackboneService {
   }
 }
 
+/*
+ * Returns printable hex representation of a socket id.
+ */
+function socketid2hex(sid){
+  var ret = [];
+  for(var i = 0; i < sid.length; i++){
+    ret.push(sid[i].toString(16));
+  }
+  return ret.join('').toUpperCase();
+}
 
 function split_address(msg) {
   var ret_ids = [];
