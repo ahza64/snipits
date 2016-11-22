@@ -43,7 +43,7 @@ describe('Get Asset Layers', function(){
       return Line.create(line);
     })
     .then(function() {
-      console.log('tree created');
+      console.log('user, trees, line created');
       done();
     });
   });
@@ -68,41 +68,44 @@ describe('Get Asset Layers', function(){
     });
   });
 
-  it('Should get the tower layer', function(done){
-    User.findOne({ _id: user._id }, function(err, res){
-      expect(err).to.be.equal(null);
-      expect(res).to.be.an('object');
+  var layers = ['tower', 'span'];
 
-      agent
-      .get(testConfig.BASE_URL + '/workr/layer/' + 'tower')
-      .set('Cookie', cookie)
-      .end(function(err, res){
+  _.each(layers, layer => {
+    it('Should get the '+ layer +' layer', function(done){
+      User.findOne({ _id: user._id }, function(err, res){
         expect(err).to.be.equal(null);
+        expect(res).to.be.an('object');
 
-        //check data
-        var data = res.body.data;
-        expect(data).to.be.an('object');
-        expect(data).to.have.all.keys([
-          'lines', 'count', 'tower'
-        ]);
+        agent
+        .get(testConfig.BASE_URL + '/workr/layer/' + layer)
+        .set('Cookie', cookie)
+        .end(function(err, res){
+          expect(err).to.be.equal(null);
 
-        // check lines
-        expect(data.lines).to.be.instanceof(Array);
-
-        // check count
-        expect(data.count).to.equal(data.tower.length);
-
-        // check tower
-        expect(data.tower).to.be.instanceof(Array);
-        _.each(data.tower, obj => {
-          expect(obj).to.have.all.keys([
-            'attributes', 'geometry'
+          //check data
+          var data = res.body.data;
+          expect(data).to.be.an('object');
+          expect(data).to.have.all.keys([
+            'lines', 'count', layer
           ]);
-        });
 
-        done();
+          // check lines
+          expect(data.lines).to.be.instanceof(Array);
+
+          // check count
+          expect(data.count).to.equal(data[layer].length);
+
+          // check asset
+          expect(data[layer]).to.be.instanceof(Array);
+          _.each(data[layer], obj => {
+            expect(obj).to.have.all.keys([
+              'attributes', 'geometry'
+            ]);
+          });
+
+          done();
+        });
       });
     });
   });
-
 });
