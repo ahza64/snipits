@@ -3,9 +3,12 @@ const sequelize = require('dsp_database/connections')('postgres');
 
 const SCHEMA = {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-  name: { type: Sequelize.STRING, alloNull: false },
-  template: { type: Sequelize.STRING, alloNull: false },
-  created: { type: Sequelize.DATE, defaultValue: Sequelize.now }
+  template_name: { type: Sequelize.STRING, allowNull: false },
+  subject: { type: Sequelize.STRING, allowNull: false },
+  body_type: { type: Sequelize.STRING, allowNull: false },
+  body: { type: Sequelize.STRING, allowNull: false },
+  updatedAt: { type: Sequelize.DATE, defaultValue: Sequelize.now },
+  createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.now }  
 };
 
 const CONFIG = {
@@ -13,11 +16,9 @@ const CONFIG = {
     singular: 'email_template',
     plural: 'email_templates'
   },
-  timestamps: false
+  timestamps: true
 };
 
-const EmailTemplate = sequelize.define('email_templates', DEFINITION_OBJECT, CONFIGURATION_OBJECT);
+const EmailTemplate = sequelize.define('email_templates', SCHEMA, CONFIG);
 
-module.exports = TreeHistoryModel;
-
-module.exports.establishRelationships = () => { };
+module.exports = EmailTemplate;

@@ -71,7 +71,10 @@ function request(options){
  * @param {Boolean} options.send       if true email service will attempt to send email else just return what would have been sent
  */
 function start(host, port, options) {
+  var config = require('dsp_shared/config/config').get();  
   console.log("STARTING ", SERVICE_NAME, host, port, options);
+
+  require('dsp_shared/database/sequelize')(config.postgres);
   var service = new BackboneService(SERVICE_NAME, (msg, reply) => {
     msg = JSON.parse(msg);    
     var m = co.wrap(mail);

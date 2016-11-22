@@ -8,11 +8,41 @@ var _ = require('underscore');
 var send_email = require('./send_email');
 
 
+
+function loadDBTemplate(template_name) {
+  var EmailTemplate = require('dsp_shared/database/model/email/template'); 
+  return EmailTemplate.findAll({template_name: template_name}).then(templates => {
+    var tmpl = {body: {}};
+    for(var i = 0; i < templates.length; i++) {
+      tmpl.subject = templates[i].subject;
+      tmpl.body[templates[i].body_type] = templates[i].body;
+    }
+    console.log("TEMPLATE", tmpl);
+    return tmpl;
+  });
+}
+
+
 function loadFileTemplate(template_name) {
   return fs.readFileAsync(path.dirname(__filename)+"/templates/"+template_name+".json").then(data => {
     return JSON.parse(data);
   });
 }
+
+
+function loadDBDistList(name) {
+  var DistList = require('dsp_shared/database/model/email/distribution_list'); 
+  return DistList.findAll({list_name: name}).then(emails => {
+    var list = [];
+    for(var i = 0; i < emails.length; i++) {
+      list.push({name: emails[i].name, email: emails[i].email});
+    }
+    
+    return list;
+  });
+}
+
+
 function loadFileDistList(name) {
   return fs.readFileAsync(path.dirname(__filename)+"/distribution_lists/"+name+".json").then(data => {
     return JSON.parse(data);
@@ -22,13 +52,17 @@ function loadFileDistList(name) {
 
 
 function loadTemplate(template_name) {
-  return loadFileTemplate(template_name);
+  return loadFileTemplate(template_name).catch( () => {
+    return loadDBTemplate(template_name);
+  });
 }
 
 function loadDistributionList(name, concat){
   concat = concat || false;
   
-  return loadFileDistList(name).then(list => {
+  return loadFileDistList(name).catch(()=> {
+    return loadDBDistList(name);
+  }).then(list => {
     if(!concat) {
       return list;
     } else {
@@ -118,7 +152,7 @@ function *generateEmail(to, from, template, values, subject, text, html, send) {
       return [true, raw_msg, result];
     }).catch(error => {
       return [false, raw_msg, error];
-    })    
+    });    
   }
   
   return [false, raw_msg, 'Send Not Requested'];
@@ -128,6 +162,11 @@ module.exports = generateEmail;
 
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');  
-  baker.command(generateEmail, {default: true, opts: 'values'});
+  var util = require('dsp_shared/lib/cmd_utils');
+  util.connect(["postgres"]);
+  
+  baker.command(function*(to, from, template, values, subject, text, html, send) {
+    return yield generateEmail(to, from, template, values, subject, text, html, send);
+  }, {command: "generateEmail", default: true, opts: 'values'});
   baker.run();
 }
