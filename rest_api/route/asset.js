@@ -81,5 +81,5 @@ if(require.main === module) {
   app.use(bodyParser());
   var logger = require('koa-logger');
   app.use(logger());
-  app.listen(3002);
+  app.listen(3000);
 }

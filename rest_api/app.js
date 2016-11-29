@@ -56,6 +56,8 @@ _.each(resources, function(resource){
 app.use(mount('/api/v3', require('./route/package')));
 app.use(mount('/api/v3', require('./route/asset')));
 app.use(mount('/api/v3', require('./route/update_tree')));
+app.use(mount('/api/v3', require('./route/layer')));
+
 
 //This is runnable as a stand alone server
 if (require.main === module) {
