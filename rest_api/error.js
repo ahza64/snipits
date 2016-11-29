@@ -8,7 +8,8 @@ const STATUS_RESOURCE = deepFreeze({
   NOT_ADDED: {status: 400, message: 'not added'},
   NOT_FOUND: {status: 404, message: 'not found'},
   INTERNAL_SERVER_ERROR: {status: 500, message: 'Internal Server Error'},
-  HISTORIES_ERROR: {status: 200, message: 'Histories Error'}
+  HISTORIES_ERROR: {status: 200, message: 'Histories Error'},
+  VERSION_ERROR: { status: 400, message: 'Bad Request for Version'}
 });
 
 function handleError(context, error, message) {
