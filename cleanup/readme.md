@@ -8,7 +8,7 @@
 
 Running this command will delete fields from the specified collection, based on the configuration specified in the `config.json` file.
 
-Eg:
+Eg: config.json
 
 ```javascript
 {
