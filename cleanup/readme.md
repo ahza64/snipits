@@ -22,3 +22,4 @@ Eg: config.json
   }
 }
 ```
+P.S Make sure that the fields to be deleted are present in the respective Schema.
