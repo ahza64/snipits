@@ -27,7 +27,12 @@ var cufSchema = new mongoose.Schema({
   tablet_phone_number: {type: String},
   unsynced_requests: {type: Number},
   app_version: {type: String},
-  location: { type: {}, index: '2dsphere' }
+  location: { type: {}, index: '2dsphere' },
+
+  //fields to delete
+  assigned_workorders: [],
+  scheduled_data: [],
+  scheduled_workorders: []
 });
 
 cufSchema.index({location: '2dsphere'});
