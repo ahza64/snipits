@@ -11,7 +11,9 @@ var JPGImage = require('./jpg_file.js');
 var TreeStates = require('tree-status-codes');
 var GPS = require("./gps");
 var vmd = require("dsp_shared/lib/pge_vmd_codes");
-require("sugar");
+const Sugar = require("sugar");
+Sugar.extend();
+
 
 /*
 *   SYSTEM TESTS:
