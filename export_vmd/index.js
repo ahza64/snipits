@@ -12,11 +12,8 @@ var bluebird = require('bluebird');
 fs.readdirAsync = bluebird.promisify(fs.readdir);
 fs.openAsync = bluebird.promisify(fs.open);
 
-
-
-
-var S3_BUCKET = "dev.pge.ftp.export.vmd";
-var DISTRIBUTION_LIST = "gabe";
+var S3_BUCKET = "prod.pge.ftp.export.vmd"; //"dev.pge.ftp.export.vmd"; 
+var DISTRIBUTION_LIST = "vmd_export";
 
 var gen_email = require('dsp_email/create_mail');
 

@@ -143,13 +143,14 @@ function *generateEmail(to, from, template, values, subject, text, html, replyTo
  * @param options
  * @param options.to    - email address or distirbution list
  * @param options.from
- * @param options.template
- * @param options.html
- * @param options.text
  * @param options.replyTo
+ * @param options.template
+ * @param options.values
+ * @param options.subject
+ * @param options.text
+ * @param options.html
  */
 function *send(options, dry_run) {
-  console.log("SEND...", options, dry_run);
   if(options.template) {
     _.extend(options, yield processTemplate(options.template, options.values));
     delete options.template;
@@ -181,7 +182,6 @@ if (require.main === module) {
   util.connect(["postgres"]);
   
   baker.command(function*(to, from, template, values, subject, text, html, dry_run, reply) {
-    console.log("SDFDSF", to, from, template, values, subject, text, html, dry_run, reply);
     return yield generateEmail(to, from, template, values, subject, text, html, dry_run, reply);
   }, {command: "generateEmail", default: true, opts: 'values'});
   baker.run();
