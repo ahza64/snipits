@@ -152,6 +152,8 @@ function *get_wc_trees(folder) {
 }
 
 
+module.exports = {run: run};
+
 //baker module
 if (require.main === module) {
   utils.bakerGen(run, { default: true }); 

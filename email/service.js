@@ -79,20 +79,16 @@ function start(host, port, options) {
     msg = JSON.parse(msg);    
     var m = co.wrap(mail);
     
+    var send = msg.send;
+    delete msg.send;
     
-    var params = ['to', 'from', 'template', 'subject', 'text', 'html', 'send'];
+    var params = ['to', 'from', 'template', 'subject', 'text', 'html'];
     var opts = _.extend({}, msg, options);
     var values = _.omit(opts, params);    
+    
     opts = _.pick(opts, params);
-    m(opts.to, 
-      opts.from, 
-      opts.template, 
-      values,
-      opts.subject, 
-      opts.text, 
-      opts.html, 
-      opts.send
-    ).then(result => {
+    opts.values = values;
+    m(opts, send).then(result => {
       result[0] = JSON.stringify(result[0]);
       result[2] = JSON.stringify(result[2]);
       reply(result);

@@ -34,4 +34,4 @@ if (require.main === module) {
   baker.run();
 }
 
-module.exports = { run: run };
+module.exports = { run: run, fixes: fixes };

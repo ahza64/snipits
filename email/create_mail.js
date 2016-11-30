@@ -1,4 +1,3 @@
-var mailcomposer = require("mailcomposer");
 var mustache = require("mustache");
 
 var BPromise = require('bluebird');
@@ -89,7 +88,7 @@ function *processTemplate(template, values) {
   template = yield loadTemplate(template);
   
   if(template.subject) {
-    message.subject = template.subject;
+    message.subject = mustache.render(template.subject, values);
   }
   
   if(template.body) {
@@ -105,8 +104,16 @@ function *processTemplate(template, values) {
   }
   return message;
 }
-function *generateEmail(to, from, template, values, subject, text, html, send) {
+
+/**
+ * 
+ */
+function *generateEmail(to, from, template, values, subject, text, html, replyTo, dry_run) {
   var message = {};
+  
+  message.to = to;
+  message.template = template;
+  message.values = values;
   
   if(from) {
     message.from = from;
@@ -115,19 +122,11 @@ function *generateEmail(to, from, template, values, subject, text, html, send) {
     message.from = "Dispatchr <no-reply@dispatchr.co>";
     message.replyTo = from;
   }
-
-  if(to) {
-    if(to.indexOf('@') !== -1) {
-      message.to = to;
-    } else {
-      message.to = yield loadDistributionList(to, true);
-    }
+  
+  if(replyTo) {
+    message.replyTo = replyTo;
   }
-  
-  if(template) {
-    _.extend(message, yield processTemplate(template, values));
-  } 
-  
+
   if(text) {
     message.text = text;
   }
@@ -137,36 +136,53 @@ function *generateEmail(to, from, template, values, subject, text, html, send) {
   if(subject) {
     message.subject = subject;
   }
-  
-  // console.log("generateEmail", message);
-  
-  var mail = mailcomposer(message);
-  mail.buildAsync = BPromise.promisify(mail.build);
-  
-  var raw_msg = yield mail.buildAsync();
-  raw_msg = raw_msg.toString();
-
-  if(send) {
-    var encoded = new Buffer(raw_msg).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
-    return yield send_email(encoded).then((result) => {
-      return [true, raw_msg, result];
-    }).catch(error => {
-      return [false, raw_msg, error];
-    });    
-  }
-  
-  return [false, raw_msg, 'Send Not Requested'];
+  return yield send(message, dry_run);
 }
 
-module.exports = generateEmail;
+/**
+ * @param options
+ * @param options.to    - email address or distirbution list
+ * @param options.from
+ * @param options.template
+ * @param options.html
+ * @param options.text
+ * @param options.replyTo
+ */
+function *send(options, dry_run) {
+  console.log("SEND...", options, dry_run);
+  if(options.template) {
+    _.extend(options, yield processTemplate(options.template, options.values));
+    delete options.template;
+  } 
+
+  if(options.to) {
+    if(options.to.indexOf('@') === -1) {
+      options.to = yield loadDistributionList(options.to, true);
+    }
+  }
+  
+  // console.log("generateEmail", options);
+  if(dry_run) {
+    return [false, options, 'Send Not Requested'];
+  } else {
+    return yield send_email(options).then((result) => {
+      return [true, options, result];
+    }).catch(error => {
+      return [false, options, error];
+    });    
+  }  
+}
+
+module.exports = send;
 
 if (require.main === module) {
   var baker = require('dsp_shared/lib/baker');  
   var util = require('dsp_shared/lib/cmd_utils');
   util.connect(["postgres"]);
   
-  baker.command(function*(to, from, template, values, subject, text, html, send) {
-    return yield generateEmail(to, from, template, values, subject, text, html, send);
+  baker.command(function*(to, from, template, values, subject, text, html, dry_run, reply) {
+    console.log("SDFDSF", to, from, template, values, subject, text, html, dry_run, reply);
+    return yield generateEmail(to, from, template, values, subject, text, html, dry_run, reply);
   }, {command: "generateEmail", default: true, opts: 'values'});
   baker.run();
 }

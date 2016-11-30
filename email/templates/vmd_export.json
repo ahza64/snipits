@@ -1,0 +1,14 @@
+{
+    "subject": "WP and WC export {{&start_date}} - {{&end_date}}",
+    "body": {
+        "text": "Hi,\n\nHere are the exports leading up to {{&end_date}}\n\n\n{{#files}}\nDate {{&date}}\nType {{&type}}\nFilename {{&name}}\nFile Count {{&file_count}}\nLink {{&link}}\n\n{{/files}}\nCheers,\n\nGabe",
+        "html": "<div dir=\"ltr\">\t<div class=\"gmail_extra\">Hi,</div>\n\t<div class=\"gmail_extra\"><br></div>\n\t<div class=\"gmail_extra\">Here are the exports leading up to 11/26<br><br>\n\n\t\t<table cellspacing=\"0\" cellpadding=\"0\" dir=\"ltr\" border=\"1\" style=\"table-layout:fixed;font-size:13px;font-family:arial,sans,sans-serif;border-collapse:collapse;border:1px solid rgb(204,204,204)\">\n\t\t\t<colgroup>\n\t\t\t\t<col width=\"100\">\n\t\t\t\t<col width=\"100\">\n\t\t\t\t<col width=\"361\">\n\t\t\t\t<col width=\"100\">\n\t\t\t\t<col width=\"599\">\n\t\t\t</colgroup>\n\t\t\t<tbody>\n\n\t\t\t\t<tr style=\"height:21px\">\n\t\t\t\t\t<td style=\"padding:2px 3px;vertical-align:bottom;font-weight:bold\">Date</td><td style=\"padding:2px 3px;vertical-align:bottom;font-weight:bold\">Type</td>\n\t\t\t\t\t<td style=\"padding:2px 3px;vertical-align:bottom;font-weight:bold\">Filename</td>\n\t\t\t\t\t<td style=\"padding:2px 3px;vertical-align:bottom;font-weight:bold\">File Count</td>\n\t\t\t\t\t<td style=\"padding:2px 3px;vertical-align:bottom;font-weight:bold\">Link</td>\n\t\t\t\t</tr>\n\t\t\t\t{{#files}}\n\t\t\t\t\t<tr style=\"height:21px\">\n\t\t\t\t\t\t<td style=\"padding:2px 3px;vertical-align:bottom;text-align:right\">{{date}}</td>\n\t\t\t\t\t\t<td style=\"padding:2px 3px;vertical-align:bottom\">{{type}}</td>\n\t\t\t\t\t\t<td style=\"padding:2px 3px;vertical-align:bottom\">{{name}}</td>\n\t\t\t\t\t\t<td style=\"padding:2px 3px;vertical-align:bottom;text-align:right\">{{file_count}}</td>\n\t\t\t\t\t\t<td style=\"padding:2px 3px;vertical-align:bottom;text-decoration:underline;color:rgb(17,85,204)\">\n\t\t\t\t\t\t\t<a class=\"gmail-in-cell-link\" href=\"{{link}}\" target=\"_blank\">\n\t\t\t\t\t\t\t\t{{link}}\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t</tr>\n\t\t\t\t{{/files}}\n\n\t\t\t</tbody>\n\t\t</table><br>\n\t</div>\n\t<div class=\"gmail_extra\">Cheers,</div>\n\t<div class=\"gmail_extra\"><br></div>\n\t<div class=\"gmail_extra\">Gabe</div>\n</div>"
+    }
+}
+
+
+
+
+
+
+

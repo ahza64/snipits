@@ -1,4 +1,4 @@
-/**
+43/**
  * @fileoverview This is a tree record xml object for pge vmd export
  */
 var _ = require("underscore");
@@ -57,7 +57,7 @@ require("sugar");
 
 /* jshint maxlen: 180 */
 var root_node = "TreeRecs"; 
-var TREE_RECORD = {     // <TreeRecs>
+var TREE_RECORD = {     // <TreeRecs>01
   sTreeCode: null,        // <sTreeCode>          char(4)		    	[NULL] or user selected from list below (tree type)
   sNotification: null,    // <sNotification>      char(1)         *[N],O,C,H,R,Q
   nDBH: null,             // <nDBH>               numeric(2, 0)   [NULL] or prescribed by CUF
