@@ -111,3 +111,51 @@ __init__.pyc	broker.pyc	node_modules	test		worker.pyc
 ```
 
 
+# Protocol
+##Worker Protocol
+`[<ADDRESS STACK>, '', <PROTOCOL ID>, <MESSAGE_TYPE_ID>, ... ]`
+
+###Message Types
+x01 => Register Service
+x02 => Service Request
+x03 => Service Response
+x04 => Heart Beat
+
+#### Register Service
+Worker To Service
+`[<WORKER ADR>, '', 'MDPW01', '\x01', 'service_name']`
+
+#### Service Request
+Broker To Worker
+`[<WORKER ADR>, '', 'MDPW01', '\x02', <CLIENT ADR>, '', 'request_data1, request_data2']`
+
+#### Service Response
+Worker To Broker
+`[<WORKER ADR>, '', 'MDPW01', '\x03', <CLIENT ADR>, '', 'response_data1', 'response_data2']`
+
+#### Heart Beat
+Wroker => Broker and Broker => Worker
+`[<WORKER ADR>, '', 'MDPW01', '\x04']`
+
+## Client Protocol
+`[<ADDRESS STACK>, '', 'MDPC01', 'service_name', ...]`
+
+### Request
+Client To Broker
+`[<CLIENT ADR>, '', 'MDPC01', 'service_name', 'request_data1, request_data2']`
+
+### Response
+Broker To Cleint
+`[<CLIENT ADR>, '', 'MDPC01', 'service_name', 'response_data1', 'response_data2']`
+
+## Workflow
+| Request Flow | Protocol | Request Type | Protocol | 
+| ------------ | -------- | ------------ | -------- |
+| Worker => Broker | Worker | Register Service 	| `[<WORKER ADR>, '', 'MDPW01', '\x01', 'service_name']`                                       |
+| Wroker => Broker | Worker | Service Heartbeat | `[<WORKER ADR>, '', 'MDPW01', '\x04']`                                                       |
+| Broker => Worker | Worker | Service Heartbeat | `[<WORKER ADR>, '', 'MDPW01', '\x04']`                                                       |
+| Client => Broker | Client | Service Request 	| `[<CLIENT ADR>, '', 'MDPC01', 'service_name', 'request_data1, request_data2']`               |
+| Broker => Worker | Worker | Service Request	| `[<WORKER ADR>, '', 'MDPW01', '\x02', <CLIENT ADR>, '', 'request_data1, request_data2']`     |
+| Worker => Broker | Worker | Service Response  | `[<WORKER ADR>, '', 'MDPW01', '\x03', <CLIENT ADR>, '', 'response_data1', 'response_data2']` |
+| Broker => Cleint | Client | Service Response  | `[<CLIENT ADR>, '', 'MDPC01', 'service_name', 'response_data1', 'response_data2']`           |
+
