@@ -116,10 +116,10 @@ __init__.pyc	broker.pyc	node_modules	test		worker.pyc
 `[<ADDRESS STACK>, '', <PROTOCOL ID>, <MESSAGE_TYPE_ID>, ... ]`
 
 ###Message Types
-x01 => Register Service
-x02 => Service Request
-x03 => Service Response
-x04 => Heart Beat
+- x01 => Register Service
+- x02 => Service Request
+- x03 => Service Response
+- x04 => Heart Beat
 
 #### Register Service
 Worker To Service
