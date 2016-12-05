@@ -2,7 +2,9 @@
  * @description This was created to merge csv for ID reconciliations with PG&E and QSI systems.
  */
 var utils = require('dsp_shared/lib/cmd_utils');
-require("sugar");
+const Sugar = require("sugar");
+Sugar.extend();
+
 var parse = require('csv-parse');
 var fs = require("fs");
 var assert = require("assert");

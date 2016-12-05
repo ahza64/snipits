@@ -7,7 +7,10 @@ const utils = require('dsp_shared/lib/cmd_utils');
 utils.connect(["meteor", "trans"]);
 
 const _ = require("underscore");
-require("sugar");
+const Sugar = require("sugar");
+Sugar.extend();
+
+
 
 
 // const Tree = require('dsp_shared/database/model/tree');

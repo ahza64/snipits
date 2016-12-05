@@ -23,8 +23,8 @@ const Export = require("dsp_shared/database/model/export");
 const WorkComplete = require("../work_complete/work_complete");
 const WorkCompleteGroup = require("../work_complete/work_complete_group");
 
-
-var export_dir = "vmd_export";
+var base_export_dir = "vmd_export";
+var export_dir = null;
 var current_workorder_ids = {};
 
 
@@ -116,10 +116,10 @@ function *run(startDate, endDate, includeExported, treeIds, exportName, email, w
     exportName = JSON.parse(JSON.stringify(new Date())).replace(/:/g, '.');  
   }
   if(exportName) {
-    if(!fs.existsSync(export_dir)){
-      fs.mkdir(export_dir);
+    if(!fs.existsSync(base_export_dir)){
+      fs.mkdir(base_export_dir);
     }    
-    export_dir = [export_dir, exportName].join('/');
+    export_dir = [base_export_dir, exportName].join('/');
     console.log("UPDATING EXPORT DIR", export_dir);
   }
   if(workComplete) {
@@ -375,3 +375,5 @@ if (require.main === module) {
   utils.bakerGen(run, { opts: 'params', default: true }); 
   baker.run();  
 }
+
+module.exports = {run: run};

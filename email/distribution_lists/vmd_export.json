@@ -1,0 +1,50 @@
+[
+	{
+		"name":  "Paula Conner",
+		"email": "PLMa@pge.com"
+	},
+	{
+		"name":  "Chinmoy Saha",
+		"email": "CPSG@pge.com"
+	},
+	{	
+		"name":  "VegMgmt User Support",
+		"email": "VegMgmtUserSupport@pge.com"
+	},
+	{
+		"name":  "Morley, Mike",
+		"email": "MDMk@pge.com"
+	},
+	{
+		"name":  "Zach Powers",
+		"email": "zpowers@quantumspatial.com"
+	},
+	{
+		"name":  "Ryan Carroll",
+		"email": "ryan@dispatchr.co"
+	},
+	{
+		"name":  "Natalie Kambak",
+		"email": "natalie@dispatchr.com"
+	},
+    {
+        "name":  "Gabriel Littman",
+        "email": "gabe@dispatchr.com"
+    },
+	{
+		"name":  "Raul Gonzalez",
+		"email": "raul@dispatchr.co"
+	},
+	{
+		"name":  "Anthony Gooran",
+		"email": "anthony@dispatchr.co"
+	},
+	{
+		"name":  "Joshua Hughes",
+		"email": "JTH8@pge.com"
+	},
+	{
+		"name":  "Stefani Smith", 
+		"email": "S2GV@pge.com"
+	}
+]

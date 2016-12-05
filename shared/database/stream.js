@@ -38,7 +38,7 @@ function *stream(Model, query, sort) {
   if(sort) {
     cursor = cursor.sort(sort);
   }
-  var _stream = cursor.cursor();
+  var _stream = cursor.stream();
   _stream.on('data', function(doc){
     this.pause();
     if(next_resolve) {

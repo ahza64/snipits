@@ -11,7 +11,9 @@ var fs = require("fs");
 var readFile = BPromise.promisify(fs.readFile);
 var writeFile = BPromise.promisify(fs.writeFile);
 
-require("sugar");
+const Sugar = require("sugar");
+Sugar.extend();
+
 var swig  = require('swig');
 var assert = require("assert");
 var _ = require("underscore");

@@ -8,6 +8,8 @@
  *     Exports are hard coded with sAcctType === M for mantainance 
  *         (Be aware that this will have to change if we export orchard trees)
  */
+const Sugar = require("sugar");
+Sugar.extend();
 
 const assert = require('assert');
 const TreeStates = require('tree-status-codes');
@@ -18,7 +20,7 @@ const root_node = "TreeWorkComp";
 const vmd = require("dsp_shared/lib/pge_vmd_codes");
 const JPGImage = require('../work_packet/jpg_file.js');
 
-require("sugar");
+
 const TIME_AND_MATERIALS_SWITCH_DATE = Date.create("Aug 1 2016 PST");
 console.log("TIME_AND_MATERIALS_SWITCH_DATE", TIME_AND_MATERIALS_SWITCH_DATE);
 

@@ -2,7 +2,9 @@
  * @description This creates export entries for QSI ingested trees.
  */
 var utils = require('dsp_shared/lib/cmd_utils');
-require("sugar");
+const Sugar = require("sugar");
+Sugar.extend();
+
 var streamCSV = require('dsp_shared/lib/stream_csv');
 var _ = require('underscore');
 utils.connect(["meteor"]);
