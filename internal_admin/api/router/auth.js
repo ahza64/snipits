@@ -5,7 +5,7 @@ const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 // Collection
-const Admins = require('dsp_shared/database/model/ingestion/tables').admins;
+const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 
 // App
 const app = koa();
@@ -31,7 +31,7 @@ passport.deserializeUser(function(user, done) {
 
 passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
   Admins.findOne({
-    where: { email: email }, 
+    where: { email: email },
     raw: true
   }).then(user => {
     var isAuthenticated = Admins.build(user).validPassword(password);
