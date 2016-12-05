@@ -90,7 +90,6 @@ router.get(
     try {
       users = [
         ...yield Users.findAll({
-          where: { deleted: false },
           include: [ { model: Companies, attributes: ['name'] } ]
         }),
         ...yield Admins.findAll({
