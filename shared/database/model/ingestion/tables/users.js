@@ -5,14 +5,12 @@ module.exports = function(sequelize, DataTypes) {
     name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING },
-    status: { type: DataTypes.STRING },
-    deleted: { type: DataTypes.BOOLEAN },
-    deletedAt: { type: DataTypes.TIME }
+    status: { type: DataTypes.STRING }
   }, {
     classMethods: {
       associate: function(models) {
         Users.belongsTo(models.companies);
-        Users.hasMany(models.histories);
+        Users.hasMany(models.ingestion_histories);
       }
     },
     instanceMethods: {
