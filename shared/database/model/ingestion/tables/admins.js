@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt-nodejs');
 
 module.exports = function(sequelize, DataTypes) {
-  var Admins = sequelize.define('admins', {
+  var Admins = sequelize.define('dispatchr_admins', {
     name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING },
@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Admins.belongsTo(models.companies);
-        Admins.hasMany(models.histories);
+        Admins.hasMany(models.ingestion_histories);
       }
     },
     instanceMethods: {

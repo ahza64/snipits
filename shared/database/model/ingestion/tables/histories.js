@@ -1,13 +1,16 @@
 module.exports = function(sequelize, DataTypes) {
-  var Histories = sequelize.define('histories', {
-    fileName: { type: DataTypes.STRING },
-    action: { type: DataTypes.STRING },
-    time: { type: DataTypes.DATE }
+  var Histories = sequelize.define('ingestion_histories', {
+    userName: { type: DataTypes.STRING },
+    adminName: { type: DataTypes.STRING },
+    action: { type: DataTypes.STRING }
   }, {
     classMethods: {
       associate: function(models) {
+        Histories.belongsTo(models.companies);
+        Histories.belongsTo(models.ingestion_configurations);
+        Histories.belongsTo(models.ingestion_files);
         Histories.belongsTo(models.users);
-        Histories.belongsTo(models.admins);
+        Histories.belongsTo(models.dispatchr_admins);
       }
     }
   });

@@ -5,9 +5,12 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Companies.hasMany(models.users);
-        Companies.hasMany(models.admins);
-        Companies.hasMany(models.ingestions);
-        Companies.hasMany(models.watchers);
+        Companies.hasMany(models.work_projects);
+        Companies.hasMany(models.dispatchr_admins);
+        Companies.hasMany(models.ingestion_configurations);
+        Companies.hasMany(models.ingestion_files);
+        Companies.hasMany(models.ingestion_watchers);
+        Companies.hasMany(models.ingestion_histories);
       }
     }
   });
