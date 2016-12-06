@@ -10,7 +10,7 @@ const app = koa();
 // Collection
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
 const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
-const Admins = require('dsp_shared/database/model/ingestion/tables').admins;
+const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 
 // Create a user
 router.post(
@@ -19,7 +19,7 @@ router.post(
     var body = this.request.body;
     var company = body.company;
 
-    company = yield Companies.findOne({ 
+    company = yield Companies.findOne({
       where: { name: company },
       raw: true
     });
@@ -90,7 +90,6 @@ router.get(
     try {
       users = [
         ...yield Users.findAll({
-          where: { deleted: false },
           include: [ { model: Companies, attributes: ['name'] } ]
         }),
         ...yield Admins.findAll({

@@ -6,9 +6,9 @@ const router = require('koa-router')();
 const app = koa();
 
 // Collection
-const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestions;
-const Admins = require('dsp_shared/database/model/ingestion/tables').admins;
-const Histories = require('dsp_shared/database/model/ingestion/tables').histories;
+const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestion_files;
+const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
+const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
 
 // Set ingestion notification
 router.put(
@@ -77,12 +77,12 @@ router.post(
       adminId: adminId
     };
     try {
-      yield Histories.create(obj);  
+      yield Histories.create(obj);
     } catch (e) {
       console.error(e);
       this.throw(500);
     }
-    
+
     this.throw(200);
   }
 );
