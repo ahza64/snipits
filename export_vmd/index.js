@@ -27,20 +27,8 @@ function *run(end_date, start_date) {
   console.log(start_date, end_date);
   yield validation.fixes();
 
-  // work packet export
-  var dir = export_dir(end_date, "wp");
-  yield extraction.run(start_date.toDate(), end_date.toDate(), false, undefined, path.basename(dir), undefined, false, false, true);
-  yield tar(end_date, 'wp');
-  yield upload(end_date, 'wp');
-  yield mark_exported.run(dir, end_date);
-
-
-  //work complete export
-  dir = export_dir(end_date, "wc");
-  yield extraction.run(start_date.toDate(), end_date.toDate(), false, undefined, path.basename(dir), undefined, true, false, true);
-  yield tar(end_date, 'wc');
-  yield upload(end_date, 'wc');
-  yield mark_exported.run(dir, end_date);
+  yield work_packet(start_date, end_date);
+  yield work_complete(start_date, end_date);
 
   //yield email(end_date); 
 }
@@ -58,6 +46,29 @@ function santitizeDate(date) {
     }
   }
   return moment(date).utcOffset("+0000");
+}
+
+function *work_packet(start_date, end_date) {
+  end_date = santitizeDate(end_date || 'last saturday');
+  start_date = santitizeDate(start_date || "2015-01-01T00:00:00.000Z");  
+  
+  var dir = export_dir(end_date, "wp");
+  yield extraction.run(start_date.toDate(), end_date.toDate(), false, undefined, path.basename(dir), undefined, false, false, true);
+  yield tar(end_date, 'wp');
+  yield upload(end_date, 'wp');
+  yield mark_exported.run(dir, end_date);
+}
+
+function *work_complete(start_date, end_date) {
+  end_date = santitizeDate(end_date || 'last saturday');
+  start_date = santitizeDate(start_date || "2015-01-01T00:00:00.000Z");  
+  
+  var dir = export_dir(end_date, "wc");
+  yield extraction.run(start_date.toDate(), end_date.toDate(), false, undefined, path.basename(dir), undefined, true, false, true);
+  yield tar(end_date, 'wc');
+  yield upload(end_date, 'wc');
+  yield mark_exported.run(dir, end_date);
+  
 }
 
 
@@ -154,5 +165,7 @@ if (require.main === module) {
   utils.bakerGen(unset);
   utils.bakerGen(upload);
   utils.bakerGen(email);
+  utils.bakerGen(work_packet);
+  utils.bakerGen(work_complete);    
   baker.run();  
 }
