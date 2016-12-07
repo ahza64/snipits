@@ -1,4 +1,4 @@
-/** 
+/**
  * @fileOverview api url
  */
 
@@ -14,6 +14,7 @@ const deleteFileUrl = base + '/delete';
 const fileHistoryUrl = base + '/history';
 const s3authUrl = base + '/s3auth';
 const companyUrl = base + '/company';
+const projectUrl = base + '/project';
 const userUrl = base + '/user';
 const usersUrl = base + '/users';
 const activateUserUrl = base + '/users/:id/activate';
@@ -29,6 +30,7 @@ export {
   fileHistoryUrl,
   s3authUrl,
   companyUrl,
+  projectUrl,
   userUrl,
   usersUrl,
   activateUserUrl,
