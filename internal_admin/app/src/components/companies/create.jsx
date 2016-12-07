@@ -11,7 +11,6 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 import { companyUrl } from '../../config';
 
-
 export default class CreateCompanyDialog extends React.Component {
   constructor() {
     super();
@@ -66,7 +65,7 @@ export default class CreateCompanyDialog extends React.Component {
   renderCircularProgress() {
     if (this.state.creating) {
       return(
-        <CircularProgress size={ 0.5 } thickness={ 0.2 } hidden={ true } />
+        <CircularProgress size={ 0.5 } hidden={ true } />
       );
     } else {
       return;

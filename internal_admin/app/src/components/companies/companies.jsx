@@ -2,6 +2,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 import * as request from 'superagent';
+const moment = require('moment');
 
 // Components
 import DefaultNavbar from '../navbar/defaultNavbar';
@@ -96,23 +97,6 @@ export default class Companies extends React.Component {
     this.fetchCompanies();
   }
 
-  reformatDate(dateStr) {
-    var formated='-';
-    try {
-      var date=new Date(dateStr);
-      var mm = date.getMonth() + 1; // getMonth() is zero-based
-      var dd = date.getDate();
-      formated = [
-        date.getFullYear(),
-        (mm>9 ? '' : '0') + mm,
-        (dd>9 ? '' : '0') + dd
-      ].join('/');
-    } catch (err) {
-      console.err(err);
-    }
-    return formated;
-  }
-
   handleCloseActionMenu() {
     this.setState({
       actionMenuOpen: false,
@@ -187,7 +171,7 @@ export default class Companies extends React.Component {
                         <TableRow key={ idx }>
                           <TableRowColumn>{ idx + 1 }</TableRowColumn>
                           <TableRowColumn>{ company.name }</TableRowColumn>
-                          <TableRowColumn>{ this.reformatDate(company.createdAt) }</TableRowColumn>
+                          <TableRowColumn>{ moment(company.createdAt).format('YYYY/MM/DD') }</TableRowColumn>
                           <TableRowColumn>
                             <FlatButton
                               label="Action Menu"
