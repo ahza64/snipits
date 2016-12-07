@@ -1,21 +1,21 @@
-[Home](index.html)
+[Home](index.md)
 ------------------
 
 ### Classes
 
--   [BackboneClient](BackboneClient.html)
-    -   [connect](BackboneClient.html#connect)
-    -   [disconnect](BackboneClient.html#disconnect)
-    -   [getEndpoint](BackboneClient.html#getEndpoint)
-    -   [send](BackboneClient.html#send)
--   [BackboneClientMessage](BackboneClientMessage.html)
-    -   [getReply](BackboneClientMessage.html#getReply)
-    -   [parseReply](BackboneClientMessage.html#parseReply)
-    -   [parseResponse](BackboneClientMessage.html#parseResponse)
-    -   [serialize](BackboneClientMessage.html#serialize)
--   [BackboneService](BackboneService.html)
-    -   [connect](BackboneService.html#connect)
--   [CmdService](CmdService.html)
+-   [BackboneClient](BackboneClient.md)
+    -   [connect](BackboneClient.md#connect)
+    -   [disconnect](BackboneClient.md#disconnect)
+    -   [getEndpoint](BackboneClient.md#getEndpoint)
+    -   [send](BackboneClient.md#send)
+-   [BackboneClientMessage](BackboneClientMessage.md)
+    -   [getReply](BackboneClientMessage.md#getReply)
+    -   [parseReply](BackboneClientMessage.md#parseReply)
+    -   [parseResponse](BackboneClientMessage.md#parseResponse)
+    -   [serialize](BackboneClientMessage.md#serialize)
+-   [BackboneService](BackboneService.md)
+    -   [connect](BackboneService.md#connect)
+-   [CmdService](CmdService.md)
 
 docs/scripts/fulltext-search-ui.js
 ==================================
@@ -39,7 +39,7 @@ window.SearcherDisplay = (function($) {
                    body = $("body"),
                    self = this;
 
-            quickSearch.attr("src", "quicksearch.html");
+            quickSearch.attr("src", "quicksearch.md");
             quickSearch.css("width", "0px");
             quickSearch.css("height", "0px");
 

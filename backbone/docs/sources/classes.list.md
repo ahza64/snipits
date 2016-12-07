@@ -1,11 +1,11 @@
-<a href="index.html" class="navbar-brand">Dispatchr Backbone</a>
+<a href="index.md" class="navbar-brand">Dispatchr Backbone</a>
 <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 
--   <a href="classes.list.html" class="dropdown-toggle">Classes<strong></strong></a>
-    -   [BackboneClient](BackboneClient.html)
-    -   [BackboneClientMessage](BackboneClientMessage.html)
-    -   [BackboneService](BackboneService.html)
-    -   [CmdService](CmdService.html)
+-   <a href="classes.list.md" class="dropdown-toggle">Classes<strong></strong></a>
+    -   [BackboneClient](BackboneClient.md)
+    -   [BackboneClientMessage](BackboneClientMessage.md)
+    -   [BackboneService](BackboneService.md)
+    -   [CmdService](CmdService.md)
 
 **
 
@@ -14,13 +14,13 @@ Classes
 
 ### Classes
 
-[BackboneClient](BackboneClient.html)  
+[BackboneClient](BackboneClient.md)  
 
-[BackboneClientMessage](BackboneClientMessage.html)  
+[BackboneClientMessage](BackboneClientMessage.md)  
 
-[BackboneService](BackboneService.html)  
+[BackboneService](BackboneService.md)  
 
-[CmdService](CmdService.html)  
+[CmdService](CmdService.md)  
 
 <span aria-hidden="true">×</span>
 #### Search results

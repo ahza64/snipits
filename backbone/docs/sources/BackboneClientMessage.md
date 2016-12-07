@@ -1,21 +1,21 @@
-[Home](index.html)
+[Home](index.md)
 ------------------
 
 ### Classes
 
--   [BackboneClient](BackboneClient.html)
-    -   [connect](BackboneClient.html#connect)
-    -   [disconnect](BackboneClient.html#disconnect)
-    -   [getEndpoint](BackboneClient.html#getEndpoint)
-    -   [send](BackboneClient.html#send)
--   [BackboneClientMessage](BackboneClientMessage.html)
-    -   [getReply](BackboneClientMessage.html#getReply)
-    -   [parseReply](BackboneClientMessage.html#parseReply)
-    -   [parseResponse](BackboneClientMessage.html#parseResponse)
-    -   [serialize](BackboneClientMessage.html#serialize)
--   [BackboneService](BackboneService.html)
-    -   [connect](BackboneService.html#connect)
--   [CmdService](CmdService.html)
+-   [BackboneClient](BackboneClient.md)
+    -   [connect](BackboneClient.md#connect)
+    -   [disconnect](BackboneClient.md#disconnect)
+    -   [getEndpoint](BackboneClient.md#getEndpoint)
+    -   [send](BackboneClient.md#send)
+-   [BackboneClientMessage](BackboneClientMessage.md)
+    -   [getReply](BackboneClientMessage.md#getReply)
+    -   [parseReply](BackboneClientMessage.md#parseReply)
+    -   [parseResponse](BackboneClientMessage.md#parseResponse)
+    -   [serialize](BackboneClientMessage.md#serialize)
+-   [BackboneService](BackboneService.md)
+    -   [connect](BackboneService.md#connect)
+-   [CmdService](CmdService.md)
 
 BackboneClientMessage
 =====================
@@ -33,7 +33,7 @@ BackboneClientMessage
 | `message` | <span class="param-type">String</span> | <span class="param-type">Array</span> | message to be serialized |
 
 Source:  
--   [client/mdc\_protocol.js](client_mdc_protocol.js.html), [line 10](client_mdc_protocol.js.html#line10)
+-   [client/mdc\_protocol.js](client_mdc_protocol.js.md), [line 10](client_mdc_protocol.js.md#line10)
 
 ### Methods
 
@@ -42,7 +42,7 @@ Source:
 get the reply message
 
 Source:  
--   [client/mdc\_protocol.js](client_mdc_protocol.js.html), [line 76](client_mdc_protocol.js.html#line76)
+-   [client/mdc\_protocol.js](client_mdc_protocol.js.md), [line 76](client_mdc_protocol.js.md#line76)
 
 ##### Returns:
 
@@ -101,7 +101,7 @@ Parses reply to this message
 </table>
 
 Source:  
--   [client/mdc\_protocol.js](client_mdc_protocol.js.html), [line 38](client_mdc_protocol.js.html#line38)
+-   [client/mdc\_protocol.js](client_mdc_protocol.js.md), [line 38](client_mdc_protocol.js.md#line38)
 
 ##### Returns:
 
@@ -115,14 +115,14 @@ reply message with protocol info stripped out
 alias to parseReply
 
 Source:  
--   [client/mdc\_protocol.js](client_mdc_protocol.js.html), [line 66](client_mdc_protocol.js.html#line66)
+-   [client/mdc\_protocol.js](client_mdc_protocol.js.md), [line 66](client_mdc_protocol.js.md#line66)
 
 #### <span class="type-signature"></span>serialize<span class="signature">()</span><span class="type-signature"> → {Array}</span>
 
 serializes the message to be sent to the Major Domo Broker
 
 Source:  
--   [client/mdc\_protocol.js](client_mdc_protocol.js.html), [line 22](client_mdc_protocol.js.html#line22)
+-   [client/mdc\_protocol.js](client_mdc_protocol.js.md), [line 22](client_mdc_protocol.js.md#line22)
 
 ##### Returns:
 

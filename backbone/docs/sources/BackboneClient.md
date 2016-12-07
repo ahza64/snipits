@@ -1,21 +1,21 @@
-[Home](index.html)
+[Home](index.md)
 ------------------
 
 ### Classes
 
--   [BackboneClient](BackboneClient.html)
-    -   [connect](BackboneClient.html#connect)
-    -   [disconnect](BackboneClient.html#disconnect)
-    -   [getEndpoint](BackboneClient.html#getEndpoint)
-    -   [send](BackboneClient.html#send)
--   [BackboneClientMessage](BackboneClientMessage.html)
-    -   [getReply](BackboneClientMessage.html#getReply)
-    -   [parseReply](BackboneClientMessage.html#parseReply)
-    -   [parseResponse](BackboneClientMessage.html#parseResponse)
-    -   [serialize](BackboneClientMessage.html#serialize)
--   [BackboneService](BackboneService.html)
-    -   [connect](BackboneService.html#connect)
--   [CmdService](CmdService.html)
+-   [BackboneClient](BackboneClient.md)
+    -   [connect](BackboneClient.md#connect)
+    -   [disconnect](BackboneClient.md#disconnect)
+    -   [getEndpoint](BackboneClient.md#getEndpoint)
+    -   [send](BackboneClient.md#send)
+-   [BackboneClientMessage](BackboneClientMessage.md)
+    -   [getReply](BackboneClientMessage.md#getReply)
+    -   [parseReply](BackboneClientMessage.md#parseReply)
+    -   [parseResponse](BackboneClientMessage.md#parseResponse)
+    -   [serialize](BackboneClientMessage.md#serialize)
+-   [BackboneService](BackboneService.md)
+    -   [connect](BackboneService.md#connect)
+-   [CmdService](CmdService.md)
 
 BackboneClient
 ==============
@@ -35,7 +35,7 @@ test readme
 | `port` | <span class="param-type">String</span> | port to connect to backbone |
 
 Source:  
--   [client/client.js](client_client.js.html), [line 19](client_client.js.html#line19)
+-   [client/client.js](client_client.js.md), [line 19](client_client.js.md#line19)
 
 ### Methods
 
@@ -44,21 +44,21 @@ Source:
 Connect to the BackboneClient.
 
 Source:  
--   [client/client.js](client_client.js.html), [line 39](client_client.js.html#line39)
+-   [client/client.js](client_client.js.md), [line 39](client_client.js.md#line39)
 
 #### <span class="type-signature"></span>disconnect<span class="signature">()</span><span class="type-signature"></span>
 
 Disconnect this conection to the BackboneClient.
 
 Source:  
--   [client/client.js](client_client.js.html), [line 52](client_client.js.html#line52)
+-   [client/client.js](client_client.js.md), [line 52](client_client.js.md#line52)
 
 #### <span class="type-signature"></span>getEndpoint<span class="signature">()</span><span class="type-signature"> → {String}</span>
 
 get endpoint url
 
 Source:  
--   [client/client.js](client_client.js.html), [line 25](client_client.js.html#line25)
+-   [client/client.js](client_client.js.md), [line 25](client_client.js.md#line25)
 
 ##### Returns:
 
@@ -78,7 +78,7 @@ The url of the endpoint
 | `timeout` | <span class="param-type">Number</span>                                         | amount of time in milliseconds to wait for response before giving up |
 
 Source:  
--   [client/client.js](client_client.js.html), [line 69](client_client.js.html#line69)
+-   [client/client.js](client_client.js.md), [line 69](client_client.js.md#line69)
 
 ##### Returns:
 
