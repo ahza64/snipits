@@ -48,7 +48,6 @@ export default class DefaultNavbar extends React.Component {
   }
 
   goToCompanies() {
-    console.log(urlPrefix + 'companies/');
     browserHistory.push(urlPrefix + 'companies/');
   }
 

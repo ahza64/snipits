@@ -7,6 +7,7 @@ const moment = require('moment');
 // Components
 import DefaultNavbar from '../navbar/defaultNavbar';
 import CreateCompanyDialog from './create';
+import CreateProjectDialog from './createProject';
 import { companyUrl } from '../../config';
 
 // Styles
@@ -30,8 +31,11 @@ export default class Companies extends React.Component {
 
     this.state = {
       companies: [],
+      companyId: null,
+      companyName: null,
       search: '',
-      dialog: false,
+      showAddCompanyDialog: false,
+      showAddProjectDialog: false,
       actionMenuOpen: false
     };
 
@@ -39,6 +43,9 @@ export default class Companies extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.isMatchSearchRegex = this.isMatchSearchRegex.bind(this);
     this.handleCloseActionMenu = this.handleCloseActionMenu.bind(this);
+    this.handleAddProjectDialogClose = this.handleAddProjectDialogClose.bind(this);
+    this.handleAddCompanyDialogClose = this.handleAddCompanyDialogClose.bind(this);
+    this.handleAddProject = this.handleAddProject.bind(this);
   }
 
   componentWillMount() {
@@ -79,27 +86,29 @@ export default class Companies extends React.Component {
 
   handleAddCompanyClick(event) {
     this.setState({
-      dialog: true
+      showAddCompanyDialog: true
     });
   }
 
-  handleDialogCancel() {
+  handleAddCompanyDialogClose(saved) {
     this.setState({
-      dialog: false
+      showAddCompanyDialog: false
     });
-  }
-
-  handleDialogSubmit(companyName) {
-    console.log(companyName);
-    this.setState({
-      dialog: false
-    });
-    this.fetchCompanies();
+    if (saved) {
+      this.fetchCompanies();
+    }
   }
 
   handleCloseActionMenu() {
     this.setState({
       actionMenuOpen: false,
+    });
+  }
+
+  handleAddProject() {
+    this.setState({
+      actionMenuOpen: false,
+      showAddProjectDialog: true
     });
   }
 
@@ -110,10 +119,10 @@ export default class Companies extends React.Component {
           anchorEl={ this.state.actionMenuTarget }
           anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
           targetOrigin={ { horizontal: 'right', vertical: 'top' } }
-          onRequestClose={ this.handleCloseActionMenu }
-        >
+          onRequestClose={ this.handleCloseActionMenu } >
           <Menu>
-            <MenuItem value="1" primaryText="Add Work Project" />
+            <MenuItem value="1" primaryText="Add Work Project"
+              onClick={ this.handleAddProject } />
             <MenuItem value="2" primaryText="Add Customer User" />
             <MenuItem value="3" primaryText="Add Ingestor" />
           </Menu>
@@ -121,11 +130,19 @@ export default class Companies extends React.Component {
     );
   }
 
-  handleActionMenu(event) {
+  handleActionMenu(event, company) {
     event.preventDefault();
     this.setState({
       actionMenuOpen: true,
       actionMenuTarget: event.currentTarget,
+      companyId: company.id,
+      companyName: company.name
+    });
+  }
+
+  handleAddProjectDialogClose(save) {
+    this.setState({
+      showAddProjectDialog: false
     });
   }
 
@@ -144,9 +161,11 @@ export default class Companies extends React.Component {
             <Row>
               <RaisedButton label='Add company' primary={ true }
                 onClick={ (event) => this.handleAddCompanyClick(event) }/>
-              <CreateCompanyDialog open={ this.state.dialog }
-                onCancel={ (event) => this.handleDialogCancel(event) }
-                onSubmit={ (name) => this.handleDialogSubmit(name) } />
+              <CreateCompanyDialog open={ this.state.showAddCompanyDialog }
+                onClose={ (saved) => this.handleAddCompanyDialogClose(saved) } />
+              <CreateProjectDialog open={ this.state.showAddProjectDialog }
+                companyId={ this.state.companyId } companyName={ this.state.companyName }
+                onClose={ (saved) => this.handleAddProjectDialogClose(saved) } />
               <TextField
                   hintText='Search companies ... '
                   fullWidth={ true }
@@ -178,7 +197,7 @@ export default class Companies extends React.Component {
                               labelPosition="before"
                               secondary={true}
                               icon={ <MoreVertIcon /> }
-                              onTouchTap={ event => this.handleActionMenu(event) }
+                              onTouchTap={ event => this.handleActionMenu(event, company) }
                             />
                           </TableRowColumn>
                         </TableRow>

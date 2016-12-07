@@ -9,14 +9,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import { companyUrl } from '../../config';
+import { projectUrl } from '../../config';
 
-export default class CreateCompanyDialog extends React.Component {
+export default class CreateProjectDialog extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      companyName: '',
+      projectName: '',
       creating: false
     };
 
@@ -29,7 +29,7 @@ export default class CreateCompanyDialog extends React.Component {
       this.props.value = name;
     }
     this.setState({
-      companyName: name
+      projectName: name
     });
   }
 
@@ -37,7 +37,7 @@ export default class CreateCompanyDialog extends React.Component {
     if (this.state.creating) {
       return true;
     } else {
-      var name = this.state.companyName;
+      var name = this.state.projectName;
       return !((name) && (name.length>0));
     }
   }
@@ -46,11 +46,14 @@ export default class CreateCompanyDialog extends React.Component {
     this.setState({
       creating: true
     });
-    var newCompany = { name: this.state.companyName };
+    var newProject = {
+      name: this.state.projectName,
+      companyId: this.props.companyId
+    };
 
     request
-    .post(companyUrl)
-    .send(newCompany)
+    .post(projectUrl)
+    .send(newProject)
     .withCredentials()
     .end(err => {
       this.setState({
@@ -91,14 +94,15 @@ export default class CreateCompanyDialog extends React.Component {
 
     return (
         <Dialog
-          title="Add Company"
+          title="Add Work Project"
           actions={ actions }
           modal={ true }
           open={ this.props.open } >
+          <div>For company: { this.props.companyName }</div>
           <TextField
-            value={ this.state.companyName }
-            hintText="Enter New Company Name"
-            floatingLabelText="Company Name"
+            value={ this.state.projectName }
+            hintText="Enter New Work Project Name"
+            floatingLabelText="Work Project Name"
             onChange={ (event) => this.handleCompanyNameChanged(event) } />
           { this.renderCircularProgress() }
         </Dialog>
