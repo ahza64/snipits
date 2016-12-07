@@ -42,7 +42,7 @@ function *run(end_date, start_date) {
   yield upload(end_date, 'wc');
   yield mark_exported.run(dir, end_date);
 
-  yield email(end_date); 
+  //yield email(end_date); 
 }
 
 function santitizeDate(date) {
@@ -104,8 +104,8 @@ function *email(date) {
   }
   
   var email_info = {
-    start_date: moment(date.toDate().rewind('1 week')).format("M/D"),//moment format
     end_date: date.format("M/D"), //moment format
+    start_date: moment(date.toDate().rewind('1 week')).format("M/D"),//moment format
     files: files
   };
   
