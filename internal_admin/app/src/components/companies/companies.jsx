@@ -7,7 +7,7 @@ const moment = require('moment');
 // Components
 import DefaultNavbar from '../navbar/defaultNavbar';
 import CreateCompanyDialog from './create';
-import CreateProjectDialog from './createProject';
+import CreateProjectDialog from '../projects/dialogs/create';
 import { companyUrl } from '../../config';
 
 // Styles

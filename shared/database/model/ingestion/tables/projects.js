@@ -1,6 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
   var Projects = sequelize.define('work_projects', {
-    name: { type: DataTypes.STRING }
+    name: { type: DataTypes.STRING },
+    status: { type: DataTypes.STRING }
   }, {
     classMethods: {
       associate: function(models) {

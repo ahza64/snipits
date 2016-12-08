@@ -22,6 +22,8 @@ export default class DefaultNavbar extends React.Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.goToCompanies = this.goToCompanies.bind(this);
     this.showCompanies = this.showCompanies.bind(this);
+    this.goToProjects = this.goToProjects.bind(this);
+    this.showProjects = this.showProjects.bind(this);
     this.goToIngest = this.goToIngest.bind(this);
     this.goToCreate = this.goToCreate.bind(this);
     this.showCreate = this.showCreate.bind(this);
@@ -53,7 +55,17 @@ export default class DefaultNavbar extends React.Component {
 
   showCompanies() {
     if (authRedux.getState().role === 'DA') {
-      return (<MenuItem eventKey={1.3} onClick={ this.goToCompanies }>Companies</MenuItem>);
+      return (<MenuItem eventKey={1.4} onClick={ this.goToCompanies }>Companies</MenuItem>);
+    }
+  }
+
+  goToProjects() {
+    browserHistory.push(urlPrefix + 'projects/');
+  }
+
+  showProjects() {
+    if (authRedux.getState().role === 'DA') {
+      return (<MenuItem eventKey={1.5} onClick={ this.goToProjects }>Work Projects</MenuItem>);
     }
   }
 
@@ -102,6 +114,7 @@ export default class DefaultNavbar extends React.Component {
           <Nav pullRight>
             <NavDropdown eventKey={1} title='Menu' id='basic-nav-dropdown'>
               { this.showCompanies() }
+              { this.showProjects() }
               { this.showIngest() }
               { this.showCreate() }
               { this.showUsers() }

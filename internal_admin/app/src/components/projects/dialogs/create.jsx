@@ -9,7 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import { projectUrl } from '../../config';
+import { projectUrl } from '../../../config';
 
 export default class CreateProjectDialog extends React.Component {
   constructor() {
@@ -23,7 +23,7 @@ export default class CreateProjectDialog extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleCompanyNameChanged(event) {
+  handleProjectNameChanged(event) {
     var name = event.target.value;
     if (this.props.value) {
       this.props.value = name;
@@ -103,7 +103,7 @@ export default class CreateProjectDialog extends React.Component {
             value={ this.state.projectName }
             hintText="Enter New Work Project Name"
             floatingLabelText="Work Project Name"
-            onChange={ (event) => this.handleCompanyNameChanged(event) } />
+            onChange={ (event) => this.handleProjectNameChanged(event) } />
           { this.renderCircularProgress() }
         </Dialog>
     );
