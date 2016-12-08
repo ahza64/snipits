@@ -14,7 +14,11 @@ const deleteFileUrl = base + '/delete';
 const fileHistoryUrl = base + '/history';
 const s3authUrl = base + '/s3auth';
 const companyUrl = base + '/company';
+const projectsUrl = base + '/projects/:companyId';
 const projectUrl = base + '/project';
+const deleteProjectUrl = base + '/project/:id';
+const activateProjectUrl = base + '/project/:id/activate';
+const deactivateProjectUrl = base + '/project/:id/deactivate';
 const userUrl = base + '/user';
 const usersUrl = base + '/users';
 const activateUserUrl = base + '/users/:id/activate';
@@ -30,7 +34,11 @@ export {
   fileHistoryUrl,
   s3authUrl,
   companyUrl,
+  projectsUrl,
   projectUrl,
+  deleteProjectUrl,
+  activateProjectUrl,
+  deactivateProjectUrl,
   userUrl,
   usersUrl,
   activateUserUrl,
