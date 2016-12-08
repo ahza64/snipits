@@ -52,7 +52,7 @@ export default class IngestList extends IngestLib {
   isMatchSearchRegex(ingestion) {
     var search = this.state.search;
     var regexp = new RegExp(search, 'i');
-    return ingestion.fileName.match(regexp);
+    return ingestion.customerFileName.match(regexp);
   }
 
   render() {
@@ -96,7 +96,7 @@ export default class IngestList extends IngestLib {
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn>{ idx }</TableRowColumn>
-                      <TableRowColumn>{ ingestion.fileName }</TableRowColumn>
+                      <TableRowColumn>{ ingestion.customerFileName }</TableRowColumn>
                       <TableRowColumn>{ ingestion.updatedAt }</TableRowColumn>
                       <TableRowColumn>{ this.getIngestionStatus(ingestion.ingested) }</TableRowColumn>
                       <TableRowColumn>
