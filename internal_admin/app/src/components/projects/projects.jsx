@@ -23,6 +23,7 @@ import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Toggle from 'material-ui/Toggle';
+import Badge from 'material-ui/Badge';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 export default class Projects extends React.Component {
@@ -32,6 +33,8 @@ export default class Projects extends React.Component {
     this.state = {
       companies: [],
       projects: [],
+      projectsFiltered: [],
+      projectsTotal: 0,
       companyId: null,
       companyName: null,
       search: '',
@@ -42,7 +45,6 @@ export default class Projects extends React.Component {
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
-    this.isMatchSearchRegex = this.isMatchSearchRegex.bind(this);
     this.handleCloseActionMenu = this.handleCloseActionMenu.bind(this);
     this.handleAddProjectDialogClose = this.handleAddProjectDialogClose.bind(this);
     this.handleAddCompanyDialogClose = this.handleAddCompanyDialogClose.bind(this);
@@ -85,23 +87,28 @@ export default class Projects extends React.Component {
         if (err) {
           console.error(err);
         } else {
-          this.setState({ projects: res.body });
+          this.setState({
+            projects: res.body,
+            projectsTotal: res.body.length
+          });
+          this.handleSearch(null, this.state.search);
         }
       });
     }
   }
 
   handleSearch(event, value) {
-    this.setState({ search: value });
-  }
+    var regexp = new RegExp(value, 'i');
+    var projects = this.state.projects;
+    projects = projects.filter(p => {
+      return (!value) || (p.name.match(regexp));
+    });
 
-  isMatchSearchRegex(projectName) {
-    var search = this.state.search;
-    if (!search) {
-      return true;
-    }
-    var regexp = new RegExp(search, 'i');
-    return projectName.match(regexp);
+    this.setState({
+      search: value,
+      projectsFiltered: projects,
+      projectsTotal: projects.length
+     });
   }
 
   handleOpenActionMenu(event) {
@@ -251,11 +258,6 @@ export default class Projects extends React.Component {
   }
 
   render() {
-    var projects = this.state.projects;
-    projects = projects.filter(p => {
-      return this.isMatchSearchRegex(p.name);
-    });
-
     return (
       <div>
         <CreateProjectDialog open={ this.state.showAddProjectDialog }
@@ -277,6 +279,11 @@ export default class Projects extends React.Component {
                 value={ this.state.search }
                 onChange={ this.handleSearch }
               />
+            Total Work Projects Found
+            <Badge
+              badgeContent={ this.state.projectsTotal }
+              secondary={ true }
+            />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>
@@ -292,7 +299,7 @@ export default class Projects extends React.Component {
                 </TableHeader>
                 <TableBody displayRowCheckbox={ false } selectable={ false }>
                   {
-                    projects.map((project, idx) => {
+                    this.state.projectsFiltered.map((project, idx) => {
                       return (
                         <TableRow key={ idx }>
                           <TableRowColumn>{ idx + 1 }</TableRowColumn>
