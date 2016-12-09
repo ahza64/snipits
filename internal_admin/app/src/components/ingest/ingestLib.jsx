@@ -12,6 +12,7 @@ export default class IngestLib extends React.Component {
 
     this.getIngestions = this.getIngestions.bind(this);
     this.setIngested = this.setIngested.bind(this);
+		this.setField = this.setField.bind(this);
     this.createIngestedHistory = this.createIngestedHistory.bind(this);
   }
 
@@ -31,21 +32,29 @@ export default class IngestLib extends React.Component {
     }
   }
 
-  setIngested(ingestionId, callback) {
-    request
-    .put(ingestionUrl)
-    .withCredentials()
-    .send({
-      ingestionId: ingestionId
-    })
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        callback();
-      }
-    });
-  }
+	setField(data, callback) {
+		request
+		.put(ingestionUrl)
+		.withCredentials()
+		.send(data)
+		.end(err => {
+			if (err) {
+				console.error(err);
+			} else {
+				callback(data);
+			}
+		});
+	}
+
+	setDescription(ingestionId, text, callback) {
+		var data = { ingestionId: ingestionId, description: text };
+		this.setField(data, callback);
+	}
+
+  setIngested(ingestionId, ingested, callback) {
+		var data = { ingestionId: ingestionId, ingested:ingested };	
+		this.setField(data, callback);
+	}
 
   createIngestedHistory(fileName) {
     var email = authRedux.getState().email;

@@ -22,6 +22,7 @@ export default class ActionMenu extends IngestLib {
     this.state = { ingestion: {} };
 
     this.handleSetIngested = this.handleSetIngested.bind(this);
+    this.handleUnSetIngested = this.handleUnSetIngested.bind(this);
     this.updateIngestionStatus = this.updateIngestionStatus.bind(this);
   }
 
@@ -33,17 +34,23 @@ export default class ActionMenu extends IngestLib {
     this.setState({ ingestion: nextProps.ingestion });
   }
 
-  updateIngestionStatus() {
+  updateIngestionStatus(data) {
     var idx = this.props.idx;
     var ingestionList = this.props.ingestions;
-    ingestionList[idx].ingested = true;
+
+    ingestionList[idx].ingested = data.ingested;
     this.props.resetIngestionList(ingestionList);
-    this.createIngestedHistory(this.state.ingestion.fileName);
+    this.createIngestedHistory(this.state.ingestion.customerFileName);
   }
 
   handleSetIngested() {
-    this.setIngested(this.state.ingestion.id, this.updateIngestionStatus);
+    this.setIngested(this.state.ingestion.id, true, this.updateIngestionStatus);
   }
+
+  handleUnSetIngested() {
+    this.setIngested(this.state.ingestion.id, false, this.updateIngestionStatus);
+  }
+
 
   render() {
     return (
@@ -55,8 +62,12 @@ export default class ActionMenu extends IngestLib {
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
         >
           <MenuItem
-            primaryText='Set as ingested'
+            primaryText='Set ingestion'
             onClick={ this.handleSetIngested }
+          />
+          <MenuItem
+            primaryText='Unset ingestion'
+            onClick={ this.handleUnSetIngested }
           />
         </IconMenu>
       </div>
