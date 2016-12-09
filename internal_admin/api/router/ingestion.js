@@ -20,7 +20,6 @@ router.put(
     var body = this.request.body;
 		var ingestionId = body.ingestionId;
 		delete body.ingestionId;
-		console.log(body)
 
     try {
       yield Ingestions.update(body,
