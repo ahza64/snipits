@@ -9,6 +9,7 @@ import { ingestionUrl } from '../../config';
 import authRedux from '../../reduxes/auth';
 import IngestLib from './ingestLib';
 import ActionMenu from './actionMenu';
+import InlineEdit from 'react-edit-inline';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -27,9 +28,14 @@ export default class IngestList extends IngestLib {
 
     this.getIngestionStatus = this.getIngestionStatus.bind(this);
     this.resetIngestionList = this.resetIngestionList.bind(this);
+		this.dataChanged = this.dataChanged.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.isMatchSearchRegex = this.isMatchSearchRegex.bind(this);
   }
+
+	dataChanged(id, text) {
+		this.setDescription(id, text, ()=>{});
+	}
 
   componentWillMount() {
     this.getIngestions((res) => {
@@ -84,7 +90,9 @@ export default class IngestList extends IngestLib {
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
                 <TableHeaderColumn>ID</TableHeaderColumn>
-                <TableHeaderColumn>File</TableHeaderColumn>
+                <TableHeaderColumn>File Name</TableHeaderColumn>
+                <TableHeaderColumn>System File Name</TableHeaderColumn>
+                <TableHeaderColumn>Description</TableHeaderColumn>
                 <TableHeaderColumn>Last Modified Time</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Action</TableHeaderColumn>
@@ -97,6 +105,26 @@ export default class IngestList extends IngestLib {
                     <TableRow key={ idx }>
                       <TableRowColumn>{ idx }</TableRowColumn>
                       <TableRowColumn>{ ingestion.customerFileName }</TableRowColumn>
+                      <TableRowColumn>{ ingestion.s3FileName }</TableRowColumn>
+                      <TableRowColumn>
+												<InlineEdit
+												activeClassName="editing"
+												change={ (data) => { this.dataChanged(ingestion.id, data.description )} }												
+												ingestion={ingestion}
+												text={ingestion.description}
+												paramName="description"
+												style={{
+													backgroundColor: 'yellow',
+													minWidth: 150,
+													display: 'inline-block',
+													margin: 0,
+													padding: 0,
+													fontSize: 15,
+													outline: 0,
+													border: 0
+												}}
+												/>
+                      </TableRowColumn>
                       <TableRowColumn>{ ingestion.updatedAt }</TableRowColumn>
                       <TableRowColumn>{ this.getIngestionStatus(ingestion.ingested) }</TableRowColumn>
                       <TableRowColumn>

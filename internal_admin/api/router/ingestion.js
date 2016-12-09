@@ -18,13 +18,15 @@ router.put(
   '/ingestions',
   function*() {
     var body = this.request.body;
+		var ingestionId = body.ingestionId;
+		delete body.ingestionId;
+		console.log(body)
 
     try {
-      yield Ingestions.update(
-        { ingested: true },
+      yield Ingestions.update(body,
         {
-          fields: ['ingested'],
-          where: { id: body.ingestionId }
+          fields: ['ingested', 'description'],
+          where: { id: ingestionId }
         }
       );
     } catch(e) {

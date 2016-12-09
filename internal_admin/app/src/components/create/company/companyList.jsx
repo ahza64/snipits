@@ -5,10 +5,10 @@ import React, {Component, PropTypes} from 'react';
 import userCreateRedux from '../../../reduxes/userCreation';
 
 // Styles
-import {List, ListItem, MakeSelectable} from 'material-ui/List';
+import {List, ListItem, makeSelectable} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 
-let SelectableList = MakeSelectable(List);
+let SelectableList = makeSelectable(List);
 
 export default class CompanyList extends React.Component {
   constructor() {
