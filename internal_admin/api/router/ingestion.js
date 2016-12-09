@@ -7,6 +7,9 @@ const app = koa();
 
 // Collection
 const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestion_files;
+const Company = require('dsp_shared/database/model/ingestion/tables').companies;
+const WorkProjects = require('dsp_shared/database/model/ingestion/tables').work_projects;
+const IngestionConfigurations = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
 const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
 
@@ -45,7 +48,7 @@ router.get(
     try {
       var ingestions = yield Ingestions.findAll({
         where: { companyId: companyId },
-        raw: true
+        include: [ Company, { model: IngestionConfigurations, include: [WorkProjects]}]
       });
     } catch(e) {
       console.error(e);
