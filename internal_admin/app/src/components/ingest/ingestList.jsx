@@ -28,14 +28,22 @@ export default class IngestList extends IngestLib {
 
     this.getIngestionStatus = this.getIngestionStatus.bind(this);
     this.resetIngestionList = this.resetIngestionList.bind(this);
-		this.dataChanged = this.dataChanged.bind(this);
+    this.dataChanged = this.dataChanged.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.isMatchSearchRegex = this.isMatchSearchRegex.bind(this);
   }
 
-	dataChanged(id, text) {
-		this.setDescription(id, text, ()=>{});
-	}
+  dataChanged(id, text) {
+    this.setDescription(id, text, ()=> {
+      var ingestions = this.state.ingestions.map(ing => {
+        if(ing.id === id) {
+          ing.description = text;
+        }
+        return ing;
+      });
+      this.setState({ ingestions: ingestions });
+    });
+  }
 
   componentWillMount() {
     this.getIngestions((res) => {
@@ -109,7 +117,7 @@ export default class IngestList extends IngestLib {
                       <TableRowColumn>
 												<InlineEdit
 												activeClassName="editing"
-												change={ (data) => { this.dataChanged(ingestion.id, data.description )} }												
+												change={ (data) => { this.dataChanged(ingestion.id, data.description )} }
 												ingestion={ingestion}
 												text={ingestion.description}
 												paramName="description"
