@@ -13,7 +13,7 @@ const INACTIVE = 'inactive';
 // Collection
 const Configs = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
 
-let isCorrectFileType = function*(fileType, workProjectId, configId) {
+var isCorrectFileType = function*(fileType, workProjectId, configId) {
   var config = yield Configs.findOne({
     where: { fileType: fileType, workProjectId: workProjectId },
     raw: true
