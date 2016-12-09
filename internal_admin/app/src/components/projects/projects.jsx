@@ -26,6 +26,10 @@ import Toggle from 'material-ui/Toggle';
 import Badge from 'material-ui/Badge';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
+// Constants
+const STATUS_ACTIVE = 'active';
+const STATUS_INACTIVE = 'inactive';
+
 export default class Projects extends React.Component {
   constructor() {
     super();
@@ -34,7 +38,6 @@ export default class Projects extends React.Component {
       companies: [],
       projects: [],
       projectsFiltered: [],
-      projectsTotal: 0,
       companyId: null,
       companyName: null,
       search: '',
@@ -54,6 +57,20 @@ export default class Projects extends React.Component {
 
   componentWillMount() {
     this.fetchCompanies(true);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    // Projects filter
+    if ((nextState.projects !== this.state.projects) ||
+      (nextState.search !== this.state.search)){
+        var regexp = new RegExp(nextState.search, 'i');
+        var filtered = nextState.projects.filter(p => {
+          return (!nextState.search) || (p.name.match(regexp));
+        });
+        this.setState({
+          projectsFiltered: filtered
+        });
+    }
   }
 
   fetchCompanies(loadProjects) {
@@ -88,27 +105,17 @@ export default class Projects extends React.Component {
           console.error(err);
         } else {
           this.setState({
-            projects: res.body,
-            projectsTotal: res.body.length
+            projects: res.body
           });
-          this.handleSearch(null, this.state.search);
         }
       });
     }
   }
 
   handleSearch(event, value) {
-    var regexp = new RegExp(value, 'i');
-    var projects = this.state.projects;
-    projects = projects.filter(p => {
-      return (!value) || (p.name.match(regexp));
-    });
-
     this.setState({
       search: value,
-      projectsFiltered: projects,
-      projectsTotal: projects.length
-     });
+    });
   }
 
   handleOpenActionMenu(event) {
@@ -146,7 +153,6 @@ export default class Projects extends React.Component {
   }
 
   handleActionMenu(event, project) {
-    event.preventDefault();
     this.setState({
       actionMenuOpen: true,
       actionMenuTarget: event.currentTarget,
@@ -185,6 +191,20 @@ export default class Projects extends React.Component {
     this.fetchProjects(companyId);
   }
 
+  updateProjectStatus(id, status) {
+    var projects = this.state.projects.map(p => {
+      if (p.id === id) {
+        p.status = status;
+        return p;
+      } else {
+        return p;
+      }
+    });
+    this.setState({
+      projects: projects
+    });
+  }
+
   toggleProjectStatus(event, active, project) {
     var url;
     if(active) {
@@ -201,6 +221,7 @@ export default class Projects extends React.Component {
         console.error(err);
       } else {
         console.log('Project',project.name,'is', active ? 'activated.' : 'deactivated.');
+        this.updateProjectStatus(project.id, active ? STATUS_ACTIVE: STATUS_INACTIVE);
       }
     });
   }
@@ -251,7 +272,7 @@ export default class Projects extends React.Component {
     return (
       <Toggle
         style={ { marginRight: '50px' } }
-        defaultToggled={ project.status === 'active' }
+        defaultToggled={ project.status === STATUS_ACTIVE }
         onToggle={ (event, active) => this.toggleProjectStatus(event, active, project) }
       />
     );
@@ -281,7 +302,7 @@ export default class Projects extends React.Component {
               />
             Total Work Projects Found
             <Badge
-              badgeContent={ this.state.projectsTotal }
+              badgeContent={ this.state.projectsFiltered.length }
               secondary={ true }
             />
           </Col>
