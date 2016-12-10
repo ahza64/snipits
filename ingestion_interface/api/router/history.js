@@ -5,9 +5,9 @@ const moment = require('moment');
 const _ = require('underscore');
 
 // Collection
-const Histories = require('dsp_shared/database/model/ingestion/tables').histories;
+const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
-const Admins = require('dsp_shared/database/model/ingestion/tables').admins;
+const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 
 // App
 const app = koa();

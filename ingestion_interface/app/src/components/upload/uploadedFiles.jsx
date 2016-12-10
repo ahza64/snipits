@@ -83,7 +83,8 @@ export default class UploadedFiles extends UploadLib {
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
                 <TableHeaderColumn style={{ width: '5px' }}>#</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '350px' }}>File</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '350px' }}>File Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '350px' }}>Sytem File Name</TableHeaderColumn>
                 <TableHeaderColumn style={{ width: '150px' }}>Last Modified Time</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Menu</TableHeaderColumn>
@@ -95,7 +96,8 @@ export default class UploadedFiles extends UploadLib {
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn style={{ width: '5px' }}>{ pageRedux.getState() + idx + 1 }</TableRowColumn>
-                      <TableRowColumn style={{ width: '350px' }}>{ file.fileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '350px' }}>{ file.customerFileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '350px' }}>{ file.s3FileName }</TableRowColumn>
                       <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
                       <TableRowColumn>{ file.status }</TableRowColumn>
                       <TableRowColumn>
@@ -104,7 +106,7 @@ export default class UploadedFiles extends UploadLib {
                           setFiles={ this.props.setFiles }
                           setHistories={ this.props.setHistories }
                           setTotal={ this.props.setTotal }
-                          files={ file.fileName }
+                          files={ file.customerFileName }
                           type={ 'UPLOAD' }
                         />
                       </TableRowColumn>
