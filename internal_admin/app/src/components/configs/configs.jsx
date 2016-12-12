@@ -6,10 +6,9 @@ const moment = require('moment');
 
 // Components
 import DefaultNavbar from '../navbar/defaultNavbar';
-import CreateProjectDialog from './dialogs/create';
-import DeleteProjectDialog from './dialogs/delete';
-import EditConfigDialog from '../configs/dialogs/edit';
-import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl } from '../../config';
+import EditConfigDialog from './dialogs/edit';
+import DeleteConfigDialog from './dialogs/delete';
+import { companyUrl, projectsUrl, configsUrl } from '../../config';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -31,51 +30,36 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 const STATUS_ACTIVE = 'active';
 const STATUS_INACTIVE = 'inactive';
 
-export default class Projects extends React.Component {
+export default class Configurations extends React.Component {
   constructor() {
     super();
 
     this.state = {
       companies: [],
       projects: [],
-      projectsFiltered: [],
+      configs: [],
       companyId: null,
       companyName: null,
-      search: '',
-      showAddProjectDialog: false,
-      showDeleteProjectDialog: false,
+      projectId: null,
+      projectName: null,
+      configSelected: {},
       showEditConfigDialog: false,
+      showDeleteConfigDialog: false,
       actionMenuOpen: false
     };
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
     this.handleCloseActionMenu = this.handleCloseActionMenu.bind(this);
-    this.handleAddProjectDialogClose = this.handleAddProjectDialogClose.bind(this);
-    this.handleAddProject = this.handleAddProject.bind(this);
-    this.handleDeleteProject = this.handleDeleteProject.bind(this);
     this.handleCreateConfig = this.handleCreateConfig.bind(this);
+    this.handleChangeConfig = this.handleChangeConfig.bind(this);
+    this.handleDeleteConfig = this.handleDeleteConfig.bind(this);
   }
 
   componentWillMount() {
-    this.fetchCompanies(true);
+    this.fetchCompanies();
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    // Projects filter
-    if ((nextState.projects !== this.state.projects) ||
-      (nextState.search !== this.state.search)){
-        var regexp = new RegExp(nextState.search, 'i');
-        var filtered = nextState.projects.filter(p => {
-          return (!nextState.search) || (p.name.match(regexp));
-        });
-        this.setState({
-          projectsFiltered: filtered
-        });
-    }
-  }
-
-  fetchCompanies(loadProjects) {
+  fetchCompanies() {
     return request
     .get(companyUrl)
     .withCredentials()
@@ -106,18 +90,40 @@ export default class Projects extends React.Component {
         if (err) {
           console.error(err);
         } else {
+          var firstProject = (res.body.length > 0) ? res.body[0] : null;
           this.setState({
-            projects: res.body
+            projects: res.body,
+            projectId: firstProject ? firstProject.id : null,
+            projectName: firstProject ? firstProject.name : null
           });
+          if (firstProject) {
+            this.fetchConfigs(firstProject.id);
+          } else {
+            this.setState({
+              configs: []
+            });
+          }
         }
       });
     }
   }
 
-  handleSearch(event, value) {
-    this.setState({
-      search: value,
-    });
+  fetchConfigs(projectId) {
+    if (projectId) {
+      let url = configsUrl.replace(':projectId', projectId);
+      return request
+      .get(url)
+      .withCredentials()
+      .end((err, res) => {
+        if (err) {
+          console.error(err);
+        } else {
+          this.setState({
+            configs: res.body,
+          });
+        }
+      });
+    }
   }
 
   handleOpenActionMenu(event) {
@@ -132,51 +138,45 @@ export default class Projects extends React.Component {
     });
   }
 
-  handleAddProject() {
+  handleCreateConfig() {
     this.setState({
       actionMenuOpen: false,
-      showAddProjectDialog: true
+      showEditConfigDialog: true,
+      configSelected: {}
     });
   }
 
-  handleCreateConfig() {
+  handleChangeConfig() {
     this.setState({
       actionMenuOpen: false,
       showEditConfigDialog: true
     });
   }
 
-  handleActionMenu(event, project) {
+  handleActionMenu(event, config) {
     this.setState({
       actionMenuOpen: true,
       actionMenuTarget: event.currentTarget,
-      projectId: project.id,
-      projectName: project.name
+      configSelected: config
     });
-  }
-
-  handleAddProjectDialogClose(saved) {
-    this.setState({
-      showAddProjectDialog: false
-    });
-    if (saved) {
-      this.fetchProjects(this.state.companyId);
-    }
-  }
-
-  handleDeleteProjectDialogClose(deleted) {
-    this.setState({
-      showDeleteProjectDialog: false
-    });
-    if (deleted) {
-      this.fetchProjects(this.state.companyId);
-    }
   }
 
   handleEditConfigDialogClose(saved) {
     this.setState({
       showEditConfigDialog: false
     });
+    if (saved) {
+      this.fetchConfigs(this.state.projectId);
+    }
+  }
+
+  handleDeleteConfigDialogClose(deleted) {
+    this.setState({
+      showDeleteConfigDialog: false
+    });
+    if (deleted) {
+      this.fetchConfigs(this.state.projectId);
+    }
   }
 
   handleCompanySelectChanged(event, companyId) {
@@ -191,45 +191,22 @@ export default class Projects extends React.Component {
     this.fetchProjects(companyId);
   }
 
-  updateProjectStatus(id, status) {
-    var projects = this.state.projects.map(p => {
-      if (p.id === id) {
-        p.status = status;
-        return p;
-      } else {
-        return p;
-      }
+  handleProjectSelectChanged(event, projectId) {
+    let projects = this.state.projects.filter(p => {
+      return p.id == projectId;
     });
+    let projectName = (projects.length > 0) ? projects[0].name : null;
     this.setState({
-      projects: projects
+      projectId: projectId,
+      projectName: projectName
     });
+    this.fetchConfigs(projectId);
   }
 
-  toggleProjectStatus(event, active, project) {
-    var url;
-    if(active) {
-      url = activateProjectUrl.replace(':id', project.id);
-    } else {
-      url = deactivateProjectUrl.replace(':id', project.id);
-    }
-
-    return request
-    .put(url)
-    .withCredentials()
-    .end(err => {
-      if(err) {
-        console.error(err);
-      } else {
-        console.log('Project',project.name,'is', active ? 'activated.' : 'deactivated.');
-        this.updateProjectStatus(project.id, active ? STATUS_ACTIVE: STATUS_INACTIVE);
-      }
-    });
-  }
-
-  handleDeleteProject() {
+  handleDeleteConfig() {
     this.setState({
       actionMenuOpen: false,
-      showDeleteProjectDialog: true
+      showDeleteConfigDialog: true
     });
   }
 
@@ -242,10 +219,10 @@ export default class Projects extends React.Component {
           targetOrigin={ { horizontal: 'right', vertical: 'top' } }
           onRequestClose={ this.handleCloseActionMenu } >
           <Menu>
-            <MenuItem value="1" primaryText="Add Igestion Config"
-              onClick={ this.handleCreateConfig } />
-            <MenuItem value="2" primaryText="Delete Work Project"
-              onClick={ this.handleDeleteProject } />
+            <MenuItem value="1" primaryText="Settings"
+              onClick={ this.handleChangeConfig } />
+            <MenuItem value="2" primaryText="Delete"
+              onClick={ this.handleDeleteConfig }/>
           </Menu>
         </Popover>
     );
@@ -255,7 +232,7 @@ export default class Projects extends React.Component {
     return(
       <SelectField
         floatingLabelText="Company"
-        fullWidth={ true }
+        fullWidth={true}
         value={ this.state.companyId }
         onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) } >
         { this.state.companies.map((company, idx) => {
@@ -268,30 +245,40 @@ export default class Projects extends React.Component {
     );
   }
 
-  renderToggle(project) {
-    return (
-      <Toggle
-        style={ { marginRight: '50px' } }
-        defaultToggled={ project.status === STATUS_ACTIVE }
-        onToggle={ (event, active) => this.toggleProjectStatus(event, active, project) }
-      />
+  renderProjectSelectField() {
+    return(
+      <SelectField
+        floatingLabelText="Work Project"
+        fullWidth={true}
+        value={ this.state.projectId }
+        onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) } >
+        { this.state.projects.map((project, idx) => {
+            return(
+              <MenuItem key={ idx } value={ project.id } primaryText={ project.name } />
+            );
+          })
+        }
+      </SelectField>
     );
   }
 
   renderDialogs() {
     return(
       <div>
-        <CreateProjectDialog open={ this.state.showAddProjectDialog }
-          companyId={ this.state.companyId } companyName={ this.state.companyName }
-          onClose={ (saved) => this.handleAddProjectDialogClose(saved) } />
-        <DeleteProjectDialog open={ this.state.showDeleteProjectDialog }
-          projectId={ this.state.projectId } projectName={ this.state.projectName }
-          onClose={ (deleted) => this.handleDeleteProjectDialogClose(deleted) } />
         <EditConfigDialog open={ this.state.showEditConfigDialog }
-          title="Create Ingestion Configuration"
-          companyId={ this.state.companyId } projectId={ this.state.projectId }
+          title={ (this.state.configSelected.id ? "Change" : "Create") + " Ingestion Configuration" }
+          companyId={ this.state.companyId }
+          projectId={ this.state.projectId }
           projectName={ this.state.projectName }
+          configId={ this.state.configSelected.id }
+          fileType={ this.state.configSelected.fileType }
+          status={ this.state.configSelected.status }
+          description={ this.state.configSelected.description }
           onClose={ (saved) => this.handleEditConfigDialogClose(saved) } />
+        <DeleteConfigDialog open={ this.state.showDeleteConfigDialog }
+          configId={ this.state.configSelected.id }
+          fileType={ this.state.configSelected.fileType }
+          onClose={ (deleted) => this.handleDeleteConfigDialogClose(deleted) } />
       </div>
     );
   }
@@ -304,20 +291,15 @@ export default class Projects extends React.Component {
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
           <Col xs={0} sm={0} md={2} lg={2} >
-            <RaisedButton label='Add Work Project' primary={ true } fullWidth={ true }
-              onClick={ this.handleAddProject } />
+            <RaisedButton label='Add Configuration' primary={ true } fullWidth={ true }
+              onClick={ this.handleCreateConfig }
+              disabled={ !this.state.projectId } />
             { this.renderCompanySelectField() }
-            <TextField
-                hintText='Search By Project ... '
-                fullWidth={ true }
-                value={ this.state.search }
-                onChange={ this.handleSearch }
-              />
-            Total Work Projects Found
+            { this.renderProjectSelectField() }
+            Total Configuration Found
             <Badge
-              badgeContent={ this.state.projectsFiltered.length }
-              secondary={ true }
-            />
+              badgeContent={ this.state.configs.length }
+              secondary={ true } />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>
@@ -325,28 +307,30 @@ export default class Projects extends React.Component {
                 <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
                   <TableRow>
                     <TableHeaderColumn>#</TableHeaderColumn>
+                    <TableHeaderColumn>Company</TableHeaderColumn>
                     <TableHeaderColumn>Work Project</TableHeaderColumn>
-                    <TableHeaderColumn>Active</TableHeaderColumn>
+                    <TableHeaderColumn>Ingestion Type</TableHeaderColumn>
                     <TableHeaderColumn>Created On</TableHeaderColumn>
                     <TableHeaderColumn>Action</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={ false } selectable={ false }>
                   {
-                    this.state.projectsFiltered.map((project, idx) => {
+                    this.state.configs.map((config, idx) => {
                       return (
                         <TableRow key={ idx }>
                           <TableRowColumn>{ idx + 1 }</TableRowColumn>
-                          <TableRowColumn>{ project.name }</TableRowColumn>
-                          <TableRowColumn>{ this.renderToggle(project) }</TableRowColumn>
-                          <TableRowColumn>{ moment(project.createdAt).format('YYYY/MM/DD') }</TableRowColumn>
+                          <TableRowColumn>{ this.state.companyName }</TableRowColumn>
+                          <TableRowColumn>{ this.state.projectName }</TableRowColumn>
+                          <TableRowColumn>{ config.fileType }</TableRowColumn>
+                          <TableRowColumn>{ moment(config.createdAt).format('YYYY/MM/DD') }</TableRowColumn>
                           <TableRowColumn>
                             <FlatButton
                               label="Action Menu"
                               labelPosition="before"
                               secondary={true}
                               icon={ <MoreVertIcon /> }
-                              onTouchTap={ event => this.handleActionMenu(event, project) }
+                              onTouchTap={ event => this.handleActionMenu(event, config) }
                             />
                           </TableRowColumn>
                         </TableRow>

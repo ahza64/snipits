@@ -20,6 +20,7 @@ export default class EditConfigDialog extends React.Component {
     super();
 
     this.state = {
+      configId: null,
       configType: '',
       configStatus: STATUS_ACTIVE,
       configDescription: '',
@@ -28,6 +29,18 @@ export default class EditConfigDialog extends React.Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if ((nextProps.open === true) && (this.props.open === false)) {
+      this.setState({
+        configType: nextProps.fileType ? nextProps.fileType : '',
+        configStatus: nextProps.status ? nextProps.status : STATUS_ACTIVE,
+        configDescription: nextProps.description ? nextProps.description : '',
+        configId: nextProps.configId,
+        configTypeError: null
+      });
+    }
   }
 
   handleConfigTypeChanged(event) {
@@ -60,6 +73,7 @@ export default class EditConfigDialog extends React.Component {
     });
 
     var config = {
+      id: this.state.configId,
       fileType: this.state.configType,
       description: this.state.configDescription,
       status: this.state.configStatus,
@@ -141,10 +155,11 @@ export default class EditConfigDialog extends React.Component {
               <tr>
                 <td>Configuration Type</td>
                 <td>
-                  <TextField
+                  <TextField autoFocus
                     name="configType"
                     hintText="Enter Configuration Type"
                     fullWidth={ true }
+                    disabled={ this.state.configId ? true : false }
                     value={ this.state.configType }
                     errorText={ this.state.configTypeError }
                     onChange={ (event) => this.handleConfigTypeChanged(event) } />
