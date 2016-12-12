@@ -67,7 +67,7 @@ var historyMassage = (histories) => {
   }
 
   histories.forEach(h => {
-    var time = h['histories.time'];
+    var time = h['ingestion_histories.createdAt'];
     if (time) {
       h.timeKey = moment(time).format('ww e');
     }
@@ -112,13 +112,14 @@ router.get(
         })
       ];
       
-      if (histories.length === 1 && !histories['histories.id']) {
+      if (histories.length === 1 && !histories['ingestion_histories.id']) {
         return this.body = {
           heatmapData: [],
           historiesData: {}
         };
       }
 
+      console.log(histories);
       histories = historyMassage(histories);
     } catch(e) {
       console.error(e);
