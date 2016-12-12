@@ -44,7 +44,7 @@ router.post(
             this.body = yield Configs.create({
               fileType: body.fileType,
               description: body.description,
-              status: ACTIVE,
+              status: body.status? body.status : ACTIVE,
               companyId: body.companyId,
               workProjectId: body.workProjectId
             });

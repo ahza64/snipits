@@ -8,6 +8,7 @@ const moment = require('moment');
 import DefaultNavbar from '../navbar/defaultNavbar';
 import CreateProjectDialog from './dialogs/create';
 import DeleteProjectDialog from './dialogs/delete';
+import EditConfigDialog from '../configs/dialogs/edit';
 import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl } from '../../config';
 
 // Styles
@@ -43,6 +44,7 @@ export default class Projects extends React.Component {
       search: '',
       showAddProjectDialog: false,
       showDeleteProjectDialog: false,
+      showEditConfigDialog: false,
       actionMenuOpen: false
     };
 
@@ -50,9 +52,9 @@ export default class Projects extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCloseActionMenu = this.handleCloseActionMenu.bind(this);
     this.handleAddProjectDialogClose = this.handleAddProjectDialogClose.bind(this);
-    this.handleAddCompanyDialogClose = this.handleAddCompanyDialogClose.bind(this);
     this.handleAddProject = this.handleAddProject.bind(this);
     this.handleDeleteProject = this.handleDeleteProject.bind(this);
+    this.handleCreateConfig = this.handleCreateConfig.bind(this);
   }
 
   componentWillMount() {
@@ -124,21 +126,6 @@ export default class Projects extends React.Component {
     });
   }
 
-  handleAddCompanyClick(event) {
-    this.setState({
-      showAddCompanyDialog: true
-    });
-  }
-
-  handleAddCompanyDialogClose(saved) {
-    this.setState({
-      showAddCompanyDialog: false
-    });
-    if (saved) {
-      this.fetchCompanies();
-    }
-  }
-
   handleCloseActionMenu() {
     this.setState({
       actionMenuOpen: false,
@@ -149,6 +136,13 @@ export default class Projects extends React.Component {
     this.setState({
       actionMenuOpen: false,
       showAddProjectDialog: true
+    });
+  }
+
+  handleCreateConfig() {
+    this.setState({
+      actionMenuOpen: false,
+      showEditConfigDialog: true
     });
   }
 
@@ -177,6 +171,12 @@ export default class Projects extends React.Component {
     if (deleted) {
       this.fetchProjects(this.state.companyId);
     }
+  }
+
+  handleEditConfigDialogClose(saved) {
+    this.setState({
+      showEditConfigDialog: false
+    });
   }
 
   handleCompanySelectChanged(event, companyId) {
@@ -242,7 +242,8 @@ export default class Projects extends React.Component {
           targetOrigin={ { horizontal: 'right', vertical: 'top' } }
           onRequestClose={ this.handleCloseActionMenu } >
           <Menu>
-            <MenuItem value="1" primaryText="Add Igestion Config" />
+            <MenuItem value="1" primaryText="Add Igestion Config"
+              onClick={ this.handleCreateConfig } />
             <MenuItem value="2" primaryText="Delete Work Project"
               onClick={ this.handleDeleteProject } />
           </Menu>
@@ -278,8 +279,8 @@ export default class Projects extends React.Component {
     );
   }
 
-  render() {
-    return (
+  renderDialogs() {
+    return(
       <div>
         <CreateProjectDialog open={ this.state.showAddProjectDialog }
           companyId={ this.state.companyId } companyName={ this.state.companyName }
@@ -287,6 +288,19 @@ export default class Projects extends React.Component {
         <DeleteProjectDialog open={ this.state.showDeleteProjectDialog }
           projectId={ this.state.projectId } projectName={ this.state.projectName }
           onClose={ (deleted) => this.handleDeleteProjectDialogClose(deleted) } />
+        <EditConfigDialog open={ this.state.showEditConfigDialog }
+          title="Create Ingestion Configuration"
+          companyId={ this.state.companyId } projectId={ this.state.projectId }
+          projectName={ this.state.projectName }
+          onClose={ (saved) => this.handleEditConfigDialogClose(saved) } />
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        { this.renderDialogs() }
         <Row><DefaultNavbar /></Row>
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
