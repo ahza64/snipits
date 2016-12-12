@@ -15,7 +15,7 @@ var stream = require('dsp_shared/database/stream');
  * @return {void}
  */
 function *updateAsset(id, imageType, userId){
-  yield Asset.update({_id : id}, {'meta.imageType': imageType, 'meta.userId': userId});
+  yield Asset.update({_id : id}, {$set: {'meta.imageType': imageType, 'meta.userId': userId}});
 }
 
 
