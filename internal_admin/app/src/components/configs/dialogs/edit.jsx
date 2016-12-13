@@ -8,6 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import CircularProgress from 'material-ui/CircularProgress';
 import Toggle from 'material-ui/Toggle';
+import EmailsList from './emailsList';
 
 import { configUrl } from '../../../config';
 
@@ -25,7 +26,9 @@ export default class EditConfigDialog extends React.Component {
       configStatus: STATUS_ACTIVE,
       configDescription: '',
       saving: false,
-      configTypeError: null
+      configTypeError: null,
+      emails: [],
+      emailsListChanged: false
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -33,12 +36,20 @@ export default class EditConfigDialog extends React.Component {
 
   componentWillUpdate(nextProps, nextState) {
     if ((nextProps.open === true) && (this.props.open === false)) {
+      var emails = [];
+      if (nextProps.watchers) {
+        emails = nextProps.watchers.map(function(w){
+          return w.email;
+        });
+      }
       this.setState({
         configType: nextProps.fileType ? nextProps.fileType : '',
         configStatus: nextProps.status ? nextProps.status : STATUS_ACTIVE,
         configDescription: nextProps.description ? nextProps.description : '',
         configId: nextProps.configId,
-        configTypeError: null
+        configTypeError: null,
+        emails: emails,
+        emailsListChanged: false
       });
     }
   }
@@ -78,7 +89,8 @@ export default class EditConfigDialog extends React.Component {
       description: this.state.configDescription,
       status: this.state.configStatus,
       companyId: this.props.companyId,
-      workProjectId: this.props.projectId
+      workProjectId: this.props.projectId,
+      watchers: this.state.emailsListChanged ? this.state.emails : null
     };
 
     request
@@ -99,6 +111,13 @@ export default class EditConfigDialog extends React.Component {
       } else {
         this.props.onClose(true);
       }
+    });
+  }
+
+  handleWathersListChanged(emails) {
+    this.setState({
+      emails: emails,
+      emailsListChanged: true
     });
   }
 
@@ -163,6 +182,14 @@ export default class EditConfigDialog extends React.Component {
                     value={ this.state.configType }
                     errorText={ this.state.configTypeError }
                     onChange={ (event) => this.handleConfigTypeChanged(event) } />
+                </td>
+              </tr>
+              <tr>
+                <td>Watchers</td>
+                <td>
+                  <EmailsList
+                    emails={ this.state.emails }
+                    onChange={ (emails) => this.handleWathersListChanged(emails) } />
                 </td>
               </tr>
               <tr>

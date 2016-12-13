@@ -8,7 +8,7 @@ const moment = require('moment');
 import DefaultNavbar from '../navbar/defaultNavbar';
 import EditConfigDialog from './dialogs/edit';
 import DeleteConfigDialog from './dialogs/delete';
-import { companyUrl, projectsUrl, configsUrl } from '../../config';
+import { companyUrl, projectsUrl, configsUrl, watchersUrl } from '../../config';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -43,6 +43,7 @@ export default class Configurations extends React.Component {
       projectId: null,
       projectName: null,
       configSelected: {},
+      watchers: [],
       showEditConfigDialog: false,
       showDeleteConfigDialog: false,
       actionMenuOpen: false
@@ -142,14 +143,26 @@ export default class Configurations extends React.Component {
     this.setState({
       actionMenuOpen: false,
       showEditConfigDialog: true,
-      configSelected: {}
+      configSelected: {},
+      watchers: null
     });
   }
 
   handleChangeConfig() {
-    this.setState({
-      actionMenuOpen: false,
-      showEditConfigDialog: true
+    let url = watchersUrl.replace(':configId', this.state.configSelected.id);
+    return request
+    .get(url)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        this.setState({
+          actionMenuOpen: false,
+          showEditConfigDialog: true,
+          watchers: res.body
+        });
+      }
     });
   }
 
@@ -274,6 +287,7 @@ export default class Configurations extends React.Component {
           fileType={ this.state.configSelected.fileType }
           status={ this.state.configSelected.status }
           description={ this.state.configSelected.description }
+          watchers={ this.state.watchers }
           onClose={ (saved) => this.handleEditConfigDialogClose(saved) } />
         <DeleteConfigDialog open={ this.state.showDeleteConfigDialog }
           configId={ this.state.configSelected.id }
