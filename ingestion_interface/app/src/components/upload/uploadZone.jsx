@@ -102,10 +102,10 @@ export default class UploadZone extends UploadLib {
       if (err) {
         console.error(err);
       } else {
-        this.createIngestionRecord(file, () => {
+        this.createIngestionRecord(file, (ingestion) => {
           this.getUploadedFiles(offset, (files) => {
             this.setFiles(files);
-            this.writeHistory(file.name, 'upload', () => {
+            this.writeHistory(ingestion, 'upload', () => {
               this.getHistory((heatmapData, historiesData) => {
                 this.setHistories(heatmapData, historiesData);
                 this.setTotal(true);

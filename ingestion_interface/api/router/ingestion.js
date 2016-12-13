@@ -15,19 +15,20 @@ router.post(
   function*() {
     var body = this.request.body;
     var record = {
-      customerFileName: body.fileName,
+      customerFileName: body.customerFileName,
       ingested: false,
-      companyId: body.companyId
+      companyId: body.companyId,
+      ingestionConfigurationId: body.ingestionConfigurationId
     };
 
     try {
-      yield Ingestions.create(record);
+      var ingestion = yield Ingestions.create(record);
+      this.body = ingestion;
     } catch(e) {
       console.error(e);
       this.throw(500);
     }
-    
-    this.throw(200);
+
   }
 );
 
@@ -93,6 +94,7 @@ router.get(
         limit: 5,
         offset: offset,
         where: { companyId: companyId },
+        order: [['createdAt', 'desc']],
         raw: true
       });
     } catch(e) {

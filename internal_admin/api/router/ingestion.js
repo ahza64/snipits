@@ -80,7 +80,6 @@ router.post(
 
     var obj = {
       action: action,
-      time: new Date(),
       adminName: admin.name,
       dispatchrAdminId: admin.id,
       companyId: ingestion.companyId,
