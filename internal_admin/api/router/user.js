@@ -49,7 +49,12 @@ router.put(
   '/users/:id/deactivate',
   function*() {
     try {
-      var user = yield Users.find({ id: this.params.id });
+      var user;
+      if (this.query.role) {
+        user = yield Admins.find({ where: {id: this.params.id } });
+      } else {
+        user = yield Users.find({ where: {id: this.params.id } });
+      }
       yield user.updateAttributes({ status: INACTIVE });
       this.body = user;
     } catch (err) {
@@ -62,7 +67,12 @@ router.put(
   '/users/:id/activate',
   function*() {
     try {
-      var user = yield Users.find({ id: this.params.id });
+      var user;
+      if (this.query.role) {
+        user = yield Admins.find({ where: {id: this.params.id } });
+      } else {
+        user = yield Users.find({ where: {id: this.params.id } });
+      }
       yield user.updateAttributes({ status: ACTIVE });
       this.body = user;
     } catch (err) {
