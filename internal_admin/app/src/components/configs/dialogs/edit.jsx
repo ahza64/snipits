@@ -158,6 +158,7 @@ export default class EditConfigDialog extends React.Component {
           actions={ actions }
           modal={ true }
           open={ this.props.open }
+          autoScrollBodyContent={ true }
           contentStyle={ { maxWidth: '600px' } } >
           <table style={ { width: '100%' } }>
             <tbody>
