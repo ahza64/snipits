@@ -23,8 +23,7 @@ passport.deserializeUser(function(user, done) {
   Users.findOne({
     where: {
       id: user.id,
-      status: 'active',
-      deleted: false
+      status: 'active'
     },
     raw: true
   }).then(user => {
@@ -38,8 +37,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
   Users.findOne({
     where: {
       email: email,
-      status: 'active',
-      deleted: false
+      status: 'active'
     },
     raw: true,
     include: [Companies]

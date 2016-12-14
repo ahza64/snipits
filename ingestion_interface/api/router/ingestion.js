@@ -7,7 +7,7 @@ const app = koa();
 
 // Collection
 const sequelize = require('dsp_shared/database/model/ingestion/tables').sequelize;
-const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestions;
+const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestion_files;
 
 // Create a file record for ingestions
 router.post(
@@ -15,8 +15,7 @@ router.post(
   function*() {
     var body = this.request.body;
     var record = {
-      fileName: body.fileName,
-      description: '',
+      customerFileName: body.fileName,
       ingested: false,
       companyId: body.companyId
     };
@@ -39,7 +38,7 @@ router.put(
     var body = this.request.body;
     var description = body.description;
     var companyId = body.companyId;
-    var fileName = body.fileName;
+    var fileName = body.customerFileName;
 
     try {
       yield Ingestions.update(
@@ -49,7 +48,7 @@ router.put(
         {
           fields: [ 'description' ],
           where: {
-            fileName: fileName,
+            customerFileName: fileName,
             companyId: companyId
           }
         }
@@ -115,7 +114,7 @@ router.get(
     try {
       var ingestion = yield Ingestions.findOne({
         where: {
-          fileName: fileName,
+          customerFileName: fileName,
           companyId: companyId
         },
         raw: true
@@ -140,7 +139,7 @@ router.get(
       var res = yield sequelize.query(
         'SELECT * FROM ingestions INNER JOIN companies ' +
         'ON ingestions."companyId" = companies.id ' +
-        'WHERE ingestions."fileName" LIKE \'%' + token + '%\' ' +
+        'WHERE ingestions."customerFileName" LIKE \'%' + token + '%\' ' +
         'AND companies.id = ' + companyId + ';'
       );
     } catch(e) {

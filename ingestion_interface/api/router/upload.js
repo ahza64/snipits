@@ -7,9 +7,9 @@ const config = require('dsp_shared/conf.d/config.json').mooncake;
 const s3Prefix = config.env + '.';
 
 // Collection
-const Histories = require('dsp_shared/database/model/ingestion/tables').histories;
+const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
-const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestions;
+const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestion_files;
 const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
 
 // App
@@ -109,7 +109,7 @@ router.post(
       yield s3.delete(bucketName, [fileName]);
       yield Ingestions.destroy({
         where: {
-          fileName: fileName,
+          customerFileName: fileName,
           companyId: companyId
         },
         force: true

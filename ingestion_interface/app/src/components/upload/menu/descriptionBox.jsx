@@ -45,7 +45,7 @@ export default class DescriptionBox extends UploadLib {
     .withCredentials()
     .send({
       companyId: companyId,
-      fileName: fileName,
+      customerFileName: fileName,
       description: description
     })
     .end(err => {

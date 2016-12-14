@@ -6,8 +6,8 @@ const router = require('koa-router')();
 const app = koa();
 
 // Collection
-const Watchers = require('dsp_shared/database/model/ingestion/tables').watchers;
-const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestions;
+const Watchers = require('dsp_shared/database/model/ingestion/tables').ingestion_watchers;
+const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestion_files;
 
 // Create watchers
 router.post(
@@ -19,21 +19,21 @@ router.post(
     var fileName = body.fileName;
     try {
       var ingestion = yield Ingestions.findOne({
-        where: { fileName: fileName, companyId: companyId },
+        where: { customerFileName: fileName, companyId: companyId },
         raw: true
       });
-      var ingestionId = ingestion.id;
+      var ingestionId = ingestion.ingestionConfigurationId;
 
       if (ingestionId) {
         var existingWatchers = yield Watchers.findAll({
-          where: { ingestionId: ingestionId },
+          where: { ingestionConfigurationId: ingestionId },
           raw: true
         });
 
         // Delete existing watchers
         if (existingWatchers.length) {
           yield Watchers.destroy({
-            where: { ingestionId: ingestionId },
+            where: { ingestionConfigurationId: ingestionId },
             force: true
           });
         }
@@ -42,9 +42,9 @@ router.post(
         var objs = [];
         watcherEmails.forEach(email => {
           objs.push({
-            watchEmail: email,
+            email: email,
             companyId: companyId,
-            ingestionId: ingestionId
+            ingestionConfigurationId: ingestionId
           });
         });
 
