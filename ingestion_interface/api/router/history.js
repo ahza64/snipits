@@ -7,6 +7,7 @@ const _ = require('underscore');
 // Collection
 const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
+const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestion_files;
 const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 
 // App
@@ -18,7 +19,6 @@ router.post(
   function*() {
     var body = this.request.body;
     var email = body.email;
-    var fileName = body.file;
     var action = body.action;
 
     // Check whether the user exists
@@ -31,12 +31,19 @@ router.post(
     var userId = user.id;
     if (!userId) { this.throw(403); }
 
+    // Check whether the ingestion exists
+    var ingestion = yield Ingestions.findOne({ where: { id: body.ingestionFileId }, raw: true });
+    if (!ingestion.id) { this.throw(403); }
+
     var obj = {
-      fileName: fileName,
       action: action,
-      time: new Date(),
-      userId: userId
+      userName: user.name,
+      userId: user.id,
+      companyId: ingestion.companyId,
+      ingestionFileId: ingestion.id,
+      ingestionConfigurationId: ingestion.ingestionConfigurationId
     };
+
     try {
       yield Histories.create(obj);  
     } catch (e) {
@@ -67,7 +74,7 @@ var historyMassage = (histories) => {
   }
 
   histories.forEach(h => {
-    var time = h['histories.time'];
+    var time = h['ingestion_histories.createdAt'];
     if (time) {
       h.timeKey = moment(time).format('ww e');
     }
@@ -99,7 +106,7 @@ router.get(
     try {
       var histories = yield Users.findAll({
         where: { companyId: companyId },
-        include: [ Histories ],
+        include: [ { model: Histories, include: [Ingestions] }],
         raw: true
       });
 
@@ -112,13 +119,14 @@ router.get(
         })
       ];
       
-      if (histories.length === 1 && !histories['histories.id']) {
+      if (histories.length === 1 && !histories['ingestion_histories.id']) {
         return this.body = {
           heatmapData: [],
           historiesData: {}
         };
       }
 
+      console.log(histories);
       histories = historyMassage(histories);
     } catch(e) {
       console.error(e);

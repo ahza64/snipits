@@ -66,7 +66,6 @@ router.post(
   function*() {
     var body = this.request.body;
     var email = body.email;
-    var fileName = body.file;
     var action = body.action;
 
     // Check whether the admin exists
@@ -74,12 +73,20 @@ router.post(
     var adminId = admin.id;
     if (!adminId) { this.throw(403); }
 
+    // Check whether the ingestion exists
+    var ingestion = yield Ingestions.findOne({ where: { id: body.ingestionFileId }, raw: true });
+    if (!ingestion.id) { this.throw(403); }
+
+
     var obj = {
-      fileName: fileName,
       action: action,
-      time: new Date(),
-      adminId: adminId
+      adminName: admin.name,
+      dispatchrAdminId: admin.id,
+      companyId: ingestion.companyId,
+      ingestionFileId: ingestion.id,
+      ingestionConfigurationId: ingestion.ingestionConfigurationId
     };
+
     try {
       yield Histories.create(obj);
     } catch (e) {

@@ -88,14 +88,14 @@ export default class UploadLib extends React.Component {
     .post(ingestionRecordUrl)
     .withCredentials()
     .send({
-      fileName: file.name,
+      customerFileName: file.name,
       companyId: companyId
     })
-    .end(err => {
+    .end((err, res) => {
       if (err) {
         console.error(err);
       } else {
-        callback();
+        callback(res.body);
       }
     });
   }
@@ -148,13 +148,13 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  writeHistory(fileName, action, callback) {
+  writeHistory(file, action, callback) {
     request
     .post(fileHistoryUrl)
     .withCredentials()
     .send({
       email: authRedux.getState().email,
-      file: fileName,
+      ingestionFileId: file.id,
       action: action
     })
     .end(err => {

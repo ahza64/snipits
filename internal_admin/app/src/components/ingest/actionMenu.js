@@ -40,7 +40,7 @@ export default class ActionMenu extends IngestLib {
 
     ingestionList[idx].ingested = data.ingested;
     this.props.resetIngestionList(ingestionList);
-    this.createIngestedHistory(this.state.ingestion.customerFileName);
+    this.createIngestedHistory(this.state.ingestion);
   }
 
   handleSetIngested() {

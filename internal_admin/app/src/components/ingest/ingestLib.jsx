@@ -56,7 +56,7 @@ export default class IngestLib extends React.Component {
 		this.setField(data, callback);
 	}
 
-  createIngestedHistory(fileName) {
+  createIngestedHistory(ingestion) {
     var email = authRedux.getState().email;
     var action = 'ingest';
 
@@ -64,8 +64,10 @@ export default class IngestLib extends React.Component {
     .post(fileHistoryUrl)
     .withCredentials()
     .send({
+      companyId: ingestion.companyId,
+      ingestionConfigurationId: ingestion.ingestionConfigurationId,
+      ingestionFileId: ingestion.id,
       email: email,
-      file: fileName,
       action: action
     })
     .end(err => {
