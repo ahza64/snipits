@@ -38,6 +38,20 @@ export default class Users extends React.Component {
     this.fetchUser();
   }
 
+  updateUserStatus(index, status) {
+    var users = this.state.users.map(user => {
+      if (user.index === index) {
+        user.status = status;
+        return user;
+      } else {
+        return user;
+      }
+    });
+    this.setState({
+      users: users
+    });
+  }
+
   toggleUserStatus(event, active, user) {
     let url;
 
@@ -49,14 +63,14 @@ export default class Users extends React.Component {
 
     return request
     .put(url)
+    .query({ role: user.role })
     .withCredentials()
     .end(err => {
       if(err) {
         console.error(err);
       } else {
         console.log('User is ', active ? 'activated.' : 'deactivated.');
-        this.fetchUser();
-        this.render();
+        this.updateUserStatus(user.index, active ? 'active' : 'inactive');
       }
     });
   }
@@ -84,7 +98,11 @@ export default class Users extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        this.setState({ users: res.body });
+        var users = res.body;
+        for (var i = 0; i < users.length; i++) {
+          users[i].index = i;
+        }
+        this.setState({ users: users });
       }
     });
   }
