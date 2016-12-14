@@ -1,6 +1,7 @@
 // Modules
 const koa = require('koa');
 const router = require('koa-router')();
+const permissions = require('./permissions');
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 
@@ -16,32 +17,35 @@ const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_a
 router.post(
   '/user',
   function*() {
-    var body = this.request.body;
-    var company = body.company;
+    if (permissions.has(this.req.user, null)) {
+      var body = this.request.body;
 
-    company = yield Companies.findOne({
-      where: { name: company },
-      raw: true
-    });
-    var companyId = company.id;
+      var companyId = body.companyId;
+      if ((!companyId) && (body.company)) {
+        company = yield Companies.findOne({
+          where: { name: body.company },
+          raw: true
+        });
+        companyId = company.id;
+      }
 
-    var user = {
-      name: body.firstname + ' ' + body.lastname,
-      email: body.email,
-      password: Users.build().generateHash(body.password),
-      status: ACTIVE,
-      companyId: companyId,
-      deleted: false
-    };
+      var user = {
+        name: body.firstname + ' ' + body.lastname,
+        email: body.email,
+        password: Users.build().generateHash(body.password),
+        status: ACTIVE,
+        companyId: companyId
+      };
 
-    if (body.role) {
-      user.role = body.role;
-      yield Admins.create(user);
-    } else {
-      yield Users.create(user);
+      if (body.role) {
+        user.role = body.role;
+        yield Admins.create(user);
+      } else {
+        yield Users.create(user);
+      }
+
+      this.body = user;
     }
-
-    this.body = user;
   }
 );
 

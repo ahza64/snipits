@@ -8,6 +8,7 @@ const moment = require('moment');
 import DefaultNavbar from '../navbar/defaultNavbar';
 import CreateCompanyDialog from './create';
 import CreateProjectDialog from '../projects/dialogs/create';
+import EditUserDialog from '../users/dialogs/edit';
 import { companyUrl } from '../../config';
 
 // Styles
@@ -36,7 +37,9 @@ export default class Companies extends React.Component {
       search: '',
       showAddCompanyDialog: false,
       showAddProjectDialog: false,
-      actionMenuOpen: false
+      showAddUserDialog: false,
+      actionMenuOpen: false,
+      userRole: 'CU'
     };
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
@@ -112,6 +115,15 @@ export default class Companies extends React.Component {
     });
   }
 
+  handleAddUser(role) {
+    this.setState({
+      actionMenuOpen: false,
+      showAddUserDialog: true,
+      userRole: role,
+      addUserDialogTitle: (role === 'CU') ? 'Create Customer User' : 'Create Ingestor'
+    });
+  }
+
   renderActionMenu() {
     return(
       <Popover
@@ -123,8 +135,10 @@ export default class Companies extends React.Component {
           <Menu>
             <MenuItem value="1" primaryText="Add Work Project"
               onClick={ this.handleAddProject } />
-            <MenuItem value="2" primaryText="Add Customer User" />
-            <MenuItem value="3" primaryText="Add Ingestor" />
+            <MenuItem value="2" primaryText="Add Customer User"
+              onClick={(event) => this.handleAddUser("CU") } />
+            <MenuItem value="3" primaryText="Add Ingestor"
+              onClick={(event) => this.handleAddUser("DI") } />
           </Menu>
         </Popover>
     );
@@ -140,9 +154,15 @@ export default class Companies extends React.Component {
     });
   }
 
-  handleAddProjectDialogClose(save) {
+  handleAddProjectDialogClose(saved) {
     this.setState({
       showAddProjectDialog: false
+    });
+  }
+
+  handleAddUserDialogClose(saved) {
+    this.setState({
+      showAddUserDialog: false
     });
   }
 
@@ -166,6 +186,12 @@ export default class Companies extends React.Component {
               <CreateProjectDialog open={ this.state.showAddProjectDialog }
                 companyId={ this.state.companyId } companyName={ this.state.companyName }
                 onClose={ (saved) => this.handleAddProjectDialogClose(saved) } />
+              <EditUserDialog open={ this.state.showAddUserDialog }
+                title={ this.state.addUserDialogTitle }
+                companyId={ this.state.companyId }
+                companyName={ this.state.companyName }
+                role={ this.state.userRole }
+                onClose={ (saved) => this.handleAddUserDialogClose(saved) } />
               <TextField
                   hintText='Search companies ... '
                   fullWidth={ true }
