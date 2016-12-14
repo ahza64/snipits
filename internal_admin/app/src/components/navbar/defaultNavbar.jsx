@@ -69,6 +69,16 @@ export default class DefaultNavbar extends React.Component {
     }
   }
 
+  goToConfigs() {
+    browserHistory.push(urlPrefix + 'configs/');
+  }
+
+  showConfigs() {
+    if (authRedux.getState().role === 'DA') {
+      return (<MenuItem eventKey={1.6} onClick={ this.goToConfigs }>Ingestion Configurations</MenuItem>);
+    }
+  }
+
   goToIngest() {
     browserHistory.push(urlPrefix + 'ingest/');
   }
@@ -115,6 +125,7 @@ export default class DefaultNavbar extends React.Component {
             <NavDropdown eventKey={1} title='Menu' id='basic-nav-dropdown'>
               { this.showCompanies() }
               { this.showProjects() }
+              { this.showConfigs() }
               { this.showIngest() }
               { this.showCreate() }
               { this.showUsers() }

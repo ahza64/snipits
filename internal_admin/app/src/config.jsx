@@ -19,6 +19,10 @@ const projectUrl = base + '/project';
 const deleteProjectUrl = base + '/project/:id';
 const activateProjectUrl = base + '/project/:id/activate';
 const deactivateProjectUrl = base + '/project/:id/deactivate';
+const configsUrl = base + '/configs/:projectId';
+const configUrl = base + '/config';
+const deleteConfigUrl = base + '/config/:id';
+const watchersUrl = base + '/watcher/:configId';
 const userUrl = base + '/user';
 const usersUrl = base + '/users';
 const activateUserUrl = base + '/users/:id/activate';
@@ -39,6 +43,10 @@ export {
   deleteProjectUrl,
   activateProjectUrl,
   deactivateProjectUrl,
+  configsUrl,
+  configUrl,
+  deleteConfigUrl,
+  watchersUrl,
   userUrl,
   usersUrl,
   activateUserUrl,

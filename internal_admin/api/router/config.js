@@ -12,6 +12,7 @@ const INACTIVE = 'inactive';
 
 // Collection
 const Configs = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
+const Watchers = require('dsp_shared/database/model/ingestion/tables').ingestion_watchers;
 
 var isCorrectFileType = function*(fileType, workProjectId, configId) {
   var config = yield Configs.findOne({
@@ -19,44 +20,77 @@ var isCorrectFileType = function*(fileType, workProjectId, configId) {
     raw: true
   });
   return (!config) || (config.id === configId);
-}
+};
+
+var updateWatchers = function*(config, emails) {
+  if (config && emails) {
+    var formated = emails.map(email => {
+      return email.toLowerCase();
+    });
+    var watchers = yield Watchers.findAll({
+      where: { ingestionConfigurationId: config.id },
+      raw: true
+    });
+    if (watchers) {
+      for (var i=0; i<watchers.length; i++) {
+        var email = watchers[i].email.toLowerCase();
+        var index = formated.indexOf(email);
+        if (index < 0) {
+          yield Watchers.destroy({ where: { id: watchers[i].id } });
+        } else {
+          formated.splice(index, 1);
+        }
+      }
+    }
+    for (var i=0; i<formated.length; i++) {
+      yield Watchers.create({
+        companyId: config.companyId,
+        ingestionConfigurationId: config.id,
+        email: formated[i]
+      });
+    }
+  }
+};
 
 // Create/update a configuration
 router.post(
   '/config',
   function*() {
     if (permissions.has(this.req.user, null)) {
-      var created = false;
+      var saved = false;
       var body = this.request.body;
       try {
         var configId = body.id;
         if (yield isCorrectFileType(body.fileType, body.workProjectId, configId)) {
+          var config;
           if (configId) {
             // update configuration
-            var config = yield Configs.find({ where: { id: configId } });
-            this.body = yield config.updateAttributes({
+            config = yield Configs.find({ where: { id: configId } });
+            config = yield config.updateAttributes({
               fileType: body.fileType,
               description: body.description,
               status: body.status
             });
           } else {
             // create a configuration
-            this.body = yield Configs.create({
+            config = yield Configs.create({
               fileType: body.fileType,
               description: body.description,
-              status: ACTIVE,
+              status: body.status? body.status : ACTIVE,
               companyId: body.companyId,
               workProjectId: body.workProjectId
             });
           }
-          created = true;
+          yield updateWatchers(config, body.watchers);
+          this.body = config;
+          saved = true;
         }
       } catch (e) {
         console.error(e);
         this.throw(500);
       }
 
-      if(!created) {
+      if(!saved) {
         console.error('Ingestion configuration with fileType', body.name, 'already exists');
         this.throw(409);
       }
