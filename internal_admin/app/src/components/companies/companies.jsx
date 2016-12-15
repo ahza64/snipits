@@ -188,9 +188,8 @@ export default class Companies extends React.Component {
                 onClose={ (saved) => this.handleAddProjectDialogClose(saved) } />
               <EditUserDialog open={ this.state.showAddUserDialog }
                 title={ this.state.addUserDialogTitle }
-                companyId={ this.state.companyId }
-                companyName={ this.state.companyName }
-                role={ this.state.userRole }
+                companies={ this.state.companies }
+                user={ { companyId: this.state.companyId, role: this.state.userRole} }
                 onClose={ (saved) => this.handleAddUserDialogClose(saved) } />
               <TextField
                   hintText='Search companies ... '

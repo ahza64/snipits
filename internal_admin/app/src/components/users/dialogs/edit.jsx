@@ -41,20 +41,52 @@ export default class EditUserDialog extends React.Component {
 
   componentWillUpdate(nextProps, nextState) {
     if ((nextProps.open === true) && (this.props.open === false)) {
-      this.setState(INIT_STATE);
+      var user = nextProps.user;
+      var newState = JSON.parse(JSON.stringify(INIT_STATE));
+      if ((!nextProps.user.companyId) && (nextProps.companies)) {
+        if (nextProps.companies.length > 0) {
+          newState.companyId = nextProps.companies[0].id;
+        }
+      }
+      if (user.id) {
+        var nameSeparatorIndex = user.name.indexOf(' ');
+        if (nameSeparatorIndex >= 0) {
+          newState.firstName = user.name.substring(0, nameSeparatorIndex);
+          newState.lastName = user.name.substring(nameSeparatorIndex+1, user.name.length);
+        } else {
+          newState.firstName = user.name;
+        }
+        newState.email = user.email;
+        newState.password = 'password';
+        newState.confirm = 'password';
+      }
+      if (user.role) {
+        newState.role = user.role;
+      }
+      if (user.companyId) {
+        newState.companyId = user.companyId;
+      }
+      this.setState(newState);
     }
   }
 
   saveUser() {
-    var role = this.props.role ? this.props.role : this.state.role;
+    var role = this.state.role;
     role = (role !== 'CU') ? role : null;
+    var companyId = this.state.companyId;
+    var password = this.state.password;
+    var userId = this.props.user.id;
+    if ((userId) && (password === 'password')) {
+      password = null;
+    }
 
     var user = {
+      id: userId,
       firstname: this.state.firstName,
       lastname: this.state.lastName,
       email: this.state.email,
-      password: this.state.password,
-      companyId: (role !== 'DA') ? this.props.companyId : null,
+      password: password,
+      companyId: (role !== 'DA') ? companyId : null,
       role: role
     };
 
@@ -127,10 +159,9 @@ export default class EditUserDialog extends React.Component {
     });
   }
 
-  handleRoleChanged(event) {
-    var role = event.target.value;
+  handleRoleChanged(event, value) {
     this.setState({
-      role: role
+      role: value
     });
   }
 
@@ -163,6 +194,39 @@ export default class EditUserDialog extends React.Component {
       );
     } else {
       return;
+    }
+  }
+
+  handleCompanySelectChanged(event, value) {
+    this.setState({
+      companyId: value
+    });
+  }
+
+  renderCompanySelectField() {
+    if (this.state.role === 'DA') {
+      return(
+        <TextField
+          name="dispatchr"
+          fullWidth={ true }
+          value="Dispatchr"
+          disabled={ true }/>
+      );
+    } else {
+      return(
+        <SelectField
+          fullWidth={true}
+          value={ this.state.companyId }
+          disabled={ (this.props.user.companyId || this.props.user.id) ? true : false }
+          onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) } >
+          { this.props.companies.map((company, idx) => {
+              return(
+                <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
+              );
+            })
+          }
+        </SelectField>
+      );
     }
   }
 
@@ -227,11 +291,7 @@ export default class EditUserDialog extends React.Component {
               <tr>
                 <td>Company</td>
                 <td style={ { paddingRight: '30px' } }>
-                  <TextField
-                    name="company"
-                    fullWidth={ true }
-                    disabled={ true }
-                    value={ this.props.companyName } />
+                  { this.renderCompanySelectField() }
                 </td>
                 <td />
                 <td />
@@ -241,9 +301,9 @@ export default class EditUserDialog extends React.Component {
                 <td style={ { paddingRight: '30px' } }>
                   <SelectField
                     fullWidth={ true }
-                    disabled={ this.props.role ? true : false }
-                    value={ this.props.role ? this.props.role : this.state.role }
-                    onChange={ (event) => this.handleRoleChanged(event) } >
+                    disabled={ (this.props.user.role || this.props.user.id) ? true : false }
+                    value={ this.state.role }
+                    onChange={ (event, index, value) => this.handleRoleChanged(event, value) } >
                     <MenuItem value="CU" primaryText="CU" />
                     <MenuItem value="DI" primaryText="DI" />
                     <MenuItem value="DA" primaryText="DA" />
