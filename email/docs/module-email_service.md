@@ -100,9 +100,9 @@ Source:
 <td>text email body , template takes presidence</td>
 </tr>
 <tr class="odd">
-<td><code.md</code></td>
+<td><code>html</code></td>
 <td><span class="param-type">String</span></td>
-<td.md email body, template takes presidence</td>
+<td>html email body, template takes presidence</td>
 </tr>
 <tr class="even">
 <td><code>dry_run</code></td>
@@ -227,9 +227,9 @@ Source:
 <td>text email body , template takes presidence</td>
 </tr>
 <tr class="even">
-<td><code.md</code></td>
+<td><code>html</code></td>
 <td><span class="param-type">String</span></td>
-<td.md email body, template takes presidence</td>
+<td>html email body, template takes presidence</td>
 </tr>
 <tr class="odd">
 <td><code>dry_run</code></td>

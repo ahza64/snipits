@@ -44,7 +44,7 @@ var SERVICE_NAME = 'email';
  * @param {String}  options.template   template name
  * @param {String}  options.subject    email subject, template takes presidence
  * @param {String}  options.text       text email body , template takes presidence
- * @param {String}  options.md      .md email body, template takes presidence
+ * @param {String}  options.md       html email body, template takes presidence
  * @param {Boolean} options.dry_run    if ture email service will not attempt to send email and return what would have been sent
  * @param {Any}     options.{anything} any other option will be used as template values 
  */
@@ -90,7 +90,7 @@ function request(options){
  * @param {String}  options.template   template name
  * @param {String}  options.subject    email subject, template takes presidence
  * @param {String}  options.text       text email body , template takes presidence
- * @param {String}  options.md      .md email body, template takes presidence
+ * @param {String}  options.md       html email body, template takes presidence
  * @param {Boolean} options.dry_run    if ture email service will not attempt to send email and return what would have been sent
  * @param {Any}     options.{anything} any other option will be used as template
  */
@@ -103,7 +103,7 @@ function start(host, port, options) {
     msg = JSON.parse(msg);    
         
     //collect all options for call
-    var params = ['to', 'from', 'template', 'subject', 'text', .md'];
+    var params = ['to', 'from', 'template', 'subject', 'text', 'html'];
     var opts = _.extend({}, msg, options);
 
     //handle send flag seperately

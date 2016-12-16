@@ -30,7 +30,7 @@ templates/test.json
     "subject": "Test Email",
     "body": {
         "text": "Hi,\n\nThis is an email template.\n\nYou're value is {{value}}\n\nThanks,\n\n- Template Test",
-        .md": ".md>This is the.md <b>version</b><br>template value: <i>{{value}}</i><.md>"
+        "html": "<html>This is the html <b>version</b><br>template value: <i>{{value}}</i></html>"
     }    
 }
 ```
@@ -56,8 +56,8 @@ templates/test.json
 <tr class="even">
 <td>test</td>
 <td>Test Email</td>
-<td.md</td>
-<td>This is the.md <strong>version</strong><br />
+<td>html</td>
+<td>This is the html <strong>version</strong><br />
 template value: <em>{{value}}</em></td>
 </tr>
 </tbody>
@@ -104,7 +104,7 @@ Library can create and send email.
 ``` prettyprint
 var create_mail = require('./email/create_mail');
 
-//yield create_mail(to, from, template, values, subject, text,.md, send);
+//yield create_mail(to, from, template, values, subject, text, html, send);
 yield create_mail('musketeers', gabe@dispatchr, 'test', {value: "TEMPLATE VALUE"}, undefined, undefined, undefined, true);
 yield create_mail('musketeers', gabe@dispatchr, undefined, undefined, "TEXT EMAIL", "EMAIL TEXT BODY HERE", undefined, true);
 ```

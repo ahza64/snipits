@@ -132,7 +132,7 @@ function *processTemplate(template, values) {
 /**
  * 
  */
-function *generateEmail(to, from, template, values, subject, text,.md, replyTo, send) {
+function *generateEmail(to, from, template, values, subject, text, html, replyTo, send) {
   var message = {};
   
   message.to = to;
@@ -141,7 +141,7 @@ function *generateEmail(to, from, template, values, subject, text,.md, replyTo, 
   message.from = from;    
   message.replyTo = replyTo;
   message.text = text;
-  message.md =.md;
+  message.md = html;
   message.subject = subject;
   
   return yield create_email(message, send);
@@ -155,7 +155,7 @@ function *generateEmail(to, from, template, values, subject, text,.md, replyTo, 
  * @param {String}  options.template   template name
  * @param {String}  options.subject    email subject, template takes presidence
  * @param {String}  options.text       text email body , template takes presidence
- * @param {String}  options.md      .md email body, template takes presidence
+ * @param {String}  options.md       html email body, template takes presidence
  * @param {Boolean} options.send       if ture email will be sent
  * @return {Object} result
  * @return {Object} result.sent        true if email was sent

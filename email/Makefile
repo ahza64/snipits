@@ -17,7 +17,7 @@ js_doc:
 markdown : 
 	mkdir -p ${MD_DIR}
 	find ${HTML_DIR} -iname "*.html" -type f | xargs -I {} -n1 basename {} .html | xargs -I {} -n1 pandoc -f html -t markdown_github -s "${HTML_DIR}/{}.html" -o "${MD_DIR}/{}.md" 
-	find ./$(MD_DIR) -name '*.md' | xargs sed -i .bak 's/.html/.md/g'
+	find ./$(MD_DIR) -name '*.md' | xargs sed -i .bak 's/\.html/.md/g'
 	rm ./$(MD_DIR)/*.bak
 	
 clean:
