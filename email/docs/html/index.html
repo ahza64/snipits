@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-email_create_mail.html">email/create_mail</a><ul class='methods'><li data-type='method'><a href="module-email_create_mail.html#~create_email">create_email</a></li><li data-type='method'><a href="module-email_create_mail.html#~generateEmail">generateEmail</a></li></ul></li><li><a href="module-email_google_api_auth.html">email/google_api_auth</a><ul class='methods'><li data-type='method'><a href="module-email_google_api_auth.html#~authorize">authorize</a></li><li data-type='method'><a href="module-email_google_api_auth.html#~createNewToken">createNewToken</a></li><li data-type='method'><a href="module-email_google_api_auth.html#~storeToken">storeToken</a></li></ul></li><li><a href="module-email_service.html">email/service</a><ul class='methods'><li data-type='method'><a href="module-email_service.html#~request">request</a></li><li data-type='method'><a href="module-email_service.html#~request">request</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>Email</h1><h2>Templates</h2><p>Email Templates are stored in the database for ile system.  The should use <a href="https://github.com/janl/mustache.js/">Mustache.js</a> template format. </p>
+<h4>File Template</h4><pre class="prettyprint source lang-json"><code>templates/test.json
+{
+    &quot;subject&quot;: &quot;Test Email&quot;,
+    &quot;body&quot;: {
+        &quot;text&quot;: &quot;Hi,\n\nThis is an email template.\n\nYou're value is {{value}}\n\nThanks,\n\n- Template Test&quot;,
+        &quot;html&quot;: &quot;&lt;html>This is the html &lt;b>version&lt;/b>&lt;br>template value: &lt;i>{{value}}&lt;/i>&lt;/html>&quot;
+    }    
+}</code></pre><h4>Database Template</h4><table>
+<thead>
+<tr>
+<th>template</th>
+<th>subject</th>
+<th>body_type</th>
+<th>body</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test</td>
+<td>Test Email</td>
+<td>text</td>
+<td>Hi,\n\nThis is an email template.\n\nYou're value is {{value}}\n\nThanks,\n\n- Template Test</td>
+</tr>
+<tr>
+<td>test</td>
+<td>Test Email</td>
+<td>html</td>
+<td><html>This is the html <b>version</b><br>template value: <i>{{value}}</i></html></td>
+</tr>
+</tbody>
+</table>
+<h2>Distribution Lists</h2><p>Distribution lists a stored in the database for file system.  </p>
+<h4>File Distribution List</h4><pre class="prettyprint source lang-json"><code>distribution_lists/musketeers.json
+[
+    {
+        &quot;name&quot;: &quot;Tejas&quot;,
+        &quot;email&quot;: &quot;tejas@dispatchr.com&quot;
+    },
+    {
+        &quot;name&quot;: &quot;Xuchang&quot;,
+        &quot;email&quot;: &quot;xuchang@dispatchr.com&quot;
+    },
+    {
+        &quot;name&quot;: &quot;Rahul&quot;,
+        &quot;email&quot;: &quot;rahul@dispatchr.com&quot;
+    }
+]</code></pre><h4>Database Distribution List</h4><table>
+<thead>
+<tr>
+<th>list</th>
+<th>name</th>
+<th>email</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>musketeers</td>
+<td>Tejas</td>
+<td>tejas@dispatchr.com</td>
+</tr>
+<tr>
+<td>musketeers</td>
+<td>Xuchang</td>
+<td>xuchang@dispatchr.com</td>
+</tr>
+<tr>
+<td>musketeers</td>
+<td>Rahul</td>
+<td>rahul@dispatchr.com</td>
+</tr>
+</tbody>
+</table>
+<h2>Create Mail</h2><p>Library can create and send email.</p>
+<pre class="prettyprint source lang-js"><code>var create_mail = require('./email/create_mail');
+
+//yield create_mail(to, from, template, values, subject, text, html, send);
+yield create_mail('musketeers', gabe@dispatchr, 'test', {value: &quot;TEMPLATE VALUE&quot;}, undefined, undefined, undefined, true);
+yield create_mail('musketeers', gabe@dispatchr, undefined, undefined, &quot;TEXT EMAIL&quot;, &quot;EMAIL TEXT BODY HERE&quot;, undefined, true);</code></pre><h2>Start The Service</h2><p>Create Mail is wrapped up in a service is wrapped up in a service that can run as a deamon</p>
+<p><strong>NOTE: Be sure to have started the <a href="https://github.com/Dispatchr/services/tree/develop/backbone">Backbone Service</a> as well.</strong></p>
+<pre class="prettyprint source"><code>$ node email/service.js start --help
+Usage: /Users/gabriellittman/Development/services/email/service.js start &lt;host> &lt;port> &lt;options>
+Required Arguments:
+
+
+Options:
+
+   --host [default 127.0.0.1]
+   --port [default 5555]
+   --[variable] Other options will be hardcoded in create mail for the service and override requests</code></pre><pre class="prettyprint source"><code>//Start the service
+$ node email/service.js start 
+
+//Start the service on port 6666
+$ node email/service.js start --port 6666
+
+//Start the service that will never send
+$ node email/service.js start --send false</code></pre><h2>Send Request to Service</h2><p>You can use the library to send a request to the service</p>
+<pre class="prettyprint source lang-js"><code>var service = require('./email/service');
+
+service.request({
+    to: 'musketeers',
+    from: 'gabe@dispatchr.co',
+    template: 'test',
+    value: 'SERVICE REQUEST TEMPLATE VALUE'
+}).then(result => {
+    console.log(&quot;GOT THE RESULT&quot;, result);
+})</code></pre><p>If you have a connection already open to the broker you can pass in the BackboneClient</p>
+<pre class="prettyprint source lang-js"><code>var BackboneClient = require('dsp_backbone/client');
+var service = require('./email/service');
+var client = new BackboneClient('127.0.0.0', '5555');
+service.request({
+    client: client
+    to: 'musketeers',
+    from: 'gabe@dispatchr.co',
+    template: 'test',
+    value: 'SERVICE REQUEST TEMPLATE VALUE'
+})</code></pre></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Dec 15 2016 23:39:52 GMT-0800 (PST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
