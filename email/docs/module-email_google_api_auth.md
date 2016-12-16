@@ -1,7 +1,3 @@
-<div class="navicon">
-
-</div>
-
 [Home](index.md)
 ------------------
 
@@ -18,97 +14,55 @@
     -   [request](module-email_service.md#~request)
     -   [request](module-email_service.md#~request)
 
-<div id="main">
-
-email/google\_api\_auth {#emailgoogle_api_auth .page-title}
+email/google\_api\_auth
 =======================
-
-<div class="section">
-
-<div class="container-overview">
-
-<div class="description">
 
 Google API logic for sending email
 
-</div>
+Source:  
+-   [google\_api\_auth.js](google_api_auth.js.md), [line 1](google_api_auth.js.md#line1)
 
-Source:
+### Methods
 
-:   -   [google\_api\_auth.js](google_api_auth.js.md), [line
-        1](google_api_auth.js.md#line1)
+#### <span class="type-signature">(inner) </span>authorize<span class="signature">(credentials, callback)</span><span class="type-signature"></span>
 
-</div>
-
-### Methods {#methods .subsection-title}
-
-#### [(inner) ]{.type-signature}authorize[(credentials, callback)]{.signature}[]{.type-signature} {#~authorize .name}
-
-<div class="description">
-
-Create an OAuth2 client with the given credentials, and then execute the
-given callback function.
-
-</div>
+Create an OAuth2 client with the given credentials, and then execute the given callback function.
 
 ##### Parameters:
 
-  Name            Type                      Description
-  --------------- ------------------------- --------------------------------------------------
-  `credentials`   [Object]{.param-type}     The authorization client credentials.
-  `callback`      [function]{.param-type}   The callback to call with the authorized client.
+| Name          | Type                                     | Description                                      |
+|---------------|------------------------------------------|--------------------------------------------------|
+| `credentials` | <span class="param-type">Object</span>   | The authorization client credentials.            |
+| `callback`    | <span class="param-type">function</span> | The callback to call with the authorized client. |
 
-Source:
+Source:  
+-   [google\_api\_auth.js](google_api_auth.js.md), [line 58](google_api_auth.js.md#line58)
 
-:   -   [google\_api\_auth.js](google_api_auth.js.md), [line
-        58](google_api_auth.js.md#line58)
+#### <span class="type-signature">(inner) </span>createNewToken<span class="signature">(oauth2Client, callback)</span><span class="type-signature"></span>
 
-#### [(inner) ]{.type-signature}createNewToken[(oauth2Client, callback)]{.signature}[]{.type-signature} {#~createNewToken .name}
-
-<div class="description">
-
-Get and store new token after prompting for user authorization, and then
-execute the given callback with the authorized OAuth2 client.
-
-</div>
+Get and store new token after prompting for user authorization, and then execute the given callback with the authorized OAuth2 client.
 
 ##### Parameters:
 
-  Name             Type                                Description
-  ---------------- ----------------------------------- --------------------------------------------------
-  `oauth2Client`   [google.auth.OAuth2]{.param-type}   The OAuth2 client to get token for.
-  `callback`       [getEventsCallback]{.param-type}    The callback to call with the authorized client.
+| Name           | Type                                               | Description                                      |
+|----------------|----------------------------------------------------|--------------------------------------------------|
+| `oauth2Client` | <span class="param-type">google.auth.OAuth2</span> | The OAuth2 client to get token for.              |
+| `callback`     | <span class="param-type">getEventsCallback</span>  | The callback to call with the authorized client. |
 
-Source:
+Source:  
+-   [google\_api\_auth.js](google_api_auth.js.md), [line 73](google_api_auth.js.md#line73)
 
-:   -   [google\_api\_auth.js](google_api_auth.js.md), [line
-        73](google_api_auth.js.md#line73)
-
-#### [(inner) ]{.type-signature}storeToken[(token)]{.signature}[]{.type-signature} {#~storeToken .name}
-
-<div class="description">
+#### <span class="type-signature">(inner) </span>storeToken<span class="signature">(token)</span><span class="type-signature"></span>
 
 Store token to disk be used in later program executions.
 
-</div>
-
 ##### Parameters:
 
-  Name      Type                    Description
-  --------- ----------------------- -----------------------------
-  `token`   [Object]{.param-type}   The token to store to disk.
+| Name    | Type                                   | Description                 |
+|---------|----------------------------------------|-----------------------------|
+| `token` | <span class="param-type">Object</span> | The token to store to disk. |
 
-Source:
+Source:  
+-   [google\_api\_auth.js](google_api_auth.js.md), [line 112](google_api_auth.js.md#line112)
 
-:   -   [google\_api\_auth.js](google_api_auth.js.md), [line
-        112](google_api_auth.js.md#line112)
-
-</div>
-
-</div>
-
-\
-
-Documentation generated by [JSDoc
-3.4.0](https://github.com/jsdoc3/jsdoc) on Thu Dec 15 2016 23:39:52
-GMT-0800 (PST) using the Minami theme.
+Documentation generated by [JSDoc 3.4.0](https://github.com/jsdoc3/jsdoc) on Thu Dec 15 2016 23:39:52 GMT-0800 (PST) using the Minami theme.
