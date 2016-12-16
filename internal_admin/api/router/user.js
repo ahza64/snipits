@@ -13,41 +13,66 @@ const Users = require('dsp_shared/database/model/ingestion/tables').users;
 const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
 const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 
-// Create a user
+// Create / update a user
 router.post(
   '/user',
   function*() {
     if (permissions.has(this.req.user, null)) {
       var body = this.request.body;
 
-      var companyId = body.companyId;
-      if ((!companyId) && (body.company)) {
-        company = yield Companies.findOne({
-          where: { name: body.company },
-          raw: true
-        });
-        companyId = company.id;
-      }
-
-      var user = {
-        name: body.firstname + ' ' + body.lastname,
-        email: body.email,
-        password: Users.build().generateHash(body.password),
-        status: ACTIVE,
-        companyId: companyId
-      };
-
-      if (body.role) {
-        user.role = body.role;
-        yield Admins.create(user);
+      if (body.id) {
+        this.body = yield updateUser(body);
       } else {
-        yield Users.create(user);
-      }
+        var companyId = body.companyId;
+        if ((!companyId) && (body.company)) {
+          company = yield Companies.findOne({
+            where: { name: body.company },
+            raw: true
+          });
+          companyId = company.id;
+        }
 
-      this.body = user;
+        var user = {
+          name: body.firstname + ' ' + body.lastname,
+          email: body.email,
+          password: Users.build().generateHash(body.password),
+          status: ACTIVE,
+          companyId: companyId
+        };
+
+        if (body.role) {
+          user.role = body.role;
+          yield Admins.create(user);
+        } else {
+          yield Users.create(user);
+        }
+
+        this.body = user;
+      }
+    } else {
+      this.throw(403);
     }
   }
 );
+
+var updateUser=function*(body) {
+  var user;
+  if (body.role) {
+    user = yield Admins.find({ where: {id: body.id } });
+  } else {
+    user = yield Users.find({ where: {id: body.id } });
+  }
+
+  var attributes = {
+    name: body.firstname + ' ' + body.lastname,
+    email: body.email
+  };
+  if (body.password) {
+    attributes.password = Users.build().generateHash(body.password);
+  }
+
+  return yield user.updateAttributes(attributes);
+}
 
 router.put(
   '/users/:id/deactivate',
@@ -88,11 +113,20 @@ router.put(
 router.delete(
   '/users/:id',
   function*() {
-    try {
-      var user = yield Users.find({ id: this.params.id });
-      this.body = yield user.updateAttributes({ deleted: true, deletedAt: new Date()});
-    } catch (err) {
-      console.error(err);
+    var userId = this.params.id;
+    if (userId && permissions.has(this.req.user, null)) {
+      try {
+        if (this.query.role) {
+          this.body = yield Admins.destroy({ where: { id: userId } });
+        } else {
+          this.body = yield Users.destroy({ where: { id: userId } });
+        }
+      } catch (err) {
+        console.error(err);
+        this.throw(500);
+      }
+    } else {
+      this.throw(403);
     }
   }
 );

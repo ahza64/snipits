@@ -25,8 +25,6 @@ export default class DefaultNavbar extends React.Component {
     this.goToProjects = this.goToProjects.bind(this);
     this.showProjects = this.showProjects.bind(this);
     this.goToIngest = this.goToIngest.bind(this);
-    this.goToCreate = this.goToCreate.bind(this);
-    this.showCreate = this.showCreate.bind(this);
     this.goToUsers = this.goToUsers.bind(this);
     this.showUsers = this.showUsers.bind(this);
   }
@@ -89,16 +87,6 @@ export default class DefaultNavbar extends React.Component {
     }
   }
 
-  goToCreate() {
-    browserHistory.push(urlPrefix + 'create/');
-  }
-
-  showCreate() {
-    if (authRedux.getState().role === 'DA') {
-      return (<MenuItem eventKey={1.2} onClick={ this.goToCreate }>Create</MenuItem>);
-    }
-  }
-
   goToUsers() {
     browserHistory.push(urlPrefix + 'users/');
   }
@@ -127,7 +115,6 @@ export default class DefaultNavbar extends React.Component {
               { this.showProjects() }
               { this.showConfigs() }
               { this.showIngest() }
-              { this.showCreate() }
               { this.showUsers() }
               <MenuItem divider />
               <MenuItem eventKey={1.4} onClick={ this.handleLogout }>Logout</MenuItem>
