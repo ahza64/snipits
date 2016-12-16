@@ -1,6 +1,7 @@
 /**
  * @fileoverview Google API logic for sending email
  * @module email/google_api_auth 
+ * @ignore
  */
 var fs = require('fs');
 var path = require('path');

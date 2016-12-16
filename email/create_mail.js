@@ -109,9 +109,7 @@ function *processTemplate(template, values) {
   return message;
 }
 
-/**
- * 
- */
+
 function *generateEmail(to, from, template, values, subject, text, html, replyTo, send) {
   var message = {};
   

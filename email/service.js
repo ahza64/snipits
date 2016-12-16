@@ -57,7 +57,7 @@ function request(options){
 }
 
 /**
- * @function request
+ * @function start
  * @param {String}  host               ip or host name to connect to backbone
  * @param {String}  port               port to connect to backbone
  * @param {Object}  options            options - these options will override what is sent in requests
