@@ -11,7 +11,7 @@ import DefaultNavbar from '../navbar/defaultNavbar';
 import UploadedFiles from './uploadedFiles';
 import UploadLib from './uploadLib';
 import History from './history/history';
-import FileExistsWarn from './notification/FileExistsWarn';
+import FileExistsWarn from './notification/fileExistsWarn';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -90,7 +90,7 @@ export default class UploadZone extends UploadLib {
   uploadFile(file, signedUrl) {
     var offset = pageRedux.getState();
     this.setUploadNotice(true);
-    
+
     request
     .put(signedUrl)
     .set('Content-Type', file.type)
