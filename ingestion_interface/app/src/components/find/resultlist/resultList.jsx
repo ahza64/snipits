@@ -60,14 +60,14 @@ export default class ResultList extends React.Component {
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Menu</TableHeaderColumn>
               </TableRow>
-            </TableHeader> 
+            </TableHeader>
             <TableBody displayRowCheckbox={ false } selectable={ false }>
-              { 
+              {
                 files.map((file, idx) => {
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn style={{ width: '5px' }}>{ idx + 1 }</TableRowColumn>
-                      <TableRowColumn style={{ width: '350px' }}>{ file.fileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '350px' }}>{ file.customerFileName }</TableRowColumn>
                       <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
                       <TableRowColumn>{ file.ingested ? 'INGESTED' : 'NOT INGESTED' }</TableRowColumn>
                       <TableRowColumn>
