@@ -1,0 +1,41 @@
+{
+    "log_file": "logs/mixed_assign_push.testlog",
+    "expected": [
+        { 
+            "type": "push",
+            "user_id": "C7Hi73J9LSGRs8chc",
+            "user_email": "CNix@wrighttree.com",
+            "target_id": "4uLfnHDYqkaCkyHNj",
+            "target_email": "Soto@wright.com",
+            "tree_ids": [ 
+                "56a9ae4d663eb9c107ce179c",
+                "5762f89617a18204032dca8e",
+                "5762f89e17a18204032dcaa3",
+                "5762f8a517a18204032dcab8",
+                "5762f8a917a18204032dcacf",
+                "5762fb9e17a18204032dceb8",
+                "5762fe5717a18204032dd1cd",
+                "5757382117a1820403293aef",
+                "5757382617a1820403293b01",
+                "575b0be817a18204032b020f",
+                "575b0bec17a18204032b0223",
+                "575b0c3817a18204032b02a1"
+            ],
+            "date": "2016-07-15T16:40:09.942Z"
+        },        
+        { 
+          "type": "assign",
+          "user_id": "DycKBjqqB2NcN97re",
+          "user_email": "d1kp@pge.com",
+          "target_id": "3AHNcnnaWDCebsrMw",
+          "target_email": "dow2@pge.com",
+          "tree_ids": [ 
+              "575fae95e047bdb034f832c7",
+              "575fae95e047bdb034f832ce",
+              "575fae95e047bdb034f832cf",
+              "577e3297bbf5a3119891bcd1"
+           ],
+          "date": "2016-07-15T16:40:09.939Z"
+        }
+    ]
+}

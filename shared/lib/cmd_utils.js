@@ -62,8 +62,7 @@ function bakerGen(gen, options) {
   options = options || {};    
   connect(options.dbs);
   options.parameters = baker.getParams(gen);
-  options.command = gen.name;
-  console.log(options);
+  options.command = gen.name;  
   baker.command(function*(){
     yield waitForConnections();    
     console.log("RUNNING");    

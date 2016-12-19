@@ -136,17 +136,18 @@ function assembleArgument(argv, command_data) {
   
   _.each(argv._, function(value){
     value = parseValue(value);
+    var arg_added = false;
     for(var i = 0; i < param_count; i++) {
       if(args[i] === undefined) {
         args[i] = value;
+        arg_added = true;
         break;
       }
     }
-    if(i < param_count) {
-      args.push(value);
-    } else if(extra_args){
+
+    if(!arg_added) {
       extra_args.push(value);
-    }    
+    }
   });
   
   for(var i =0; i < required.length; i++) {

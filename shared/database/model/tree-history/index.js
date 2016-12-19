@@ -40,10 +40,9 @@ historySchema.statics.buildVersion = function(type, id, date) {
                                   object_type: type,
                                   object_id: id,
                                   $or: [
-                                    {request_created: {$lt: date}},
-                                    {created: {$lt: date}}
+                                    {request_created: {$lt: date}}
                                   ]
-                              }).sort({request_created: 1, created: 1})
+                              }).sort({request_created: 1})
   .then(histories => {
     histories.sort((h1, h2) => {
       var d1 = h1.request_created || h1.created;
@@ -57,11 +56,19 @@ historySchema.statics.buildVersion = function(type, id, date) {
       return 0;
     });
 
+    console.log("GOT HISTORIES", histories.length); 
+
     //reconstitue
     var result = {};
     for(var i = 0; i < histories.length; i++) {
       _.extend(result, histories[i].action_value);
+      for(var key in result) {
+        if(result.hasOwnProperty(key) && result[key] === DELETED) {
+          delete result[key];
+        }
+      }      
     }
+    return result;
 
   });
 };
@@ -110,6 +117,9 @@ function generateRecord(treeDiff, tree, result) {
 }
 
 function singleHistoryRecord(tree, user, json, timestamp, source) {
+  if(timestamp) {
+    timestamp = Date.create(timestamp); //wrapping null or 0 in crate creates a date at 1970-01-01 00:00:00.000Z
+  }
   return {
     action_value: json,
     object_type: 'Tree',
@@ -117,7 +127,7 @@ function singleHistoryRecord(tree, user, json, timestamp, source) {
     performer_id: user._id,
     performer_type: user.type || 'User',
     source: source,
-    request_created: Date.create(timestamp) || new Date(),
+    request_created: timestamp || new Date(),
     created: new Date()
   };
 }
