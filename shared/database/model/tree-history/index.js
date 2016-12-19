@@ -73,6 +73,30 @@ historySchema.statics.buildVersion = function(type, id, date) {
   });
 };
 
+
+historySchema.statics.iterVersions = function*(type, id, date) {
+  date = date || new Date();
+  var stream = stream(TreeHistoryModel, {
+                                  object_type: type,
+                                  object_id: id,
+                                  $or: [
+                                    {request_created: {$lt: date}}
+                                  ]
+                              },{request_created: 1});
+
+
+  var cur_version = {};
+  for(var hist of stream) {
+    _.extend(cur_version, hist.action_value);
+    for(var key in hist) {
+      if(cur_version.hasOwnProperty(key) && cur_version[key] === DELETED) {
+        delete cur_version[key];
+      }
+    }          
+    yield cur_version;    
+  }
+};
+
 //https://github.com/jquery/jquery/blob/master/src/core.js
 function isNumeric( obj ) {
 

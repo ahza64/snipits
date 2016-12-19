@@ -6,7 +6,6 @@ var _ = require('underscore');
 var fs = require('fs');
 var assert = require('assert');
 var stream = require('dsp_shared/database/stream');
-var User = require('dsp_shared/database/model/users');
 var TreeHistory = require("dsp_shared/database/model/tree-history");
 var Tree = require("dsp_shared/database/model/tree");
 
@@ -85,68 +84,8 @@ function *run(log_dir_path, fix) {
 }
 
 
-function *setUserCufIds(fix) {
-  var Cuf = require('dsp_shared/database/model/cufs');
-  var users = yield User.find();
-  for(var i = 0; i < users.length; i++) {
-    var user = users[i];
-    var user_email = user.emails[0].address;
-    var cufs = yield Cuf.find({scuf: user_email});
-    var found_cuf = null;
-    
-    for(var j = 0; j < cufs.length; j++) {
-      var cuf = cufs[j];      
-      var cuf_score = cufScore(cuf, user_email, user.profile.name);      
-      // console.log("CHECK USER", user.profile.name, user_email, cuf.first, cuf.last, cuf.uniq_id, cuf.active, cuf_score);
-      if(cuf_score > 0) {
-        if(!found_cuf) {
-          found_cuf = cuf;
-        } else {
-          if(cuf_score > cufScore(found_cuf, user_email, user.profile.name)) {
-            found_cuf = cuf;
-          }
-        }
-      }
-    }
-    if(found_cuf) {
-      // console.log("FOUND CUF FOR USER", user.profile.name, user_email, found_cuf.first, found_cuf.last, found_cuf.uniq_id);
-      if(user.profile.cuf_id !== found_cuf._id) {
 
-        console.log("Setting User Cuf ID", user._id);
-        console.log("Setting User Cuf ID", 'cuf_id:', user.profile.cuf_id, '==>', found_cuf._id);
-        console.log("Setting User Cuf ID", 'user:', user.profile.name, user.emails[0].address);
-        console.log("Setting User Cuf ID", ' cuf:', found_cuf.first+" "+found_cuf.last, found_cuf.uniq_id, found_cuf.status);
-        user.profile.cuf_id = found_cuf._id;
-        user.markModified('profile');        
-        console.log("TEST", user.profile.cuf_id);
-        if(fix) {
-          yield user.save();
-        }
-      }
-    }
-        
-  }
-}
 
-function cufScore(cuf, user_email, user_name) {
-  var score = 0;
-  if(cuf.uniq_id.toLowerCase() === user_email.toLowerCase()) {
-    score+=2;
-  }
-  var cuf_name = cuf.first+" "+cuf.last;
-  if(cuf_name === user_name) {
-    score++;
-  }
-  if(score > 0) {
-    if(cuf.uniq_id.toLowerCase().includes("@pge.com")) {
-      score+=2;
-    }
-    if(cuf.status === "active") {
-      score++;
-    }    
-  }
-  return score;
-}
 
 
 // function *processAssign(update) {
