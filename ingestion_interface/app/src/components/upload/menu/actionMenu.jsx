@@ -25,33 +25,26 @@ export default class ActionMenu extends UploadLib {
     this.state = {
       showWatcherModal: false,
       showDescriptionModal: false,
-      watchers: [],
-      ingestions: {},
-      fileName: '',
       type: 'UPLOAD',
-      token: '',
+      fileId: null
     };
 
     this.close = this.close.bind(this);
     this.open = this.open.bind(this);
-    this.getWatchers = this.getWatchers.bind(this);
-    this.getIngestion = this.getIngestion.bind(this);
     this.handleDeleteIngestion = this.handleDeleteIngestion.bind(this);
   }
 
   componentWillMount() {
     this.setState({
-      fileName: this.props.files,
-      type: this.props.type,
-      token: this.props.token,
+      fileId: this.props.fileId,
+      type: this.props.type
     });
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      fileName: nextProps.files,
-      type: nextProps.type,
-      token: nextProps.token,
+      fileId: nextProps.fileId,
+      type: nextProps.type
     });
   }
 
@@ -67,90 +60,45 @@ export default class ActionMenu extends UploadLib {
     this.setState(stateObj);
   }
 
-  getWatchers() {
-    this.getWatcherEmail(this.props.files, (emails) => {
-      this.setState({ watchers: emails });
-    });
-  }
-
-  getIngestion() {
-    this.getIngestionRecord(this.props.files, (res) => {
-      this.setState({ ingestions: res.body });
-    });
+  handleFileDeleted() {
+    if (this.props.onFileDeleted) {
+      this.props.onFileDeleted(this.props.fileId);
+    }
   }
 
   handleDeleteIngestion() {
-    var type = this.state.type;
+    this.deleteUploadedFile(this.props.fileId, () => this.handleFileDeleted());
+  }
 
-    if (type === 'UPLOAD') {
-      // In upload page
-      var offset = pageRedux.getState();
-      this.deleteUploadedFile(this.state.fileName, () => {
-        this.getUploadedFiles(offset, (files) => {
-          this.props.setFiles(files);
-          this.writeHistory(this.state.fileName, 'delete', () => {
-            this.getHistory((heatmapData, historiesData) => {
-              this.props.setHistories(heatmapData, historiesData);
-              this.props.setTotal(false);
-            });
-          });
-        });
-      });
-    } else if (type === 'SEARCH') {
-      // In search page
-      this.deleteUploadedFile(this.state.fileName, () => {
-        this.getSearchResults(this.state.token, this.props.setFiles);
-      });
+  handleDescriptionChanged(newDescription) {
+    this.close('showDescriptionModal');
+    if(newDescription && this.props.onDescriptionChanged) {
+      this.props.onDescriptionChanged(this.props.fileId, newDescription);
     }
-
-    this.props.setDelNotification();
   }
 
   render() {
     return (
       <div>
         <IconMenu
-          touchTapCloseDelay={ 0 }
           iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
         >
           <MenuItem
             primaryText='Set Description'
-            onClick={
-              () => {
-                this.getIngestion();
-                this.open('showDescriptionModal');
-              } 
-            }
+            onClick={ () => this.open('showDescriptionModal') }
           />
           <MenuItem
-            primaryText='Set Watchers'
-            onClick={
-              () => {
-                this.open('showWatcherModal');
-                this.getWatchers();
-              } 
-            }
-          />
-          <MenuItem 
             primaryText='Delete'
             onClick={ this.handleDeleteIngestion }
           />
         </IconMenu>
-        <WatcherNotification
-          setFiles={ this.props.setFiles }
-          showModal={ this.state.showWatcherModal }
-          setClose={ () => this.close('showWatcherModal') }
-          files={ this.props.files }
-          watchers={ this.state.watchers }
-        />
         <DescriptionBox
-          setFiles={ this.props.setFiles }
           showModal={ this.state.showDescriptionModal }
-          setClose={ () => this.close('showDescriptionModal') }
-          files={ this.props.files }
-          ingestions={ this.state.ingestions }
+          setClose={ (newDescription) => this.handleDescriptionChanged(newDescription) }
+          fileId={ this.props.fileId }
+          description={ this.props.description }
         />
       </div>
     );

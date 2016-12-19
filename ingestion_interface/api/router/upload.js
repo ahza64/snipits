@@ -92,29 +92,43 @@ router.post(
   }
 );
 
+var addToHistory = function*(file, user, action) {
+  var obj = {
+    action: action,
+    userName: user.name,
+    userId: user.id,
+    companyId: file.companyId,
+    ingestionFileId: file.id,
+    ingestionConfigurationId: file.ingestionConfigurationId
+  };
+  return yield Histories.create(obj);
+};
+
 // Delete the uploaded file
 router.post(
   '/delete',
   function*() {
-    var company = this.request.body.company;
-    var fileName = this.request.body.file;
-    var bucketName = s3Prefix + company.toLowerCase() + '.ftp';
+    var fileId = this.request.body.fileId;
 
     try {
-      var companyId = yield Companies.findOne({
-        where: { name: company },
+      var file = yield Ingestions.findOne({
+        where: { id: fileId },
         raw: true
       });
-      companyId = companyId.id;
+      var company = yield Companies.findOne({
+        where: { id: file.companyId },
+        raw: true
+      });
+      var bucketName = s3Prefix + company.name.toLowerCase() + '.ftp';
+      var fileName = file.s3FileName;
+      yield addToHistory(file, this.req.user, 'delete');
       yield s3.delete(bucketName, [fileName]);
       yield Ingestions.destroy({
         where: {
-          customerFileName: fileName,
-          companyId: companyId
+          id: fileId
         },
         force: true
       });
-
       console.log('Deleted file ' + fileName + ' from ' + bucketName);
     } catch(e) {
       console.error(e);

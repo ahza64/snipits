@@ -38,27 +38,21 @@ router.put(
   function*() {
     var body = this.request.body;
     var description = body.description;
-    var companyId = body.companyId;
-    var fileName = body.customerFileName;
-
-    try {
-      yield Ingestions.update(
-        {
+    var fileId = body.fileId;
+    if (fileId) {
+      try {
+        var ingestion = yield Ingestions.find({ where: { id: fileId } });
+        ingestion = yield ingestion.updateAttributes({
           description: description
-        },
-        {
-          fields: [ 'description' ],
-          where: {
-            customerFileName: fileName,
-            companyId: companyId
-          }
-        }
-      );
-    } catch(e) {
-      console.error(e);
+        });
+      } catch(e) {
+        console.error(e);
+        this.throw(500);
+      }
+    } else {
+      console.error('fileId not found');
       this.throw(500);
     }
-
     this.throw(200);
   }
 );

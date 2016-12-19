@@ -58,6 +58,10 @@ export default class UploadZone extends UploadLib {
       }
     });
     this.getUploadedFiles(0, this.setFiles);
+    this.fetchHistories();
+  }
+
+  fetchHistories() {
     this.getHistory((heatmapData, historiesData) => {
       this.setHistories(heatmapData, historiesData);
     });
@@ -164,6 +168,33 @@ export default class UploadZone extends UploadLib {
     }
   }
 
+  handleFileDescriptionChanged(fileId, newDescription) {
+    var files = this.state.files.map(function(file) {
+      if (file.id === fileId) {
+        file.description = newDescription;
+      }
+      return file;
+    });
+    this.setState({
+      files: files
+    });
+  }
+
+  handleFileDeleted(fileId) {
+    this.fetchHistories();
+    this.setTotal(false);
+    var files=[];
+    for (var i = 0; i < this.state.files.length; i++) {
+      var file = this.state.files[i];
+      if (file.id !== fileId ) {
+        files.push(file);
+      }
+    }
+    this.setState({
+      files: files
+    });
+  }
+
   render() {
     return (
       <div>
@@ -184,6 +215,8 @@ export default class UploadZone extends UploadLib {
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <UploadedFiles
+              onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
+              onFileDescriptionChanged={ (fileId, newDescription) => this.handleFileDescriptionChanged(fileId, newDescription) }
               files={ this.state.files }
               setHistories={ this.setHistories }
               setFiles={ this.setFiles }
