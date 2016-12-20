@@ -90,7 +90,7 @@ export default class DescriptionBox extends UploadLib {
               floatingLabelText='Description Box'
               multiLine={ true }
               rows={1}
-              value={ this.state.description }
+              value={ this.state.description || '' }
               onChange={ this.handleDescriptionChange }
             />
           </Col>
