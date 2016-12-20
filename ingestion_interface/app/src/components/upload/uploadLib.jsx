@@ -62,15 +62,14 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  deleteUploadedFile(fileName, callback) {
+  deleteUploadedFile(fileId, callback) {
     var company = authRedux.getState()['company.name'];
 
     request
     .post(deleteFileUrl)
     .withCredentials()
     .send({
-      file: fileName,
-      company: company
+      fileId: fileId
     })
     .end(err => {
       if (err) {

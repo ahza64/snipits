@@ -20,7 +20,8 @@ export default class DescriptionBox extends UploadLib {
     super();
 
     this.state = {
-      description: ''
+      description: '',
+      fileId: null
     };
 
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
@@ -28,7 +29,10 @@ export default class DescriptionBox extends UploadLib {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ description: nextProps.ingestions.description });
+    this.setState({
+      description: nextProps.description,
+      fileId: nextProps.fileId
+    });
   }
 
   handleDescriptionChange(event, value) {
@@ -39,20 +43,19 @@ export default class DescriptionBox extends UploadLib {
     var fileName = this.props.files;
     var description = this.state.description;
     var companyId = authRedux.getState()['company.id'];
-    
+
     request
     .put(ingestionRecordUrl)
     .withCredentials()
     .send({
-      companyId: companyId,
-      customerFileName: fileName,
+      fileId: this.state.fileId,
       description: description
     })
     .end(err => {
       if (err) {
         console.error(err);
       } else {
-        this.props.setClose();
+        this.props.setClose(description);
       }
     });
   }
@@ -67,7 +70,7 @@ export default class DescriptionBox extends UploadLib {
       <FlatButton
         label='Cancel'
         primary={ false }
-        onClick={ this.props.setClose }
+        onClick={ (event) => this.props.setClose(null) }
       />,
     ];
 
@@ -87,7 +90,7 @@ export default class DescriptionBox extends UploadLib {
               floatingLabelText='Description Box'
               multiLine={ true }
               rows={1}
-              value={ this.state.description }
+              value={ this.state.description || '' }
               onChange={ this.handleDescriptionChange }
             />
           </Col>
@@ -95,5 +98,5 @@ export default class DescriptionBox extends UploadLib {
         </Row>
       </Dialog>
     );
-  }  
+  }
 }

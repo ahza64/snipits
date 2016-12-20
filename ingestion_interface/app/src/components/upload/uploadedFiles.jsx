@@ -58,6 +58,19 @@ export default class UploadedFiles extends UploadLib {
     }, 2500);
   }
 
+  handleDescriptionChanged(fileId, newDescription) {
+    if (this.props.onFileDescriptionChanged) {
+      this.props.onFileDescriptionChanged(fileId, newDescription);
+    }
+  }
+
+  handleFileDeleted(fileId) {
+    this.setDelNotification();
+    if (this.props.onFileDeleted) {
+      this.props.onFileDeleted(fileId);
+    }
+  }
+
   changePage(opr) {
     pageRedux.dispatch({ type: opr });
     var offset = pageRedux.getState();
@@ -89,9 +102,9 @@ export default class UploadedFiles extends UploadLib {
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Menu</TableHeaderColumn>
               </TableRow>
-            </TableHeader> 
+            </TableHeader>
             <TableBody displayRowCheckbox={ false } selectable={ false }>
-              { 
+              {
                 this.state.files.map((file, idx) => {
                   return (
                     <TableRow key={ idx }>
@@ -102,11 +115,10 @@ export default class UploadedFiles extends UploadLib {
                       <TableRowColumn>{ file.status }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
-                          setDelNotification={ this.setDelNotification }
-                          setFiles={ this.props.setFiles }
-                          setHistories={ this.props.setHistories }
-                          setTotal={ this.props.setTotal }
-                          files={ file.customerFileName }
+                          fileId={ file.id }
+                          description={ file.description }
+                          onDescriptionChanged={ (fileId, newDescription) => this.handleDescriptionChanged(fileId, newDescription) }
+                          onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
                           type={ 'UPLOAD' }
                         />
                       </TableRowColumn>

@@ -39,6 +39,32 @@ export default class ResultList extends React.Component {
     }, 2500);
   }
 
+  handleDescriptionChanged(fileId, newDescription) {
+    var files = this.state.files.map(function(file) {
+      if (file.id === fileId) {
+        file.description = newDescription;
+      }
+      return file;
+    });
+    this.setState({
+      files: files
+    });
+  }
+
+  handleFileDeleted(fileId) {
+    var files=[];
+    for (var i = 0; i < this.state.files.length; i++) {
+      var file = this.state.files[i];
+      if (file.id !== fileId ) {
+        files.push(file);
+      }
+    }
+    this.setState({
+      files: files
+    });
+    this.setDelNotification();
+  }
+
   render() {
     var files = this.state.files;
     var filesCount = _.countBy(files, f => {
@@ -68,15 +94,15 @@ export default class ResultList extends React.Component {
                     <TableRow key={ idx }>
                       <TableRowColumn style={{ width: '5px' }}>{ idx + 1 }</TableRowColumn>
                       <TableRowColumn style={{ width: '350px' }}>{ file.customerFileName }</TableRowColumn>
-                      <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD HH:mm') }</TableRowColumn>
                       <TableRowColumn>{ file.ingested ? 'INGESTED' : 'NOT INGESTED' }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
-                          setDelNotification={ this.setDelNotification }
-                          setFiles={ this.props.setFiles }
-                          files={ file.fileName }
+                          fileId={ file.id }
+                          description={ file.description }
+                          onDescriptionChanged={ (fileId, newDescription) => this.handleDescriptionChanged(fileId, newDescription) }
+                          onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
                           type={ 'SEARCH' }
-                          token={ this.state.token }
                         />
                       </TableRowColumn>
                     </TableRow>
