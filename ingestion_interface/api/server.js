@@ -33,6 +33,8 @@ app.use(mount(config.url_prefix, require('./router/upload')));
 app.use(mount(config.url_prefix, require('./router/ingestion')));
 app.use(mount(config.url_prefix, require('./router/watcher')));
 app.use(mount(config.url_prefix, require('./router/history')));
+app.use(mount(config.url_prefix, require('./router/project')));
+app.use(mount(config.url_prefix, require('./router/config')));
 
 // Port
 app.listen(port);

@@ -1,4 +1,4 @@
-/** 
+/**
  * @fileOverview api url
  */
 
@@ -19,6 +19,8 @@ const userUrl = base + '/user';
 const ingestionRecordUrl = base + '/ingestions';
 const watcherUrl = base + '/watchers';
 const searchUrl = base + '/searchingestions';
+const projectsUrl = base + '/projects/:companyId'
+const configsUrl = base + '/configs/:projectId'
 
 export {
   loginUrl,
@@ -33,4 +35,6 @@ export {
   ingestionRecordUrl,
   watcherUrl,
   searchUrl,
+  projectsUrl,
+  configsUrl,
 };

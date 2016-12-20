@@ -14,8 +14,10 @@ router.post(
   '/ingestions',
   function*() {
     var body = this.request.body;
+
     var record = {
       customerFileName: body.customerFileName,
+      s3FileName: body.s3FileName,
       ingested: false,
       companyId: body.companyId,
       ingestionConfigurationId: body.ingestionConfigurationId

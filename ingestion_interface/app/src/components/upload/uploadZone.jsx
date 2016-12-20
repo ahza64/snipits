@@ -12,6 +12,7 @@ import UploadedFiles from './uploadedFiles';
 import UploadLib from './uploadLib';
 import History from './history/history';
 import FileExistsWarn from './notification/fileExistsWarn';
+import SelectConfigDialog from './dialogs/selectConfigDialog';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -32,6 +33,9 @@ export default class UploadZone extends UploadLib {
       histories: {},
       total: 0,
       percent: 0,
+      showSelectConfigDialog: false,
+      uploadFileName: null,
+      selectedConfig: {}
     };
 
     this.setFiles = this.setFiles.bind(this);
@@ -46,6 +50,9 @@ export default class UploadZone extends UploadLib {
 
   componentWillMount() {
     var companyId = authRedux.getState()['company.id'];
+    this.setState({
+      companyId: companyId
+    });
 
     request
     .get(ingestionRecordUrl + '/total/' + companyId)
@@ -91,7 +98,7 @@ export default class UploadZone extends UploadLib {
     this.setState({ fileExistsWarn: false });
   }
 
-  uploadFile(file, signedUrl) {
+  uploadFile(file, s3FileName, configId, signedUrl) {
     var offset = pageRedux.getState();
     this.setUploadNotice(true);
 
@@ -106,7 +113,7 @@ export default class UploadZone extends UploadLib {
       if (err) {
         console.error(err);
       } else {
-        this.createIngestionRecord(file, (ingestion) => {
+        this.createIngestionRecord(file, s3FileName, configId, (ingestion) => {
           this.getUploadedFiles(offset, (files) => {
             this.setFiles(files);
             this.writeHistory(ingestion, 'upload', () => {
@@ -124,12 +131,18 @@ export default class UploadZone extends UploadLib {
   }
 
   onDrop(files) {
+    this.newFile = files[0];
+    this.setState({
+      showSelectConfigDialog: true,
+      uploadFileName: this.newFile.name
+    });
+  }
+
+  uploadNewFile(file, s3FileName, configId) {
     var company = authRedux.getState()['company.name'];
     var companyId = authRedux.getState()['company.id'];
-    var file = files[0];
-
     request
-    .get(fileCheckUrl + '/' + companyId + '/' + file.name)
+    .get(fileCheckUrl + '/' + configId + '/' + file.name)
     .withCredentials()
     .end((err, res) => {
       if (err) {
@@ -139,7 +152,7 @@ export default class UploadZone extends UploadLib {
           request
           .post(s3authUrl)
           .send({
-            name: file.name,
+            name: s3FileName,
             type: file.type,
             company: company,
             action: 'putObject'
@@ -149,7 +162,7 @@ export default class UploadZone extends UploadLib {
             if (err) {
               console.error(err);
             } else {
-              this.uploadFile(file, res.text);
+              this.uploadFile(file, s3FileName, configId, res.text);
             }
           });
         } else {
@@ -158,6 +171,32 @@ export default class UploadZone extends UploadLib {
         }
       }
     });
+  }
+
+  createS3FileName(project, config) {
+    var company = authRedux.getState()['company.name'];
+    var s3FileName = company.toLowerCase() + '_' +
+      project.toLowerCase() + '_' +
+      config.toLowerCase() + '_' +
+      (new Date()).getTime();
+    s3FileName = s3FileName.replace(/\s/g, '_');
+    return s3FileName;
+  }
+
+  handleSelectConfigDialogClose(projectId, configId, projectName, configName) {
+    this.setState({
+      showSelectConfigDialog: false,
+    });
+    if(configId) {
+      this.setState({
+        selectedConfig: {
+          projectId: projectId,
+          configId: configId
+        }
+      });
+      var s3FileName = this.createS3FileName(projectName, configName);
+      this.uploadNewFile(this.newFile, s3FileName, configId);
+    }
   }
 
   displayProgressBar() {
@@ -198,6 +237,14 @@ export default class UploadZone extends UploadLib {
   render() {
     return (
       <div>
+        <SelectConfigDialog open={ this.state.showSelectConfigDialog}
+          companyId={ this.state.companyId }
+          companyName={ this.state.companyName }
+          fileName={ this.state.uploadFileName }
+          projectId={ this.state.selectedConfig.projectId }
+          configId={ this.state.selectedConfig.configId }
+          onClose={ (projectId, configId, projectName, configName) =>
+            this.handleSelectConfigDialogClose(projectId, configId, projectName, configName) } />
         <Row style={{ height: '50%', height: '375px' }}>
           <Col xs={4} sm={4} md={4} lg={4} >
             <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
