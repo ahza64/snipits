@@ -48,14 +48,14 @@ router.get(
 
 // Check if same file exists
 router.get(
-  '/check/same/:companyId/:fileName',
+  '/check/same/:configId/:fileName',
   function*() {
-    var companyId = this.params.companyId;
+    var configId = this.params.configId;
     var fileName = this.params.fileName;
 
     try {
       var ingestions = yield Ingestions.findAll({
-        where: { companyId: companyId },
+        where: { ingestionConfigurationId: configId },
         raw: true
       });
     } catch(e) {
@@ -63,7 +63,7 @@ router.get(
       this.throw(500);
     }
 
-    ingestions = ingestions.map(x => x.fileName);
+    ingestions = ingestions.map(x => x.customerFileName);
     var exists = _.contains(ingestions, fileName);
 
     this.body = exists;

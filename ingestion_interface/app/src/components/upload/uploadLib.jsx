@@ -81,7 +81,7 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  createIngestionRecord(file, callback) {
+  createIngestionRecord(file, s3FileName, configId, callback) {
     var companyId = authRedux.getState()['company.id'];
 
     request
@@ -89,7 +89,9 @@ export default class UploadLib extends React.Component {
     .withCredentials()
     .send({
       customerFileName: file.name,
-      companyId: companyId
+      companyId: companyId,
+      ingestionConfigurationId: configId,
+      s3FileName: s3FileName
     })
     .end((err, res) => {
       if (err) {
