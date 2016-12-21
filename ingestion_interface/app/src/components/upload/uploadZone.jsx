@@ -234,6 +234,21 @@ export default class UploadZone extends UploadLib {
     });
   }
 
+  handleFileConfigurationChanged(fileId, projectId, configId, newS3FileName) {
+    var files = this.state.files.map(function(file) {
+      if (file.id === fileId) {
+        file['ingestion_configuration.projectId'] = projectId;
+        file.ingestionConfigurationId = configId;
+        file.s3FileName = newS3FileName;
+      }
+      return file;
+    });
+    this.setState({
+      files: files
+    });
+    this.fetchHistories();
+  }
+
   render() {
     return (
       <div>
@@ -263,7 +278,10 @@ export default class UploadZone extends UploadLib {
           <Col xs={8} sm={8} md={8} lg={8} >
             <UploadedFiles
               onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
-              onFileDescriptionChanged={ (fileId, newDescription) => this.handleFileDescriptionChanged(fileId, newDescription) }
+              onFileDescriptionChanged={ (fileId, newDescription) =>
+                this.handleFileDescriptionChanged(fileId, newDescription) }
+              onFileConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
+                this.handleFileConfigurationChanged(fileId, projectId, configId, newS3FileName) }
               files={ this.state.files }
               setHistories={ this.setHistories }
               setFiles={ this.setFiles }

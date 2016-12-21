@@ -18,11 +18,12 @@ export default class ResultList extends React.Component {
 
     this.state = {
       files: [],
-      delNotice: false,
+      notice: false,
+      noticeMessage: '',
       token: '',
     };
 
-    this.setDelNotification = this.setDelNotification.bind(this);
+    this.setNotification = this.setNotification.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,10 +33,13 @@ export default class ResultList extends React.Component {
     });
   }
 
-  setDelNotification() {
-    this.setState({ delNotice: true });
+  setNotification(message) {
+    this.setState({
+      notice: true,
+      noticeMessage: message
+    });
     setTimeout(() => {
-      this.setState({ delNotice: false });
+      this.setState({ notice: false });
     }, 2500);
   }
 
@@ -49,6 +53,22 @@ export default class ResultList extends React.Component {
     this.setState({
       files: files
     });
+    this.setNotification('File Description Changed Successfully');
+  }
+
+  handleConfigurationChanged(fileId, projectId, configId, newS3FileName) {
+    var files = this.state.files.map(function(file) {
+      if (file.id === fileId) {
+        file['ingestion_configuration.projectId'] = projectId;
+        file.ingestionConfigurationId = configId;
+        file.s3FileName = newS3FileName;
+      }
+      return file;
+    });
+    this.setState({
+      files: files
+    });
+    this.setNotification('File Configuration Changed Successfully');
   }
 
   handleFileDeleted(fileId) {
@@ -62,7 +82,7 @@ export default class ResultList extends React.Component {
     this.setState({
       files: files
     });
-    this.setDelNotification();
+    this.setNotification('File Deleted Successfully');
   }
 
   render() {
@@ -98,9 +118,16 @@ export default class ResultList extends React.Component {
                       <TableRowColumn>{ file.ingested ? 'INGESTED' : 'NOT INGESTED' }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
+                          companyId={ file.companyId }
                           fileId={ file.id }
+                          fileName={ file.customerFileName }
+                          projectId={ file["ingestion_configuration.projectId"] }
+                          configId={ file.ingestionConfigurationId }
                           description={ file.description }
-                          onDescriptionChanged={ (fileId, newDescription) => this.handleDescriptionChanged(fileId, newDescription) }
+                          onDescriptionChanged={ (fileId, newDescription) =>
+                            this.handleDescriptionChanged(fileId, newDescription) }
+                          onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
+                            this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
                           onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
                           type={ 'SEARCH' }
                         />
@@ -113,8 +140,8 @@ export default class ResultList extends React.Component {
           </Table>
         </Row>
         <Snackbar
-          open={ this.state.delNotice }
-          message='File Deleted Successfully'
+          open={ this.state.notice }
+          message={ this.state.noticeMessage }
           autoHideDuration={ 2500 }
         />
       </div>

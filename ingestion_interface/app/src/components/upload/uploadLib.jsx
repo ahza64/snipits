@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import request from 'superagent';
-import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl, searchUrl } from '../../config';
+import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl, searchUrl, ingestionConfigUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -182,4 +182,22 @@ export default class UploadLib extends React.Component {
       }
     });
   }
+
+  changeFileConfiguration(fileId, newConfigId, callback) {
+    request
+    .put(ingestionConfigUrl)
+    .send({
+      fileId: fileId,
+      configId: newConfigId
+    })
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        callback(res.body.s3FileName);
+      }
+    });
+  }
+
 }

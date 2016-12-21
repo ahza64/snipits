@@ -31,13 +31,15 @@ export default class SelectConfigDialog extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      companyId: nextProps.companyId,
-      projectId: nextProps.projectId,
-      configId: nextProps.configId,
-    });
-    this.fetchProjects(nextProps.companyId);
+  componentWillUpdate(nextProps, nextState) {
+    if ((nextProps.open === true) && (this.props.open === false)) {
+      this.setState({
+        companyId: nextProps.companyId,
+        projectId: nextProps.projectId,
+        configId: nextProps.configId,
+      });
+      this.fetchProjects(nextProps.companyId);
+    }
   }
 
   fetchProjects(companyId) {

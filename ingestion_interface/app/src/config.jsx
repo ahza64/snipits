@@ -17,6 +17,7 @@ const s3authUrl = base + '/s3auth';
 const companyUrl = base + '/company';
 const userUrl = base + '/user';
 const ingestionRecordUrl = base + '/ingestions';
+const ingestionConfigUrl = base + '/ingestions/config';
 const watcherUrl = base + '/watchers';
 const searchUrl = base + '/searchingestions';
 const projectsUrl = base + '/projects/:companyId'
@@ -33,6 +34,7 @@ export {
   companyUrl,
   userUrl,
   ingestionRecordUrl,
+  ingestionConfigUrl,
   watcherUrl,
   searchUrl,
   projectsUrl,
