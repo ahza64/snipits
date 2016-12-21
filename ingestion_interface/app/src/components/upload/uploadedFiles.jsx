@@ -28,11 +28,12 @@ export default class UploadedFiles extends UploadLib {
 
     this.state = {
       files: [],
-      delNotice: false,
+      notice: false,
+      noticeMessage: '',
       total: 0
     };
 
-    this.setDelNotification = this.setDelNotification.bind(this);
+    this.setNotification = this.setNotification.bind(this);
     this.changePage = this.changePage.bind(this);
     this.renderPage = this.renderPage.bind(this);
   }
@@ -51,21 +52,32 @@ export default class UploadedFiles extends UploadLib {
     });
   }
 
-  setDelNotification() {
-    this.setState({ delNotice: true });
+  setNotification(message) {
+    this.setState({
+      notice: true,
+      noticeMessage: message
+    });
     setTimeout(() => {
-      this.setState({ delNotice: false });
+      this.setState({ notice: false });
     }, 2500);
   }
 
   handleDescriptionChanged(fileId, newDescription) {
+    this.setNotification('File Description Changed Successfully');
     if (this.props.onFileDescriptionChanged) {
       this.props.onFileDescriptionChanged(fileId, newDescription);
     }
   }
 
+  handleConfigurationChanged(fileId, projectId, configId, newS3FileName) {
+    this.setNotification('File Configuration Changed Successfully');
+    if (this.props.onFileConfigurationChanged) {
+      this.props.onFileConfigurationChanged(fileId, projectId, configId, newS3FileName);
+    }
+  }
+
   handleFileDeleted(fileId) {
-    this.setDelNotification();
+    this.setNotification('File Deleted Successfully');
     if (this.props.onFileDeleted) {
       this.props.onFileDeleted(fileId);
     }
@@ -115,9 +127,16 @@ export default class UploadedFiles extends UploadLib {
                       <TableRowColumn>{ file.status }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
+                          companyId={ file.companyId }
                           fileId={ file.id }
+                          fileName={ file.customerFileName }
+                          projectId={ file["ingestion_configuration.projectId"] }
+                          configId={ file.ingestionConfigurationId }
                           description={ file.description }
-                          onDescriptionChanged={ (fileId, newDescription) => this.handleDescriptionChanged(fileId, newDescription) }
+                          onDescriptionChanged={ (fileId, newDescription) =>
+                            this.handleDescriptionChanged(fileId, newDescription) }
+                          onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
+                            this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
                           onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
                           type={ 'UPLOAD' }
                         />
@@ -150,8 +169,8 @@ export default class UploadedFiles extends UploadLib {
         <Row>
         </Row>
         <Snackbar
-          open={ this.state.delNotice }
-          message='File Deleted Successfully'
+          open={ this.state.notice }
+          message={ this.state.noticeMessage }
           autoHideDuration={ 2500 }
         />
       </div>

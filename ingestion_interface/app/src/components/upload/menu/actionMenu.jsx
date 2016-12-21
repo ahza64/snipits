@@ -9,6 +9,7 @@ import pageRedux from '../../../reduxes/page';
 import UploadLib from '../uploadLib';
 import WatcherNotification from './watcherNotification';
 import DescriptionBox from './descriptionBox';
+import SelectConfigDialog from '../dialogs/selectConfigDialog';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -25,8 +26,14 @@ export default class ActionMenu extends UploadLib {
     this.state = {
       showWatcherModal: false,
       showDescriptionModal: false,
+      showSelectConfigDialog: false,
       type: 'UPLOAD',
-      fileId: null
+      fileId: null,
+      fileName: '',
+      companyId: null,
+      projectId: null,
+      configId: null,
+      originalConfigId: null
     };
 
     this.close = this.close.bind(this);
@@ -34,18 +41,24 @@ export default class ActionMenu extends UploadLib {
     this.handleDeleteIngestion = this.handleDeleteIngestion.bind(this);
   }
 
-  componentWillMount() {
+  setStateFromProps(props) {
     this.setState({
-      fileId: this.props.fileId,
-      type: this.props.type
+      fileId: props.fileId,
+      type: props.type,
+      fileName: props.fileName,
+      companyId: props.companyId,
+      projectId: props.projectId,
+      configId: props.configId,
+      originalConfigId: props.configId
     });
   }
 
+  componentWillMount() {
+    this.setStateFromProps(this.props);
+  }
+
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      fileId: nextProps.fileId,
-      type: nextProps.type
-    });
+    this.setStateFromProps(nextProps);
   }
 
   close(modalName) {
@@ -77,6 +90,19 @@ export default class ActionMenu extends UploadLib {
     }
   }
 
+  handleSelectConfigDialogClose(projectId, configId, projectName, configName) {
+    this.setState({
+      showSelectConfigDialog: false
+    });
+    if (configId && (configId !== this.state.originalConfigId)) {
+      this.changeFileConfiguration(this.state.fileId, configId, (newS3FileName) => {
+        if (this.props.onConfigurationChanged) {
+          this.props.onConfigurationChanged(this.state.fileId, projectId, configId, newS3FileName);
+        }
+      });
+    }
+  }
+
   render() {
     return (
       <div>
@@ -90,6 +116,10 @@ export default class ActionMenu extends UploadLib {
             onClick={ () => this.open('showDescriptionModal') }
           />
           <MenuItem
+            primaryText='Set Configuration'
+            onClick={ () => this.open('showSelectConfigDialog') }
+          />
+          <MenuItem
             primaryText='Delete'
             onClick={ this.handleDeleteIngestion }
           />
@@ -99,6 +129,14 @@ export default class ActionMenu extends UploadLib {
           setClose={ (newDescription) => this.handleDescriptionChanged(newDescription) }
           fileId={ this.props.fileId }
           description={ this.props.description }
+        />
+        <SelectConfigDialog open={ this.state.showSelectConfigDialog}
+          companyId={ this.state.companyId }
+          projectId={ this.state.projectId }
+          configId={ this.state.configId }
+          fileName={ this.state.fileName }
+          onClose={ (projectId, configId, projectName, configName) =>
+            this.handleSelectConfigDialogClose(projectId, configId, projectName, configName) }
         />
       </div>
     );
