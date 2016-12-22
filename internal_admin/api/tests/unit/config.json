@@ -1,0 +1,4 @@
+{
+  "route_dir" : "../../router",
+  "BASE_URL" : "/api/tests"
+}
