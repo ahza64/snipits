@@ -43,7 +43,7 @@ var processes = {
 
 function *run(log_dir_path, fix) {
   console.log("RUN", log_dir_path, fix);
-  var query = { request_created: { $type: "string" } };
+  var query = { request_created: { $type: 2 } };
   var count = yield  TreeHistory.find(query).count();
   assert(count === 0, "bad history request_created type");
   
@@ -158,7 +158,7 @@ function *processEdit(edit, fix) {
  *  
  */
 function *fix_dates(fix) {
-  var query = { request_created: { $type: "string" } };
+  var query = { request_created: { $type: 2 } };
   var total = yield  TreeHistory.find(query).count();
   var hist_stream = stream(TreeHistory, query);
   var count = 0;
