@@ -30,7 +30,7 @@ function *run(end_date, start_date) {
   yield work_packet(start_date, end_date);
   yield work_complete(start_date, end_date);
 
-  //yield email(end_date); 
+  yield email(end_date); 
 }
 
 function santitizeDate(date) {
@@ -126,7 +126,7 @@ function *email(date) {
                             replyTo: 'Gabriel Littman <gabe@dispatchr.com>',
                             template: 'vmd_export',
                             values: email_info
-                        });
+                        }, true);
 }
 
 /**
@@ -135,7 +135,12 @@ function *email(date) {
 function *upload(date, type) {
   date = santitizeDate(date || 'last saturday');
   var filename = tar_filename(date, type);
+  yield uploadFile(filename);
+}
+
+function *uploadFile(filename){
   var file = fs.createReadStream(filename);
+  console.log("UPLOADING>>>>", filename);
   yield s3.upload(S3_BUCKET, filename, file);  
 }
 
@@ -164,6 +169,7 @@ if (require.main === module) {
   utils.bakerGen(run, { opts: 'params', default: true }); 
   utils.bakerGen(unset);
   utils.bakerGen(upload);
+  utils.bakerGen(uploadFile);
   utils.bakerGen(email);
   utils.bakerGen(work_packet);
   utils.bakerGen(work_complete);    

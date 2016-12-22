@@ -1,7 +1,7 @@
 #TIMESTAMP=$(shell date +%Y-%m-%dT%H:%M:%S.000Z)
 #FILE_TIMESTAMP=$(shell date +%Y-%m-%d_%H.%M.%S.000Z)
 
-DATE=2016-10-29
+DATE=2016-12-10
 TIMESTAMP=${DATE}T00:00:00.000Z
 FILE_TIMESTAMP=${DATE}T00.00.00.000Z
 
@@ -25,7 +25,7 @@ work_complete_export:
 	node mark_exported.js run vmd_export/wc_$(FILE_TIMESTAMP) $(TIMESTAMP)
 
 
-TREE_IDS=56fc495e9d1f4fbf189fce8d,56fc495f9d1f4fbf189fce98
+TREE_IDS=574741f49815288c382cda61
 
 MISSING_EXPORT_DATE=${DATE}
 #PACKET_NAME=MissingWPUpdate
@@ -34,5 +34,5 @@ PACKET_NAME=AdditionalWPUpdate
 create_tree_id_export:
 	node extraction/index.js --exportName wp_$(MISSING_EXPORT_DATE)_${PACKET_NAME} --includeExported --skipValidate --treeIds $(TREE_IDS)
 	tar -zcvf vmd_wp_export_$(MISSING_EXPORT_DATE)_${PACKET_NAME}.tar.gz vmd_export/wp_$(MISSING_EXPORT_DATE)_${PACKET_NAME}/*.WP
-	node google_upload.js uploadFile vmd_wp_export_$(MISSING_EXPORT_DATE)_${PACKET_NAME}.tar.gz
+	node index.js uploadFile vmd_wp_export_$(MISSING_EXPORT_DATE)_${PACKET_NAME}.tar.gz
 	node mark_exported.js run vmd_export/wp_$(MISSING_EXPORT_DATE)_${PACKET_NAME} $(MISSING_EXPORT_DATE) 
