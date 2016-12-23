@@ -53,7 +53,13 @@
         "api_port": "3333",
         "web_port": "3334",
         "url_prefix": "/",
-        "env": "dev"
+        "env": "dev",
+        "notifications": {
+          "enabled": false,
+          "host": "127.0.0.1",
+          "port": "5555",
+          "sender": "gabe@dispatchr.co"
+        }
     },
     "admin": {
         "host": "0.0.0.0",

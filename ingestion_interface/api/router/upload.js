@@ -4,6 +4,7 @@ const router = require('koa-router')();
 const _ = require('underscore');
 const s3 = require('dsp_shared/aws/s3');
 const config = require('dsp_shared/conf.d/config.json').mooncake;
+const notifications = require('./notifications');
 const s3Prefix = config.env + '.';
 
 // Collection
@@ -122,6 +123,7 @@ router.post(
       var bucketName = s3Prefix + company.name.toLowerCase() + '.ftp';
       var fileName = file.s3FileName;
       yield addToHistory(file, this.req.user, 'delete');
+      yield notifications.send(this.req.user, file, 'delete');
       yield s3.delete(bucketName, [fileName]);
       yield Ingestions.destroy({
         where: {
