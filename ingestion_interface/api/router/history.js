@@ -3,6 +3,7 @@ const koa = require('koa');
 const router = require('koa-router')();
 const moment = require('moment');
 const _ = require('underscore');
+const notifications = require('./notifications');
 
 // Collection
 const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
@@ -35,6 +36,8 @@ router.post(
     var ingestion = yield Ingestions.findOne({ where: { id: body.ingestionFileId }, raw: true });
     if (!ingestion.id) { this.throw(403); }
 
+    yield notifications.send(this.req.user, ingestion, action);
+
     var obj = {
       action: action,
       userName: user.name,
@@ -45,12 +48,12 @@ router.post(
     };
 
     try {
-      yield Histories.create(obj);  
+      yield Histories.create(obj);
     } catch (e) {
       console.error(e);
       this.throw(500);
     }
-    
+
     this.throw(200);
   }
 );
@@ -118,7 +121,7 @@ router.get(
           raw: true
         })
       ];
-      
+
       if (histories.length === 1 && !histories['ingestion_histories.id']) {
         return this.body = {
           heatmapData: [],
@@ -126,7 +129,7 @@ router.get(
         };
       }
 
-      console.log(histories);
+      //console.log(histories);
       histories = historyMassage(histories);
     } catch(e) {
       console.error(e);
