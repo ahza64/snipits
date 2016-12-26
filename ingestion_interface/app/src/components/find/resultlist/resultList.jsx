@@ -85,6 +85,12 @@ export default class ResultList extends React.Component {
     this.setNotification('File Deleted Successfully');
   }
 
+  handleError(err) {
+    if ((err) && (err.status === 409)) {
+      this.setNotification('Configuration already contains the file with the same name');
+    }
+  }
+
   render() {
     var files = this.state.files;
     var filesCount = _.countBy(files, f => {
@@ -129,6 +135,7 @@ export default class ResultList extends React.Component {
                           onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
                             this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
                           onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
+                          onError={ (err) => this.handleError(err) }
                           type={ 'SEARCH' }
                         />
                       </TableRowColumn>

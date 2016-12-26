@@ -83,6 +83,12 @@ export default class UploadedFiles extends UploadLib {
     }
   }
 
+  handleError(err) {
+    if ((err) && (err.status === 409)) {
+      this.setNotification('Configuration already contains the file with the same name');
+    }
+  }
+
   changePage(opr) {
     pageRedux.dispatch({ type: opr });
     var offset = pageRedux.getState();
@@ -138,6 +144,7 @@ export default class UploadedFiles extends UploadLib {
                           onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
                             this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
                           onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
+                          onError={ (err) => this.handleError(err) }
                           type={ 'UPLOAD' }
                         />
                       </TableRowColumn>
