@@ -101,11 +101,22 @@ router.put(
 
     if (fileId && configId) {
       var ingestion = null;
+      var ingestionWithSameName = null;
       try {
         ingestion = yield Ingestions.find({ where: { id: fileId } });
+        ingestionWithSameName = yield Ingestions.find({
+          where: {
+            customerFileName: ingestion.customerFileName,
+            ingestionConfigurationId: configId
+          }
+        });
       } catch(e) {
         console.error(e);
         this.throw(500);
+      }
+
+      if (ingestionWithSameName) {
+        this.throw(409);
       }
 
       if ((ingestion.ingestionConfigurationId !== configId) && permissions.has(this.req.user, ingestion.companyId)) {

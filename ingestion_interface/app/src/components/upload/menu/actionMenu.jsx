@@ -95,9 +95,15 @@ export default class ActionMenu extends UploadLib {
       showSelectConfigDialog: false
     });
     if (configId && (configId !== this.state.originalConfigId)) {
-      this.changeFileConfiguration(this.state.fileId, configId, (newS3FileName) => {
-        if (this.props.onConfigurationChanged) {
-          this.props.onConfigurationChanged(this.state.fileId, projectId, configId, newS3FileName);
+      this.changeFileConfiguration(this.state.fileId, configId, (newS3FileName, err) => {
+        if (!err) {
+          if (this.props.onConfigurationChanged) {
+            this.props.onConfigurationChanged(this.state.fileId, projectId, configId, newS3FileName);
+          }
+        } else {
+          if (this.props.onError) {
+            this.props.onError(err);
+          }
         }
       });
     }

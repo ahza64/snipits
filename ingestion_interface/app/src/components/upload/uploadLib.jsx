@@ -194,8 +194,9 @@ export default class UploadLib extends React.Component {
     .end((err, res) => {
       if (err) {
         console.error(err);
+        callback(null, err);
       } else {
-        callback(res.body.s3FileName);
+        callback(res.body.s3FileName, null);
       }
     });
   }
