@@ -60,7 +60,7 @@ export default class IngestList extends IngestLib {
   }
 
   handleSearch(event, value) {
-    this.setState({ search: value }); 
+    this.setState({ search: value });
   }
 
   isMatchSearchRegex(ingestion) {
@@ -107,7 +107,7 @@ export default class IngestList extends IngestLib {
               </TableRow>
             </TableHeader>
             <TableBody displayRowCheckbox={ false } selectable={ false }>
-              { 
+              {
                 ingestions.map((ingestion, idx) => {
                   return (
                     <TableRow key={ idx }>
@@ -119,7 +119,7 @@ export default class IngestList extends IngestLib {
 												activeClassName="editing"
 												change={ (data) => { this.dataChanged(ingestion.id, data.description )} }
 												ingestion={ingestion}
-												text={ingestion.description}
+												text={ ingestion.description || ''}
 												paramName="description"
 												style={{
 													backgroundColor: 'yellow',
