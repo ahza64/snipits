@@ -1,6 +1,7 @@
 // Modules
 const koa = require('koa');
 const router = require('koa-router')();
+const notifications = require('./notifications');
 
 // App
 const app = koa();
@@ -28,6 +29,9 @@ router.put(
           where: { id: ingestionId }
         }
       );
+      if (body.ingested) {
+        yield notifications.fileIngested(this.req.user, ingestionId);
+      }
     } catch(e) {
       console.error(e);
       this.throw(500);

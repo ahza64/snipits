@@ -56,17 +56,18 @@ export default class ActionMenu extends IngestLib {
     return (
       <div>
         <IconMenu
-          touchTapCloseDelay={ 0 }
           iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
           anchorOrigin={{horizontal: 'right', vertical: 'top'}}
           targetOrigin={{horizontal: 'right', vertical: 'top'}}
         >
           <MenuItem
+            disabled={ this.state.ingestion.ingested }
             primaryText='Set ingestion'
             onClick={ this.handleSetIngested }
           />
           <MenuItem
             primaryText='Unset ingestion'
+            disabled={ !this.state.ingestion.ingested }
             onClick={ this.handleUnSetIngested }
           />
         </IconMenu>

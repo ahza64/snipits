@@ -2,6 +2,7 @@
 const koa = require('koa');
 const router = require('koa-router')();
 const permissions = require('./permissions');
+const notifications = require('./notifications');
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 
@@ -24,12 +25,20 @@ router.post(
         this.body = yield updateUser(body);
       } else {
         var companyId = body.companyId;
-        if ((!companyId) && (body.company)) {
+        var companyName = body.company;
+        if ((!companyId) && (companyName)) {
           company = yield Companies.findOne({
-            where: { name: body.company },
+            where: { name: companyName },
             raw: true
           });
           companyId = company.id;
+        }
+        if (!companyName) {
+          company = yield Companies.findOne({
+            where: { id: companyId },
+            raw: true
+          });
+          companyName = company.name;
         }
 
         var user = {
@@ -42,9 +51,10 @@ router.post(
 
         if (body.role) {
           user.role = body.role;
-          yield Admins.create(user);
+          user = yield Admins.create(user);
         } else {
-          yield Users.create(user);
+          user = yield Users.create(user);
+          yield notifications.userCreated(companyName, user, body.password);
         }
 
         this.body = user;
