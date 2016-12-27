@@ -84,7 +84,7 @@ export default class History extends UploadLib {
             history[key].forEach(record => {
               var name = record.name;
               var action = record['ingestion_histories.action'];
-              var fileName = record['ingestion_histories.ingestion_file.customerFileName'];
+              var fileName = record['ingestion_histories.customerFileName'];
               var time = record['ingestion_histories.createdAt'];
 
               str += name + ' ' + action + ' ' + fileName + ' on ' + moment(time).format('MMM DD hh:mm:ss') + '<br>';

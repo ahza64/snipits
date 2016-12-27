@@ -96,6 +96,7 @@ router.post(
 var addToHistory = function*(file, user, action) {
   var obj = {
     action: action,
+    customerFileName: file.customerFileName,
     userName: user.name,
     userId: user.id,
     companyId: file.companyId,

@@ -81,9 +81,9 @@ router.post(
     var ingestion = yield Ingestions.findOne({ where: { id: body.ingestionFileId }, raw: true });
     if (!ingestion.id) { this.throw(403); }
 
-
     var obj = {
       action: action,
+      customerFileName: ingestion.customerFileName,
       adminName: admin.name,
       dispatchrAdminId: admin.id,
       companyId: ingestion.companyId,

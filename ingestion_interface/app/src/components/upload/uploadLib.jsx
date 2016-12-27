@@ -156,6 +156,7 @@ export default class UploadLib extends React.Component {
     .send({
       email: authRedux.getState().email,
       ingestionFileId: file.id,
+      customerFileName: file.customerFileName,
       action: action
     })
     .end(err => {

@@ -40,6 +40,7 @@ router.post(
 
     var obj = {
       action: action,
+      customerFileName: ingestion.customerFileName,
       userName: user.name,
       userId: user.id,
       companyId: ingestion.companyId,
@@ -109,7 +110,7 @@ router.get(
     try {
       var histories = yield Users.findAll({
         where: { companyId: companyId },
-        include: [ { model: Histories, include: [Ingestions] }],
+        include: [ { model: Histories }],
         raw: true
       });
 
