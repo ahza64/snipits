@@ -49,7 +49,6 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
 
 // Router
 router.post('/login', passport.authenticate('local', {}), function*() {
-  console.log('IN AUTH');
   this.body = this.passport.user;
   console.log('response login: ', this.body);
 });
