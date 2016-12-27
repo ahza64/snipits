@@ -9,7 +9,6 @@ const base = 'http://localhost:' + port;
 // API
 const loginUrl = base + '/login';
 const logoutUrl = base + '/logout';
-//const displayFilesUrl = base + '/displayUpload/';
 const fileCheckUrl = base + '/check/same';
 const deleteFileUrl = base + '/delete';
 const fileHistoryUrl = base + '/history';
@@ -26,7 +25,6 @@ const configsUrl = base + '/configs/:projectId'
 export {
   loginUrl,
   logoutUrl,
-  //displayFilesUrl,
   fileCheckUrl,
   deleteFileUrl,
   fileHistoryUrl,

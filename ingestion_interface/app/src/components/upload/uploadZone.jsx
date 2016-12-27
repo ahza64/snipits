@@ -154,7 +154,7 @@ export default class UploadZone extends UploadLib {
           .send({
             name: s3FileName,
             type: file.type,
-            company: company,
+            companyId: companyId,
             action: 'putObject'
           })
           .withCredentials()
