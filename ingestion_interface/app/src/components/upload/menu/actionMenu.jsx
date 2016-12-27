@@ -7,7 +7,6 @@ import { fileHistoryUrl, deleteFileUrl } from '../../../config';
 import authRedux from '../../../reduxes/auth';
 import pageRedux from '../../../reduxes/page';
 import UploadLib from '../uploadLib';
-import WatcherNotification from './watcherNotification';
 import DescriptionBox from './descriptionBox';
 import SelectConfigDialog from '../dialogs/selectConfigDialog';
 
@@ -24,7 +23,6 @@ export default class ActionMenu extends UploadLib {
     super();
 
     this.state = {
-      showWatcherModal: false,
       showDescriptionModal: false,
       showSelectConfigDialog: false,
       type: 'UPLOAD',

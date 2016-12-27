@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import request from 'superagent';
-import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl, searchUrl, ingestionConfigUrl } from '../../config';
+import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, searchUrl, ingestionConfigUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -15,8 +15,6 @@ export default class UploadLib extends React.Component {
     this.getUploadedFiles = this.getUploadedFiles.bind(this);
     this.deleteUploadedFile = this.deleteUploadedFile.bind(this);
     this.createIngestionRecord = this.createIngestionRecord.bind(this);
-    this.setWatcherEmail = this.setWatcherEmail.bind(this);
-    this.getWatcherEmail = this.getWatcherEmail.bind(this);
     this.getHistory = this.getHistory.bind(this);
     this.getSearchResults = this.getSearchResults.bind(this);
   }
@@ -112,39 +110,6 @@ export default class UploadLib extends React.Component {
         console.error(err);
       } else {
         callback(res);
-      }
-    });
-  }
-
-  getWatcherEmail(fileName, callback) {
-    request
-    .get(watcherUrl + '/' + fileName)
-    .withCredentials()
-    .end((err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        callback(res.body);
-      }
-    });
-  }
-
-  setWatcherEmail(fileName, watcherEmails, callback) {
-    var companyId = authRedux.getState()['company.id'];
-
-    request
-    .post(watcherUrl)
-    .withCredentials()
-    .send({
-      fileName: fileName,
-      watcherEmails: watcherEmails,
-      companyId: companyId
-    })
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        callback();
       }
     });
   }
