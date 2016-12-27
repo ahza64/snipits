@@ -25,14 +25,12 @@ app.use(session({ key: 'dispatchr:sess' }, app));
 console.log("FILENAME", __filename);
 console.log("asdf", path.dirname(__filename) + "/" + testConfig.route_dir);
 
+//app.use(auth);
+app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/auth')));
 
-var route_dir = path.dirname(__filename) + "/" + testConfig.route_dir;
-var routesFile = fs.readdirSync(route_dir);
+// routesFile.forEach( f => {
+//   console.log('------>', f, testConfig.BASE_URL);
+//   app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, f))));
+// });
 
-routesFile.forEach( f => {
-  console.log('------>', f, testConfig.BASE_URL);
-  app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, f))));
-});
-app.use(auth);
-
-module.exports = app.listen(3335);
+module.exports = app.listen(3000);

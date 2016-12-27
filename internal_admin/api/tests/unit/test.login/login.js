@@ -36,7 +36,7 @@ describe('Login', function(){
   after(function(done){
     Admin.destroy({
       where: {
-        id: 1
+        email: admin.email
       }
     }).then(() => {
       done();
@@ -47,13 +47,17 @@ describe('Login', function(){
     console.log(testConfig.BASE_URL + '/login');
     agent
     .post(testConfig.BASE_URL + '/login')
-    .send({ email: admin.email, password: admin.password})
+    .send({ email: admin.email, password: '123'})
     .end((err, res) => {
-      expect(err).to.equal(null);
-      console.log(res.body);
-      // expect(res.body.data).to.be.an('object');
-      // expect(res.body.data.id).to.equal(admin.id);
-      done();
+      if(err){
+        console.error(err);
+      } else {
+        expect(err).to.equal(null);
+        expect(res.body).to.be.an('object');
+        expect(res.body.id).to.equal(admin.id);
+        console.log(res.body);
+        done();
+      }
     })
   })
 });
