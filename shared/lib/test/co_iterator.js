@@ -42,7 +42,7 @@ describe('CO Iterator', function() {
       try {
         yield Promise.reject(new Error("TEST"));
       } catch(e) {
-        console.log("CAUGHT ERROR", e);
+        // console.log("CAUGHT ERROR", e);
         caught_error = true;
       }
       caught_error.should.be.eql(true);
@@ -55,7 +55,7 @@ describe('CO Iterator', function() {
       try {
         yield BPromise.reject(new Error("TEST2"));
       } catch(e) {
-        console.log("CAUGHT ERROR", e);
+        // console.log("CAUGHT ERROR", e);
         caught_error = true;
       }
       caught_error.should.be.eql(true);
@@ -75,7 +75,7 @@ describe('CO Iterator', function() {
         try {
           yield p;
         } catch(e) {
-          console.log("CAUGHT ERROR", e);
+          // console.log("CAUGHT ERROR", e);
           caught_error = true;
         }
         caught_error.should.be.eql(true);
@@ -97,7 +97,7 @@ describe('CO Iterator', function() {
       try {
         for(var p of stream){
           expect++;
-          console.log("looking for more");
+          // console.log("looking for more");
           var i = yield p;
           if(i !== null) {
             i.should.be.eql(expect);

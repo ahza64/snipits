@@ -21,16 +21,16 @@ describe('ESRI ArcServer', function() {
     var server = new Server();
     return server.services().then(function(services){
       // console.log("services", services);
-      services.should.containEql("EASTER_EGG_1511");
+      services.should.containEql("EASTEREGG_1101");
     });
   });
 
   it('be able to get service', function() {
     var server = new Server();
-    return server.getService("EASTER_EGG_1511").then(function(service){
-      service.name.should.eql("EASTER_EGG_1511");
-      service.layer_by_id.points_easter_egg_1511.id.should.be.eql(0);
-      service.layer_by_id.conductors_easter_egg_1511.id.should.be.eql(1);
+    return server.getService("EASTEREGG_1101").then(function(service){
+      service.name.should.eql("EASTEREGG_1101");
+      service.layer_by_id.points_easteregg_1101.id.should.be.eql(0);
+      service.layer_by_id.conductors_easteregg_1101.id.should.be.eql(1);
     });
   });
 
@@ -38,8 +38,8 @@ describe('ESRI ArcServer', function() {
   it('be able to iterate features in layer', function() {
     this.timeout(10000);
     var server = new Server();
-    return server.getService("EASTER_EGG_1511").then(function(service){
-      return service.getLayer('points_easter_egg_1511');
+    return server.getService("EASTEREGG_1101").then(function(service){
+      return service.getLayer('points_easteregg_1101');
     }).then(function(layer){
       // console.log("GOT LAYER", layer);
       return co(function*(){
@@ -52,8 +52,9 @@ describe('ESRI ArcServer', function() {
             ids.push(feature.attributes.OBJECTID);
           }
         }
-        total.should.be.eql(20);
-        ids.should.containDeep([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23]);
+        
+        total.should.be.eql(22);
+        ids.should.containDeep([1,4,41,46,53,72,89,99,110,144,148,155,173,191,222,224,249,251,261,280,296,298]);
       });
     });
   });
@@ -61,8 +62,8 @@ describe('ESRI ArcServer', function() {
   it('be able to iterate features with total % batch = 0', function() {
     this.timeout(10000);
     var server = new Server();
-    return server.getService("EASTER_EGG_1511").then(function(service){
-      return service.getLayer('points_easter_egg_1511');
+    return server.getService("EASTEREGG_1101").then(function(service){
+      return service.getLayer('points_easteregg_1101');
     }).then(function(layer){
       // console.log("GOT LAYER", layer);
       return co(function*(){
@@ -75,8 +76,8 @@ describe('ESRI ArcServer', function() {
             ids.push(feature.attributes.OBJECTID);
           }
         }
-        total.should.be.eql(20);
-        ids.should.containDeep([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23]);
+        total.should.be.eql(22);
+        ids.should.containDeep([ 1,4,41,46,53,72,89,99,110,144,148,155,173,191,222,224,249,251,261,280,296,298]);
       });
     });
   });
@@ -88,7 +89,7 @@ describe('ESRI ArcServer', function() {
     var token = new Token("https://esri.dispatchr.co:6443", "system", "465tenth", {expiration: 1});
     server.setToken(token);
     return server.folders().then(function(folders){
-      folders.should.containEql("TRANSMISSION_2015");
+      folders.should.containEql("TRANSMISSION_2015_MERGE");
     }).catch(error => {
       return Promise.reject(new Error(error.message));
     });
@@ -104,31 +105,30 @@ describe('ESRI ArcServer', function() {
     return co(function*(){
       
       var folders = yield server.folders();
-      folders.should.containEql("TRANSMISSION_2015");
-      var folder = yield server.getFolder('TRANSMISSION_2015');
-      folder.getURL().should.be.eql("https://esri.dispatchr.co:6443/arcgis/rest/services/TRANSMISSION_2015");
+      folders.should.containEql("TRANSMISSION_2015_MERGE");
+      var folder = yield server.getFolder('TRANSMISSION_2015_MERGE');
+      folder.getURL().should.be.eql("https://esri.dispatchr.co:6443/arcgis/rest/services/TRANSMISSION_2015_MERGE");
       var services = yield folder.services();
-      services.should.containEql("20160707_VACA_TESLA_UPDATE");
-      var service = yield folder.getService("20160707_VACA_TESLA_UPDATE");              
+      services.should.containEql("ALL_LINES");
+      var service = yield folder.getService("ALL_LINES");              
       
       var layers = yield service.layers();
-      layers.length.should.be.eql(4);
+      layers.length.should.be.eql(2);
       for(var i = 0; i < layers.length; i++) {
         // console.log("LAYERS", layers[i]);
         var layer = yield service.getLayer(layers[i]);
         // console.log("layer", layer.layer.type);
         if(layer.layer.id === 0) {
-          layer.type.should.be.eql("Group Layer");
-          var url = "https://esri.dispatchr.co:6443/arcgis/rest/services/TRANSMISSION_2015"+
-                    "/20160707_VACA_TESLA_UPDATE/MapServer/0";
+          layer.type.should.be.eql("Feature Layer");
+          var url = "https://esri.dispatchr.co:6443/arcgis/rest/services/TRANSMISSION_2015_MERGE"+
+                    "/ALL_LINES/MapServer/0";
           layer.getURL().should.be.eql(url);
+          layers.should.containDeep([ 'ALL_Towers', 'ALL_Spans',]);
+          
           var sub_service = yield layer.getSubLayerService();
           var sub_layers = yield sub_service.layers();
           // console.log("SUB LAYERS", sub_layers);
-          sub_layers.length.should.be.eql(3);
-          sub_layers.should.containDeep([ 'VACA_TESLA_500kV_TreeTops', 
-                                          'VACA_TESLA_500kV_Towers',
-                                          'VACA_TESLA_500kV_Spans' ]);
+          sub_layers.length.should.be.eql(0);
         } else {
           layer.type.should.be.eql("Feature Layer");
         }
