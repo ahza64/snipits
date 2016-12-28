@@ -3,6 +3,7 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import * as request from 'superagent';
 const _ = require('underscore');
+const moment = require('moment');
 
 // Components
 import { ingestionUrl } from '../../config';
@@ -97,7 +98,7 @@ export default class IngestList extends IngestLib {
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
-                <TableHeaderColumn>ID</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '50px' }}>ID</TableHeaderColumn>
                 <TableHeaderColumn>File Name</TableHeaderColumn>
                 <TableHeaderColumn>System File Name</TableHeaderColumn>
                 <TableHeaderColumn>Description</TableHeaderColumn>
@@ -111,7 +112,7 @@ export default class IngestList extends IngestLib {
                 ingestions.map((ingestion, idx) => {
                   return (
                     <TableRow key={ idx }>
-                      <TableRowColumn>{ idx }</TableRowColumn>
+                      <TableRowColumn style={{ width: '50px' }}>{ idx + 1 }</TableRowColumn>
                       <TableRowColumn>{ ingestion.customerFileName }</TableRowColumn>
                       <TableRowColumn>{ ingestion.s3FileName }</TableRowColumn>
                       <TableRowColumn>
@@ -133,7 +134,7 @@ export default class IngestList extends IngestLib {
 												}}
 												/>
                       </TableRowColumn>
-                      <TableRowColumn>{ ingestion.updatedAt }</TableRowColumn>
+                      <TableRowColumn>{ moment(ingestion.updatedAt).format('YYYY/MM/DD hh:mm') }</TableRowColumn>
                       <TableRowColumn>{ this.getIngestionStatus(ingestion.ingested) }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu

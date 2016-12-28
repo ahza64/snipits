@@ -305,6 +305,7 @@ export default class Projects extends React.Component {
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
           <Col xs={0} sm={0} md={2} lg={2} >
             <RaisedButton label='Add Work Project' primary={ true } fullWidth={ true }
+              disabled={ this.state.companies.length === 0 }
               onClick={ this.handleAddProject } />
             { this.renderCompanySelectField() }
             <TextField

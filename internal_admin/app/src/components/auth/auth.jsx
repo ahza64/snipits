@@ -11,9 +11,9 @@ const roleLib = {
 // Secure the router based on login and role
 var isRouteAuthorized = (nextState, replace) => {
   var user = authRedux.getState();
-  var role = user.role;
+  var role = user ? user.role : null;
 
-  if (!user.id) {
+  if (!(user && user.id)) {
     // check if user login
     replace(urlPrefix);
   } else if (!_.contains(roleLib[role], nextState.location.pathname)) {
