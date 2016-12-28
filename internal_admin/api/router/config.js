@@ -16,7 +16,7 @@ const Watchers = require('dsp_shared/database/model/ingestion/tables').ingestion
 
 var isCorrectFileType = function*(fileType, workProjectId, configId) {
   var config = yield Configs.findOne({
-    where: { fileType: fileType, workProjectId: workProjectId },
+    where: { fileType: { ilike: fileType }, workProjectId: workProjectId },
     raw: true
   });
   return (!config) || (config.id === configId);

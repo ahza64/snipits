@@ -26,14 +26,14 @@ router.post(
   function*() {
     var company = this.request.body;
     var exists = yield Companies.count({
-      where: { name: company.name }
+      where: { name: { ilike: company.name } }
     });
 
     if (exists) {
       this.body = true;
       return;
     }
-    
+
     yield Companies.create(company);
     yield s3.createBucket(config.env + '.' + company.name.toLowerCase() + '.ftp');
     this.body = true;
