@@ -8,16 +8,16 @@ const DELETED = '---deleted---';
 const utils = require('dsp_lib/utils');
 const mongoose = require('mongoose');
 
-historySchema.statics.recordTreeHistory = function(oldTree, newTree, user, queued, source) {
+historySchema.statics.recordTreeHistory = function(oldTree, newTree, user, queued, source, applied_date) {
   var changes = diff(utils.toJSON(oldTree), utils.toJSON(newTree));
-  return TreeHistoryModel.create(changes, newTree, user, queued, source);
+  return TreeHistoryModel.create(changes, newTree, user, queued, source, applied_date);
 };
 
-historySchema.statics.create = function(treeDiff, tree, user, queued, source) {
+historySchema.statics.create = function(treeDiff, tree, user, queued, source, applied_date) {
   var eligibleChanges = _.filter(treeDiff, diff => IGNORE_FIELDS.indexOf(diff.path.join()) === -1);
   var treeHistory = {};
   eligibleChanges.map(diff => generateRecord(diff, tree, treeHistory));
-  var historyRecord = singleHistoryRecord(tree, user, treeHistory, queued, source);
+  var historyRecord = singleHistoryRecord(tree, user, treeHistory, queued, source, applied_date);
   var historyRecordPg = historyRecord;
   historyRecordPg.object_id = historyRecord.object_id.toString();
 
@@ -36,26 +36,13 @@ historySchema.statics.create = function(treeDiff, tree, user, queued, source) {
 };
 
 historySchema.statics.buildVersion = function(type, id, date) {
+  console.log("build", id, date);
   return TreeHistoryModel.find({
                                   object_type: type,
                                   object_id: id,
-                                  $or: [
-                                    {request_created: {$lt: date}}
-                                  ]
-                              }).sort({request_created: 1})
+                                  applied_date: {$lt: date}
+                              }).sort({applied_date: 1})
   .then(histories => {
-    histories.sort((h1, h2) => {
-      var d1 = h1.request_created || h1.created;
-      var d2 = h2.request_created || h1.created;
-      if(d1 < d2) {
-        return -1;
-      }
-      if(d1 > d2) {
-        return 1;
-      }
-      return 0;
-    });
-
     console.log("GOT HISTORIES", histories.length); 
 
     //reconstitue
@@ -77,12 +64,10 @@ historySchema.statics.buildVersion = function(type, id, date) {
 historySchema.statics.iterVersions = function*(type, id, date) {
   date = date || new Date();
   var stream = stream(TreeHistoryModel, {
-                                  object_type: type,
-                                  object_id: id,
-                                  $or: [
-                                    {request_created: {$lt: date}}
-                                  ]
-                              },{request_created: 1});
+                                object_type: type,
+                                object_id: id,
+                                applied_date: {$lt: date}
+                              },{applied_date: 1});
 
 
   var cur_version = {};
@@ -140,10 +125,14 @@ function generateRecord(treeDiff, tree, result) {
   return result;
 }
 
-function singleHistoryRecord(tree, user, json, timestamp, source) {
+function singleHistoryRecord(tree, user, json, timestamp, source, applied_date) {
   if(timestamp) {
     timestamp = Date.create(timestamp); //wrapping null or 0 in crate creates a date at 1970-01-01 00:00:00.000Z
   }
+  if(applied_date) {
+    timestamp = Date.create(applied_date); //wrapping null or 0 in crate creates a date at 1970-01-01 00:00:00.000Z
+  }
+  var now = new Date();
   return {
     action_value: json,
     object_type: 'Tree',
@@ -151,8 +140,9 @@ function singleHistoryRecord(tree, user, json, timestamp, source) {
     performer_id: user._id,
     performer_type: user.type || 'User',
     source: source,
-    request_created: timestamp || new Date(),
-    created: new Date()
+    request_created: timestamp || now,
+    applied_date: applied_date || now,
+    created: now
   };
 }
 
