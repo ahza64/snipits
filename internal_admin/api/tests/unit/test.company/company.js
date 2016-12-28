@@ -9,7 +9,7 @@ var agent = request(server);
 
 const test_company = require('../data/company/test_company');
 const URL = testConfig.BASE_URL + '/company';
-
+var cookie;
 describe('Create a copmany', function () {
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');
@@ -17,6 +17,9 @@ describe('Create a copmany', function () {
     .post(testConfig.BASE_URL + '/login')
     .send({email: admin.email, password: '123'})
     .end((err, res) => {
+      cookie = res.header['set-cookie'].map(function(r) {
+        return r.replace('; path=/; httponly', '');
+      }).join('; ');
       expect(err).to.equal(null);
       console.log(res.body);
       done();
@@ -28,6 +31,7 @@ describe('Create a copmany', function () {
     agent
     .post(URL)
     .send(test_company)
+    .set('Cookie', cookie)
     .end(function (err, res) {
       if(err){
         console.error(err);
@@ -41,6 +45,7 @@ describe('Create a copmany', function () {
     agent
     .get(URL)
     .expect(200)
+    .set('Cookie', cookie)
     .end(function (err, res) {
       if(err){
         console.error(err.status);
