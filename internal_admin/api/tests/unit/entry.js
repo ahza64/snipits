@@ -28,6 +28,9 @@ console.log("asdf", path.dirname(__filename) + "/" + testConfig.route_dir);
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/auth')));
 app.use(auth);
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/company')));
+app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/projects')));
+app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/user')));
+
 
 //mount tests
 
