@@ -10,6 +10,7 @@ var TreeHistory = require("dsp_shared/database/model/tree-history");
 var Tree = require("dsp_shared/database/model/tree");
 
 var parse_file = require('./parse_file');
+var parse_json_file = require('./json_parser');
 
 // const TreeStates = require('tree-status-codes');
 
@@ -41,7 +42,7 @@ var processes = {
   // 'routine_flag': processRoutine,
 };
 
-function *run(log_dir_path, fix) {
+function *run(log_dir_path, fix, json) {
   console.log("RUN", log_dir_path, fix);
   var query = { request_created: { $type: 2 } };
   var count = yield  TreeHistory.find(query).count();
@@ -56,14 +57,24 @@ function *run(log_dir_path, fix) {
   count = yield  TreeHistory.find(query).count();
   assert(count === 0, "epoch 0 history request_created");
   
+  query = {applied_date: null};
+  count = yield  TreeHistory.find(query).count();
+  assert(count === 0, "applied date not set");
+  
+  var missing_source = yield TreeHistory.find({source: null}).count();  
+  assert(missing_source === 0, "Tree histories missing source");
+  
   // yield setUserCufIds(fix);
   
   var files = fs.readdirSync(log_dir_path);
   var cur_file_date = null;
   var updates = [];
-  for(var i = 0; i < files.length; i++) {
+  for(var i = 0; i < files.length+1; i++) {
     var file_name = files[i];
-    var file_date = file_name.substring("ctrlsys-".length, "ctrlsys-2016-09-24".length);
+    var file_date = null;
+    if(file_name) {
+      file_date = file_name.substring("ctrlsys-".length, "ctrlsys-2016-09-24".length);
+    }
     if(file_date !== cur_file_date) {      
       updates = _.sortBy(updates, 'date');
       for(var j = 0; j < updates.length; j++) {
@@ -74,10 +85,16 @@ function *run(log_dir_path, fix) {
       updates = [];
       cur_file_date = file_date;      
     }
-    if(files[i].indexOf('err') === -1) {
+    if(i < files.length && files[i].indexOf('err') === -1) {
       var file_path = log_dir_path+"/"+file_name;
       console.log("file", files[i]);              
-      var file_updates = yield parse_file(file_path);
+      var file_updates = [];
+      if(json) {
+        file_updates = yield parse_json_file(file_path);
+      } else {
+        file_updates = yield parse_file(file_path);
+      }
+       
       Array.prototype.push.apply(updates,file_updates);      
     }    
   }
@@ -143,9 +160,9 @@ function *processEdit(edit, fix) {
     
     tree._id = tree._id || edit.tree_id;
     tree.status = tree.status.replaceAt(STATUS_INDEX, STATUS_CODE[edit.to]);    
-    console.log("TREE ID WHAT HAPPENED", tree);
+
     if(fix) {
-      yield TreeHistory.recordTreeHistory(oldTree, tree, user, Date.create(edit.date), 'mp_logs');
+      yield TreeHistory.recordTreeHistory(oldTree, tree, user, Date.create(edit.date), 'mp_logs', Date.create(edit.date));
     }
     
   }
@@ -158,14 +175,26 @@ function *processEdit(edit, fix) {
  *  
  */
 function *fix_dates(fix) {
+    
+  
+  yield TreeHistory.update({source: null, performer_type: "User"}, 
+                                               {$set:{source: "mobile"}}, {multi:true});
+  yield TreeHistory.update({source: null, performer_id: "fix_tree_soruce"}, 
+                                               {$set:{source: "fix_tree_soruce_migration"}}, {multi:true});
+  yield TreeHistory.update({source: null, performer_id: "mark_tree_as_ignored"}, 
+                                               {$set:{source: "mark_tree_as_ignored_migration"}}, {multi:true});
+ 
+  var missing_source = yield TreeHistory.find({source: null}).count();
+  assert(missing_source === 0, "Tree histories missing source");
+  
   var query = { request_created: { $type: 2 } };
   var total = yield  TreeHistory.find(query).count();
   var hist_stream = stream(TreeHistory, query);
   var count = 0;
   for(var hist of hist_stream){
-    count++;
     hist = yield hist;
     if(hist) {
+      count++;
       console.log("FIXING STRING DATES ", count, "of", total, hist._id, hist.request_created);
       hist.request_created = Date.create(hist.request_created);
       hist.markModified('request_created');
@@ -183,6 +212,7 @@ function *fix_dates(fix) {
   for(hist of hist_stream){
     hist = yield hist;
     if(hist) {
+      count++;      
       console.log("FIXING HISTORY ", count, "of", total, hist._id, hist.request_created, "=>", hist.created);
       hist.request_created = hist.created;
       if(fix) {
@@ -191,6 +221,36 @@ function *fix_dates(fix) {
     }
   }
 
+  var applied_field = {
+    "api_v2_patches": 'request_created', 
+    "mp_logs": 'request_created',
+    "api_v3": 'request_created',
+    "csv_trim_code_ingest": 'created',
+    "fix_tree_soruce_migration": 'created',
+    "manager_planer": 'created',
+    "mark_tree_as_ignored_migration": 'created',
+    "migrateUpdateHistorySchema": 'created',
+    "mobile": 'created',
+    "set_pi_complete_time_migraton": 'created'
+  };
+  query = {applied_date: null};
+  total = yield  TreeHistory.find(query).count();
+  hist_stream = stream(TreeHistory, query);
+  count = 0;      
+  for(hist of hist_stream) {
+    hist = yield hist;
+    if(hist) {
+      count++;
+      if(count%100 === 0) {
+        console.log("FIXING APPLIED DATE", count, "of", total, hist._id, hist.applied_date, "=>", hist[applied_field[hist.source]]);
+      }
+      hist.applied_date = hist[applied_field[hist.source]];
+      if(fix) {
+        yield hist.save();
+      }      
+    }
+  }
+  
 }
 
 
@@ -210,6 +270,8 @@ function *fix_dates(fix) {
 if (require.main === module) {
   utils.bakerGen(run, {default: true});
   utils.bakerGen(fix_dates);
-  
+  utils.bakerGen(function *buildTree(tree_id, date){
+    return yield TreeHistory.buildVersion("Tree", tree_id, Date.create(date));
+  });
   utils.bakerRun();  
 }
