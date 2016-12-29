@@ -11,7 +11,8 @@ const URL = testConfig.BASE_URL + '/project';
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
-
+const INIT_NUM_PROJECTS = 0;
+var cookie;
 var project_id;
 
 describe('Create a project', function () {
@@ -33,7 +34,6 @@ describe('Create a project', function () {
     });
   });
 
-  //login
   it('Should log in', function(done) {
     console.log(testConfig.BASE_URL + '/login');
     agent
@@ -58,8 +58,9 @@ describe('Create a project', function () {
       if(err){
         console.error(err);
       } else {
-        console.log('Inserted ID ------------>', res.body.id);
+        console.log('Inserted ID (from response) ------------>', res.body.id);
       }
+      console.log('');
       project_id = res.body.id;
       done();
     });
@@ -73,10 +74,8 @@ describe('Create a project', function () {
     .end(function (err, res) {
       if(err){
         console.error(err);
-      } else {
-        console.log('PUT deactivate response ----->', res.body);
       }
-      expect(res.body.status).to.equal(INACTIVE)
+      expect(res.body.status).to.equal(INACTIVE);
       done();
     });
   });
@@ -87,10 +86,9 @@ describe('Create a project', function () {
     .set('Cookie', cookie)
     .expect(200)
     .end(function (err, res) {
+      console.log('expect product to be "active"');
       if(err){
         console.error(err);
-      } else {
-        console.log('PUT activate response ----->', res.body);
       }
       expect(res.body.status).to.equal(ACTIVE);
       done();
@@ -106,8 +104,9 @@ describe('Create a project', function () {
       if(err){
         console.error(err);
       } else {
-        console.log('Delete response ----->', res.body);
+        console.log('Deleted project');
       }
+      console.log('-------------------------', res.body);
       done();
     });
   });
@@ -119,11 +118,13 @@ describe('Create a project', function () {
     .expect(200)
     .set('Cookie', cookie)
     .end(function (err, res) {
-      console.log("Getting company projects", res.body);
+      console.log("Getting company projects, found ", res.body.length);
       expect(err).to.be.null;
       if(err){
         console.error(err.status);
       }
+      res.body.should.have.length(INIT_NUM_PROJECTS);
+      res.body.should.not.contain(test_project);
       done();
     });
   });

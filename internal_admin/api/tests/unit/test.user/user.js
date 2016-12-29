@@ -18,7 +18,6 @@ var cookie;
 describe('Test for "user" methods', function () {
   //login
   it('Should log in', done => {
-    console.log(testConfig.BASE_URL + '/login');
     agent
     .post(testConfig.BASE_URL + '/login')
     .send({email: admin.email, password: '123'})
@@ -41,10 +40,9 @@ describe('Test for "user" methods', function () {
       if(err){
         console.error(err);
       }
-      console.log('result of post', res.body);
       res.status.should.not.equal(404);
       done();
-    })
+    });
   });
 
   it('Should find userID', function (done) {
@@ -55,9 +53,7 @@ describe('Test for "user" methods', function () {
       if(err){
         console.error(err);
       }
-      console.log('result of get', res.body);
       res.status.should.not.equal(404);
-
       //find user by email
       found_user = _.find(res.body, function (user) {
         return user.email === test_user.email;
@@ -75,12 +71,10 @@ describe('Test for "user" methods', function () {
     .end(function (err, res) {
       if(err){
         console.error(err);
-      } else {
-        console.log('PUT deactivate response ----->', res.body);
       }
-      expect(res.body.status).to.equal(INACTIVE)
+      expect(res.body.status).to.equal(INACTIVE);
       done();
-    })
+    });
   });
 
   it('Should change status from inactive to active via put', function (done) {
@@ -91,12 +85,10 @@ describe('Test for "user" methods', function () {
     .end(function (err, res) {
       if(err){
         console.error(err);
-      } else {
-        console.log('PUT activate response ----->', res.body);
       }
-      expect(res.body.status).to.equal(ACTIVE)
+      expect(res.body.status).to.equal(ACTIVE);
       done();
-    })
+    });
   });
 
   it('Should delete the user', function (done) {
@@ -107,14 +99,9 @@ describe('Test for "user" methods', function () {
     .end(function (err, res) {
       if(err){
         console.error(err);
-      } else {
-        console.log('Delete response ----->', res.body);
       }
       res.body.should.equal(1);
       done();
-    })
+    });
   });
-
-
-
 });

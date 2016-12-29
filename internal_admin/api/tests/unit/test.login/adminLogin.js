@@ -1,4 +1,4 @@
-
+/*
 const chai = require('chai');
 const expect = chai.expect;
 const testConfig = require('../config');
@@ -18,3 +18,4 @@ function getCookie(agent) {
   });
 }
 module.exports = getCookie;
+*/

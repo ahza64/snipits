@@ -8,9 +8,10 @@ const admin = require('../data/login/admin');
 var agent = request(server);
 const test_company = require('../data/company/company');
 const URL = testConfig.BASE_URL + '/company';
-
 var cookie;
-describe('Create a copmany', function () {
+
+describe('/company tests', function () {
+
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');
     agent
@@ -21,12 +22,11 @@ describe('Create a copmany', function () {
         return r.replace('; path=/; httponly', '');
       }).join('; ');
       expect(err).to.equal(null);
-      console.log(res.body);
       done();
-    })
-  })
+    });
+  });
 
-  it('inserts a company', function () {
+  it('inserts a company', function (done) {
     console.log("creating company with id " + test_company.id);
     agent
     .post(URL)
@@ -35,13 +35,14 @@ describe('Create a copmany', function () {
     .end(function (err, res) {
       if(err){
         console.error(err);
-      } else {
-        console.log('Inserted', res.body);
       }
-    })
-  })
+      console.log("DEGUB", res.body);
+      //res.body.should.be.true;
+      done();
+    });
+  });
 
-  it('checks that company was actually inserted', function () {
+  it('checks that company was actually inserted', function (done) {
     agent
     .get(URL)
     .expect(200)
@@ -50,9 +51,11 @@ describe('Create a copmany', function () {
       if(err){
         console.error(err.status);
       }
-      err.should.not.be.null;
-    })
-  })
+      res.body.length.should.not.equal();
+      expect(err).to.equal(null)
+      done();
+    });
+  });
 
   it('should logout', function (done) {
     agent
@@ -61,12 +64,12 @@ describe('Create a copmany', function () {
     .end(function (err, res) {
       res.body.should.be.true;
       if(err){
-        console.error(err.status);
+        console.error(err);
       } else {
         console.log('Logged out!');
       }
       done();
-    })
-  })
+    });
+  });
 
 });
