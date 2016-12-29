@@ -6,9 +6,9 @@ const testConfig = require('../config');
 const server = require('../entry');
 const admin = require('../data/login/admin');
 var agent = request(server);
-
-const test_company = require('../data/company/test_company');
+const test_company = require('../data/company/company');
 const URL = testConfig.BASE_URL + '/company';
+
 var cookie;
 describe('Create a copmany', function () {
   it('Should log in', done => {
