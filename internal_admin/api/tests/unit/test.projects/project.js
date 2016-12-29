@@ -10,10 +10,29 @@ const test_project = require('../data/projects/project');
 const URL = testConfig.BASE_URL + '/project';
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
+const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 
 var project_id;
 
 describe('Create a project', function () {
+
+  //create/destroy admin for test
+  before(function(done){
+      Admin.create(admin).then(() => {
+        done();
+      });
+  });
+
+  after(function(done){
+    Admin.destroy({
+      where: {
+        email: admin.email
+      }
+    }).then(() => {
+      done();
+    });
+  });
+
   //login
   it('Should log in', function(done) {
     console.log(testConfig.BASE_URL + '/login');
@@ -28,6 +47,7 @@ describe('Create a project', function () {
       done();
     });
   });
+
   it('inserts a project', function (done) {
     console.log("inserting project with name: " + test_project.name);
     agent
@@ -42,7 +62,7 @@ describe('Create a project', function () {
       }
       project_id = res.body.id;
       done();
-    })
+    });
   });
 
   it('Should change status from active to inactive via put', function (done) {
@@ -58,7 +78,7 @@ describe('Create a project', function () {
       }
       expect(res.body.status).to.equal(INACTIVE)
       done();
-    })
+    });
   });
 
   it('Should change status from inactive to active via put', function (done) {
@@ -89,10 +109,10 @@ describe('Create a project', function () {
         console.log('Delete response ----->', res.body);
       }
       done();
-    })
+    });
   });
 
-//GET Uses PLURAL '/projects'
+  //GET Uses PLURAL '/projects'
   it('checks that project was actually inserted', function (done) {
     agent
     .get(URL + 's/' + test_project.companyId)
@@ -105,7 +125,7 @@ describe('Create a project', function () {
         console.error(err.status);
       }
       done();
-    })
-  })
+    });
+  });
 
 });
