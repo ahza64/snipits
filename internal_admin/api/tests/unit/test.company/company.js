@@ -8,9 +8,27 @@ const admin = require('../data/login/admin');
 var agent = request(server);
 const test_company = require('../data/company/company');
 const URL = testConfig.BASE_URL + '/company';
+const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
+
 var cookie;
 
 describe('/company tests', function () {
+  //create/destroy admin for test
+  before(function(done){
+      Admin.create(admin).then(() => {
+        done();
+      });
+  });
+
+  after(function(done){
+    Admin.destroy({
+      where: {
+        email: admin.email
+      }
+    }).then(() => {
+      done();
+    });
+  });
 
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');
