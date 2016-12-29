@@ -12,10 +12,28 @@ const admin = require('../data/login/admin');
 var agent = request(server);
 const test_watcher = require('../data/watcher/watcher');
 const URL = testConfig.BASE_URL + '/watcher';
+const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
+
 var found_watcher;
 var cookie;
 
 describe('Test for "watcher" methods', function () {
+  //create/destroy admin for test
+  before(function(done){
+      Admin.create(admin).then(() => {
+        done();
+      });
+  });
+
+  after(function(done){
+    Admin.destroy({
+      where: {
+        email: admin.email
+      }
+    }).then(() => {
+      done();
+    });
+  });
   //login
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');
