@@ -3,5 +3,6 @@ const test_company = {
   "name": 'test company',
   "createdAt": Date.now(),
   "updatedAt": Date.now(),
-}
+};
+
 module.exports = test_company;

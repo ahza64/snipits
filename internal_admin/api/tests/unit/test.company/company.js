@@ -5,6 +5,7 @@ const request = require('supertest');
 const testConfig = require('../config');
 const server = require('../entry');
 const admin = require('../data/login/admin');
+const _ = require('underscore');
 var agent = request(server);
 const test_company = require('../data/company/company');
 const URL = testConfig.BASE_URL + '/company';
@@ -13,13 +14,11 @@ const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_ad
 var cookie;
 
 describe('/company tests', function () {
-  //create/destroy admin for test
   before(function(done){
       Admin.create(admin).then(() => {
         done();
       });
   });
-
   after(function(done){
     Admin.destroy({
       where: {
@@ -54,8 +53,7 @@ describe('/company tests', function () {
       if(err){
         console.error(err);
       }
-      console.log("DEGUB", res.body);
-      //res.body.should.be.true;
+      res.body.should.be.true;
       done();
     });
   });
@@ -69,23 +67,10 @@ describe('/company tests', function () {
       if(err){
         console.error(err.status);
       }
-      res.body.length.should.not.equal();
-      expect(err).to.equal(null)
-      done();
-    });
-  });
-
-  it('should logout', function (done) {
-    agent
-    .get(testConfig.BASE_URL + '/logout')
-    .expect(200)
-    .end(function (err, res) {
-      res.body.should.be.true;
-      if(err){
-        console.error(err);
-      } else {
-        console.log('Logged out!');
-      }
+      var found_company = _.find(res.body, function (company) {
+        return company.id === test_company.id
+      })
+      expect(found_company).to.exist;
       done();
     });
   });

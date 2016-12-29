@@ -1,5 +1,4 @@
-//  Must have valid project-id AND companyId
-//@TODO fix ingestionConfigurationId
+// @TODO Must have valid project-id + ingestionConfigurationId  AND companyId
 
 const chai = require('chai');
 const _ = require('underscore');
@@ -11,20 +10,27 @@ const server = require('../entry');
 const admin = require('../data/login/admin');
 var agent = request(server);
 const test_watcher = require('../data/watcher/watcher');
+const test_company = require('../data/company/company');
+const test_project = require('../data/projects/project')
 const URL = testConfig.BASE_URL + '/watcher';
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
+const Company = require('dsp_shared/database/model/ingestion/tables').companies;
+const Project = require('dsp_shared/database/model/ingestion/tables').projects;
 
 var found_watcher;
 var cookie;
 
 describe('Test for "watcher" methods', function () {
-  //create/destroy admin for test
   before(function(done){
       Admin.create(admin).then(() => {
+        // Company.create(test_company).then(()=> {
+        //   Project.create(test_project).then(()=> {
+        //     done();
+        //   });
+        // });
         done();
       });
   });
-
   after(function(done){
     Admin.destroy({
       where: {
@@ -34,7 +40,7 @@ describe('Test for "watcher" methods', function () {
       done();
     });
   });
-  //login
+
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');
     agent
@@ -45,6 +51,7 @@ describe('Test for "watcher" methods', function () {
         return r.replace('; path=/; httponly', '');
       }).join('; ');
       expect(err).to.equal(null);
+      expect(admin.email).to.equal(res.body.email);
       done();
      });
   });
@@ -58,6 +65,7 @@ describe('Test for "watcher" methods', function () {
       if(err){
         console.error(err);
       }
+      res.body.email.should.equal(test_watcher.email)
       res.status.should.not.equal(404);
       done();
     });
@@ -76,11 +84,13 @@ describe('Test for "watcher" methods', function () {
         return item.email === test_watcher.email;
       });
       console.log("Searching for watcher by email...");
-      console.log(found_watcher.email, "ID:" + found_watcher.id);
+      console.log(found_watcher.email, "ID: " + found_watcher.id);
+      expect(found_watcher).to.exist;
       done();
     });
   });
 
+//successful delete results in 1
   it('Should delete the watcher', function (done) {
     agent
     .delete(URL + '/' + found_watcher.id)

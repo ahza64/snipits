@@ -18,4 +18,22 @@ function getCookie(agent) {
   });
 }
 module.exports = getCookie;
+
+
+
+it('should logout', function (done) {
+  agent
+  .get(testConfig.BASE_URL + '/logout')
+  .expect(200)
+  .end(function (err, res) {
+    res.body.should.be.true;
+    if(err){
+      console.error(err);
+    } else {
+      console.log('Logged out!');
+    }
+    done();
+  });
+});
+
 */

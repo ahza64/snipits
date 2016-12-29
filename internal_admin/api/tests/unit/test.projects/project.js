@@ -16,14 +16,11 @@ var cookie;
 var project_id;
 
 describe('Create a project', function () {
-
-  //create/destroy admin for test
   before(function(done){
       Admin.create(admin).then(() => {
         done();
       });
   });
-
   after(function(done){
     Admin.destroy({
       where: {
@@ -61,6 +58,7 @@ describe('Create a project', function () {
         console.log('Inserted ID (from response) ------------>', res.body.id);
       }
       console.log('');
+      expect(res.body.name).to.equal(test_project.name);
       project_id = res.body.id;
       done();
     });
@@ -95,6 +93,7 @@ describe('Create a project', function () {
     });
   });
 
+//success response body is empty
   it('Should delete the project', function (done) {
     agent
     .delete(URL + '/' + project_id)
@@ -106,13 +105,12 @@ describe('Create a project', function () {
       } else {
         console.log('Deleted project');
       }
-      console.log('-------------------------', res.body);
       done();
     });
   });
 
   //GET Uses PLURAL '/projects'
-  it('checks that project was actually inserted', function (done) {
+  it('checks that project was actually Deleted', function (done) {
     agent
     .get(URL + 's/' + test_project.companyId)
     .expect(200)

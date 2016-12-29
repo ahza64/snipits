@@ -10,7 +10,6 @@ var agent = request(server);
 const test_user = require('../data/user/user');
 const URL = testConfig.BASE_URL + '/users';
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
-
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 var found_user;
@@ -18,13 +17,11 @@ var user_id;
 var cookie;
 
 describe('Test for "user" methods', function () {
-  //create/destroy admin for test
   before(function(done){
       Admin.create(admin).then(() => {
         done();
       });
   });
-
   after(function(done){
     Admin.destroy({
       where: {
@@ -34,7 +31,7 @@ describe('Test for "user" methods', function () {
       done();
     });
   });
-  //login
+
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');
     agent
@@ -60,6 +57,7 @@ describe('Test for "user" methods', function () {
         console.error(err);
       }
       console.log('result of post', res.body);
+      res.body.email.should.equal(test_user.email);
       res.status.should.not.equal(404);
       done();
     })
@@ -75,11 +73,11 @@ describe('Test for "user" methods', function () {
       }
       console.log('result of get', res.body);
       res.status.should.not.equal(404);
-
       //find user by email
       found_user = _.find(res.body, function (user) {
         return user.email === test_user.email;
       });
+      expect(found_user).to.exist;
       done();
     });
   });
@@ -93,8 +91,6 @@ describe('Test for "user" methods', function () {
     .end(function (err, res) {
       if(err){
         console.error(err);
-      } else {
-        console.log('PUT deactivate response ----->', res.body);
       }
       expect(res.body.status).to.equal(INACTIVE)
       done();
@@ -109,8 +105,6 @@ describe('Test for "user" methods', function () {
     .end(function (err, res) {
       if(err){
         console.error(err);
-      } else {
-        console.log('PUT activate response ----->', res.body);
       }
       expect(res.body.status).to.equal(ACTIVE)
       done();
@@ -125,14 +119,9 @@ describe('Test for "user" methods', function () {
     .end(function (err, res) {
       if(err){
         console.error(err);
-      } else {
-        console.log('Delete response ----->', res.body);
       }
       res.body.should.equal(1);
       done();
     })
   });
-
-
-
 });
