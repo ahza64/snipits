@@ -220,17 +220,13 @@ export default class UploadZone extends UploadLib {
   }
 
   handleFileDeleted(fileId) {
-    this.fetchHistories();
-    this.setTotal(false);
-    var files=[];
-    for (var i = 0; i < this.state.files.length; i++) {
-      var file = this.state.files[i];
-      if (file.id !== fileId ) {
-        files.push(file);
-      }
-    }
-    this.setState({
-      files: files
+    var offset = pageRedux.getState();
+    this.getUploadedFiles(offset, (files) => {
+      this.setFiles(files);
+      this.getHistory((heatmapData, historiesData) => {
+        this.setHistories(heatmapData, historiesData);
+        this.setTotal(false);
+      });
     });
   }
 

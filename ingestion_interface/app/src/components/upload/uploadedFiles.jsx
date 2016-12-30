@@ -164,7 +164,7 @@ export default class UploadedFiles extends UploadLib {
                 <ChevronLeft/>
               </IconButton>
               <IconButton
-                disabled={ pageRedux.getState() + offsetInterval > this.state.total }
+                disabled={ pageRedux.getState() + offsetInterval >= this.state.total }
                 onClick={ () => this.changePage('NEXT') }>
                 <ChevronRight/>
               </IconButton>
