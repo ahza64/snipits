@@ -5,6 +5,17 @@ import Mocha from 'mocha';
 import Glob from 'glob';
 import './utils/dom';
 
+const m = require('module');
+const originalLoader = m._load;
+
+m._load = function hookedLoader(request, parent, isMain) {
+  if (request.match(/.jpeg|.jpg|.png|.scss$/)) {
+    return { uri: request };
+  }
+
+  return originalLoader(request, parent, isMain);
+};
+
 const argv = Minimist(process.argv.slice(2), {
   alias: {
     c: 'component',

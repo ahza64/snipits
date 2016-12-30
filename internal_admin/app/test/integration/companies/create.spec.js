@@ -2,11 +2,9 @@
 import CreateCompanyDialog from '../../../src/components/companies/create';
 import React from 'react';
 import { mount } from 'enzyme';
-import { shallow } from 'enzyme';
-import {assert} from 'chai';
+import { assert } from 'chai';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 describe('<CreateCompanyDialog />', () => {
 
