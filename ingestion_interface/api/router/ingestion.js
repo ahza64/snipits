@@ -23,6 +23,10 @@ router.post(
   function*() {
     var body = this.request.body;
 
+    if (!permissions.has(this.req.user, body.companyId)) {
+      this.throw(403);
+    }
+
     var record = {
       customerFileName: body.customerFileName,
       s3FileName: body.s3FileName,
@@ -50,14 +54,24 @@ router.put(
     var description = body.description;
     var fileId = body.fileId;
     if (fileId) {
+      var ingestion = null;
       try {
-        var ingestion = yield Ingestions.find({ where: { id: fileId } });
-        ingestion = yield ingestion.updateAttributes({
-          description: description
-        });
+        ingestion = yield Ingestions.find({ where: { id: fileId } });
       } catch(e) {
         console.error(e);
         this.throw(500);
+      }
+      if ((ingestion) && (permissions.has(this.req.user, ingestion.companyId))) {
+        try {
+          ingestion = yield ingestion.updateAttributes({
+            description: description
+          });
+        } catch(e) {
+          console.error(e);
+          this.throw(500);
+        }
+      } else {
+        this.throw(403);
       }
     } else {
       console.error('fileId not found');
@@ -161,6 +175,10 @@ router.get(
   function*() {
     var companyId = this.params.companyId;
 
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
+
     try {
       var total = yield Ingestions.count({
         where: { companyId: companyId }
@@ -180,6 +198,10 @@ router.get(
   function*() {
     var companyId = this.params.companyId;
     var offset = this.params.offset;
+
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
 
     try {
       var ingestions = yield Ingestions.findAll({
@@ -210,6 +232,10 @@ router.get(
     var fileName = this.params.fileName;
     var companyId = this.params.companyId;
 
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
+
     try {
       var ingestion = yield Ingestions.findOne({
         where: {
@@ -233,6 +259,11 @@ router.get(
   function*() {
     var companyId = this.params.companyId;
     var token = this.params.token;
+
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
+
     try {
       var ingestions = yield Ingestions.findAll({
         where: {

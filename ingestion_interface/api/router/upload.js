@@ -5,6 +5,7 @@ const _ = require('underscore');
 const s3 = require('dsp_shared/aws/s3');
 const config = require('dsp_shared/conf.d/config.json').mooncake;
 const notifications = require('./notifications');
+const permissions = require('./permissions');
 const s3Prefix = config.env + '.';
 
 // Collection
@@ -12,40 +13,10 @@ const Histories = require('dsp_shared/database/model/ingestion/tables').ingestio
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
 const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestion_files;
 const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
+const Configs = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
 
 // App
 const app = koa();
-
-// Get the uploaded files
-router.get(
-  '/displayUpload/:company',
-  function*() {
-    var company = this.params.company;
-    var bucket = s3Prefix + company.toLowerCase() + '.ftp';
-    try {
-      var res = yield s3.list(bucket);
-      var files = res.Contents;
-
-      for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        var fileName = file.Key;
-        var ingestion = yield Ingestions.findOne({
-          where: {
-            fileName: fileName
-          },
-          raw: true
-        });
-        file.ingestion = ingestion;
-      }
-    } catch(e) {
-      console.error(e);
-      this.throw(500);
-    }
-
-    console.log('Files already uploaded: ', files);
-    this.body = files;
-  }
-);
 
 // Check if same file exists
 router.get(
@@ -54,8 +25,23 @@ router.get(
     var configId = this.params.configId;
     var fileName = this.params.fileName;
 
+    var config = null;
     try {
-      var ingestions = yield Ingestions.findAll({
+      config = yield Configs.findOne({
+        where: { id: configId },
+        raw: true
+      });
+    } catch(e) {
+      console.error(e);
+      this.throw(500);
+    }
+    if (!(config && permissions.has(this.req.user, config.companyId))) {
+      this.throw(403);
+    }
+
+    var ingestions = [];
+    try {
+      ingestions = yield Ingestions.findAll({
         where: { ingestionConfigurationId: configId },
         raw: true
       });
@@ -75,10 +61,33 @@ router.get(
 router.post(
   '/s3auth',
   function*() {
-    var fileName = this.request.body.name;
-    var fileType = this.request.body.type;
-    var company = this.request.body.company.toLowerCase();
-    var action = this.request.body.action;
+    var body = this.request.body;
+    var companyId = body.companyId;
+
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
+
+    var company = null;
+    try {
+      var c = yield Companies.findOne({
+        where: { id: companyId },
+        raw: true
+      });
+      company = c.name;
+    } catch(e) {
+      console.error(e);
+      this.throw(500);
+    }
+
+    if (!company) {
+      this.throw(500);
+    }
+
+    var fileName = body.name;
+    var fileType = body.type;
+
+    var action = body.action;
     var bucket = s3Prefix + company + '.ftp';
 
     try {
@@ -111,12 +120,22 @@ router.post(
   '/delete',
   function*() {
     var fileId = this.request.body.fileId;
-
+    var file = null;
     try {
-      var file = yield Ingestions.findOne({
+      file = yield Ingestions.findOne({
         where: { id: fileId },
         raw: true
       });
+    } catch(e) {
+      console.error(e);
+      this.throw(500);
+    }
+
+    if (!(file && permissions.has(this.req.user, file.companyId))) {
+      this.throw(403);
+    }
+
+    try {
       var company = yield Companies.findOne({
         where: { id: file.companyId },
         raw: true

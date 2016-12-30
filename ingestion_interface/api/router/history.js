@@ -4,6 +4,7 @@ const router = require('koa-router')();
 const moment = require('moment');
 const _ = require('underscore');
 const notifications = require('./notifications');
+const permissions = require('./permissions');
 
 // Collection
 const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
@@ -34,7 +35,10 @@ router.post(
 
     // Check whether the ingestion exists
     var ingestion = yield Ingestions.findOne({ where: { id: body.ingestionFileId }, raw: true });
-    if (!ingestion.id) { this.throw(403); }
+
+    if (!(ingestion && permissions.has(this.req.user, ingestion.companyId))) {
+      this.throw(403);
+    }
 
     yield notifications.send(this.req.user, ingestion, action);
 
@@ -106,6 +110,10 @@ router.get(
   '/history/:companyId',
   function*() {
     var companyId = this.params.companyId;
+
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
 
     try {
       var histories = yield Users.findAll({
