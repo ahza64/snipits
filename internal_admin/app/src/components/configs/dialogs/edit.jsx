@@ -54,12 +54,21 @@ export default class EditConfigDialog extends React.Component {
     }
   }
 
-  handleConfigTypeChanged(event) {
-    var configType = event.target.value;
+  validateConfigType(configType) {
+    var configTypeError = null;
+    if ((configType) && (configType.length > 0)) {
+      var correct = configType.match( /^[\w\.]+$/g );
+      configTypeError = correct ? null : 'Allowed characters: alphanumeric, \'_\' and \'.\'';
+    }
     this.setState({
       configType: configType,
-      configTypeError: null
+      configTypeError: configTypeError
     });
+  }
+
+  handleConfigTypeChanged(event) {
+    var configType = event.target.value;
+    this.validateConfigType(configType);
   }
 
   handleConfigDescriptionChanged(event) {
@@ -70,7 +79,7 @@ export default class EditConfigDialog extends React.Component {
   }
 
   isConfirmButtonDisabled() {
-    if (this.state.creating) {
+    if (this.state.creating || this.state.configTypeError) {
       return true;
     } else {
       var configType = this.state.configType;

@@ -17,24 +17,32 @@ export default class CreateCompanyDialog extends React.Component {
 
     this.state = {
       companyName: '',
+      companyNameError: null,
       creating: false
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleCompanyNameChanged(event) {
-    var name = event.target.value;
-    if (this.props.value) {
-      this.props.value = name;
+  validateCompanyName(companyName) {
+    var companyNameError = null;
+    if ((companyName) && (companyName.length > 0)) {
+      var correct = companyName.match( /^[a-zA-Z\d\.]+$/g );
+      companyNameError = correct ? null : 'Allowed characters: alphanumeric and \'.\'';
     }
     this.setState({
-      companyName: name
+      companyName: companyName,
+      companyNameError: companyNameError
     });
   }
 
+  handleCompanyNameChanged(event) {
+    var name = event.target.value;
+    this.validateCompanyName(name);
+  }
+
   isConfirmButtonDisabled() {
-    if (this.state.creating) {
+    if (this.state.creating || this.state.companyNameError) {
       return true;
     } else {
       var name = this.state.companyName;
@@ -99,6 +107,7 @@ export default class CreateCompanyDialog extends React.Component {
             value={ this.state.companyName }
             hintText="Enter New Company Name"
             floatingLabelText="Company Name"
+            errorText={ this.state.companyNameError }
             onChange={ (event) => this.handleCompanyNameChanged(event) } />
           { this.renderCircularProgress() }
         </Dialog>

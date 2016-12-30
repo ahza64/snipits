@@ -22,7 +22,7 @@ router.post(
 
     if (permissions.has(this.req.user, companyId)) {
       var project = yield Projects.findOne({
-        where: { name: body.name, companyId: companyId },
+        where: { name: { ilike: body.name }, companyId: companyId },
         raw: true
       });
 
