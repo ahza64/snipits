@@ -1,9 +1,12 @@
+const company = require('../company/company');
+
 const user = {
-  firstname: 'bob',
-  lastname: 'abc',
-  companyId: 345,
-  email: '123@test.com',
-  password: '123',
-  status: 'active'
+   firstname: 'H',
+   lastname: 'H',
+   email: 'h@h.co',
+   company: company.name,
+   password: '123',
+   companyId: company.id,
+   role: null
 };
 module.exports = user;

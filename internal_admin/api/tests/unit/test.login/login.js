@@ -1,13 +1,12 @@
 /* globals describe, it,  before, after */
 
-
 //module
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
 const testConfig = require('../config');
 const server = require('../entry');
-var agent = request(server);
+var   agent = request(server);
 
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 

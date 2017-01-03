@@ -32,8 +32,7 @@ app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/projects')))
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/user')));
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/watcher')));
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/config')));
-
-
+app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/ingestion')));
 
 
 //mount tests

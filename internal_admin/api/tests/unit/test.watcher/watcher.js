@@ -8,10 +8,11 @@ const request = require('supertest');
 const testConfig = require('../config');
 const server = require('../entry');
 const admin = require('../data/login/admin');
+require('../helper');
 var agent = request(server);
 const test_watcher = require('../data/watcher/watcher');
 const test_company = require('../data/company/company');
-const test_project = require('../data/projects/project')
+const test_project = require('../data/projects/project');
 const URL = testConfig.BASE_URL + '/watcher';
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const Company = require('dsp_shared/database/model/ingestion/tables').companies;
@@ -21,25 +22,6 @@ var found_watcher;
 var cookie;
 
 describe('Test for "watcher" methods', function () {
-  before(function(done){
-      Admin.create(admin).then(() => {
-        // Company.create(test_company).then(()=> {
-        //   Project.create(test_project).then(()=> {
-        //     done();
-        //   });
-        // });
-        done();
-      });
-  });
-  after(function(done){
-    Admin.destroy({
-      where: {
-        email: admin.email
-      }
-    }).then(() => {
-      done();
-    });
-  });
 
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');

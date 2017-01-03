@@ -9,28 +9,16 @@ const admin = require('../data/login/admin');
 var agent = request(server);
 const test_user = require('../data/user/user');
 const URL = testConfig.BASE_URL + '/users';
-const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
+//const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
+require('../helper');
 var found_user;
 var user_id;
 var cookie;
 
 describe('Test for "user" methods', function () {
-  before(function(done){
-      Admin.create(admin).then(() => {
-        done();
-      });
-  });
-  after(function(done){
-    Admin.destroy({
-      where: {
-        email: admin.email
-      }
-    }).then(() => {
-      done();
-    });
-  });
+ console.log("--------------------", test_user);
 
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');
@@ -47,7 +35,8 @@ describe('Test for "user" methods', function () {
   });
 
   it('inserts a user', function (done) {
-    console.log("inserting user with name: " + test_user.name);
+    this.timeout(5000);
+    console.log("inserting user with name: " + test_user.firstname);
     agent
     .post(testConfig.BASE_URL + '/user')
     .send(test_user)
@@ -55,11 +44,13 @@ describe('Test for "user" methods', function () {
     .end(function (err, res) {
       if(err){
         console.error(err);
+      } else {
+        console.log('RES ------> ', res.body);
+        done();
       }
-      console.log('result of post', res.body);
+      console.log('result of post_______________________________________', res.body);
       res.body.email.should.equal(test_user.email);
       res.status.should.not.equal(404);
-      done();
     })
   });
 
