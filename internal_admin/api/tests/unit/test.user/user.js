@@ -11,7 +11,10 @@ const test_user = require('../data/user/user');
 const URL = testConfig.BASE_URL + '/users';
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
-require('../helper');
+require('../data_init');
+require('../data_cleanup');
+
+
 var found_user;
 var user_id;
 var cookie;
@@ -46,7 +49,7 @@ describe('Test for "user" methods', function () {
       }
       res.body.email.should.equal(test_user.email);
       res.status.should.not.equal(404);
-    })
+    });
   });
 
   it('Should find userID', function (done) {

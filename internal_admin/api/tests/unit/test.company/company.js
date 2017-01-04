@@ -29,7 +29,7 @@ describe('/company tests', function () {
     });
   });
 
-  it('Should log in', done => {
+  it('Should log in', function(done) {
     console.log(testConfig.BASE_URL + '/login');
     agent
     .post(testConfig.BASE_URL + '/login')
@@ -68,8 +68,8 @@ describe('/company tests', function () {
         console.error(err.status);
       }
       var found_company = _.find(res.body, function (company) {
-        return company.id === test_company.id
-      })
+        return company.id === test_company.id;
+      });
       expect(found_company).to.exist;
       done();
     });

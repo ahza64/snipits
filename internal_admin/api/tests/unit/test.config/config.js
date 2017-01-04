@@ -13,7 +13,9 @@ const URL = testConfig.BASE_URL + '/config';
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 const Project = require('dsp_shared/database/model/ingestion/tables').work_projects;
-require('../helper');
+require('../data_init');
+require('../data_cleanup');
+
 var savedConfigId;
 
 describe('Test for "config ingestion" methods', function () {

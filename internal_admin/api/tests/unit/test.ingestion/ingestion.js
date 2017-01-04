@@ -9,11 +9,13 @@ const testConfig = require('../config');
 const server = require('../entry');
 const admin = require('../data/login/admin');
 var agent = request(server);
-require('../helper');
+require('../data_init');
+require('../data_cleanup');
 const test_watcher = require('../data/watcher/watcher');
 const test_company = require('../data/company/company');
 const test_project = require('../data/projects/project');
 const URL   = testConfig.BASE_URL + '/ingestions';
+const Ingestion_Configurations = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 const Project = require('dsp_shared/database/model/ingestion/tables').projects;
@@ -22,6 +24,8 @@ var cookie;
 
 
 describe('Test for "ingestion" ', function () {
+//@TODO add before insert ingestion_configuration
+
 
   it('Should log in', done => {
     agent
@@ -33,13 +37,11 @@ describe('Test for "ingestion" ', function () {
       }).join('; ');
       expect(err).to.equal(null);
       expect(admin.email).to.equal(res.body.email);
-      console.log("res.body.email ----------->",  res.body.email);
       done();
      });
   });
 
   it('Should set ingestion notification', function (done) {
-    console.log("POSTING to ----------------->", URL);
     agent
     .put(URL)
     .set('Cookie', cookie)
@@ -49,8 +51,8 @@ describe('Test for "ingestion" ', function () {
     .end(function (err, res) {
       if (err) {
         console.error(err);
-        console.log("DEBUG------------------->", res.body);
       }
+      //ADD assertion
       done();
     });
   });
@@ -65,7 +67,7 @@ describe('Test for "ingestion" ', function () {
           console.error(err);
         }
         done();
-        //console.log("DEBUG", res);
+        //add assertion
     });
   });
 });
