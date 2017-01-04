@@ -1,7 +1,7 @@
 var test_ingestion = {
   "ingestionId": 10,
   "ingested": false,
-  "description": "FAAAACK"
+  "description": "Nice description"
 };
 
 module.exports = test_ingestion;

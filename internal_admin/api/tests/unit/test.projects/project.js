@@ -19,6 +19,12 @@ var project_id;
 
 describe('Create a project', function () {
   before(function(done){
+    Admin.findOne({where: {email:admin.email}}).then(function (found) {
+      if (found){
+        console.log("found", found);
+        done();
+      }
+    });
       Admin.create(admin).then(() => {
         Company.create(company).then(()=>{
           done();

@@ -18,10 +18,8 @@ const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_a
 router.post(
   '/user',
   function*() {
-    console.log("this.request.body----------------------", this.request.body);
     if (permissions.has(this.req.user, null)) {
       var body = this.request.body;
-      console.log("IN POST USER----------------------");
       if (body.id) {
         this.body = yield updateUser(body);
       } else {
@@ -49,14 +47,14 @@ router.post(
           status: ACTIVE,
           companyId: companyId
         };
-        
+
         if (body.role) {
           user.role = body.role;
           user = yield Admins.create(user);
-          console.log('In body role', user);
+          // console.log('In body role', user);
         } else {
           user = yield Users.create(user);
-          console.log('In else part', user);
+          // console.log('In else part', user);
           yield notifications.userCreated(companyName, user, body.password);
         }
 

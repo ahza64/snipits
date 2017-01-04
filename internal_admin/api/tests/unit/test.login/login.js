@@ -18,6 +18,12 @@ describe('Login', function(){
 
   before(function(done){
     console.log('===================== Login =====================');
+    Admin.findOne({where: {email:admin.email}}).then(function (found) {
+      if (found){
+        console.log("found", found);
+        done();
+      }
+    })
       Admin.create(admin).then(() => {
         done();
       });

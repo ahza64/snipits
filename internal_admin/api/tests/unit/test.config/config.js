@@ -15,7 +15,7 @@ const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 const Project = require('dsp_shared/database/model/ingestion/tables').work_projects;
 require('../data_init');
 require('../data_cleanup');
-
+var cookie;
 var savedConfigId;
 
 describe('Test for "config ingestion" methods', function () {

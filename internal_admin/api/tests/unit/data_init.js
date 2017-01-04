@@ -9,6 +9,12 @@ const project = require('./data/projects/project');
 
 before(function(done) {
   console.log('before every test in every file');
+  var c = Company.findOne({where: {id:company.id}}).then(function (found) {
+    if (found){
+      console.log("found", found);
+      done();
+    }
+  })
   Company.create(company).then(() => {
     Admin.create(admin).then(() => {
       Project.create(project).then(() =>  {

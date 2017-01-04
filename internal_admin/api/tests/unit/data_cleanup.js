@@ -6,6 +6,8 @@ const Project = require('dsp_shared/database/model/ingestion/tables').work_proje
 const admin = require('./data/login/admin');
 const company = require('./data/company/company');
 const project = require('./data/projects/project');
+//Add drop db
+
 
 after(function (done) {
   Admin.destroy({where: { email: admin.email }}).then(function() {
