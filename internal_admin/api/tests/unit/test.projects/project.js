@@ -8,6 +8,8 @@ const admin = require('../data/login/admin');
 var agent = request(server);
 const test_project = require('../data/projects/project');
 const URL = testConfig.BASE_URL + '/project';
+const Company = require('dsp_shared/database/model/ingestion/tables').companies;
+const company = require('../data/company/company');
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
@@ -18,16 +20,16 @@ var project_id;
 describe('Create a project', function () {
   before(function(done){
       Admin.create(admin).then(() => {
-        done();
+        Company.create(company).then(()=>{
+          done();
+        });
       });
   });
   after(function(done){
-    Admin.destroy({
-      where: {
-        email: admin.email
-      }
-    }).then(() => {
-      done();
+    Admin.destroy({where: {email: admin.email}}).then(() => {
+        Company.destroy({where: { id : company.id } }).then(()=>{
+          done();
+      });
     });
   });
 

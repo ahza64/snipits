@@ -9,7 +9,6 @@ const admin = require('../data/login/admin');
 var agent = request(server);
 const test_user = require('../data/user/user');
 const URL = testConfig.BASE_URL + '/users';
-//const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 require('../helper');
@@ -18,8 +17,6 @@ var user_id;
 var cookie;
 
 describe('Test for "user" methods', function () {
- console.log("--------------------", test_user);
-
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');
     agent
@@ -45,10 +42,8 @@ describe('Test for "user" methods', function () {
       if(err){
         console.error(err);
       } else {
-        console.log('RES ------> ', res.body);
         done();
       }
-      console.log('result of post_______________________________________', res.body);
       res.body.email.should.equal(test_user.email);
       res.status.should.not.equal(404);
     })
@@ -62,9 +57,7 @@ describe('Test for "user" methods', function () {
       if(err){
         console.error(err);
       }
-      console.log('result of get', res.body);
       res.status.should.not.equal(404);
-      //find user by email
       found_user = _.find(res.body, function (user) {
         return user.email === test_user.email;
       });

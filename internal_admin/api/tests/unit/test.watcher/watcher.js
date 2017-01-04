@@ -10,13 +10,12 @@ const server = require('../entry');
 const admin = require('../data/login/admin');
 require('../helper');
 var agent = request(server);
+const Ingestion_Configurations = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
 const test_watcher = require('../data/watcher/watcher');
 const test_company = require('../data/company/company');
 const test_project = require('../data/projects/project');
+const test_configuration = require('../data/config/ingestion_configuration')
 const URL = testConfig.BASE_URL + '/watcher';
-const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
-const Company = require('dsp_shared/database/model/ingestion/tables').companies;
-const Project = require('dsp_shared/database/model/ingestion/tables').projects;
 
 var found_watcher;
 var cookie;
