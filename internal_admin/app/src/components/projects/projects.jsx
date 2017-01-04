@@ -242,7 +242,7 @@ export default class Projects extends React.Component {
           targetOrigin={ { horizontal: 'right', vertical: 'top' } }
           onRequestClose={ this.handleCloseActionMenu } >
           <Menu>
-            <MenuItem value="1" primaryText="Add Igestion Config"
+            <MenuItem value="1" primaryText="Add Ingestion Config"
               onClick={ this.handleCreateConfig } />
             <MenuItem value="2" primaryText="Delete Work Project"
               onClick={ this.handleDeleteProject } />
