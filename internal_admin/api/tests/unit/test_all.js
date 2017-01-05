@@ -1,12 +1,15 @@
 describe('All tests', function () {
 
-  it('should run login test', function () {
-    this.timeout(5555);
-      require('./test.login/login');
-  });
+  describe('should run login test', function () {
+  setTimeout(function () {
+    require('./test.login/login');
+  }, 5555);
+});
 
-  it('should run project tests', function () {
-    this.timeout(4444);
-    require('./test.projects/project');
+  describe('should run project tests', function (done) {
+  setTimeout(function () {
+      require('./test.projects/project');
+      done();
+    }, 5555);
   });
 });

@@ -1,3 +1,12 @@
+/**
+ * @overview This file creates an Admin, Company, Project, and ingestion_configuration
+ * file. For use with @file test.watcher/watcher.js
+
+ * @const admin   @see data/login/admin
+ * @const company @see data/company/company
+ * @const project @see data/projects/project
+ * @const test_configuration @see data/config/ingestion_configuration
+ */
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 const Project = require('dsp_shared/database/model/ingestion/tables').work_projects;

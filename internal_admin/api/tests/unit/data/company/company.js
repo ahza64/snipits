@@ -1,3 +1,9 @@
+/**
+* @overview this is a sample company that
+* insert into the DB
+*/
+
+
 const test_company = {
   "id" : 345,
   "name": 'test company',

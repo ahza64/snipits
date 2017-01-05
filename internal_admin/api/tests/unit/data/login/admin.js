@@ -1,5 +1,6 @@
 /**
-* @overview this is the sample admin for db insertion for login
+* @overview this is the sample admin for db insertion
+  these credentials are used for login by tests
 */
 
 const admin = {

@@ -1,3 +1,10 @@
+/**
+ * @overview This file creates an Admin, Company, and Project
+ * @const admin   @see data/login/admin
+ * @const company @see data/company/company
+ * @const project @see data/projects/project
+ * @param {Object} done - marks end of block
+ */
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 const Project = require('dsp_shared/database/model/ingestion/tables').work_projects;
