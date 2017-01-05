@@ -1,3 +1,8 @@
+/**
+* @overview this is the sample watcher for db insertion
+* @TODO ingestionConfigurationId needs to be fixed
+*/
+
 //  Must have valid project-id and companyId
 const company = require('../company/company');
 

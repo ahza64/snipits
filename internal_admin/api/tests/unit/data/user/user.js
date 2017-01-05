@@ -1,3 +1,7 @@
+/**
+* @overview this is the sample user for db insertion
+*/
+
 const company = require('../company/company');
 
 const user = {

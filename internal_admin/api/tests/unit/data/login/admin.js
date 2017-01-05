@@ -1,3 +1,7 @@
+/**
+* @overview this is the sample admin for db insertion for login
+*/
+
 const admin = {
   "id": 1,
   "name": "admin",
