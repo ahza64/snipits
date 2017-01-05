@@ -8,7 +8,7 @@ const testConfig = require('../config');
 const server = require('../entry');
 var   agent = request(server);
 
-require('../data/data/data_initializers/data_initializers/admin_init');
+require('../data/data_initializers/admin_init');
 const admin = require('../data/login/admin');
 
 describe('Login', function(){

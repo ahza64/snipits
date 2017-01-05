@@ -3,7 +3,6 @@ const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 const Project = require('dsp_shared/database/model/ingestion/tables').work_projects;
 const Ingestion_Configurations = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
 
-//const User = require('.')
 const test_configuration = require('../config/ingestion_configuration')
 const admin = require('../login/admin');
 const company = require('../company/company');

@@ -1,20 +1,12 @@
-
 describe('All tests', function () {
 
-  it('should run login test', function (done) {
-    setTimeout(function () {
-      require('./test.login/login')(done);
-    }, 3000);
+  it('should run login test', function () {
+    this.timeout(5555);
+      require('./test.login/login');
   });
 
   it('should run project tests', function () {
-    setTimeout(function () {
-      require('./test.projects/project');
-    }, 3000);
+    this.timeout(4444);
+    require('./test.projects/project');
   });
-
-
-// require('./test.user/user');
-// require('./test.company/company');
-// require('./test.watcher/watcher');
 });

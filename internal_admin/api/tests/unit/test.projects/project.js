@@ -19,7 +19,7 @@ require('../data/data_initializers/company_init');
 var cookie;
 var project_id;
 
-describe('Create a project', function () {
+describe('Project tests', function () {
   it('Should log in', function(done) {
     console.log(testConfig.BASE_URL + '/login');
     agent
