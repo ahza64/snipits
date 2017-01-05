@@ -9,31 +9,13 @@ const _ = require('underscore');
 var agent = request(server);
 const test_company = require('../data/company/company');
 const URL = testConfig.BASE_URL + '/company';
-const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
-
+const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 var cookie;
+require('../data/data_initializers/admin_init');
 
 describe('/company tests', function () {
-  before(function(done){
-    Admin.findOne({where: {email:admin.email}}).then(function (found) {
-
-      if (found){
-        console.log("found:", found);
-        done();
-      } else {
-        Admin.create(admin).then(() => {
-          done();
-        });
-      }
-
-    })
-  });
-  after(function(done){
-    Admin.destroy({
-      where: {
-        email: admin.email
-      }
-    }).then(() => {
+  after(function (done) {
+    Company.destroy({where: { id: test_company.id }}).then(function() {
       done();
     });
   });
@@ -52,7 +34,7 @@ describe('/company tests', function () {
     });
   });
 
-  it('inserts a company', function (done) {
+  it('inserts a company', function () {
     console.log("creating company with id " + test_company.id);
     agent
     .post(URL)
@@ -63,7 +45,6 @@ describe('/company tests', function () {
         console.error(err);
       }
       res.body.should.be.true;
-      done();
     });
   });
 

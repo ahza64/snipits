@@ -13,8 +13,7 @@ const URL = testConfig.BASE_URL + '/config';
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 const Project = require('dsp_shared/database/model/ingestion/tables').work_projects;
-require('../data_init');
-require('../data_cleanup');
+require('../data/data_initializers/data_init');
 var cookie;
 var savedConfigId;
 

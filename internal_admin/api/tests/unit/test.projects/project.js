@@ -14,37 +14,21 @@ const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const INIT_NUM_PROJECTS = 0;
+require('../data/data_initializers/admin_init');
+require('../data/data_initializers/company_init');
 var cookie;
 var project_id;
 
 describe('Create a project', function () {
-  before(function(done){
-    Admin.findOne({where: {email:admin.email}}).then(function (found) {
-      if (found){
-        console.log("found", found);
-        done();
-      }
-    });
-      Admin.create(admin).then(() => {
-        Company.create(company).then(()=>{
-          done();
-        });
-      });
-  });
-  after(function(done){
-    Admin.destroy({where: {email: admin.email}}).then(() => {
-        Company.destroy({where: { id : company.id } }).then(()=>{
-          done();
-      });
-    });
-  });
-
   it('Should log in', function(done) {
     console.log(testConfig.BASE_URL + '/login');
     agent
     .post(testConfig.BASE_URL + '/login')
     .send({email: admin.email, password: '123'})
     .end((err, res) => {
+      if(err){
+        done(err);
+      }
       cookie = res.header['set-cookie'].map(function(r) {
         return r.replace('; path=/; httponly', '');
       }).join('; ');

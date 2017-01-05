@@ -8,8 +8,7 @@ const request = require('supertest');
 const testConfig = require('../config');
 const server = require('../entry');
 const admin = require('../data/login/admin');
-require('../data_init');
-require('../data_cleanup');
+
 var agent = request(server);
 const Ingestion_Configurations = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
 const test_watcher = require('../data/watcher/watcher');
@@ -17,6 +16,7 @@ const test_company = require('../data/company/company');
 const test_project = require('../data/projects/project');
 const test_configuration = require('../data/config/ingestion_configuration')
 const URL = testConfig.BASE_URL + '/watcher';
+require('../data/data_initializers/ingestion_configuration_init');
 
 var found_watcher;
 var cookie;
@@ -24,9 +24,16 @@ var cookie;
 describe('Test for "watcher" methods', function () {
 
   it('Should log in', done => {
+    Ingestion_Configurations
+    .findOne({where : { workProjectId : test_configuration.workProjectId}})
+    .then(function (found) {
+      test_watcher.ingestionConfigurationId = found.id;
+      console.log("DEBUG found id ==== ", found.id);
+    })
     console.log(testConfig.BASE_URL + '/login');
     agent
     .post(testConfig.BASE_URL + '/login')
+    .expect(200)
     .send({email: admin.email, password: '123'})
     .end((err, res) => {
       cookie = res.header['set-cookie'].map(function(r) {
@@ -36,6 +43,7 @@ describe('Test for "watcher" methods', function () {
       expect(admin.email).to.equal(res.body.email);
       done();
      });
+
   });
 
   it('inserts a watcher', function (done) {

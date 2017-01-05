@@ -8,36 +8,10 @@ const testConfig = require('../config');
 const server = require('../entry');
 var   agent = request(server);
 
-const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
-
-console.log(Admin);
-
+require('../data/data/data_initializers/data_initializers/admin_init');
 const admin = require('../data/login/admin');
 
 describe('Login', function(){
-
-  before(function(done){
-    console.log('===================== Login =====================');
-    Admin.findOne({where: {email:admin.email}}).then(function (found) {
-      if (found){
-        console.log("found", found);
-        done();
-      }
-    })
-      Admin.create(admin).then(() => {
-        done();
-      });
-  });
-
-  after(function(done){
-    Admin.destroy({
-      where: {
-        email: admin.email
-      }
-    }).then(() => {
-      done();
-    });
-  });
 
   it('Should log in', done => {
     console.log(testConfig.BASE_URL + '/login');
