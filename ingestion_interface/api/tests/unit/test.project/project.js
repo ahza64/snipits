@@ -6,22 +6,16 @@ const testConfig = require('../config');
 const server = require('../entry');
 var   agent = request(server);
 
-const Users = require('dsp_shared/database/model/ingestion/tables').users;
-//
-const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
-const Projects = require('dsp_shared/database/model/ingestion/tables').work_projects;
-
 const company = require('../data/company/company');
 const project = require('../data/project/project');
-const test_config = require('../data/config/config');
+const user = require('../data/login/user');
 
 require('../data/data_initializers/ingestion_configuration_init');
-//
-const user = require('../data/login/user');
 
 var cookie;
 
-describe('Test project configuration', () => {
+
+describe('Test finding the projects', () => {
 
   it('Should log in', done => {
     agent
@@ -36,15 +30,15 @@ describe('Test project configuration', () => {
     })
   });
 
-  it('should get project configuration', (done) => {
+  it('should find a project', (done) => {
     agent
-    .get(testConfig.BASE_URL + '/configs/' + project.id)
+    .get(testConfig.BASE_URL + '/projects/' + company.id)
     .set('Cookie', cookie)
     .end( (err, res) => {
       if(err){
         console.log(err);
       } else {
-        expect(res.body[0].fileType === test_config.fileType).to.be.true;
+        expect(res.body[0].name === project.name).to.be.true;
         done();
       }
     });
