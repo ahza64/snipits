@@ -27,5 +27,6 @@ app.use(session({ key: 'dispatchr:sess' }, app));
 
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/auth')));
 app.use(auth);
+app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/config')));
 
 module.exports = app.listen(3000);
