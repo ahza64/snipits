@@ -1,17 +1,20 @@
 // Init data
 const companies = require('./data/companies');
+const projects = require('./data/projects');
 
 var data = {};
 
 var init = function(){
   data = {
-    companies: companies
+    companies: companies,
+    projects: projects
   };
 }
 
 var clear = function(){
   data = {
-    companies: []
+    companies: [],
+    projects: []
   };
 };
 
