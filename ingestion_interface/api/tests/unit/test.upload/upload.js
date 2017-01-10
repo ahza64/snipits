@@ -37,9 +37,10 @@ describe('Test uploading files', () =>{
 		.set('Cookie', cookie)
 	    .end( (err, res) => {
 	      if(err){
-	        console.log(err);
+	        done(err);
 	      } else {
-	        expect(res.body).to.be.true;
+			  console.log("Checking for ingestion file from predefined configID and filename");
+	          expect(res.body).to.be.true;
 			  done();
 	      }
 	      });	   
