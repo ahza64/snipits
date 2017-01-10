@@ -9,13 +9,16 @@ const test_configuration = require('../config/config');
 const company = require('../company/company');
 const project = require('../project/project');
 const user = require('../login/user');
+const file = require('../ingestion/ingestion_file');
 
 before(function(done) {
   Company.create(company).then(() => {
     Users.create(user).then(() => {
       Project.create(project).then(() =>  {
         Ingestion_Configurations.create(test_configuration).then(() => {
+			Ingestion_Files.create(file).then(() => {
           done();
+	     });
         });
       });
     });

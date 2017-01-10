@@ -6,6 +6,7 @@ const bodyParser = require('koa-body-parser');
 const requestId = require('koa-request-id');
 const session = require('koa-session');
 const mount = require('koa-mount');
+const models = require('dsp_shared/database/model/ingestion/tables');
 
 // Dispatchr Module
 const testConfig = require('./config');
@@ -15,6 +16,10 @@ const auth = require('../../middleware/auth');
 require('dsp_shared/database/sequelize')(config.mooncake);
 
 var app = koa();
+
+models.sequelize.sync().then(function() {
+  console.log('Database Connected');
+});
 
 app.use(bodyParser());
 app.use(requestId());
@@ -30,6 +35,8 @@ app.use(auth);
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/config')));
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/project')));
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/ingestion')));
+app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/upload')));
+
 
 
 
