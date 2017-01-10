@@ -1,5 +1,4 @@
-
-
+// @TODO see below
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
@@ -84,7 +83,7 @@ describe('Test ingestion file', () => {
         console.log(err);
       } else {
         console.log('===========', res.body);
-        // @TODO needs s3 access
+// ==================================================> @TODO needs s3 access
         done();
       }
     });
@@ -116,7 +115,7 @@ describe('Test ingestion file', () => {
         done();
       }
     });
-  });;
+  });
 
   it('should get 1 ingestion on comapny id & file name', (done) => {
     agent
@@ -130,7 +129,7 @@ describe('Test ingestion file', () => {
         done();
       }
     });
-  });;
+  });
 
   it('should search for file name on company id', (done) => {
     var partial_search = 'ad';
@@ -146,7 +145,6 @@ describe('Test ingestion file', () => {
         done();
       }
     });
-  });;
-
+  });
 
 });

@@ -22,7 +22,6 @@ router.post(
     var body = this.request.body;
     var email = body.email;
     var action = body.action;
-
     // Check whether the user exists
     try {
       var user = yield Users.findOne({ where: { email: email }, raw: true });
@@ -55,7 +54,6 @@ router.post(
     try {
       yield Histories.create(obj);
     } catch (e) {
-      console.error(e);
       this.throw(500);
     }
 
@@ -138,7 +136,6 @@ router.get(
         };
       }
 
-      //console.log(histories);
       histories = historyMassage(histories);
     } catch(e) {
       console.error(e);

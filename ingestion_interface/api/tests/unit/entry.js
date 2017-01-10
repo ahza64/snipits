@@ -16,6 +16,9 @@ const auth = require('../../middleware/auth');
 require('dsp_shared/database/sequelize')(config.mooncake);
 
 var app = koa();
+models.sequelize.sync().then(function() {
+  console.log('Database Connected');
+});
 
 models.sequelize.sync().then(function() {
   console.log('Database Connected');
@@ -36,8 +39,6 @@ app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/config')));
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/project')));
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/ingestion')));
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/upload')));
-
-
-
+app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/history')));
 
 module.exports = app.listen(3000);

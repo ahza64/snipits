@@ -1,12 +1,10 @@
 
-// const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
 const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 const Project = require('dsp_shared/database/model/ingestion/tables').work_projects;
 const Ingestion_Configurations = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
 
 const test_configuration = require('../config/config');
-// const admin = require('../login/admin');
 const company = require('../company/company');
 const project = require('../project/project');
 const user = require('../login/user');
