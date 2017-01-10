@@ -29,6 +29,8 @@ app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/auth')));
 app.use(auth);
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/config')));
 app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/project')));
+app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/ingestion')));
+
 
 
 module.exports = app.listen(3000);
