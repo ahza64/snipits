@@ -34,7 +34,7 @@
     "koa-route": "^2.4.2",
     "koa-router": "^5.4.0",
     "koa-session": "^3.3.1",
-    "material-ui": "^0.15.4",
+    "material-ui": "^0.16.6",
     "moment": "2.17.1",
     "node-sass": "^3.9.3",
     "nodemon": "^1.11.0",
