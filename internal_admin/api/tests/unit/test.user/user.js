@@ -30,7 +30,7 @@ describe('Test for "user" methods', function () {
     });
   });
 
-  it('inserts a user', function () {
+  it('inserts a user', function (done) {
     console.log("inserting user with name: " + test_user.firstname);
     agent
     .post(testConfig.BASE_URL + '/user')
