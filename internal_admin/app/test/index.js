@@ -28,8 +28,10 @@ const mocha = new Mocha({
   reporter: 'dot',
 });
 
+var component = process.argv.length > 2 ? process.argv[2] : null;
+
 Glob(
-  `app/test/integration/**/${argv.component ? argv.component : '*'}.spec.js`,
+  `app/test/integration/**/${component ? component : '*'}.spec.js`,
   {},
   (err, files) => {
     files.forEach((file) => mocha.addFile(file));
