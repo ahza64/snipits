@@ -6,16 +6,15 @@ const request = require('supertest');
 const testConfig = require('../config');
 const server = require('../entry');
 const admin = require('../data/login/admin');
-var agent = request(server);
 const test_user = require('../data/user/user');
 const URL = testConfig.BASE_URL + '/users';
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
+var agent = request(server);
 var found_user;
 var user_id;
 var cookie;
 require('../data/data_initializers/data_init');
-//require('../')
 
 describe('Test for "user" methods', function () {
   it('Should log in', done => {
@@ -40,13 +39,11 @@ describe('Test for "user" methods', function () {
     .set('Cookie', cookie)
     .end(function (err, res) {
       if(err){
-        console.error("ERROR DEBUG ---->",err);
         done(err)
       } else {
         console.log("Email of inserted user ----->", res.body.email);
         res.body.email.should.equal(test_user.email);
         res.status.should.not.equal(404);
-        console.log("End of it REACHED *********************");
         done();
       }
     });

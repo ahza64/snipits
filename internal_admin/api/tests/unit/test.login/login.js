@@ -28,6 +28,6 @@ describe('Login', function(){
         console.log(res.body);
         done();
       }
-    })
-  })
+    });
+  });
 });

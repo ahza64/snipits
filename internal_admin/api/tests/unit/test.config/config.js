@@ -3,19 +3,16 @@ const expect = chai.expect;
 const should = chai.should();
 const request = require('supertest');
 const server = require('../entry');
-var agent = request(server);
 const testConfig = require('../config');
 const test_config = require('../data/config/ingestion_configuration');
 const admin = require('../data/login/admin');
 const company = require('../data/company/company');
 const project = require('../data/projects/project');
 const URL = testConfig.BASE_URL + '/config';
-const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
-const Company = require('dsp_shared/database/model/ingestion/tables').companies;
-const Project = require('dsp_shared/database/model/ingestion/tables').work_projects;
-require('../data/data_initializers/data_init');
+var agent = request(server);
 var cookie;
 var savedConfigId;
+require('../data/data_initializers/data_init');
 
 describe('Test for "config ingestion" methods', function () {
 
@@ -56,7 +53,7 @@ describe('Test for "config ingestion" methods', function () {
     .set('Cookie', cookie)
     .end(function (err, res) {
       if(err){
-        console.error('-------------', err);
+        done(err);
       }
       res.status.should.not.equal(404);
       res.body.description.should.equal(new_config.description);
@@ -70,7 +67,7 @@ describe('Test for "config ingestion" methods', function () {
     .set('Cookie', cookie)
     .end(function (err, res) {
       if(err){
-        console.error('-------------', err);
+        done(err);
       } else {
         res.body[0].description.should.equal("321");
         done();

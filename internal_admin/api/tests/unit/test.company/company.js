@@ -42,7 +42,7 @@ describe('/company tests', function () {
     .set('Cookie', cookie)
     .end(function (err, res) {
       if(err){
-        console.error(err);
+        done(err);
       }
       res.body.should.be.true;
     });

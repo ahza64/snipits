@@ -5,19 +5,16 @@ const request = require('supertest');
 const testConfig = require('../config');
 const server = require('../entry');
 const admin = require('../data/login/admin');
-var agent = request(server);
 const test_project = require('../data/projects/project');
 const URL = testConfig.BASE_URL + '/project';
-const Company = require('dsp_shared/database/model/ingestion/tables').companies;
-const company = require('../data/company/company');
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
-const Admin = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 const INIT_NUM_PROJECTS = 0;
-require('../data/data_initializers/admin_init');
-require('../data/data_initializers/company_init');
+var agent = request(server);
 var cookie;
 var project_id;
+require('../data/data_initializers/admin_init');
+require('../data/data_initializers/company_init');
 
 describe('Project tests', function () {
   it('Should log in', function(done) {

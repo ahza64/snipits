@@ -12,7 +12,6 @@ const admin = require('../data/login/admin');
 var agent = request(server);
 const Ingestion_Configurations = require('dsp_shared/database/model/ingestion/tables').ingestion_configurations;
 const test_watcher = require('../data/watcher/watcher');
-const test_company = require('../data/company/company');
 const test_project = require('../data/projects/project');
 const test_configuration = require('../data/config/ingestion_configuration')
 const URL = testConfig.BASE_URL + '/watcher';
@@ -28,7 +27,6 @@ describe('Test for "watcher" methods', function () {
     .findOne({where : { workProjectId : test_configuration.workProjectId}})
     .then(function (found) {
       test_watcher.ingestionConfigurationId = found.id;
-      console.log("DEBUG found id ==== ", found.id);
     })
     console.log(testConfig.BASE_URL + '/login');
     agent
@@ -43,7 +41,6 @@ describe('Test for "watcher" methods', function () {
       expect(admin.email).to.equal(res.body.email);
       done();
      });
-
   });
 
   it('inserts a watcher', function (done) {
