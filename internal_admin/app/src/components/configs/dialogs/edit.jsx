@@ -143,7 +143,7 @@ export default class EditConfigDialog extends React.Component {
   renderCircularProgress() {
     if (this.state.saving) {
       return(
-        <CircularProgress size={ 0.5 } hidden={ true } />
+        <CircularProgress size={ 20 } hidden={ true } />
       );
     } else {
       return;
