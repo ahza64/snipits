@@ -4,6 +4,7 @@ const expect = chai.expect;
 const request = require('supertest');
 const testConfig = require('../config');
 const server = require('../entry');
+const moment = require('moment');
 var   agent = request(server);
 
 const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
@@ -55,17 +56,22 @@ describe('History test', () => {
   it('should get history logs on companyId', (done) => {
     Histories.create(history)
     .then((res) => {
-      agent
-      .get(testConfig.BASE_URL + '/history/' + history.companyId)
-      .set('Cookie', cookie)
-      .end( (err, res) => {
-        if(err){
-          console.log(err);
-        } else {
-          expect(res.body.historiesData['02 2'].length === 2).to.be.true;
-          expect(res.body.historiesData['02 2'][0].email === user.email).to.be.true;
-          done();
-        }
+      Histories.find({ where: { customerFileName: "admin" } })
+      .then((res) => {
+        var date;
+        date = moment(res.createdAt).format('ww e');
+        agent
+        .get(testConfig.BASE_URL + '/history/' + history.companyId)
+        .set('Cookie', cookie)
+        .end( (err, res) => {
+          if(err){
+            console.log(err);
+          } else {
+            expect(res.body.historiesData[date].length === 2).to.be.true;
+            expect(res.body.historiesData[date][0].email === user.email).to.be.true;
+            done();
+          }
+        });
       });
     })
     .catch((err) => {
