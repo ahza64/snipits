@@ -1,4 +1,3 @@
-
 const Company = require('dsp_shared/database/model/ingestion/tables').companies;
 const company = require('../company/company');
 

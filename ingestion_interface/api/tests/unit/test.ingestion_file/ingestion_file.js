@@ -1,4 +1,4 @@
-// @TODO see below
+ //@TODO see below
 const chai = require('chai');
 const expect = chai.expect;
 const request = require('supertest');
@@ -6,17 +6,9 @@ const testConfig = require('../config');
 const server = require('../entry');
 var   agent = request(server);
 
-const Users = require('dsp_shared/database/model/ingestion/tables').users;
-const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
-const Projects = require('dsp_shared/database/model/ingestion/tables').work_projects;
 const Ingestions = require('dsp_shared/database/model/ingestion/tables').ingestion_files;
-
-const company = require('../data/company/company');
-const project = require('../data/project/project');
-const test_config = require('../data/config/config');
 const ingest_file = require('../data/ingestion/ingestion_file');
 const user = require('../data/auth/user');
-
 require('../data/data_initializers/ingestion_file_init');
 
 var cookie;
@@ -38,7 +30,6 @@ describe('Test ingestion file', () => {
   });
 
   it('should post ingestion file', (done) => {
-    //console.log("Before post, this is ", );
     agent
     .post(testConfig.BASE_URL + '/ingestions')
     .send(ingest_file)
@@ -75,20 +66,22 @@ describe('Test ingestion file', () => {
       }
     });
   });
-
-  it('should update file name for postgres and s3', (done) => {
-    agent
-    .put(testConfig.BASE_URL + '/ingestions/config')
-    .set('Cookie', cookie)
-    .end( (err, res) => {
-      if(err){
-        console.log(err);
-      } else {
-// =========> @TODO needs s3 access
-        done();
-      }
-    });
-  });
+/**
+  @see the following it block requires s3 access
+*/
+//   it('should update file name for postgres and s3', (done) => {
+//     agent
+//     .put(testConfig.BASE_URL + '/ingestions/config')
+//     .set('Cookie', cookie)
+//     .end( (err, res) => {
+//       if(err){
+//         console.log(err);
+//       } else {
+// // =========> @TODO needs s3 access
+//         done();
+//       }
+//     });
+//   });
 
   it('should get number of ingestions on comapny id', (done) => {
     agent

@@ -7,17 +7,11 @@ const request = require('supertest');
 const testConfig = require('../config');
 const server = require('../entry');
 var   agent = request(server);
-
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
-
-
 const user = require('../data/auth/user');
-
-console.log(Users);
-console.log(user);
+require('../data/data_initializers/company_init');
 
 describe('Login', () => {
-
   before((done) => {
     console.log('===================== Login =====================');
     Users.create(user).then(() => {
@@ -33,7 +27,7 @@ describe('Login', () => {
       }
     }).then(() => {
       done();
-    })
+    });
   });
 
   it('Should log in', done => {
@@ -42,12 +36,14 @@ describe('Login', () => {
     .post(testConfig.BASE_URL + '/login')
     .send({ email: user.email, password: '123'})
     .end( (err, res) => {
+      expect(err).to.be.null;
+      expect(res.body.email).to.equal(user.email);
       if(err){
         console.error(err);
       } else {
         console.log('RESULT', res.body);
         done();
       }
-    })
+    });
   });
-})
+});
