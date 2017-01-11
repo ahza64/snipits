@@ -1,9 +1,7 @@
-
 const company = require('../company/company');
 const ingest_config = require('../config/config');
 const ingestion_file = require('../ingestion/ingestion_file')
-const user = require('../login/user');
-
+const user = require('../auth/user');
 const history = {
   "userName": "testUser",
   "adminName": "testAdmin",
@@ -17,5 +15,4 @@ const history = {
   "email": user.email,
   "customerFileName": ingestion_file.customerFileName
 };
-
 module.exports = history;

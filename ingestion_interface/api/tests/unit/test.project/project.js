@@ -8,7 +8,7 @@ var   agent = request(server);
 
 const company = require('../data/company/company');
 const project = require('../data/project/project');
-const user = require('../data/login/user');
+const user = require('../data/auth/user');
 
 require('../data/data_initializers/ingestion_configuration_init');
 

@@ -15,7 +15,7 @@ const company = require('../data/company/company');
 const project = require('../data/project/project');
 const test_config = require('../data/config/config');
 const ingest_file = require('../data/ingestion/ingestion_file');
-const user = require('../data/login/user');
+const user = require('../data/auth/user');
 
 require('../data/data_initializers/ingestion_file_init');
 
@@ -38,11 +38,13 @@ describe('Test ingestion file', () => {
   });
 
   it('should post ingestion file', (done) => {
+    //console.log("Before post, this is ", );
     agent
     .post(testConfig.BASE_URL + '/ingestions')
     .send(ingest_file)
     .set('Cookie', cookie)
     .end( (err, res) => {
+      expect(err).to.be.null;
       if(err){
         console.log(err);
       } else {
@@ -56,11 +58,11 @@ describe('Test ingestion file', () => {
   it('should update description', (done) => {
     agent
     .put(testConfig.BASE_URL + '/ingestions')
-    .send({fileId: fileId, description: "new test description for put update"})
+    .send({fileId:  fileId, description: "new test description for put update"})
     .set('Cookie', cookie)
     .end( (err) => {
       if(err){
-        console.log(err);
+        done(err);
       } else {
         Ingestions.find({where: {customerFileName: ingest_file.customerFileName}})
         .then((res) => {
@@ -68,7 +70,7 @@ describe('Test ingestion file', () => {
           done();
         })
         .catch((err) => {
-          console.log(err);
+          done(err);
         });
       }
     });
@@ -82,8 +84,7 @@ describe('Test ingestion file', () => {
       if(err){
         console.log(err);
       } else {
-        console.log('===========', res.body);
-// ==================================================> @TODO needs s3 access
+// =========> @TODO needs s3 access
         done();
       }
     });

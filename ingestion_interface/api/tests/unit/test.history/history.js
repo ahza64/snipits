@@ -8,7 +8,7 @@ var   agent = request(server);
 
 const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
 
-const user = require('../data/login/user');
+const user = require('../data/auth/user');
 const history = require('../data/history/history');
 
 require('../data/data_initializers/history_init');
@@ -38,7 +38,7 @@ describe('History test', () => {
     .set('Cookie', cookie)
     .end( (err, res) => {
       if(err){
-        console.log(err);
+        done(err);
       } else {
         Histories.find({where: {customerFileName: history.customerFileName}})
         .then((res) => {
@@ -46,7 +46,7 @@ describe('History test', () => {
           done();
         })
         .catch((err) => {
-          console.log(err);
+          done(err);
         });
       }
     });

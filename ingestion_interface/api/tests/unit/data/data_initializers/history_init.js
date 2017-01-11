@@ -7,7 +7,7 @@ const Ingestion_Files = require('dsp_shared/database/model/ingestion/tables').in
 const Ingestion_Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
 
 const company = require('../company/company');
-const user = require('../login/user');
+const user = require('../auth/user');
 const project = require('../project/project');
 const test_configuration = require('../config/config');
 const test_ingest_file = require('../ingestion/ingestion_file');

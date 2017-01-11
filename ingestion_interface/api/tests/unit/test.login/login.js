@@ -11,7 +11,7 @@ var   agent = request(server);
 const Users = require('dsp_shared/database/model/ingestion/tables').users;
 
 
-const user = require('../data/login/user');
+const user = require('../data/auth/user');
 
 console.log(Users);
 console.log(user);

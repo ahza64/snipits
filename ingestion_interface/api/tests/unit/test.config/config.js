@@ -17,7 +17,7 @@ const test_config = require('../data/config/config');
 
 require('../data/data_initializers/ingestion_configuration_init');
 //
-const user = require('../data/login/user');
+const user = require('../data/auth/user');
 
 var cookie;
 

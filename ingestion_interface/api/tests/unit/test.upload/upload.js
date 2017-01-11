@@ -7,15 +7,15 @@ const ingestion_file = require('../data/ingestion/ingestion_file')
 const server = require('../entry');
 var   agent = request(server);
 const get_url = '/check/same' //followed by /:configId/:fileName
-require('../data/data_initializers/ingestion_file_init');
+require('../data/data_initializers/upload_init');
 //
-const user = require('../data/login/user');
+const user = require('../data/auth/user');
 
 var cookie;
 
 
 describe('Test uploading files', () =>{
-	
+
     it('Should log in', done => {
       agent
       .post(testConfig.BASE_URL + '/login')
@@ -29,8 +29,8 @@ describe('Test uploading files', () =>{
       })
     });
 
-    
-	
+
+
 	it('should check if file exists', (done) => {
 		agent
 		.get(testConfig.BASE_URL + get_url + "/" + config.id + "/" + ingestion_file.customerFileName)
@@ -43,7 +43,6 @@ describe('Test uploading files', () =>{
 	          expect(res.body).to.be.true;
 			  done();
 	      }
-	      });	   
-	});	
+	      });
+	});
 });
-

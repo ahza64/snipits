@@ -1,6 +1,4 @@
 const company = require('../company/company');
-
-
 module.exports = {
   id: 11,
   name: 'Test User',
@@ -10,4 +8,4 @@ module.exports = {
   createdAt: Date.now(),
   updatedAt: Date.now(),
   companyId: company.id
-}
+};
