@@ -113,9 +113,9 @@ export default class UploadedFiles extends UploadLib {
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
                 <TableHeaderColumn style={{ width: '5px' }}>#</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '250px' }}>File Name</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '250px' }}>Sytem File Name</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '150px' }}>Last Modified Time</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '300px' }}>File Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '300px' }}>Sytem File Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '100px' }}>Last Modified Time</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Menu</TableHeaderColumn>
               </TableRow>
@@ -126,9 +126,9 @@ export default class UploadedFiles extends UploadLib {
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn style={{ width: '5px' }}>{ pageRedux.getState() + idx + 1 }</TableRowColumn>
-                      <TableRowColumn style={{ width: '250px' }}>{ file.customerFileName }</TableRowColumn>
-                      <TableRowColumn style={{ width: '250px' }}>{ file.s3FileName }</TableRowColumn>
-                      <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
+                      <TableRowColumn style={{ width: '300px' }}>{ file.customerFileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '300px' }}>{ file.s3FileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '100px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
                       <TableRowColumn>{ file.status }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
