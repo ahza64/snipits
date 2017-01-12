@@ -6,6 +6,9 @@ import CreateProjectDialog from '../../../src/components/projects/dialogs/create
 import Configurations from '../../../src/components/configs/configs';
 import EditConfigDialog from '../../../src/components/configs/dialogs/edit';
 import DeleteConfigDialog from '../../../src/components/configs/dialogs/delete';
+import IngestLib from '../../../src/components/ingest/ingestLib';
+
+import authRedux from '../../../src/reduxes/auth';
 
 // Mocks
 const database = require('./database');
@@ -13,6 +16,8 @@ const companiesAPI = require('./api/companies');
 const projectsAPI = require('./api/projects');
 const configsAPI = require('./api/configs');
 const watchersAPI = require('./api/watchers');
+const ingestionsAPI = require('./api/ingestions');
+const historiesAPI = require('./api/histories');
 
 var init = function() {
   // Replace fetchCompanies method from Companies
@@ -126,6 +131,24 @@ var init = function() {
     let configId = this.props.configId;
     configsAPI.deleteConfig(configId);
     this.props.onClose(true);
+  };
+
+  // Replace getIngestions method from IngestLib
+  IngestLib.prototype.getIngestions = function(callback) {
+    let companyId = authRedux.getState().companyId;
+    var ingestions = ingestionsAPI.getIngestions(companyId);
+    callback({ body: ingestions });
+  };
+
+  // Replace setField method from IngestLib
+  IngestLib.prototype.setField = function(data, callback) {
+    ingestionsAPI.updateIngestion(data);
+    callback(data);
+  };
+
+  // Replace createIngestedHistory method from IngestLib
+  IngestLib.prototype.createIngestedHistory = function(ingestion) {
+    historiesAPI.createHistory(ingestion, 'ingest');
   };
 
 };
