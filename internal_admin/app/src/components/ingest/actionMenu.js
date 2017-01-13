@@ -50,6 +50,10 @@ export default class ActionMenu extends IngestLib {
     this.setIngested(this.state.ingestion.id, false, this.updateIngestionStatus);
   }
 
+  handleDownloadFile() {
+    alert('You have reached plaid speed!');
+  }
+
 
   render() {
     return (
@@ -68,6 +72,10 @@ export default class ActionMenu extends IngestLib {
             primaryText='Unset ingestion'
             disabled={ !this.state.ingestion.ingested }
             onClick={ this.handleUnSetIngested }
+          />
+          <MenuItem
+            primaryText='Dowload File'
+            onClick={ this.handleDownloadFile }
           />
         </IconMenu>
       </div>
