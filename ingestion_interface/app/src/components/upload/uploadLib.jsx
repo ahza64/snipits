@@ -1,6 +1,6 @@
 // Modules
 import React from 'react';
-import request from 'superagent';
+import request from '../../services/request';
 import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, searchUrl, ingestionConfigUrl } from '../../config';
 
 // Components

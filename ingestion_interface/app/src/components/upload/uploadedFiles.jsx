@@ -1,6 +1,5 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
 const moment = require('moment');
 
 // Components

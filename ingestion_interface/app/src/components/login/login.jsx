@@ -2,7 +2,7 @@
 const urlPrefix = require('dsp_shared/conf.d/config.json').mooncake.url_prefix;
 import React from 'react';
 import { browserHistory } from 'react-router';
-import * as request from 'superagent';
+import request from '../../services/request';
 import authRedux from '../../reduxes/auth';
 import { loginUrl } from '../../config';
 
@@ -44,7 +44,7 @@ export default class Login extends React.Component {
   handleLoginPassword(event) {
     this.setState({
       password: event.target.value
-    }); 
+    });
   }
 
   handleClick(event) {
@@ -78,11 +78,11 @@ export default class Login extends React.Component {
             <div>
               <img className='sm-logo' src={ smLogo } />
               <div>
-                Username: 
+                Username:
                 <TextField value={ this.state.email } onChange={ this.handleLoginEmail } hintText='Email Address'/>
               </div>
               <div>
-                Password: 
+                Password:
                 <TextField value={ this.state.password } onChange={ this.handleLoginPassword } hintText='password' type='password'/>
               </div>
               <div>
