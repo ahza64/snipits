@@ -2,7 +2,7 @@
 const urlPrefix = require('dsp_shared/conf.d/config.json').admin.url_prefix;
 import React from 'react';
 import { browserHistory } from 'react-router';
-import * as request from 'superagent';
+import request from '../../services/request';
 import authRedux from '../../reduxes/auth';
 import { loginUrl } from '../../config';
 import { getDefaultRoute } from '../auth/auth';
