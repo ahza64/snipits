@@ -1,5 +1,8 @@
 // Modules
 import React from 'react';
+import * as request from 'superagent';
+import { s3authUrl } from '../../config';
+//var fs = require('react-native-level-fs');
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -23,6 +26,7 @@ export default class ActionMenu extends IngestLib {
     this.handleSetIngested = this.handleSetIngested.bind(this);
     this.handleUnSetIngested = this.handleUnSetIngested.bind(this);
     this.updateIngestionStatus = this.updateIngestionStatus.bind(this);
+    this.handleDownloadFile = this.handleDownloadFile.bind(this);
   }
 
   componentWillMount() {
@@ -51,9 +55,67 @@ export default class ActionMenu extends IngestLib {
   }
 
   handleDownloadFile() {
-    alert('You have reached plaid speed!');
+    console.log(this.state.ingestion);
+    request
+    .post(s3authUrl)
+    .send({
+      name: this.state.ingestion.s3FileName,
+      type: 'image/png',
+      companyId: this.state.ingestion.companyId,
+      action: 'getObject'
+    })
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("response from download for signed url", res);
+        this.downloadFile(res.text);
+      }
+    });
   }
 
+  downloadFile(signedUrl) {
+
+    var file = fs.createWriteStream('hello1.png');
+
+    request.get(signedUrl).end((err, res) => {
+      res.pipe(file);
+    })
+
+
+    // var offset = pageRedux.getState();
+    // this.setUploadNotice(true);
+    // console.log("000000000000000000000000000", signedUrl);
+    // request
+    // .get(signedUrl)
+    // // .set('Content-disposition', 'attachment')
+    // // .on('progress', (event) => {
+    // //   this.setState({ percent: event.percent });
+    // // })
+    // .end((err, res) => {
+    //   if (err) {
+    //     console.error(err);
+    //   } else {
+    //     // this.createIngestionRecord(file, s3FileName, configId, (ingestion) => {
+    //     //   this.getUploadedFiles(offset, (files) => {
+    //     //     this.setFiles(files);
+    //     //     this.writeHistory(ingestion, 'upload', () => {
+    //     //       this.getHistory((heatmapData, historiesData) => {
+    //     //         this.setHistories(heatmapData, historiesData);
+    //     //         this.setTotal(true);
+    //     //         this.setUploadNotice(false);
+    //     //         this.setState({ percent: 0 });
+    //     //       });
+    //     //     });
+    //     //   });
+    //     // });
+    //     // this.set('Content-disposition', 'attachment; filename=' + filename);
+    //     // this.set('Content-type', mimetype);
+    //     console.log("download response=v=====", res);
+    //   }
+    // });
+  }
 
   render() {
     return (

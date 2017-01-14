@@ -139,8 +139,7 @@ module.exports = {
     var params = {
       Bucket: bucketName,
       Key: fileName,
-      Expires: 3000,
-      ContentType: fileType
+      Expires: 3000
     };
 
     try {
