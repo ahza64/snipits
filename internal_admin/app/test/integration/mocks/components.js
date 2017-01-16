@@ -7,6 +7,7 @@ import Configurations from '../../../src/components/configs/configs';
 import EditConfigDialog from '../../../src/components/configs/dialogs/edit';
 import DeleteConfigDialog from '../../../src/components/configs/dialogs/delete';
 import IngestLib from '../../../src/components/ingest/ingestLib';
+import EditUserDialog from '../../../src/components/users/dialogs/edit';
 
 import authRedux from '../../../src/reduxes/auth';
 
@@ -149,6 +150,15 @@ var init = function() {
   // Replace createIngestedHistory method from IngestLib
   IngestLib.prototype.createIngestedHistory = function(ingestion) {
     historiesAPI.createHistory(ingestion, 'ingest');
+  };
+
+  // Replace saveUser method from EditUserDialog
+  EditUserDialog.prototype.saveUser = function() {
+  };
+
+  // Replace renderCircularProgress method from EditUserDialog
+  EditUserDialog.prototype.renderCircularProgress = function() {
+    return;
   };
 
 };
