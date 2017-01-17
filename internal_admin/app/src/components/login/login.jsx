@@ -61,16 +61,21 @@ export default class Login extends React.Component {
     }, 3000);
   }
 
-  handleClick(event) {
-    event.preventDefault();
-
-    const loginData = this.state;
-
+  login(loginData, callback) {
     request
     .post(loginUrl)
     .send(loginData)
     .withCredentials()
     .end((err, res) => {
+      callback(err, res);
+    });
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+    const loginData = this.state;
+
+    this.login(loginData, (err, res) => {
       if (err) {
         console.error(err);
         this.showErrorMessage();

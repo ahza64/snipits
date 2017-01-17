@@ -64,9 +64,20 @@ var deleteUser = function(userId, role) {
   }
 };
 
+var getAdmin = function(email, password) {
+  if (email && password) {
+    return database.data.admins.filter(function(admin) {
+      return (admin.email.toLowerCase() === email) && (admin.password === password);
+    });
+  } else {
+    return [];
+  }
+};
+
 module.exports = {
   'getUsers': getUsers,
   'saveUser': saveUser,
   'setActive': setActive,
-  'deleteUser': deleteUser
+  'deleteUser': deleteUser,
+  'getAdmin': getAdmin
 };

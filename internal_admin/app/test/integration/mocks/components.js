@@ -10,6 +10,7 @@ import IngestLib from '../../../src/components/ingest/ingestLib';
 import Users from '../../../src/components/users/users';
 import EditUserDialog from '../../../src/components/users/dialogs/edit';
 import DeleteUserDialog from '../../../src/components/users/dialogs/delete';
+import Login from '../../../src/components/login/login';
 
 import authRedux from '../../../src/reduxes/auth';
 
@@ -209,6 +210,23 @@ var init = function() {
   DeleteUserDialog.prototype.handleSubmit = function(event) {
     usersAPI.deleteUser(this.props.userId, this.props.role);
     this.props.onClose(true);
+  };
+
+  // Replace login method from Login
+  Login.prototype.login = function(loginData, callback) {
+    var admins = usersAPI.getAdmin(loginData.email, loginData.password);
+    if (admins.length === 1) {
+      callback(null, { body: admins[0] });
+    } else {
+      // Run callback and ignore console.error
+      var error = console.error;
+      try {
+        console.error = function(msg) {};
+        callback({ status: 401, message: '' }, { body: null })
+      } finally {
+        console.error = error;
+      }
+    }
   };
 };
 
