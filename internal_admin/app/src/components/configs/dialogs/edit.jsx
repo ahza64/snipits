@@ -34,23 +34,27 @@ export default class EditConfigDialog extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  loadProps(props) {
+    var emails = [];
+    if (props.watchers) {
+      emails = props.watchers.map(function(w){
+        return w.email;
+      });
+    }
+    this.setState({
+      configType: props.fileType ? props.fileType : '',
+      configStatus: props.status ? props.status : STATUS_ACTIVE,
+      configDescription: props.description ? props.description : '',
+      configId: props.configId,
+      configTypeError: null,
+      emails: emails,
+      emailsListChanged: false
+    });
+  }
+
   componentWillUpdate(nextProps, nextState) {
     if ((nextProps.open === true) && (this.props.open === false)) {
-      var emails = [];
-      if (nextProps.watchers) {
-        emails = nextProps.watchers.map(function(w){
-          return w.email;
-        });
-      }
-      this.setState({
-        configType: nextProps.fileType ? nextProps.fileType : '',
-        configStatus: nextProps.status ? nextProps.status : STATUS_ACTIVE,
-        configDescription: nextProps.description ? nextProps.description : '',
-        configId: nextProps.configId,
-        configTypeError: null,
-        emails: emails,
-        emailsListChanged: false
-      });
+      this.loadProps(nextProps);
     }
   }
 
@@ -139,7 +143,7 @@ export default class EditConfigDialog extends React.Component {
   renderCircularProgress() {
     if (this.state.saving) {
       return(
-        <CircularProgress size={ 0.5 } hidden={ true } />
+        <CircularProgress size={ 20 } hidden={ true } />
       );
     } else {
       return;
