@@ -78,15 +78,19 @@ export default class Login extends React.Component {
             <div>
               <img className='sm-logo' src={ smLogo } />
               <div>
-                Username:
+                {
+                  // Username:
+                }
                 <TextField value={ this.state.email } onChange={ this.handleLoginEmail } hintText='Email Address'/>
               </div>
               <div>
-                Password:
-                <TextField value={ this.state.password } onChange={ this.handleLoginPassword } hintText='password' type='password'/>
+                {
+                  // Password:
+                }
+                <TextField value={ this.state.password } onChange={ this.handleLoginPassword } hintText='Password' type='password'/>
               </div>
               <div>
-                <RaisedButton onClick={ this.handleClick } label='LOGIN'/>
+                <RaisedButton keyboardFocused={true} onClick={ this.handleClick } label='USER LOGIN'/>
               </div>
             </div>
           </Paper>

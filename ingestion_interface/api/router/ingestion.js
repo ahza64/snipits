@@ -32,7 +32,8 @@ router.post(
       s3FileName: body.s3FileName,
       ingested: false,
       companyId: body.companyId,
-      ingestionConfigurationId: body.ingestionConfigurationId
+      ingestionConfigurationId: body.ingestionConfigurationId,
+      description: body.description
     };
 
     try {
