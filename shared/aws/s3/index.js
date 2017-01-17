@@ -152,7 +152,7 @@ module.exports = {
         ContentType: fileType
       };
     }
-    
+
     try {
       var signedUrl = yield s3.getSignedUrlAsync(action, params);
       return signedUrl;
