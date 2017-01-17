@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import { browserHistory } from 'react-router';
-import * as request from 'superagent';
+import request from '../../services/request';
 const moment = require('moment');
 
 // Components

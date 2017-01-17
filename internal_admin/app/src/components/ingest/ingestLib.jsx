@@ -1,6 +1,6 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
+import request from '../../services/request';
 
 // Components
 import { ingestionUrl, fileHistoryUrl } from '../../config';
@@ -52,7 +52,7 @@ export default class IngestLib extends React.Component {
 	}
 
   setIngested(ingestionId, ingested, callback) {
-		var data = { ingestionId: ingestionId, ingested:ingested };	
+		var data = { ingestionId: ingestionId, ingested:ingested };
 		this.setField(data, callback);
 	}
 

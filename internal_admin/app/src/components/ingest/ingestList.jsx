@@ -1,7 +1,6 @@
 // Modules
 import React from 'react';
 import { browserHistory } from 'react-router';
-import * as request from 'superagent';
 const _ = require('underscore');
 const moment = require('moment');
 

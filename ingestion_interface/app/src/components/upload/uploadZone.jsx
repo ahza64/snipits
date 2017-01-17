@@ -1,6 +1,6 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
+import request from '../../services/request';
 import Dropzone from 'react-dropzone';
 import { s3authUrl, ingestionRecordUrl, fileCheckUrl } from '../../config';
 

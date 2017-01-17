@@ -1,6 +1,5 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
 const moment = require('moment');
 const ReactHighcharts = require('react-highcharts');
 require('highcharts-more')(ReactHighcharts.Highcharts);

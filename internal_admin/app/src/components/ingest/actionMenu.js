@@ -1,6 +1,5 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
 
 // Components
 import authRedux from '../../reduxes/auth';
