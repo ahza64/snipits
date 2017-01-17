@@ -34,3 +34,11 @@ Start the internal admin platform
 > - cd internal_admin (cd into internal admin app)
 > - npm run dev-web (start the web server)
 > - npm run dev-server (start the RESTful service)
+
+Test the internal admin platform
+-------------
+
+> **Steps to test:**
+> 
+> - cd internal_admin (cd into internal admin app)
+> - npm run test-ui (test the ui part)
