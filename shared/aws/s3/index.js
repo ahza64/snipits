@@ -136,12 +136,23 @@ module.exports = {
   }),
 
   sign: co.wrap(function* (action, bucketName, fileName, fileType) {
-    var params = {
-      Bucket: bucketName,
-      Key: fileName,
-      Expires: 3000
-    };
 
+    var params = {};
+    if(action === 'getObject'){
+      params = {
+        Bucket: bucketName,
+        Key: fileName,
+        Expires: 3000
+      };
+    } else {
+      params = {
+        Bucket: bucketName,
+        Key: fileName,
+        Expires: 3000,
+        ContentType: fileType
+      };
+    }
+    
     try {
       var signedUrl = yield s3.getSignedUrlAsync(action, params);
       return signedUrl;
