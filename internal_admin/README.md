@@ -5,15 +5,6 @@ This is an admin platform mainly for user management and file ingestion manageme
 
 ----------
 
-Index
--------------
-
-You can insert a table of contents using the marker `[TOC]`:
-
-[TOC]
-
-----------
-
 
 Setup
 -------------
