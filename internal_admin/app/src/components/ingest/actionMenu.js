@@ -2,7 +2,6 @@
 import React from 'react';
 import * as request from 'superagent';
 import { s3authUrl } from '../../config';
-//var fs = require('react-native-level-fs');
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -55,7 +54,7 @@ export default class ActionMenu extends IngestLib {
   }
 
   handleDownloadFile() {
-    console.log(this.state.ingestion);
+
     request
     .post(s3authUrl)
     .send({
@@ -69,10 +68,10 @@ export default class ActionMenu extends IngestLib {
       if (err) {
         console.error(err);
       } else {
-        console.log("response from download for signed url", res);
         window.open(res.text);
       }
     });
+
   }
 
   render() {

@@ -17,10 +17,6 @@ router.post(
     var body = this.request.body;
     var companyId = body.companyId;
 
-    // if (!permissions.has(this.req.user, companyId)) {
-    //   this.throw(403);
-    // }
-
     var company = null;
     try {
       var c = yield Companies.findOne({
@@ -46,7 +42,6 @@ router.post(
     try {
       yield s3.list(bucket);
       var signedUrl = yield s3.sign(action, bucket, fileName, fileType);
-      console.log("signed url===================", signedUrl);
     } catch(e) {
       console.error(e);
       this.throw(500);
