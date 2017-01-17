@@ -137,20 +137,16 @@ module.exports = {
 
   sign: co.wrap(function* (action, bucketName, fileName, fileType) {
 
-    var params = {};
+    var params = {
+      Bucket: bucketName,
+      Key: fileName,
+      Expires: 3000
+    };
+
     if(action === 'getObject'){
-      params = {
-        Bucket: bucketName,
-        Key: fileName,
-        Expires: 3000
-      };
+      params.ResponseContentDisposition = 'attachment';
     } else {
-      params = {
-        Bucket: bucketName,
-        Key: fileName,
-        Expires: 3000,
-        ContentType: fileType
-      };
+      params.ContentType = fileType;
     }
 
     try {
