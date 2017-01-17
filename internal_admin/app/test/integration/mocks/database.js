@@ -5,6 +5,8 @@ const configs = require('./data/configs');
 const watchers = require('./data/watchers');
 const ingestions = require('./data/ingestions');
 const histories = require('./data/histories');
+const admins = require('./data/admins');
+const users = require('./data/users');
 
 var data = {};
 
@@ -15,7 +17,9 @@ var init = function(){
     configs: configs,
     watchers: watchers,
     ingestions: ingestions,
-    histories: histories
+    histories: histories,
+    admins: admins,
+    users: users
   };
 }
 
@@ -26,7 +30,9 @@ var clear = function(){
     configs: [],
     watchers: [],
     ingestions: [],
-    histories: []
+    histories: [],
+    admins: [],
+    users: []
   };
 };
 

@@ -7,7 +7,9 @@ import Configurations from '../../../src/components/configs/configs';
 import EditConfigDialog from '../../../src/components/configs/dialogs/edit';
 import DeleteConfigDialog from '../../../src/components/configs/dialogs/delete';
 import IngestLib from '../../../src/components/ingest/ingestLib';
+import Users from '../../../src/components/users/users';
 import EditUserDialog from '../../../src/components/users/dialogs/edit';
+import DeleteUserDialog from '../../../src/components/users/dialogs/delete';
 
 import authRedux from '../../../src/reduxes/auth';
 
@@ -19,6 +21,7 @@ const configsAPI = require('./api/configs');
 const watchersAPI = require('./api/watchers');
 const ingestionsAPI = require('./api/ingestions');
 const historiesAPI = require('./api/histories');
+const usersAPI = require('./api/users');
 
 var init = function() {
   // Replace fetchCompanies method from Companies
@@ -154,6 +157,29 @@ var init = function() {
 
   // Replace saveUser method from EditUserDialog
   EditUserDialog.prototype.saveUser = function() {
+    var role = this.state.role;
+    role = (role !== 'CU') ? role : null;
+    var companyId = this.state.companyId;
+    var password = this.state.password;
+    var userId = this.props.user.id;
+    if ((userId) && (password === 'password')) {
+      password = null;
+    }
+
+    var user = {
+      id: userId,
+      firstname: this.state.firstName,
+      lastname: this.state.lastName,
+      email: this.state.email,
+      password: password,
+      companyId: (role !== 'DA') ? companyId : null,
+      role: role
+    };
+
+    usersAPI.saveUser(user);
+    if (this.props.onClose) {
+      this.props.onClose(true);
+    }
   };
 
   // Replace renderCircularProgress method from EditUserDialog
@@ -161,6 +187,29 @@ var init = function() {
     return;
   };
 
+  // Replace fetchCompanies method from Users
+  Users.prototype.fetchCompanies = function() {
+    var companies = database.data.companies;
+    this.setState({ companies: companies });
+  };
+
+  // Replace fetchUser method from Users
+  Users.prototype.fetchUser = function() {
+    var users = usersAPI.getUsers();
+    this.setState({ users: users });
+  };
+
+  // Replace toggleUserStatus method from Users
+  Users.prototype.toggleUserStatus = function(event, active, user) {
+    usersAPI.setActive(user, active);
+    this.updateUserStatus(user.index, active ? 'active' : 'inactive');
+  };
+
+  // Replace handleSubmit method from DeleteUserDialog
+  DeleteUserDialog.prototype.handleSubmit = function(event) {
+    usersAPI.deleteUser(this.props.userId, this.props.role);
+    this.props.onClose(true);
+  };
 };
 
 module.exports = { 'init': init };
