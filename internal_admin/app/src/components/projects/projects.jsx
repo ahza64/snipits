@@ -26,6 +26,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Toggle from 'material-ui/Toggle';
 import Badge from 'material-ui/Badge';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import '../../../styles/header.scss';
 
 // Constants
 const STATUS_ACTIVE = 'active';
@@ -327,9 +328,9 @@ export default class Projects extends React.Component {
                   <TableRow>
                     <TableHeaderColumn>#</TableHeaderColumn>
                     <TableHeaderColumn>Work Project</TableHeaderColumn>
-                    <TableHeaderColumn>Active</TableHeaderColumn>
+                    <TableHeaderColumn className='header-pos'>Active</TableHeaderColumn>
                     <TableHeaderColumn>Created On</TableHeaderColumn>
-                    <TableHeaderColumn>Action</TableHeaderColumn>
+                    <TableHeaderColumn className='header-pos'>Action</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={ false } selectable={ false }>

@@ -36,7 +36,6 @@ router.put(
       console.error(e);
       this.throw(500);
     }
-
     this.throw(200);
   }
 );
