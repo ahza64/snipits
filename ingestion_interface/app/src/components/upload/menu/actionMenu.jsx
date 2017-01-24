@@ -118,10 +118,10 @@ export default class ActionMenu extends UploadLib {
             primaryText='Set Description'
             onClick={ () => this.open('showDescriptionModal') }
           />
-          <MenuItem
+        {/*}<MenuItem
             primaryText='Set Configuration'
             onClick={ () => this.open('showSelectConfigDialog') }
-          />
+          />*/}
           <MenuItem
             primaryText='Delete'
             onClick={ this.handleDeleteIngestion }

@@ -260,7 +260,8 @@ export default class UploadZone extends UploadLib {
           <Col xs={4} sm={4} md={4} lg={4} >
             <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
               <div className='dropzone-text'>
-                Drop Your File Here
+                Drop Your File Here,
+                <h3>select project and configuration after dropping your file.</h3>
                 <LinearProgress
                   mode='determinate'
                   value={ this.state.percent }

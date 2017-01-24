@@ -72,21 +72,16 @@ export default class Login extends React.Component {
   render() {
     return (
       <Row>
+        <h1 style={{textAlign: 'center'}}>Ingestion App to upload your project files</h1>
         <Col xs={0} sm={1} md={4} lg={4} ></Col>
         <Col xs={12} sm={10} md={4} lg={4} >
           <Paper style={loginContainerStyle} zDepth={2} rounded={false}>
             <div>
               <img className='sm-logo' src={ smLogo } />
               <div>
-                {
-                  // Username:
-                }
                 <TextField value={ this.state.email } onChange={ this.handleLoginEmail } hintText='Email Address'/>
               </div>
               <div>
-                {
-                  // Password:
-                }
                 <TextField value={ this.state.password } onChange={ this.handleLoginPassword } hintText='Password' type='password'/>
               </div>
               <div>
