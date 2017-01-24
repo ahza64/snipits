@@ -5,8 +5,10 @@ import { browserHistory } from 'react-router';
 import request from '../../services/request';
 import authRedux from '../../reduxes/auth';
 import { loginUrl } from '../../config';
+import Snackbar from 'material-ui/Snackbar';
 
 // Styles
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -29,7 +31,8 @@ export default class Login extends React.Component {
     super();
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      openSnackbar: false
     };
     this.handleLoginEmail = this.handleLoginEmail.bind(this);
     this.handleLoginPassword = this.handleLoginPassword.bind(this);
@@ -59,6 +62,7 @@ export default class Login extends React.Component {
     .end((err, res) => {
       if (err) {
         console.error(err);
+        this.setState({ openSnackbar: true})
       } else {
         authRedux.dispatch({
           type: 'LOGIN',
@@ -91,6 +95,15 @@ export default class Login extends React.Component {
           </Paper>
         </Col>
         <Col xs={0} sm={1} md={4} lg={4} ></Col>
+        <MuiThemeProvider>
+          <div>
+            { this.props.children }
+            <Snackbar
+              open={ this.state.openSnackbar }
+              message="Invalid login, try again."
+            />
+          </div>
+        </MuiThemeProvider>
       </Row>
     );
   }
