@@ -41,12 +41,14 @@ export default class Login extends React.Component {
 
   handleLoginEmail(event) {
     this.setState({
-      email: event.target.value
+      email: event.target.value,
+      openSnackbar: false
     });
   }
   handleLoginPassword(event) {
     this.setState({
-      password: event.target.value
+      password: event.target.value,
+      openSnackbar: false
     });
   }
 
@@ -62,7 +64,9 @@ export default class Login extends React.Component {
     .end((err, res) => {
       if (err) {
         console.error(err);
-        this.setState({ openSnackbar: true})
+        if (err.status === 401 || err.status === 400) {
+          this.setState({ openSnackbar: true });
+        }
       } else {
         authRedux.dispatch({
           type: 'LOGIN',
@@ -100,7 +104,7 @@ export default class Login extends React.Component {
             { this.props.children }
             <Snackbar
               open={ this.state.openSnackbar }
-              message="Invalid login, try again."
+              message="Invalid login, please try again."
             />
           </div>
         </MuiThemeProvider>
