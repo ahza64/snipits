@@ -42,11 +42,11 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  getSearchResults(token, callback) {
+  getSearchResults(token, callback, offset = 0, projectsFilter = 'a', ingestionsFilter = 'a') {
     var companyId = authRedux.getState()['company.id'];
 
     request
-    .get(searchUrl + '/' + companyId + '/' + token)
+    .get(searchUrl + '/' + companyId + '/' + projectsFilter + '/' + ingestionsFilter + '/' + offset + '/' + token)
     .withCredentials()
     .on('progress', (event) => {
       this.setState({ searching: event.percent });
