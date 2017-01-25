@@ -1,6 +1,7 @@
 // Modules
 import React from 'react';
 import request from '../../../services/request';
+import _ from 'underscore';
 
 // Components
 import UploadLib from '../../upload/uploadLib';
@@ -28,11 +29,14 @@ export default class SearchBar extends UploadLib {
   handleSearchInput(event, value) {
     this.setState({ token: value });
     this.props.setToken(value);
+    this.handleSearch();
   }
 
   handleSearch() {
+    const fileSearch = _.debounce(() => { this.getSearchResults(token, this.props.setFiles) }, 350);
     var token = this.state.token;
-    this.getSearchResults(token, this.props.setFiles);
+    // this.getSearchResults(token, this.props.setFiles);
+    fileSearch();
   }
 
   render() {
@@ -44,11 +48,11 @@ export default class SearchBar extends UploadLib {
           value={ this.state.token }
           onChange={ this.handleSearchInput }
         />
-        <RaisedButton
+      {/*<RaisedButton
           label='Search'
           fullWidth={true}
           onClick={ this.handleSearch }
-        />
+        />*/}
       </div>
     );
   }

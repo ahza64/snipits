@@ -267,6 +267,7 @@ router.get(
 
     try {
       var ingestions = yield Ingestions.findAll({
+        limit: 5,
         where: {
           companyId: companyId,
           customerFileName: {
