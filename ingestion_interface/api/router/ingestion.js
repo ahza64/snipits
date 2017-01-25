@@ -256,33 +256,61 @@ router.get(
 
 // Search the ingestion record
 router.get(
-  '/searchingestions/:companyId/:token(.*)',
+  '/searchingestions/:companyId/:token(.*)/:projectsFilter/:ingestionsFilter/:offset',
   function*() {
     var companyId = this.params.companyId;
+    // @TODO reverse nameing convention
+    var projectsFilter = this.params.projectsFilter;
+    var ingestionsFilter = this.params.ingestionsFilter;
+    console.log('ingestionsFilter Params================================', ingestionsFilter);
+    // var projectsFilter = 18;
+    // var ingestionsFilter = 14;
     var token = this.params.token;
+    var offset = 0;//this.params.offset;
 
     if (!permissions.has(this.req.user, companyId)) {
       this.throw(403);
     }
 
     try {
+      var whereQuery = {
+        companyId: companyId,
+        customerFileName: {
+          $like: '%' + token + '%'
+        }
+      };
+
+      var includeQuery = {
+        model: Configs,
+        attributes: [['workProjectId','projectId']],
+        required: false
+      };
+
+      if (projectsFilter != 'a') {
+        whereQuery.ingestionConfigurationId = projectsFilter;
+        if (ingestionsFilter != 'a') {
+          includeQuery = {
+            model: Configs,
+            attributes: [['workProjectId','projectId']],
+            required: false,
+            where: {
+              workProjectId: ingestionsFilter
+            }
+          };
+        };
+      };
+
       var ingestions = yield Ingestions.findAll({
         limit: 5,
-        where: {
-          companyId: companyId,
-          customerFileName: {
-            $like: '%' + token + '%'
-          }
-        },
-        include: [{
-          model: Configs,
-          attributes: [['workProjectId','projectId']],
-          required: false
-        }],
+        offset: offset,
+        where: whereQuery,
+        include: [ includeQuery ],
+        order: [['createdAt', 'desc']],
         raw: true
       });
 
       this.body = ingestions;
+      console.log('HHHHHHHHHHH', ingestions);
     } catch(e) {
       console.error(e);
       this.throw(500);

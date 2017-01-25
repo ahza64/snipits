@@ -34,6 +34,7 @@ export default class UploadLib extends React.Component {
         console.error(err);
       } else {
         var files = res.body;
+        console.log("vvvvvvvvvvvvvv", files);
         files.forEach(f => {
           f.status = this.getFileStatus(f);
         });
@@ -44,9 +45,12 @@ export default class UploadLib extends React.Component {
 
   getSearchResults(token, callback) {
     var companyId = authRedux.getState()['company.id'];
+    var projectsFilter = 'a';
+    var ingestionsFilter = 'a';
+    var offset = 'a';
 
     request
-    .get(searchUrl + '/' + companyId + '/' + token)
+    .get(searchUrl + '/' + companyId + '/' + token + '/' + projectsFilter + '/' + ingestionsFilter + '/' + offset)
     .withCredentials()
     .on('progress', (event) => {
       this.setState({ searching: event.percent });
@@ -55,6 +59,7 @@ export default class UploadLib extends React.Component {
       if (err) {
         console.error(err);
       } else {
+        console.log("llllllllllllllllllll", res.body);
         callback(res.body);
       }
     });
