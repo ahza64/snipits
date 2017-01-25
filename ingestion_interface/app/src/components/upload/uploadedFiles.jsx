@@ -18,6 +18,9 @@ import Snackbar from 'material-ui/Snackbar';
 import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import IconButton from 'material-ui/IconButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+
 
 const offsetInterval = 5;
 
@@ -27,21 +30,30 @@ export default class UploadedFiles extends UploadLib {
 
     this.state = {
       files: [],
+      displayedFiles: [],
       notice: false,
       noticeMessage: '',
-      total: 0
+      total: 0,
+      projectValue: 0,
+      configValue: 0,
+      testfiles: ['project1', 'project2']
     };
 
     this.setNotification = this.setNotification.bind(this);
     this.changePage = this.changePage.bind(this);
     this.renderPage = this.renderPage.bind(this);
+    this.handleProjectChange = this.handleProjectChange.bind(this);
+    this.handleConfigChange = this.handleConfigChange.bind(this);
   }
 
   componentWillMount() {
     this.setState({
       files: this.props.files,
-      total: this.props.total
+      total: this.props.total,
+      projectValue: 0,
+      configValue: 0
     });
+    //console.log(files);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -101,14 +113,39 @@ export default class UploadedFiles extends UploadLib {
     }
   }
 
+  handleProjectChange(event, index, value){
+    this.setState({projectValue : value});
+  }
+
+  handleConfigChange(event, index, value){
+    this.setState({configValue: value});
+  }
+
   renderPage() {
     return pageRedux.getState() + this.state.files.length + ' of ' + this.state.total + ' in total';
   }
 
   render() {
+    console.log(this.state.files);
+
     return (
       <div>
         <Row>
+              <DropDownMenu value={this.state.projectValue} onChange={this.handleProjectChange}>
+                <MenuItem value={0} primaryText="Choose Project" />
+                {
+                    this.state.files.map((file, idx) => {
+                      return (<MenuItem key={ idx } value={ idx+1 } primaryText = { file["ingestion_configuration.projectId"] } />)
+                    })
+                }
+            </DropDownMenu>
+            <DropDownMenu value={this.state.configValue} onChange={this.handleConfigChange}>
+              <MenuItem value={0} primaryText="Choose Config" />
+              <MenuItem value={1} primaryText="Config1" />
+              <MenuItem value={2} primaryText="Config2" />
+            </DropDownMenu>
+      </Row>
+          <Row>
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
