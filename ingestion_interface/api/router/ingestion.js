@@ -188,8 +188,9 @@ router.get(
       console.error(e);
       this.throw(500);
     }
+    this.body = {};
+    this.body.total = total;
 
-    this.body = total;
   }
 );
 
@@ -254,19 +255,15 @@ router.get(
   }
 );
 
-// Search the ingestion record
+// Search and/or filter the ingestion record
 router.get(
   '/searchingestions/:companyId/:token(.*)/:projectsFilter/:ingestionsFilter/:offset',
   function*() {
     var companyId = this.params.companyId;
-    // @TODO reverse nameing convention
     var projectsFilter = this.params.projectsFilter;
     var ingestionsFilter = this.params.ingestionsFilter;
-    console.log('ingestionsFilter Params================================', ingestionsFilter);
-    // var projectsFilter = 18;
-    // var ingestionsFilter = 14;
     var token = this.params.token;
-    var offset = 0;//this.params.offset;
+    var offset = this.params.offset;
 
     if (!permissions.has(this.req.user, companyId)) {
       this.throw(403);
@@ -283,20 +280,26 @@ router.get(
       var includeQuery = {
         model: Configs,
         attributes: [['workProjectId','projectId']],
-        required: false
+        required: true
       };
 
-      if (projectsFilter != 'a') {
-        whereQuery.ingestionConfigurationId = projectsFilter;
-        if (ingestionsFilter != 'a') {
-          includeQuery = {
-            model: Configs,
-            attributes: [['workProjectId','projectId']],
-            required: false,
-            where: {
-              workProjectId: ingestionsFilter
-            }
-          };
+      if (token === '☠') {
+        whereQuery = {
+          companyId: companyId
+        };
+      }
+
+      if (projectsFilter !== 'a') {
+        includeQuery = {
+          model: Configs,
+          attributes: [['workProjectId','projectId']],
+          required: true,
+          where: {
+            workProjectId: projectsFilter
+          }
+        };
+        if (ingestionsFilter !== 'a') {
+          whereQuery.ingestionConfigurationId = ingestionsFilter;
         };
       };
 
@@ -309,8 +312,18 @@ router.get(
         raw: true
       });
 
-      this.body = ingestions;
-      console.log('HHHHHHHHHHH', ingestions);
+      var total = yield Ingestions.count({
+        where: whereQuery,
+        include: [ includeQuery ],
+        order: [['createdAt', 'desc']],
+        raw: true
+      });
+
+      this.body = {
+        ingestions: ingestions,
+        total: total
+      };
+      console.log('HHHHHHHHHHH', this.body.total);
     } catch(e) {
       console.error(e);
       this.throw(500);

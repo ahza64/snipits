@@ -50,6 +50,7 @@ export default class UploadZone extends UploadLib {
     this.setFileExistsWarn = this.setFileExistsWarn.bind(this);
     this.setTotal = this.setTotal.bind(this);
     this.displayProgressBar = this.displayProgressBar.bind(this);
+    this.setSearchTotal = this.setSearchTotal.bind(this);
   }
 
   setFiles(files) {
@@ -73,7 +74,7 @@ export default class UploadZone extends UploadLib {
       if (err) {
         console.error(err);
       } else {
-        this.setState({ total: res.body });
+        this.setState( res.body );
       }
     });
     this.getUploadedFiles(0, this.setFiles);
@@ -89,6 +90,10 @@ export default class UploadZone extends UploadLib {
   setTotal(bool) {
     var curTotal = this.state.total;
     this.setState({ total: bool ? curTotal + 1 : curTotal - 1 });
+  }
+
+  setSearchTotal(total) {
+    this.setState({ total: total });
   }
 
   setFiles(files) {
@@ -288,6 +293,7 @@ export default class UploadZone extends UploadLib {
             <SearchBar
               setFiles={ this.setFiles }
               setToken={ this.setToken }
+              setSearchTotal={ this.setSearchTotal }
             />
             <UploadedFiles
               onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }

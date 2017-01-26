@@ -33,10 +33,16 @@ export default class SearchBar extends UploadLib {
   }
 
   handleSearch() {
-    const fileSearch = _.debounce(() => { this.getSearchResults(token, this.props.setFiles) }, 350);
     var token = this.state.token;
-    // this.getSearchResults(token, this.props.setFiles);
-    fileSearch();
+    var setFiles = this.props.setFiles;
+    var setSearchTotal = this.props.setSearchTotal;
+    console.log('handle search props=>', this.props);
+    _.debounce(() => {
+      this.getSearchResults(token, (body) => {
+        setFiles(body.ingestions);
+        setSearchTotal(body.total);
+      })}, 350
+    )();
   }
 
   render() {
@@ -48,11 +54,6 @@ export default class SearchBar extends UploadLib {
           value={ this.state.token }
           onChange={ this.handleSearchInput }
         />
-      {/*<RaisedButton
-          label='Search'
-          fullWidth={true}
-          onClick={ this.handleSearch }
-        />*/}
       </div>
     );
   }

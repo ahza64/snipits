@@ -34,7 +34,7 @@ export default class UploadLib extends React.Component {
         console.error(err);
       } else {
         var files = res.body;
-        console.log("vvvvvvvvvvvvvv", files);
+        console.log("uploaded files=>", files);
         files.forEach(f => {
           f.status = this.getFileStatus(f);
         });
@@ -43,11 +43,13 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  getSearchResults(token, callback) {
+  getSearchResults(token = '☠', callback, offset = '0', projectsFilter = 'a', ingestionsFilter = 'a') {
     var companyId = authRedux.getState()['company.id'];
-    var projectsFilter = 'a';
-    var ingestionsFilter = 'a';
-    var offset = 'a';
+    // projectsFilter = 14;
+    // ingestionsFilter = 18;
+    // offset = 5;
+    // token = '';
+    console.log("search results token=>", token);
 
     request
     .get(searchUrl + '/' + companyId + '/' + token + '/' + projectsFilter + '/' + ingestionsFilter + '/' + offset)
@@ -59,7 +61,7 @@ export default class UploadLib extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        console.log("llllllllllllllllllll", res.body);
+        console.log("res.body from search results=>", res.body);
         callback(res.body);
       }
     });
