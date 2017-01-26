@@ -257,7 +257,7 @@ router.get(
 
 // Search and/or filter the ingestion record
 router.get(
-  '/searchingestions/:companyId/:token(.*)/:projectsFilter/:ingestionsFilter/:offset',
+  '/searchingestions/:companyId/:projectsFilter/:ingestionsFilter/:offset/:token(.*)',
   function*() {
     var companyId = this.params.companyId;
     var projectsFilter = this.params.projectsFilter;
@@ -283,11 +283,11 @@ router.get(
         required: true
       };
 
-      if (token === '☠') {
-        whereQuery = {
-          companyId: companyId
-        };
-      }
+      // if (token === '☠') {
+      //   whereQuery = {
+      //     companyId: companyId
+      //   };
+      // }
 
       if (projectsFilter !== 'a') {
         includeQuery = {
@@ -318,6 +318,7 @@ router.get(
         order: [['createdAt', 'desc']],
         raw: true
       });
+      console.log("give me the totals from db ==================>", total);
 
       this.body = {
         ingestions: ingestions,

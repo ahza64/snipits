@@ -43,7 +43,7 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  getSearchResults(token = '☠', callback, offset = '0', projectsFilter = 'a', ingestionsFilter = 'a') {
+  getSearchResults(token, callback, offset = '0', projectsFilter = 'a', ingestionsFilter = 'a') {
     var companyId = authRedux.getState()['company.id'];
     // projectsFilter = 14;
     // ingestionsFilter = 18;
@@ -52,7 +52,7 @@ export default class UploadLib extends React.Component {
     console.log("search results token=>", token);
 
     request
-    .get(searchUrl + '/' + companyId + '/' + token + '/' + projectsFilter + '/' + ingestionsFilter + '/' + offset)
+    .get(searchUrl + '/' + companyId + '/' + projectsFilter + '/' + ingestionsFilter + '/' + offset + '/' + token)
     .withCredentials()
     .on('progress', (event) => {
       this.setState({ searching: event.percent });
