@@ -7,6 +7,7 @@ import authRedux from '../../reduxes/auth';
 import pageRedux from '../../reduxes/page';
 import UploadLib from './uploadLib';
 import ActionMenu from './menu/actionMenu';
+import searchBar from '../find/searchbar/searchBar'
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -36,7 +37,7 @@ export default class UploadedFiles extends UploadLib {
       total: 0,
       projectValue: 0,
       configValue: 0,
-      testfiles: ['project1', 'project2']
+      configMenuDisable: true
     };
 
     this.setNotification = this.setNotification.bind(this);
@@ -115,6 +116,13 @@ export default class UploadedFiles extends UploadLib {
 
   handleProjectChange(event, index, value){
     this.setState({projectValue : value});
+    if(value != 0){
+      this.setState({configMenuDisable : false})
+    }
+    else{
+      this.setState({configMenuDisable : true});
+    }
+    console.log("configuration menu disabled: ", this.state.configMenuDisable);
   }
 
   handleConfigChange(event, index, value){
@@ -131,21 +139,24 @@ export default class UploadedFiles extends UploadLib {
     return (
       <div>
         <Row>
-              <DropDownMenu value={this.state.projectValue} onChange={this.handleProjectChange}>
-                <MenuItem value={0} primaryText="Choose Project" />
-                {
-                    this.state.files.map((file, idx) => {
-                      return (<MenuItem key={ idx } value={ idx+1 } primaryText = { file["ingestion_configuration.projectId"] } />)
-                    })
-                }
-            </DropDownMenu>
-            <DropDownMenu value={this.state.configValue} onChange={this.handleConfigChange}>
-              <MenuItem value={0} primaryText="Choose Config" />
-              <MenuItem value={1} primaryText="Config1" />
-              <MenuItem value={2} primaryText="Config2" />
-            </DropDownMenu>
-      </Row>
-          <Row>
+          <DropDownMenu value={this.state.projectValue} onChange={this.handleProjectChange}>
+            <MenuItem value={0} primaryText="Choose Project" />
+            {
+              this.state.files.map((file, idx) => {
+                return (<MenuItem key={ idx } value={ idx+1 } primaryText = { file["ingestion_configuration.projectId"] } />)
+              })
+            }
+          </DropDownMenu>
+          <DropDownMenu value={this.state.configValue} onChange={this.handleConfigChange} disabled={this.state.configMenuDisable}>
+            <MenuItem value={0} primaryText="Choose Config" />
+            {
+              this.state.files.map((file, idx) => {
+                return (<MenuItem key={ idx } value={ idx+1 } primaryText = { file.ingestionConfigurationId } />)
+              })
+            }
+          </DropDownMenu>
+        </Row>
+        <Row>
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
@@ -177,46 +188,46 @@ export default class UploadedFiles extends UploadLib {
                           description={ file.description }
                           onDescriptionChanged={ (fileId, newDescription) =>
                             this.handleDescriptionChanged(fileId, newDescription) }
-                          onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
-                            this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
-                          onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
-                          onError={ (err) => this.handleError(err) }
-                          type={ 'UPLOAD' }
-                        />
-                      </TableRowColumn>
-                    </TableRow>
-                  );
-                })
-              }
-            </TableBody>
-          </Table>
-        </Row>
-          <Col xs={10} sm={10} md={10} lg={10} ></Col>
-          <Col xs={2} sm={2} md={2} lg={2} >
-            <Row>
-              <IconButton
-                disabled={ pageRedux.getState() <= 0 }
-                onClick={ () => this.changePage('PREV') }>
-                <ChevronLeft/>
-              </IconButton>
-              <IconButton
-                disabled={ pageRedux.getState() + offsetInterval >= this.state.total }
-                onClick={ () => this.changePage('NEXT') }>
-                <ChevronRight/>
-              </IconButton>
+                            onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
+                              this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
+                              onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
+                              onError={ (err) => this.handleError(err) }
+                              type={ 'UPLOAD' }
+                              />
+                          </TableRowColumn>
+                        </TableRow>
+                      );
+                    })
+                  }
+                </TableBody>
+              </Table>
             </Row>
+            <Col xs={10} sm={10} md={10} lg={10} ></Col>
+            <Col xs={2} sm={2} md={2} lg={2} >
+              <Row>
+                <IconButton
+                  disabled={ pageRedux.getState() <= 0 }
+                  onClick={ () => this.changePage('PREV') }>
+                  <ChevronLeft/>
+                </IconButton>
+                <IconButton
+                  disabled={ pageRedux.getState() + offsetInterval >= this.state.total }
+                  onClick={ () => this.changePage('NEXT') }>
+                  <ChevronRight/>
+                </IconButton>
+              </Row>
+              <Row>
+                { this.renderPage() }
+              </Row>
+            </Col>
             <Row>
-              { this.renderPage() }
             </Row>
-          </Col>
-        <Row>
-        </Row>
-        <Snackbar
-          open={ this.state.notice }
-          message={ this.state.noticeMessage }
-          autoHideDuration={ 2500 }
-        />
-      </div>
-    );
-  }
-}
+            <Snackbar
+              open={ this.state.notice }
+              message={ this.state.noticeMessage }
+              autoHideDuration={ 2500 }
+              />
+          </div>
+        );
+      }
+    }
