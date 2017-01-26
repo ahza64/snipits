@@ -303,6 +303,14 @@ router.get(
         };
       };
 
+      var total = yield Ingestions.count({
+        where: whereQuery,
+        include: [ includeQuery ],
+        order: [['createdAt', 'desc']],
+        raw: true
+      });
+      console.log("give me the totals from db ==================>", total);
+
       var ingestions = yield Ingestions.findAll({
         limit: 5,
         offset: offset,
@@ -312,13 +320,6 @@ router.get(
         raw: true
       });
 
-      var total = yield Ingestions.count({
-        where: whereQuery,
-        include: [ includeQuery ],
-        order: [['createdAt', 'desc']],
-        raw: true
-      });
-      console.log("give me the totals from db ==================>", total);
 
       this.body = {
         ingestions: ingestions,
