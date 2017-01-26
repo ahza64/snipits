@@ -13,6 +13,8 @@ import UploadLib from './uploadLib';
 import History from './history/history';
 import FileExistsWarn from './notification/fileExistsWarn';
 import SelectConfigDialog from './dialogs/selectConfigDialog';
+import Search from '../find/findMain';
+import SearchBar from '../find/searchbar/searchBar';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -35,9 +37,11 @@ export default class UploadZone extends UploadLib {
       percent: 0,
       showSelectConfigDialog: false,
       uploadFileName: null,
-      selectedConfig: {}
+      selectedConfig: {},
+      token: ''
     };
 
+    this.setToken = this.setToken.bind(this);
     this.setFiles = this.setFiles.bind(this);
     this.setHistories = this.setHistories.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
@@ -46,6 +50,15 @@ export default class UploadZone extends UploadLib {
     this.setFileExistsWarn = this.setFileExistsWarn.bind(this);
     this.setTotal = this.setTotal.bind(this);
     this.displayProgressBar = this.displayProgressBar.bind(this);
+    this.setSearchTotal = this.setSearchTotal.bind(this);
+  }
+
+  setFiles(files) {
+    this.setState({ files: files });
+  }
+
+  setToken(token) {
+    this.setState({ token: token });
   }
 
   componentWillMount() {
@@ -61,7 +74,7 @@ export default class UploadZone extends UploadLib {
       if (err) {
         console.error(err);
       } else {
-        this.setState({ total: res.body });
+        this.setState( res.body );
       }
     });
     this.getUploadedFiles(0, this.setFiles);
@@ -77,6 +90,11 @@ export default class UploadZone extends UploadLib {
   setTotal(bool) {
     var curTotal = this.state.total;
     this.setState({ total: bool ? curTotal + 1 : curTotal - 1 });
+  }
+
+  setSearchTotal(total) {
+    this.setState({ total: total });
+    console.log("search total ++++++++>>", this.state.total);
   }
 
   setFiles(files) {
@@ -260,7 +278,8 @@ export default class UploadZone extends UploadLib {
           <Col xs={4} sm={4} md={4} lg={4} >
             <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
               <div className='dropzone-text'>
-                Drop Your File Here
+                Drop Your File Here,
+                <h3>select project and configuration after dropping your file.</h3>
                 <LinearProgress
                   mode='determinate'
                   value={ this.state.percent }
@@ -272,6 +291,11 @@ export default class UploadZone extends UploadLib {
             </Dropzone>
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
+            <SearchBar
+              setFiles={ this.setFiles }
+              setToken={ this.setToken }
+              setSearchTotal={ this.setSearchTotal }
+            />
             <UploadedFiles
               onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
               onFileDescriptionChanged={ (fileId, newDescription) =>

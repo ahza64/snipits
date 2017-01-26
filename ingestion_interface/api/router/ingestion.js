@@ -188,8 +188,9 @@ router.get(
       console.error(e);
       this.throw(500);
     }
+    this.body = {};
+    this.body.total = total;
 
-    this.body = total;
   }
 );
 
@@ -254,34 +255,77 @@ router.get(
   }
 );
 
-// Search the ingestion record
+// Search and/or filter the ingestion record
 router.get(
-  '/searchingestions/:companyId/:token(.*)',
+  '/searchingestions/:companyId/:projectsFilter/:ingestionsFilter/:offset/:token(.*)',
   function*() {
     var companyId = this.params.companyId;
+    var projectsFilter = this.params.projectsFilter;
+    var ingestionsFilter = this.params.ingestionsFilter;
     var token = this.params.token;
+    var offset = this.params.offset;
 
     if (!permissions.has(this.req.user, companyId)) {
       this.throw(403);
     }
 
     try {
-      var ingestions = yield Ingestions.findAll({
-        where: {
-          companyId: companyId,
-          customerFileName: {
-            $like: '%' + token + '%'
-          }
-        },
-        include: [{
+      var whereQuery = {
+        companyId: companyId,
+        customerFileName: {
+          $like: '%' + token + '%'
+        }
+      };
+
+      var includeQuery = {
+        model: Configs,
+        attributes: [['workProjectId','projectId']],
+        required: true
+      };
+
+      // if (token === '☠') {
+      //   whereQuery = {
+      //     companyId: companyId
+      //   };
+      // }
+
+      if (projectsFilter !== 'a') {
+        includeQuery = {
           model: Configs,
           attributes: [['workProjectId','projectId']],
-          required: false
-        }],
+          required: true,
+          where: {
+            workProjectId: projectsFilter
+          }
+        };
+        if (ingestionsFilter !== 'a') {
+          whereQuery.ingestionConfigurationId = ingestionsFilter;
+        };
+      };
+
+      var total = yield Ingestions.count({
+        where: whereQuery,
+        include: [ includeQuery ],
+        order: [['createdAt', 'desc']],
+        raw: true
+      });
+      console.log("give me the totals from db ==================>", total);
+
+      var ingestions = yield Ingestions.findAll({
+        limit: 5,
+        offset: offset,
+        where: whereQuery,
+        include: [ includeQuery ],
+        order: [['createdAt', 'desc']],
         raw: true
       });
 
-      this.body = ingestions;
+
+      this.body = {
+        ingestions: ingestions,
+        total: total
+      };
+      console.log('HHHHHHHHHHH', this.body.total);
     } catch(e) {
       console.error(e);
       this.throw(500);
