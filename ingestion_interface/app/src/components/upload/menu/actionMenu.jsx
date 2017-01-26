@@ -8,6 +8,7 @@ import pageRedux from '../../../reduxes/page';
 import UploadLib from '../uploadLib';
 import DescriptionBox from './descriptionBox';
 import SelectConfigDialog from '../dialogs/selectConfigDialog';
+import DeleteDialog from '../dialogs/confirmFileDelete';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -24,6 +25,7 @@ export default class ActionMenu extends UploadLib {
     this.state = {
       showDescriptionModal: false,
       showSelectConfigDialog: false,
+      showDeleteDialog: false,
       type: 'UPLOAD',
       fileId: null,
       fileName: '',
@@ -36,6 +38,7 @@ export default class ActionMenu extends UploadLib {
     this.close = this.close.bind(this);
     this.open = this.open.bind(this);
     this.handleDeleteIngestion = this.handleDeleteIngestion.bind(this);
+    this.handleDescriptionChanged = this.handleDescriptionChanged.bind(this);
   }
 
   setStateFromProps(props) {
@@ -71,6 +74,7 @@ export default class ActionMenu extends UploadLib {
   }
 
   handleFileDeleted() {
+    this.close('showDeleteDialog');
     if (this.props.onFileDeleted) {
       this.props.onFileDeleted(this.props.fileId);
     }
@@ -124,7 +128,7 @@ export default class ActionMenu extends UploadLib {
           />
           <MenuItem
             primaryText='Delete'
-            onClick={ this.handleDeleteIngestion }
+            onClick={ () => this.open('showDeleteDialog') }
           />
         </IconMenu>
         <DescriptionBox
@@ -140,6 +144,12 @@ export default class ActionMenu extends UploadLib {
           fileName={ this.state.fileName }
           onClose={ (projectId, configId, projectName, configName) =>
             this.handleSelectConfigDialogClose(projectId, configId, projectName, configName) }
+        />
+      <DeleteDialog open={ this.state.showDeleteDialog }
+          fileId={ this.props.fileId }
+          fileName={ this.props.fileName }
+          onClose= { (event) => this.close('showDeleteDialog') }
+          onDelete={ (event) => this.handleDeleteIngestion() }
         />
       </div>
     );
