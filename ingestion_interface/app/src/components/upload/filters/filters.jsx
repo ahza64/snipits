@@ -78,16 +78,25 @@ export default class Filters extends UploadLib {
           this.setState({uniqueConfigs : uniqueConfigs});
 
         }, 0, this.state.projectValue);
-
-
-
-
       });
 
     }
 
     handleConfigChange(event, index, value){
-      this.setState({configValue: value});
+      this.setState({configValue: value}, ()=>{
+        var token = this.props.token;
+        var setFiles = this.props.setFiles;
+        var setSearchTotal = this.props.setSearchTotal;
+
+        this.getSearchResults(token, (body) => {
+          console.log("current config value: ", this.state.configValue)
+          setFiles(body.ingestions);
+          setSearchTotal(body.total);
+
+        }, 0, this.state.projectValue, this.state.configValue);
+
+
+      });
     }
 
     render() {
