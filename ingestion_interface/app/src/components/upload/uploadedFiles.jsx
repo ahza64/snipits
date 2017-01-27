@@ -120,11 +120,11 @@ export default class UploadedFiles extends UploadLib {
       this.setState({configMenuDisable : false})
     }
     else{
+      this.setState({configValue : 0});
       this.setState({configMenuDisable : true});
     }
-    console.log("configuration menu disabled: ", this.state.configMenuDisable);
-  }
 
+  }
   handleConfigChange(event, index, value){
     this.setState({configValue: value});
   }
@@ -138,7 +138,7 @@ export default class UploadedFiles extends UploadLib {
 
     return (
       <div>
-        <Row>
+         <Row>
           <DropDownMenu value={this.state.projectValue} onChange={this.handleProjectChange}>
             <MenuItem value={0} primaryText="Choose Project" />
             {
