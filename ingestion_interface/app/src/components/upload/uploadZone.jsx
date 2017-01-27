@@ -185,7 +185,18 @@ export default class UploadZone extends UploadLib {
             if (err) {
               console.error(err);
             } else {
+              request
+              .get(ingestionRecordUrl + '/total/' + companyId)
+              .withCredentials()
+              .end((err, res) => {
+                if (err) {
+                  console.error(err);
+                } else {
+                  this.setState( res.body );
+                }
+              });
               this.uploadFile(file, s3FileName, configId, res.text);
+              this.fetchHistories();
             }
           });
         } else {
