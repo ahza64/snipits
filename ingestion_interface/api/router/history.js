@@ -43,6 +43,7 @@ router.post(
 
     var obj = {
       action: action,
+      s3FileName: ingestion.s3FileName,
       customerFileName: ingestion.customerFileName,
       userName: user.name,
       userId: user.id,
