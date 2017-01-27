@@ -1,4 +1,4 @@
-// Check user permissions to edit company data
+// validate that client isn't sending an alternate company id
 var has = function(user, companyId) {
   var hasPermissions = false;
   if((user) && (user.status === 'active') && (user.companyId == companyId)) {

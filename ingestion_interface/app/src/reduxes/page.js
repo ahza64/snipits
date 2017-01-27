@@ -11,6 +11,9 @@ const pageReducer = (state = 0, action) => {
       return state + offset;
     case 'PREV':
       return state - offset;
+    case 'RESET':
+      state = 0;
+      return state;
     default:
       return state;
   }

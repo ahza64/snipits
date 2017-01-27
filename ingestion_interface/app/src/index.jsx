@@ -15,7 +15,7 @@ import FindMain from './components/find/findMain.jsx';
 ReactDOM.render(
   <Router history={ browserHistory }>
     <Route path={ urlPrefix } component={ App }>
-      <IndexRoute component={ Login } />
+      <IndexRoute name='LOGIN' component={ Login } />
       <Route onEnter={ isRouteAuthorized } path='upload/' component={ Upload }></Route>
       <Route onEnter={ isRouteAuthorized } path='find/' component={ FindMain }></Route>
     </Route>

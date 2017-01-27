@@ -97,7 +97,8 @@ export default class UploadedFiles extends UploadLib {
     } else if (offset < 0) {
       pageRedux.dispatch({ type: 'NEXT' });
     } else {
-      this.getUploadedFiles(offset, this.props.setFiles);
+      console.log("uploaded files state files=>>", this.state.files);
+      this.getSearchResults(this.props.token, this.props.setFiles, offset);
     }
   }
 

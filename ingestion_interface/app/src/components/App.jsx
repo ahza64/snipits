@@ -28,7 +28,7 @@ export default class App extends React.Component {
   componentWillMount() {
     var self = this;
     request.addListener(function(err, res) {
-      if (res.status == 401) {
+      if (res.status === 401 && self.props.location.pathname !== '/') {
         self.setState({
           sessionExpired: true
         });
