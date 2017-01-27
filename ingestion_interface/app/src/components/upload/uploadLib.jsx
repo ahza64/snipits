@@ -156,6 +156,24 @@ export default class UploadLib extends React.Component {
     });
   }
 
+  getAllFiles(callback){
+    var companyId = authRedux.getState()['company.id'];
+
+    request
+    .get(ingestionRecordUrl + '/projectIds/' + companyId)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        var body = res.body;
+        console.log("please be all filez: ", body)
+        callback(body);
+      }
+    });
+
+  }
+
   changeFileConfiguration(fileId, newConfigId, callback) {
     request
     .put(ingestionConfigUrl)

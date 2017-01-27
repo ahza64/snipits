@@ -227,6 +227,32 @@ router.get(
   }
 );
 
+//get ingestion records
+router.get(
+  '/ingestions/projectIds/:companyId',
+  function*() {
+    var companyId = this.params.companyId;
+
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
+
+    try {
+      var ingestions = yield Ingestions.findAll({
+        include: [{
+          model: Configs,
+          attributes: [['workProjectId','projectId']],
+          required: false
+        }]
+      });
+    } catch(e) {
+      console.error(e);
+      this.throw(500);
+    }
+    this.body = ingestions;
+  }
+)
+
 // Get the ingestion record
 router.get(
   '/ingestions/:fileName/:companyId',

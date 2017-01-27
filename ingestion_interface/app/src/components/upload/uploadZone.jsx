@@ -265,6 +265,7 @@ export default class UploadZone extends UploadLib {
   }
 
   render() {
+    console.log("uploadzone files: ", this.state.files)
     return (
       <div>
         <SelectConfigDialog open={ this.state.showSelectConfigDialog}
