@@ -1,7 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
   var Histories = sequelize.define('ingestion_histories', {
     customerFileName: { type: DataTypes.STRING },
-    s3FileName: ingestion.s3FileName,
+    s3FileName: { type: DataTypes.STRING },
     userName: { type: DataTypes.STRING },
     adminName: { type: DataTypes.STRING },
     action: { type: DataTypes.STRING }
