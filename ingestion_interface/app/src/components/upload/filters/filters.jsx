@@ -61,23 +61,31 @@ export default class Filters extends UploadLib {
         var setFiles = this.props.setFiles;
         var setSearchTotal = this.props.setSearchTotal;
 
-        this.getSearchResults(token, (body) => {
-          console.log("current projectvalue: ", this.state.projectValue)
-          setFiles(body.ingestions);
-          setSearchTotal(body.total);
+        if (this.state.projectValue != 0){
+          this.getSearchResults(token, (body) => {
+            console.log("current projectvalue: ", this.state.projectValue)
+            setFiles(body.ingestions);
+            setSearchTotal(body.total);
 
-          var files = this.props.files;
-          var uniqueConfigs = [];
-          console.log("filesss: ", files)
+            var files = this.props.files;
+            var uniqueConfigs = [];
+            console.log("filesss: ", files)
 
-          for (var i = 0; i < files.length; i++){
-            uniqueConfigs[i] = files[i].ingestionConfigurationId;
-          }
+            for (var i = 0; i < files.length; i++){
+              uniqueConfigs[i] = files[i].ingestionConfigurationId;
+            }
 
-          uniqueConfigs = _.uniq(uniqueConfigs);
-          this.setState({uniqueConfigs : uniqueConfigs});
+            uniqueConfigs = _.uniq(uniqueConfigs);
+            this.setState({uniqueConfigs : uniqueConfigs});
 
-        }, 0, this.state.projectValue);
+          }, 0, this.state.projectValue);
+        }
+        else{
+          this.getSearchResults(token, (body) => {
+            setFiles(body.ingestions);
+            setSearchTotal(body.total);
+          }, 0);
+        }
       });
 
     }
@@ -88,13 +96,22 @@ export default class Filters extends UploadLib {
         var setFiles = this.props.setFiles;
         var setSearchTotal = this.props.setSearchTotal;
 
-        this.getSearchResults(token, (body) => {
-          console.log("current config value: ", this.state.configValue)
-          setFiles(body.ingestions);
-          setSearchTotal(body.total);
+        if (this.state.configValue != 0){
+          this.getSearchResults(token, (body) => {
+            console.log("current config value: ", this.state.configValue)
+            setFiles(body.ingestions);
+            setSearchTotal(body.total);
 
-        }, 0, this.state.projectValue, this.state.configValue);
+          }, 0, this.state.projectValue, this.state.configValue);
+        }
+        else{
+          this.getSearchResults(token, (body) => {
+            console.log("current config value: ", this.state.configValue)
+            setFiles(body.ingestions);
+            setSearchTotal(body.total);
 
+          }, 0, this.state.projectValue);
+        }
 
       });
     }
