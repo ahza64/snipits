@@ -15,6 +15,7 @@ import FileExistsWarn from './notification/fileExistsWarn';
 import SelectConfigDialog from './dialogs/selectConfigDialog';
 import Search from '../find/findMain';
 import SearchBar from '../find/searchbar/searchBar';
+import Filters from './filters/filters';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -294,6 +295,12 @@ export default class UploadZone extends UploadLib {
             <SearchBar
               setFiles={ this.setFiles }
               setToken={ this.setToken }
+              setSearchTotal={ this.setSearchTotal }
+            />
+            <Filters
+              files={ this.state.files }
+              token={ this.state.token }
+              setFiles={ this.setFiles }
               setSearchTotal={ this.setSearchTotal }
             />
             <UploadedFiles

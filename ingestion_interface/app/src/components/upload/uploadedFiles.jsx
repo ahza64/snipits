@@ -138,7 +138,7 @@ export default class UploadedFiles extends UploadLib {
 
     return (
       <div>
-         <Row>
+         {/*}<Row>
           <DropDownMenu value={this.state.projectValue} onChange={this.handleProjectChange}>
             <MenuItem value={0} primaryText="Choose Project" />
             {
@@ -155,7 +155,7 @@ export default class UploadedFiles extends UploadLib {
               })
             }
           </DropDownMenu>
-        </Row>
+        </Row>*/}
         <Row>
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
