@@ -213,8 +213,10 @@ router.get(
         where: { companyId: companyId },
         include: [{
           model: Configs,
-          attributes: [['workProjectId','projectId']],
-          required: false
+          required: true,
+          include:[{
+            model: Projects
+          }],
         }],
         order: [['createdAt', 'desc']],
         raw: true
@@ -223,7 +225,6 @@ router.get(
       console.error(e);
       this.throw(500);
     }
-
     this.body = ingestions;
   }
 );
