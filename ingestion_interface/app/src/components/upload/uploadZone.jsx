@@ -39,7 +39,9 @@ export default class UploadZone extends UploadLib {
       showSelectConfigDialog: false,
       uploadFileName: null,
       selectedConfig: {},
-      token: ''
+      token: '',
+      projectId: 0,
+      configId: 0
     };
 
     this.setToken = this.setToken.bind(this);
@@ -52,6 +54,8 @@ export default class UploadZone extends UploadLib {
     this.setTotal = this.setTotal.bind(this);
     this.displayProgressBar = this.displayProgressBar.bind(this);
     this.setSearchTotal = this.setSearchTotal.bind(this);
+    this.setProjectId = this.setProjectId.bind(this);
+    this.setConfigId = this.setConfigId.bind(this);
   }
 
   setFiles(files) {
@@ -60,6 +64,14 @@ export default class UploadZone extends UploadLib {
 
   setToken(token) {
     this.setState({ token: token });
+  }
+
+  setProjectId(projectId){
+    this.setState({projectId: projectId})
+  }
+
+  setConfigId(configId){
+    this.setState({configId: configId})
   }
 
   componentWillMount() {
@@ -303,6 +315,8 @@ export default class UploadZone extends UploadLib {
               token={ this.state.token }
               setFiles={ this.setFiles }
               setSearchTotal={ this.setSearchTotal }
+              setProjectId={ this.setProjectId }
+              setConfigId={ this.setConfigId }
             />
             <UploadedFiles
               onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }

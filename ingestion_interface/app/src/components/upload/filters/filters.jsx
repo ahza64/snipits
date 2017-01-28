@@ -49,6 +49,7 @@ export default class Filters extends UploadLib {
     handleProjectChange(event, index, value){
 
       this.setState({projectValue : value}, ()=>{
+        this.props.setProjectId(value);
           console.log("project value after menu choice: ", this.state.projectValue )
         if(value != 0){
           this.setState({configMenuDisable : false})
@@ -92,6 +93,7 @@ export default class Filters extends UploadLib {
 
     handleConfigChange(event, index, value){
       this.setState({configValue: value}, ()=>{
+        this.props.setConfigId(value);
         var token = this.props.token;
         var setFiles = this.props.setFiles;
         var setSearchTotal = this.props.setSearchTotal;
