@@ -109,14 +109,15 @@ export default class UploadedFiles extends UploadLib {
   render() {
     return (
       <div>
-        <Row>
+        <Row style={{ height: '300px' }}>
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
                 <TableHeaderColumn style={{ width: '5px' }}>#</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '300px' }}>File Name</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '300px' }}>Sytem File Name</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '100px' }}>Last Modified Time</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '200px' }}>File Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '150px' }}>Project Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '150px' }}>Config Type</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '150px' }}>Last Modified Time</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Menu</TableHeaderColumn>
               </TableRow>
@@ -127,9 +128,10 @@ export default class UploadedFiles extends UploadLib {
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn style={{ width: '5px' }}>{ pageRedux.getState() + idx + 1 }</TableRowColumn>
-                      <TableRowColumn style={{ width: '300px' }}>{ file.customerFileName }</TableRowColumn>
-                      <TableRowColumn style={{ width: '300px' }}>{ file.s3FileName }</TableRowColumn>
-                      <TableRowColumn style={{ width: '100px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
+                      <TableRowColumn style={{ width: '200px' }}>{ file.customerFileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ file['ingestion_configuration.work_project.name']}</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ file['ingestion_configuration.fileType'] }</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
                       <TableRowColumn>{ file.status }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
