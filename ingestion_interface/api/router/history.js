@@ -83,7 +83,7 @@ var historyMassage = (histories) => {
   histories.forEach(h => {
     var time = h['ingestion_histories.createdAt'];
     if (time) {
-      h.timeKey = moment(time).format('ww e');
+      h.timeKey = moment(time).format('W E');
     }
   });
 

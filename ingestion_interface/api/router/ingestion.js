@@ -281,14 +281,15 @@ router.get(
 
       var includeQuery = {
         model: Configs,
-        attributes: [['workProjectId','projectId']],
-        required: true
+        required: true,
+        include:[{
+          model: Projects
+        }]
       };
 
       if (projectsFilter !== 'a') {
         includeQuery = {
           model: Configs,
-          attributes: [['workProjectId','projectId']],
           required: true,
           where: {
             workProjectId: projectsFilter

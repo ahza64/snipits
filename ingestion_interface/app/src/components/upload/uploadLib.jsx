@@ -11,16 +11,11 @@ export default class UploadLib extends React.Component {
     super();
 
     this.writeHistory = this.writeHistory.bind(this);
-    this.getFileStatus = this.getFileStatus.bind(this);
     this.getUploadedFiles = this.getUploadedFiles.bind(this);
     this.deleteUploadedFile = this.deleteUploadedFile.bind(this);
     this.createIngestionRecord = this.createIngestionRecord.bind(this);
     this.getHistory = this.getHistory.bind(this);
     this.getSearchResults = this.getSearchResults.bind(this);
-  }
-
-  getFileStatus(ingestion) {
-    return ingestion.ingested ? 'INGESTED' : 'NOT INGESTED';
   }
 
   getUploadedFiles(offset, callback) {
@@ -34,9 +29,6 @@ export default class UploadLib extends React.Component {
         console.error(err);
       } else {
         var files = res.body;
-        files.forEach(f => {
-          f.status = this.getFileStatus(f);
-        });
         callback(files);
       }
     });

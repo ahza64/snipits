@@ -94,11 +94,9 @@ export default class UploadZone extends UploadLib {
 
   setSearchTotal(total) {
     this.setState({ total: total });
-    console.log("search total ++++++++>>", this.state.total);
   }
 
   setFiles(files) {
-    console.log('>>>>>>>>>>>>>', files);
     if (files.ingestions){
       this.setState({ files: files.ingestions})
     } else {

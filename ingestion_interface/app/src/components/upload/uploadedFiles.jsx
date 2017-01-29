@@ -97,7 +97,6 @@ export default class UploadedFiles extends UploadLib {
     } else if (offset < 0) {
       pageRedux.dispatch({ type: 'NEXT' });
     } else {
-      console.log("uploaded files state files=>>", this.state.files);
       this.getSearchResults(this.props.token, this.props.setFiles, offset);
     }
   }
@@ -132,7 +131,7 @@ export default class UploadedFiles extends UploadLib {
                       <TableRowColumn style={{ width: '150px' }}>{ file['ingestion_configuration.work_project.name']}</TableRowColumn>
                       <TableRowColumn style={{ width: '150px' }}>{ file['ingestion_configuration.fileType'] }</TableRowColumn>
                       <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
-                      <TableRowColumn>{ file.status }</TableRowColumn>
+                      <TableRowColumn>{ file.ingested ? 'INGESTED' : 'NOT INGESTED' }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
                           companyId={ file.companyId }

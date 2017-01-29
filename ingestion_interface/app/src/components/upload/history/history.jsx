@@ -111,17 +111,6 @@ export default class History extends UploadLib {
     };
   }
 
-  componentWillMount() {
-    var heatmapData = this.props.heatmap;
-    var historiesData = this.props.histories;
-
-    this.hmConfig.series[0].data = heatmapData;
-    this.setState({
-      heatmap: this.hmConfig,
-      histories: historiesData
-    });
-  }
-
   componentWillReceiveProps(nextProps) {
     var heatmapData = nextProps.heatmap;
     var historiesData = nextProps.histories;
