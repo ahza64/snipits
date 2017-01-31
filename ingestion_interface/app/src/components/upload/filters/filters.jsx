@@ -1,9 +1,14 @@
 import React from 'react';
 import _ from 'underscore';
 
+
 import UploadLib from '../uploadLib';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
+import SelectConfig from '../dialogs/selectConfigDialog';
+
+import { projectsUrl, configsUrl } from '../../../config';
+import request from '../../../services/request';
 
 export default class Filters extends UploadLib {
   constructor() {
@@ -14,45 +19,67 @@ export default class Filters extends UploadLib {
       configValue: 0,
       configMenuDisable: true,
       uniqueProjects: [],
-      configs: [],
       uniqueConfigs: []
     };
 
+
     this.handleProjectChange = this.handleProjectChange.bind(this);
     this.handleConfigChange = this.handleConfigChange.bind(this);
-    this.makeProjectListUnique = this.makeProjectListUnique.bind(this);
+    this.getProjects = this.getProjects.bind(this);
+    this.getConfigs = this.getConfigs.bind(this);
+
+    console.log('high')
+
   }
 
     componentWillMount(){
-
-      this.getAllFiles((body) =>{
-        console.log("ingestions config: ", body[0].ingestion_configuration.projectId)
-        this.makeProjectListUnique(body);
-      })
+      this.getProjects(this.props.companyId);
     }
 
-    makeProjectListUnique(files){
-      var projectIds = [];
-      var configs = []
-      for (var i = 0; i < files.length-1; i++){
-        projectIds[i] = files[i].ingestion_configuration.projectId;
-        configs[i] = files[i].ingestionConfigurationId;
+    getProjects(companyId) {
+      if (companyId) {
+        let url = projectsUrl.replace(':companyId', companyId);
+        return request
+        .get(url)
+        .withCredentials()
+        .end((err, res) => {
+          if (err) {
+            console.error(err);
+          } else {
+            this.setState({
+              uniqueProjects: res.body
+            });
+          }
+        });
       }
-      var uniqueProjects = _.uniq(projectIds);
-
-      this.setState({uniqueProjects : uniqueProjects})
-
     }
 
-
+    getConfigs(projectId) {
+      if (projectId) {
+        let url = configsUrl.replace(':projectId', projectId);
+        return request
+        .get(url)
+        .withCredentials()
+        .end((err, res) => {
+          if (err) {
+            console.error(err);
+          } else {
+            console.log(">>>>>>>>>> ", res.body)
+            this.setState({
+              uniqueConfigs: res.body
+            });
+          }
+        });
+      }
+    }
 
     handleProjectChange(event, index, value){
 
       this.setState({projectValue : value}, ()=>{
         this.props.setProjectId(value);
-          console.log("project value after menu choice: ", this.state.projectValue )
         if(value != 0){
-          this.setState({configMenuDisable : false})
+          this.setState({configMenuDisable : false});
+          this.setState({configValue : 0});
         }
         else{
           this.setState({configValue : 0});
@@ -64,20 +91,10 @@ export default class Filters extends UploadLib {
 
         if (this.state.projectValue != 0){
           this.getSearchResults(token, (body) => {
-            console.log("current projectvalue: ", this.state.projectValue)
             setFiles(body.ingestions);
             setSearchTotal(body.total);
 
-            var files = this.props.files;
-            var uniqueConfigs = [];
-            console.log("filesss: ", files)
-
-            for (var i = 0; i < files.length; i++){
-              uniqueConfigs[i] = files[i].ingestionConfigurationId;
-            }
-
-            uniqueConfigs = _.uniq(uniqueConfigs);
-            this.setState({uniqueConfigs : uniqueConfigs});
+            this.getConfigs(this.state.projectValue);
 
           }, 0, this.state.projectValue);
         }
@@ -124,16 +141,16 @@ export default class Filters extends UploadLib {
             <DropDownMenu value={this.state.projectValue} onChange={this.handleProjectChange}>
               <MenuItem value={0} primaryText="Choose Project" />
               {
-                this.state.uniqueProjects.map((projectId, idx) => {
-                  return (<MenuItem key={ idx } value={ projectId } primaryText = {projectId}/>)
+                this.state.uniqueProjects.map((project, idx) => {
+                  return (<MenuItem key={ idx } value={ project.id } primaryText = {project.name}/>)
                 })
               }
             </DropDownMenu>
             <DropDownMenu value={this.state.configValue} onChange={this.handleConfigChange} disabled={this.state.configMenuDisable}>
               <MenuItem value={0} primaryText="Choose Config" />
               {
-                this.state.uniqueConfigs.map((configId, idx) => {
-                  return (<MenuItem key={ idx } value={ configId } primaryText = { configId } />)
+                this.state.uniqueConfigs.map((config, idx) => {
+                  return (<MenuItem key={ idx } value={ config.id } primaryText = { config.fileType } />)
                 })
               }
             </DropDownMenu>

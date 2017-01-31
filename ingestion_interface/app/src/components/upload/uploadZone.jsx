@@ -218,6 +218,7 @@ export default class UploadZone extends UploadLib {
     this.setState({
       showSelectConfigDialog: false,
     });
+    console.log("state after dialog close=====>", this.state);
     if(configId) {
       this.setState({
         selectedConfig: {
@@ -309,6 +310,7 @@ export default class UploadZone extends UploadLib {
               setFiles={ this.setFiles }
               setToken={ this.setToken }
               setSearchTotal={ this.setSearchTotal }
+
             />
             <Filters
               files={ this.state.files }
@@ -317,6 +319,7 @@ export default class UploadZone extends UploadLib {
               setSearchTotal={ this.setSearchTotal }
               setProjectId={ this.setProjectId }
               setConfigId={ this.setConfigId }
+              companyId={ this.state.companyId }
             />
             <UploadedFiles
               onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
