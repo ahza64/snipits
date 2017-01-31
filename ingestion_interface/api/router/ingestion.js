@@ -268,7 +268,6 @@ router.get(
     var ingestionsFilter = this.params.ingestionsFilter;
     var token = this.params.token;
     var offset = this.params.offset;
-
     if (!permissions.has(this.req.user, companyId)) {
       this.throw(403);
     }
@@ -289,15 +288,18 @@ router.get(
         }]
       };
 
-      if (projectsFilter !== 'a') {
+      if (projectsFilter !== '0') {
         includeQuery = {
           model: Configs,
           required: true,
+          include:[{
+            model: Projects
+          }],
           where: {
             workProjectId: projectsFilter
           }
         };
-        if (ingestionsFilter !== 'a') {
+        if (ingestionsFilter !== '0') {
           whereQuery.ingestionConfigurationId = ingestionsFilter;
         };
       };
@@ -308,7 +310,6 @@ router.get(
         order: [['createdAt', 'desc']],
         raw: true
       });
-      console.log("give me the totals from db ==================>", total);
 
       var ingestions = yield Ingestions.findAll({
         limit: 5,

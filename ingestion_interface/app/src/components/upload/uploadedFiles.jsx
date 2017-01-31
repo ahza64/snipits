@@ -134,8 +134,6 @@ export default class UploadedFiles extends UploadLib {
   }
 
   render() {
-    console.log(this.state.files);
-
     return (
       <div>
         <Row style={{ height: '300px' }}>

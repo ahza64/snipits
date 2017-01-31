@@ -28,8 +28,6 @@ export default class Filters extends UploadLib {
     this.getProjects = this.getProjects.bind(this);
     this.getConfigs = this.getConfigs.bind(this);
 
-    console.log('high')
-
   }
 
     componentWillMount(){
@@ -64,7 +62,6 @@ export default class Filters extends UploadLib {
           if (err) {
             console.error(err);
           } else {
-            console.log(">>>>>>>>>> ", res.body)
             this.setState({
               uniqueConfigs: res.body
             });
@@ -117,7 +114,6 @@ export default class Filters extends UploadLib {
 
         if (this.state.configValue != 0){
           this.getSearchResults(token, (body) => {
-            console.log("current config value: ", this.state.configValue)
             setFiles(body.ingestions);
             setSearchTotal(body.total);
 
@@ -125,7 +121,6 @@ export default class Filters extends UploadLib {
         }
         else{
           this.getSearchResults(token, (body) => {
-            console.log("current config value: ", this.state.configValue)
             setFiles(body.ingestions);
             setSearchTotal(body.total);
 
