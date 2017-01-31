@@ -43,6 +43,7 @@ router.post(
 
     var obj = {
       action: action,
+      s3FileName: ingestion.s3FileName,
       customerFileName: ingestion.customerFileName,
       userName: user.name,
       userId: user.id,
@@ -82,7 +83,7 @@ var historyMassage = (histories) => {
   histories.forEach(h => {
     var time = h['ingestion_histories.createdAt'];
     if (time) {
-      h.timeKey = moment(time).format('ww e');
+      h.timeKey = moment(time).format('W E');
     }
   });
 

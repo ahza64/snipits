@@ -56,6 +56,7 @@ export default class UploadZone extends UploadLib {
     this.setSearchTotal = this.setSearchTotal.bind(this);
     this.setProjectId = this.setProjectId.bind(this);
     this.setConfigId = this.setConfigId.bind(this);
+
   }
 
   setFiles(files) {
@@ -107,11 +108,14 @@ export default class UploadZone extends UploadLib {
 
   setSearchTotal(total) {
     this.setState({ total: total });
-    console.log("search total ++++++++>>", this.state.total);
   }
 
   setFiles(files) {
-    this.setState({ files: files });
+    if (files.ingestions){
+      this.setState({ files: files.ingestions})
+    } else {
+      this.setState({ files: files });
+    }
   }
 
   setHistories(heatmapData, historiesData) {
@@ -193,7 +197,18 @@ export default class UploadZone extends UploadLib {
             if (err) {
               console.error(err);
             } else {
+              request
+              .get(ingestionRecordUrl + '/total/' + companyId)
+              .withCredentials()
+              .end((err, res) => {
+                if (err) {
+                  console.error(err);
+                } else {
+                  this.setState( res.body );
+                }
+              });
               this.uploadFile(file, s3FileName, configId, res.text);
+              this.fetchHistories();
             }
           });
         } else {
@@ -310,7 +325,6 @@ export default class UploadZone extends UploadLib {
               setFiles={ this.setFiles }
               setToken={ this.setToken }
               setSearchTotal={ this.setSearchTotal }
-
             />
             <Filters
               files={ this.state.files }
@@ -332,6 +346,7 @@ export default class UploadZone extends UploadLib {
               setFiles={ this.setFiles }
               setTotal={ this.setTotal }
               total={ this.state.total }
+              token={ this.state.token }
             />
           </Col>
         </Row>

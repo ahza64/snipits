@@ -110,7 +110,7 @@ export default class UploadedFiles extends UploadLib {
     } else if (offset < 0) {
       pageRedux.dispatch({ type: 'NEXT' });
     } else {
-      this.getUploadedFiles(offset, this.props.setFiles);
+      this.getSearchResults(this.props.token, this.props.setFiles, offset);
     }
   }
 
@@ -138,32 +138,15 @@ export default class UploadedFiles extends UploadLib {
 
     return (
       <div>
-         {/*}<Row>
-          <DropDownMenu value={this.state.projectValue} onChange={this.handleProjectChange}>
-            <MenuItem value={0} primaryText="Choose Project" />
-            {
-              this.state.files.map((file, idx) => {
-                return (<MenuItem key={ idx } value={ idx+1 } primaryText = { file["ingestion_configuration.projectId"] } />)
-              })
-            }
-          </DropDownMenu>
-          <DropDownMenu value={this.state.configValue} onChange={this.handleConfigChange} disabled={this.state.configMenuDisable}>
-            <MenuItem value={0} primaryText="Choose Config" />
-            {
-              this.state.files.map((file, idx) => {
-                return (<MenuItem key={ idx } value={ idx+1 } primaryText = { file.ingestionConfigurationId } />)
-              })
-            }
-          </DropDownMenu>
-        </Row>*/}
-        <Row>
+        <Row style={{ height: '300px' }}>
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
                 <TableHeaderColumn style={{ width: '5px' }}>#</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '300px' }}>File Name</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '300px' }}>Sytem File Name</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '100px' }}>Last Modified Time</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '200px' }}>File Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '150px' }}>Project Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '150px' }}>Config Type</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '150px' }}>Last Modified Time</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Menu</TableHeaderColumn>
               </TableRow>
@@ -174,10 +157,11 @@ export default class UploadedFiles extends UploadLib {
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn style={{ width: '5px' }}>{ pageRedux.getState() + idx + 1 }</TableRowColumn>
-                      <TableRowColumn style={{ width: '300px' }}>{ file.customerFileName }</TableRowColumn>
-                      <TableRowColumn style={{ width: '300px' }}>{ file.s3FileName }</TableRowColumn>
-                      <TableRowColumn style={{ width: '100px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
-                      <TableRowColumn>{ file.status }</TableRowColumn>
+                      <TableRowColumn style={{ width: '200px' }}>{ file.customerFileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ file['ingestion_configuration.work_project.name']}</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ file['ingestion_configuration.fileType'] }</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
+                      <TableRowColumn>{ file.ingested ? 'INGESTED' : 'NOT INGESTED' }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
                           companyId={ file.companyId }

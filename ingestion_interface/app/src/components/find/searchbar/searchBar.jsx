@@ -2,6 +2,7 @@
 import React from 'react';
 import request from '../../../services/request';
 import _ from 'underscore';
+import pageRedux from '../../../reduxes/page';
 
 // Components
 import UploadLib from '../../upload/uploadLib';
@@ -27,7 +28,6 @@ export default class SearchBar extends UploadLib {
   }
 
   handleSearchInput(event, value) {
-    console.log("search bar value/token ::::::::>", value);
     this.setState({ token: value }, () => {
       this.props.setToken(value);
       this.handleSearch();
@@ -38,8 +38,8 @@ export default class SearchBar extends UploadLib {
     var token = this.state.token;
     var setFiles = this.props.setFiles;
     var setSearchTotal = this.props.setSearchTotal;
-    console.log('handle search props=>', token);
     _.debounce(() => {
+      pageRedux.dispatch({ type: 'RESET' });
       this.getSearchResults(token, (body) => {
         setFiles(body.ingestions);
         setSearchTotal(body.total);

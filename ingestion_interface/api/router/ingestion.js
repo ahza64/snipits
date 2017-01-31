@@ -98,6 +98,7 @@ var createNewS3FileName = function(ingestion, company, newProject, newConfig) {
 var addToHistory = function*(file, user, action) {
   var obj = {
     action: action,
+    s3FileName: file.s3FileName,
     customerFileName: file.customerFileName,
     userName: user.name,
     userId: user.id,
@@ -213,8 +214,10 @@ router.get(
         where: { companyId: companyId },
         include: [{
           model: Configs,
-          attributes: [['workProjectId','projectId']],
-          required: false
+          required: true,
+          include:[{
+            model: Projects
+          }],
         }],
         order: [['createdAt', 'desc']],
         raw: true
@@ -223,7 +226,6 @@ router.get(
       console.error(e);
       this.throw(500);
     }
-
     this.body = ingestions;
   }
 );
@@ -281,20 +283,15 @@ router.get(
 
       var includeQuery = {
         model: Configs,
-        attributes: [['workProjectId','projectId']],
-        required: true
+        required: true,
+        include:[{
+          model: Projects
+        }]
       };
-
-      // if (token === '☠') {
-      //   whereQuery = {
-      //     companyId: companyId
-      //   };
-      // }
 
       if (projectsFilter !== 'a') {
         includeQuery = {
           model: Configs,
-          attributes: [['workProjectId','projectId']],
           required: true,
           where: {
             workProjectId: projectsFilter
@@ -322,12 +319,10 @@ router.get(
         raw: true
       });
 
-
       this.body = {
         ingestions: ingestions,
         total: total
       };
-      console.log('HHHHHHHHHHH', this.body.total);
     } catch(e) {
       console.error(e);
       this.throw(500);
