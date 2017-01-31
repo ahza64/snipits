@@ -29,9 +29,6 @@ export default class UploadLib extends React.Component {
         console.error(err);
       } else {
         var files = res.body;
-        files.forEach(f => {
-          f.status = this.getFileStatus(f);
-        });
         callback(files);
       }
     });
