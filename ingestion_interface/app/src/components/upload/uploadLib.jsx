@@ -34,7 +34,7 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  getSearchResults(token, callback, offset = 0, projectsFilter = 'a', ingestionsFilter = 'a') {
+  getSearchResults(token, callback, offset = 0, projectsFilter = 0, ingestionsFilter = 0) {
     var companyId = authRedux.getState()['company.id'];
 
     request
@@ -139,6 +139,23 @@ export default class UploadLib extends React.Component {
         callback(body.heatmapData, body.historiesData);
       }
     });
+  }
+
+  getAllFiles(callback){
+    var companyId = authRedux.getState()['company.id'];
+
+    request
+    .get(ingestionRecordUrl + '/projectIds/' + companyId)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        var body = res.body;
+        callback(body);
+      }
+    });
+
   }
 
   changeFileConfiguration(fileId, newConfigId, callback) {

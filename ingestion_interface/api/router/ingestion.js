@@ -5,6 +5,7 @@ const permissions = require('./permissions');
 const s3 = require('dsp_shared/aws/s3');
 const config = require('dsp_shared/conf.d/config.json').mooncake;
 const s3Prefix = config.env + '.';
+const _ = require('underscore');
 
 // App
 const app = koa();
@@ -229,6 +230,7 @@ router.get(
   }
 );
 
+
 // Get the ingestion record
 router.get(
   '/ingestions/:fileName/:companyId',
@@ -266,7 +268,6 @@ router.get(
     var ingestionsFilter = this.params.ingestionsFilter;
     var token = this.params.token;
     var offset = this.params.offset;
-
     if (!permissions.has(this.req.user, companyId)) {
       this.throw(403);
     }
@@ -287,15 +288,18 @@ router.get(
         }]
       };
 
-      if (projectsFilter !== 'a') {
+      if (projectsFilter !== '0') {
         includeQuery = {
           model: Configs,
           required: true,
+          include:[{
+            model: Projects
+          }],
           where: {
             workProjectId: projectsFilter
           }
         };
-        if (ingestionsFilter !== 'a') {
+        if (ingestionsFilter !== '0') {
           whereQuery.ingestionConfigurationId = ingestionsFilter;
         };
       };
@@ -315,7 +319,6 @@ router.get(
         order: [['createdAt', 'desc']],
         raw: true
       });
-
 
       this.body = {
         ingestions: ingestions,

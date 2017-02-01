@@ -15,6 +15,7 @@ import FileExistsWarn from './notification/fileExistsWarn';
 import SelectConfigDialog from './dialogs/selectConfigDialog';
 import Search from '../find/findMain';
 import SearchBar from '../find/searchbar/searchBar';
+import Filters from './filters/filters';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -38,7 +39,9 @@ export default class UploadZone extends UploadLib {
       showSelectConfigDialog: false,
       uploadFileName: null,
       selectedConfig: {},
-      token: ''
+      token: '',
+      projectId: 0,
+      configId: 0
     };
 
     this.setToken = this.setToken.bind(this);
@@ -51,6 +54,9 @@ export default class UploadZone extends UploadLib {
     this.setTotal = this.setTotal.bind(this);
     this.displayProgressBar = this.displayProgressBar.bind(this);
     this.setSearchTotal = this.setSearchTotal.bind(this);
+    this.setProjectId = this.setProjectId.bind(this);
+    this.setConfigId = this.setConfigId.bind(this);
+
   }
 
   setFiles(files) {
@@ -59,6 +65,14 @@ export default class UploadZone extends UploadLib {
 
   setToken(token) {
     this.setState({ token: token });
+  }
+
+  setProjectId(projectId){
+    this.setState({projectId: projectId})
+  }
+
+  setConfigId(configId){
+    this.setState({configId: configId})
   }
 
   componentWillMount() {
@@ -219,6 +233,7 @@ export default class UploadZone extends UploadLib {
     this.setState({
       showSelectConfigDialog: false,
     });
+    console.log("state after dialog close=====>", this.state);
     if(configId) {
       this.setState({
         selectedConfig: {
@@ -309,6 +324,17 @@ export default class UploadZone extends UploadLib {
               setFiles={ this.setFiles }
               setToken={ this.setToken }
               setSearchTotal={ this.setSearchTotal }
+              projectId={ this.state.projectId}
+              configId={ this.state.configId }
+            />
+            <Filters
+              files={ this.state.files }
+              token={ this.state.token }
+              setFiles={ this.setFiles }
+              setSearchTotal={ this.setSearchTotal }
+              setProjectId={ this.setProjectId }
+              setConfigId={ this.setConfigId }
+              companyId={ this.state.companyId }
             />
             <UploadedFiles
               onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }

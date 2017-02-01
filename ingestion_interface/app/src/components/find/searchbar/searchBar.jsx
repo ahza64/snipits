@@ -38,12 +38,14 @@ export default class SearchBar extends UploadLib {
     var token = this.state.token;
     var setFiles = this.props.setFiles;
     var setSearchTotal = this.props.setSearchTotal;
+    var projectId = this.props.projectId;
+    var configId = this.props.configId;
     _.debounce(() => {
       pageRedux.dispatch({ type: 'RESET' });
       this.getSearchResults(token, (body) => {
         setFiles(body.ingestions);
         setSearchTotal(body.total);
-      })}, 350
+      }, 0, projectId, configId)}, 350
     )();
   }
 

@@ -7,6 +7,7 @@ import authRedux from '../../reduxes/auth';
 import pageRedux from '../../reduxes/page';
 import UploadLib from './uploadLib';
 import ActionMenu from './menu/actionMenu';
+import searchBar from '../find/searchbar/searchBar'
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -18,6 +19,9 @@ import Snackbar from 'material-ui/Snackbar';
 import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import IconButton from 'material-ui/IconButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+
 
 const offsetInterval = 5;
 
@@ -27,21 +31,30 @@ export default class UploadedFiles extends UploadLib {
 
     this.state = {
       files: [],
+      displayedFiles: [],
       notice: false,
       noticeMessage: '',
-      total: 0
+      total: 0,
+      projectValue: 0,
+      configValue: 0,
+      configMenuDisable: true
     };
 
     this.setNotification = this.setNotification.bind(this);
     this.changePage = this.changePage.bind(this);
     this.renderPage = this.renderPage.bind(this);
+    this.handleProjectChange = this.handleProjectChange.bind(this);
+    this.handleConfigChange = this.handleConfigChange.bind(this);
   }
 
   componentWillMount() {
     this.setState({
       files: this.props.files,
-      total: this.props.total
+      total: this.props.total,
+      projectValue: 0,
+      configValue: 0
     });
+    //console.log(files);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -101,6 +114,21 @@ export default class UploadedFiles extends UploadLib {
     }
   }
 
+  handleProjectChange(event, index, value){
+    this.setState({projectValue : value});
+    if(value != 0){
+      this.setState({configMenuDisable : false})
+    }
+    else{
+      this.setState({configValue : 0});
+      this.setState({configMenuDisable : true});
+    }
+
+  }
+  handleConfigChange(event, index, value){
+    this.setState({configValue: value});
+  }
+
   renderPage() {
     return pageRedux.getState() + this.state.files.length + ' of ' + this.state.total + ' in total';
   }
@@ -142,46 +170,46 @@ export default class UploadedFiles extends UploadLib {
                           description={ file.description }
                           onDescriptionChanged={ (fileId, newDescription) =>
                             this.handleDescriptionChanged(fileId, newDescription) }
-                          onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
-                            this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
-                          onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
-                          onError={ (err) => this.handleError(err) }
-                          type={ 'UPLOAD' }
-                        />
-                      </TableRowColumn>
-                    </TableRow>
-                  );
-                })
-              }
-            </TableBody>
-          </Table>
-        </Row>
-          <Col xs={10} sm={10} md={10} lg={10} ></Col>
-          <Col xs={2} sm={2} md={2} lg={2} >
-            <Row>
-              <IconButton
-                disabled={ pageRedux.getState() <= 0 }
-                onClick={ () => this.changePage('PREV') }>
-                <ChevronLeft/>
-              </IconButton>
-              <IconButton
-                disabled={ pageRedux.getState() + offsetInterval >= this.state.total }
-                onClick={ () => this.changePage('NEXT') }>
-                <ChevronRight/>
-              </IconButton>
+                            onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
+                              this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
+                              onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
+                              onError={ (err) => this.handleError(err) }
+                              type={ 'UPLOAD' }
+                              />
+                          </TableRowColumn>
+                        </TableRow>
+                      );
+                    })
+                  }
+                </TableBody>
+              </Table>
             </Row>
+            <Col xs={10} sm={10} md={10} lg={10} ></Col>
+            <Col xs={2} sm={2} md={2} lg={2} >
+              <Row>
+                <IconButton
+                  disabled={ pageRedux.getState() <= 0 }
+                  onClick={ () => this.changePage('PREV') }>
+                  <ChevronLeft/>
+                </IconButton>
+                <IconButton
+                  disabled={ pageRedux.getState() + offsetInterval >= this.state.total }
+                  onClick={ () => this.changePage('NEXT') }>
+                  <ChevronRight/>
+                </IconButton>
+              </Row>
+              <Row>
+                { this.renderPage() }
+              </Row>
+            </Col>
             <Row>
-              { this.renderPage() }
             </Row>
-          </Col>
-        <Row>
-        </Row>
-        <Snackbar
-          open={ this.state.notice }
-          message={ this.state.noticeMessage }
-          autoHideDuration={ 2500 }
-        />
-      </div>
-    );
-  }
-}
+            <Snackbar
+              open={ this.state.notice }
+              message={ this.state.noticeMessage }
+              autoHideDuration={ 2500 }
+              />
+          </div>
+        );
+      }
+    }
