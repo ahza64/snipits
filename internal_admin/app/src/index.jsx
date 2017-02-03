@@ -13,6 +13,7 @@ import Projects from './components/projects/projects.jsx';
 import Configurations from './components/configs/configs.jsx';
 import Ingest from './components/ingest/ingest.jsx';
 import Users from './components/users/users.jsx';
+import Schema from './components/schema/schema.jsx';
 
 
 // Router
@@ -25,6 +26,8 @@ ReactDOM.render(
       <Route onEnter={ isRouteAuthorized } path='configs/' component={ Configurations }></Route>
       <Route onEnter={ isRouteAuthorized } path='ingest/' component={ Ingest }></Route>
       <Route onEnter={ isRouteAuthorized } path='users/' component={ Users }></Route>
+      <Route onEnter={ isRouteAuthorized } path='schemas/' component={ Schema }></Route>
+
     </Route>
   </Router>,
 document.getElementById('app'));

@@ -36,8 +36,9 @@ app.use(mount(config.url_prefix, require('./router/projects')));
 app.use(mount(config.url_prefix, require('./router/watcher')));
 app.use(mount(config.url_prefix, require('./router/config')));
 app.use(mount(config.url_prefix, require('./router/download')));
-app.use(mount(config.url_prefix, require('./router/qow')));
+app.use(mount(config.url_prefix, require('./router/schema')));
 
 
 // Port
+console.log('app listening on port ' + port);
 app.listen(port);

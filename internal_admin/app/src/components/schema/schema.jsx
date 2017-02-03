@@ -6,26 +6,47 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as Table from 'reactabular-table';
 
 import DefaultNavbar from '../navbar/defaultNavbar';
-
+import CreateRowDialog from './dialogs/createRowDialog'
 import Row from 'react-bootstrap/lib/Row';
-
 
 import { cloneDeep, findIndex } from 'lodash';
 import * as edit from 'react-edit';
 import uuid from 'uuid';
 
 // import { generateRows } from './helpers';
+var jobTypes = ['a','b','s']
+export default class QowSchema extends React.Component {
+  constructor() {
+    super();
 
+    this.state = {
+      name: '',
+      projectNameError: null,
+      creating: false,
+      fields : [],
+      showCreateRowDialog: false
+    };
 
+    this.addField = this.addField.bind(this);
+    this.renderDialogs = this.renderDialogs.bind(this);
+    this.fetchSchemas = this.fetchSchemas.bind(this);
+  }
 
-const jobs = [];
-const jobTypes = [ 'A', 'B', 'C', 'D' ];
+  componentWillMount(){
+    this.fetchSchemas()
+    console.log(this.props);
+  }
 
-function addJobs(quantity) {
-  const startId = jobs.length;
+  fetchSchemas(){
+
+  }
+
+  setSchemas(){}
+
+  addField(field) {
   for (let i = 0; i < quantity; i++) {
     const id = startId + i;
-    jobs.push({
+    this.state.fields.push({
       id: id,
       name: 'Item name ' + id,
       type: 'B',
@@ -35,24 +56,24 @@ function addJobs(quantity) {
   }
 }
 
-addJobs(5);
+  renderDialogs(){
+    return(
+      <CreateRowDialog open={ this.state.showCreateRowDialog }></CreateRowDialog>
+    )
+  }
 
-const cellEditProp = {
-  mode: 'click',
-  blurToSave: true
-};
-
-export default class EditTypeTable extends React.Component {
   render() {
     return (
       <div>
+        { this.renderDialogs() }
         <Row><DefaultNavbar /></Row>
-        <BootstrapTable data={ jobs } cellEdit={ cellEditProp } insertRow={ true } >
-          <TableHeaderColumn dataField='id' isKey={ true }>Job ID</TableHeaderColumn>
-          <TableHeaderColumn dataField='name' editable={ { type: 'textarea' } }>Job Name</TableHeaderColumn>
-          <TableHeaderColumn dataField='type' editable={ { type: 'select', options: { values: jobTypes } } }>Job Type</TableHeaderColumn>
-          <TableHeaderColumn dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
-          <TableHeaderColumn dataField='datetime' editable={ { type: 'datetime' } }>Date Time</TableHeaderColumn>
+        <BootstrapTable data={ this.state.fields } insertRow={ true }  >
+          <TableHeaderColumn width='20%' dataField='id' isKey={ true }>Job ID</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='name' editable={ { type: 'textarea' } }>Job Name</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='type' editable={ { type: 'select', options: { values: jobTypes } } }>Job Type</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='datetime' editable={ { type: 'datetime' } }>Date Time</TableHeaderColumn>
+
         </BootstrapTable>
       </div>
     );

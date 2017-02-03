@@ -57,6 +57,8 @@ export default class Projects extends React.Component {
     this.handleDeleteProject = this.handleDeleteProject.bind(this);
     this.handleCreateConfig = this.handleCreateConfig.bind(this);
     this.goToQOWs = this.goToQOWs.bind(this);
+    this.getQOWs = this.getQOWs.bind(this);
+
   }
 
   componentWillMount() {
@@ -236,20 +238,26 @@ export default class Projects extends React.Component {
   }
 
   getQOWs(){
+    var companyId = this.state.companyId;
+    var projectId = this.state.projectId;
     return request
-    .get(qowsUrl.replace(':projectId', this.state.projectId))
+    .post(qowsUrl)
+    .send({
+      companyId:companyId,
+      projectId:projectId
+    })
     .withCredentials()
     .end(function (err, res) {
-
+      console.log("======================", res.body);
+      return res.body;
     })
-
   }
 
   goToQOWs(){
-    console.log(this.state);
-    return <div>
-      {  }
-    </div>
+    //console.log(this.getQOWs());
+    console.log(qowsUrl);
+    // let schemaQuery
+    return browserHistory.push('/schemas/') ;
   }
 
   renderActionMenu() {
