@@ -9,7 +9,7 @@ import DefaultNavbar from '../navbar/defaultNavbar';
 import CreateProjectDialog from './dialogs/create';
 import DeleteProjectDialog from './dialogs/delete';
 import EditConfigDialog from '../configs/dialogs/edit';
-import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl } from '../../config';
+import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, qowsUrl } from '../../config';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -56,6 +56,7 @@ export default class Projects extends React.Component {
     this.handleAddProject = this.handleAddProject.bind(this);
     this.handleDeleteProject = this.handleDeleteProject.bind(this);
     this.handleCreateConfig = this.handleCreateConfig.bind(this);
+    this.goToQOWs = this.goToQOWs.bind(this);
   }
 
   componentWillMount() {
@@ -234,6 +235,23 @@ export default class Projects extends React.Component {
     });
   }
 
+  getQOWs(){
+    return request
+    .get(qowsUrl.replace(':projectId', this.state.projectId))
+    .withCredentials()
+    .end(function (err, res) {
+
+    })
+
+  }
+
+  goToQOWs(){
+    console.log(this.state);
+    return <div>
+      {  }
+    </div>
+  }
+
   renderActionMenu() {
     return(
       <Popover
@@ -247,6 +265,9 @@ export default class Projects extends React.Component {
               onClick={ this.handleCreateConfig } />
             <MenuItem value="2" primaryText="Delete Work Project"
               onClick={ this.handleDeleteProject } />
+            <MenuItem value="3" primaryText="See QOWs"
+            onClick={ this.goToQOWs } />
+
           </Menu>
         </Popover>
     );

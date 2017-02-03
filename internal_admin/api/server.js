@@ -36,6 +36,8 @@ app.use(mount(config.url_prefix, require('./router/projects')));
 app.use(mount(config.url_prefix, require('./router/watcher')));
 app.use(mount(config.url_prefix, require('./router/config')));
 app.use(mount(config.url_prefix, require('./router/download')));
+app.use(mount(config.url_prefix, require('./router/qow')));
+
 
 // Port
 app.listen(port);

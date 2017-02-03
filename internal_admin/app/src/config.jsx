@@ -21,6 +21,7 @@ const activateProjectUrl = base + '/project/:id/activate';
 const deactivateProjectUrl = base + '/project/:id/deactivate';
 const configsUrl = base + '/configs/:projectId';
 const configUrl = base + '/config';
+const qowsUrl = base + '/qows/:projectId';
 const deleteConfigUrl = base + '/config/:id';
 const watchersUrl = base + '/watcher/:configId';
 const userUrl = base + '/user';

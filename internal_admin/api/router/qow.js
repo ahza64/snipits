@@ -12,17 +12,18 @@ const INACTIVE = 'inactive';
 
 // Collection
 const Projects = require('dsp_shared/database/model/ingestion/tables').work_projects;
+const QowSchemas = require('dsp_shared/database/model/ingestion/tables').qow_schemas;
 
 // Create a project
-router.post(
-  '/project',
+router.get(
+  '/qows/:projectId/',
   function*() {
     var body = this.request.body;
     var companyId = body.companyId;
 
     if (permissions.has(this.req.user, companyId)) {
       var project = yield Projects.findOne({
-        where: { name: { ilike: body.name }, companyId: companyId },
+        where: { name: { ilike: this.params.projectId }, companyId: companyId },
         raw: true
       });
 
