@@ -1,7 +1,8 @@
 // added packages reactabular lodash react-edit uuid
 // react-bootstrap-table babel-preset-stage-0 (in .babelrc) babelify react-hot-loader toastr
 import React from 'react';
-
+import request from '../../services/request';
+//import { api_port } from 'dsp_shared/conf.d/config';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as Table from 'reactabular-table';
 
@@ -38,10 +39,15 @@ export default class QowSchema extends React.Component {
   }
 
   fetchSchemas(){
-
+    request
+    .post('localhost:3335/schemas')
+    .send({})
+    .end(function (err, res) {
+      console.log(res);
+    })
   }
 
-  setSchemas(){}
+  setSchemas(schemas){}
 
   addField(field) {
   for (let i = 0; i < quantity; i++) {

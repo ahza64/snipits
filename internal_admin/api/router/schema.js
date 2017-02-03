@@ -20,7 +20,7 @@ router.get(
   function*() {
     var body = this.request.body;
     console.log('/schema?companyId=:companyId&projectId', this.request);
-    console.log('/schema?companyId=:companyId&projectId', this.request.query);
+    console.log('user', this.req.user);
     var companyId = body.companyId;
     var projectId = body.projectId;
 
