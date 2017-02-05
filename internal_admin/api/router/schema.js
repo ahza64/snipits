@@ -16,27 +16,26 @@ const QowSchemas = require('dsp_shared/database/model/ingestion/tables').qow_sch
 
 // Get all user schemas
 router.get(
-  '/schemas',
+  '/schemas/:projectId',
   function*() {
-    var body = this.request.body;
-    console.log('/schema?companyId=:companyId&projectId', this.request);
-    console.log('user', this.req.user);
-    var companyId = body.companyId;
-    var projectId = body.projectId;
-
+    var companyId = this.req.user.companyId;
+    var projectId = this.params.projectId;
+    console.log('c =============> ', companyId);
+    console.log('p =============> ', projectId);
+    var self = this;
     if (permissions.has(this.req.user, companyId)) {
-      var schemas = yield QowSchemas.find({
+      yield QowSchemas.findAll({
         where: {
-          projectId: projectId,
+          workProjectId: projectId,
          },
         raw: true
+      })
+      .then(found => {
+        console.log("res---------->", found);
+        self.body = found;
+      }, notFound =>{
+        console.log("notFound", notFound);
       });
-
-      if(schemas) {
-        return schemas;
-      } else {
-      this.throw(403);
-    }
   }
 });
 

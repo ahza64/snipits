@@ -22,8 +22,6 @@ export default class CreateRowDialog extends React.Component {
     };
   }
 
-
-
   render(){
     return(
       <div>is open</div>

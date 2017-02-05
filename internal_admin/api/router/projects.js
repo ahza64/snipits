@@ -65,11 +65,10 @@ router.delete(
 router.get(
   '/projects/:companyId',
   function*() {
-    var companyId = this.params.companyId;
+    var companyId = this.req.user.companyId;
     if (!companyId) {
       return this.body = [];
     }
-
     if (permissions.has(this.req.user, companyId)) {
       var projects = [];
       try {

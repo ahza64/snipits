@@ -22,45 +22,23 @@ export default class QowSchema extends React.Component {
 
     this.state = {
       name: '',
-      projectNameError: null,
-      creating: false,
-      fields : [],
+      project: null,
+      fields: false,
       showCreateRowDialog: false
     };
-
-    this.addField = this.addField.bind(this);
+    this.componentWillMount = this.componentWillMount.bind(this);
     this.renderDialogs = this.renderDialogs.bind(this);
     this.fetchSchemas = this.fetchSchemas.bind(this);
   }
 
   componentWillMount(){
-    this.fetchSchemas()
-    console.log(this.props);
+    this.setFields(this.props.schema)
   }
 
-  fetchSchemas(){
-    request
-    .post('localhost:3335/schemas')
-    .send({})
-    .end(function (err, res) {
-      console.log(res);
-    })
+  setFields(fields){
+    this.setState({fields : fields})
   }
 
-  setSchemas(schemas){}
-
-  addField(field) {
-  for (let i = 0; i < quantity; i++) {
-    const id = startId + i;
-    this.state.fields.push({
-      id: id,
-      name: 'Item name ' + id,
-      type: 'B',
-      active: i % 2 === 0 ? 'Y' : 'N',
-      datetime: '200' + i + '-12-28T14:57:00'
-    });
-  }
-}
 
   renderDialogs(){
     return(
@@ -73,12 +51,12 @@ export default class QowSchema extends React.Component {
       <div>
         { this.renderDialogs() }
         <Row><DefaultNavbar /></Row>
-        <BootstrapTable data={ this.state.fields } insertRow={ true }  >
+        <BootstrapTable insertRow={ true } data={ this.state.fields } >
           <TableHeaderColumn width='20%' dataField='id' isKey={ true }>Job ID</TableHeaderColumn>
           <TableHeaderColumn width='20%' dataField='name' editable={ { type: 'textarea' } }>Job Name</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='type' editable={ { type: 'select', options: { values: jobTypes } } }>Job Type</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='datetime' editable={ { type: 'datetime' } }>Date Time</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='version' editable={ { type: 'select', options: { values: jobTypes } } }>Job Type</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='createdAt' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='updatedAt' editable={ { type: 'datetime' } }>Date Time</TableHeaderColumn>
 
         </BootstrapTable>
       </div>
