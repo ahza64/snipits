@@ -28,6 +28,8 @@ export default class DefaultNavbar extends React.Component {
     this.goToUsers = this.goToUsers.bind(this);
     this.showUsers = this.showUsers.bind(this);
     this.goToSchemas = this.goToSchemas.bind(this);
+    this.showSchemas = this.showSchemas.bind(this);
+
   }
 
   handleLogout(event) {
