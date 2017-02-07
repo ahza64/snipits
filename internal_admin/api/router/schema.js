@@ -38,14 +38,12 @@ router.get(
 });
 
   router.put('/schemas/:projectId', function*() {
-    console.log('boody===================================', this.request.body);
     var companyId = this.req.user.companyId;
     var projectId = this.params.projectId;
-    var name = this.request.body.name;
-    var schemaId = this.request.body.id;
-    var version = 1;
-    var updatedAt = Date.now();
-    var createdAt = Date.now();
+    var body = this.request.body;
+    var name = body.name;
+    var schemaId = body.id || null;
+
     var self = this;
 
     if (permissions.has(this.req.user, companyId)) {
@@ -56,38 +54,31 @@ router.get(
          },
         raw: true
       })
-      .then(found => {
-        console.log("Found", found);
+      .then((found, err) => {
+        if(err){
+          console.error(err);
+        }
+        var version;
+        if (found) {
+          version = found.version;
+        } else {
+          version = 0;
+        }
         self.body = found;
         QowSchemas.create({
           name: name,
           workProjectId: projectId,
-          version: found.version + 1,
+          version: version + 1,
           createdAt: Date.now(),
           updatedAt: Date.now()
-        }).then((err, res) => {
+        }).then((res, err) => {
           if (err) {
             console.error(err);
           } else {
             console.log(res);
           }
-        })
-      }, notFound =>{
-        console.log("notFound", notFound);
-        QowSchemas.create({
-          name: name,
-          workProjectId: projectId,
-          version: version,
-          createdAt: Date.now(),
-          updatedAt: Date.now()
-        }).then((err, res) => {
-          if (err) {
-            console.error(err);
-          } else {
-            console.log(res);
-          }
-        })
-      });//nf
+        }) //then(res, err)
+      }); //then(found,err)
     } //if
   });
 
