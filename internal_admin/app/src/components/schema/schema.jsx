@@ -2,11 +2,14 @@
 // react-bootstrap-table babel-preset-stage-0 (in .babelrc) babelify react-hot-loader toastr
 import React from 'react';
 import request from '../../services/request';
-//import { api_port } from 'dsp_shared/conf.d/config';
+import authRedux from '../../reduxes/auth';
+import schemaRedux from '../../reduxes/schema';
+
+// Components
+import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, schemaListUrl, schemaUrl } from '../../config';
+import DefaultNavbar from '../navbar/defaultNavbar'
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as Table from 'reactabular-table';
-
-import DefaultNavbar from '../navbar/defaultNavbar';
 import CreateRowDialog from './dialogs/createRowDialog'
 import Row from 'react-bootstrap/lib/Row';
 
@@ -22,7 +25,6 @@ export default class QowSchema extends React.Component {
 
     this.state = {
       name: '',
-      schema: {},
       fields: [],
       showCreateRowDialog: false
     };
@@ -30,8 +32,12 @@ export default class QowSchema extends React.Component {
     this.renderDialogs = this.renderDialogs.bind(this);
     // this.fetchSchemas = this.fetchSchemas.bind(this);
     this.setSchema = this.setSchema.bind(this);
+    this.getSchema = this.getSchema.bind(this);
     this.renderDialogs = this.renderDialogs.bind(this);
 
+    this.getSchema(res => {
+      setSchema(res)
+    })
   }
 
   componentWillMount(){
@@ -43,6 +49,22 @@ export default class QowSchema extends React.Component {
     this.setState({schema : schema})
   }
 
+  getSchema(callback){
+    let url = schemaUrl.replace(':schemaId', schemaRedux.getState())
+    console.log('url',url);
+    return request
+    .get(url)
+    .withCredentials()
+    .end((err,res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(res.body);
+        callback(res.body);
+      }
+    })
+  }
+
   renderDialogs(){
     return(
       <CreateFieldDialog open={ this.state.showCreateRowDialog }></CreateFieldDialog>
@@ -52,6 +74,7 @@ export default class QowSchema extends React.Component {
   render() {
     return (
       <div>
+        <Row> <DefaultNavbar /> </Row>
         <BootstrapTable insertRow={ true } data={ this.state.schema } >
           <TableHeaderColumn width='10%' dataField='id' isKey={ true }>Schema ID</TableHeaderColumn>
           <TableHeaderColumn width='20%' dataField='name' editable={ { type: 'textarea' } }>Schema Name</TableHeaderColumn>
@@ -59,7 +82,6 @@ export default class QowSchema extends React.Component {
           <TableHeaderColumn width='20%' dataField='createdAt'>Created On</TableHeaderColumn>
           <TableHeaderColumn width='20%' dataField='updatedAt' editable={ { type: 'datetime' } }> Updated On </TableHeaderColumn>
         </BootstrapTable>
-        // { this.renderDialogs() }
       </div>
     );
   }

@@ -9,7 +9,6 @@ import DefaultNavbar from '../navbar/defaultNavbar';
 import CreateProjectDialog from './dialogs/create';
 import DeleteProjectDialog from './dialogs/delete';
 import EditConfigDialog from '../configs/dialogs/edit';
-import projectRedux from '../../reduxes/project';
 import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, qowsUrl } from '../../config';
 
 // Styles
@@ -237,7 +236,6 @@ export default class Projects extends React.Component {
   }
 
   goToQOWSchemas(){
-    projectRedux.dispatch({ type: 'CHANGE_PROJECT', value: this.state.projectId });
     browserHistory.push('/schemas/');
   }
 
@@ -256,7 +254,6 @@ export default class Projects extends React.Component {
               onClick={ this.handleDeleteProject } />
             <MenuItem value="3" primaryText="See QOWs"
             onClick={ this.goToQOWSchemas } />
-
           </Menu>
         </Popover>
     );

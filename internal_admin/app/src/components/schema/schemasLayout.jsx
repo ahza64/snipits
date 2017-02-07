@@ -3,9 +3,10 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import request from '../../services/request';
 import authRedux from '../../reduxes/auth';
-import projectRedux from '../../reduxes/project';
+import schemaRedux from '../../reduxes/schema';
+
 // Components
-import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, qowsUrl } from '../../config';
+import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, schemaListUrl, schemaUrl } from '../../config';
 import EditIcon from 'material-ui/svg-icons/image/edit'
 import Schema from './schema';
 import DefaultNavbar from '../navbar/defaultNavbar'
@@ -42,6 +43,7 @@ export default class SchemasLayout extends React.Component {
     this.fetchProjects = this.fetchProjects.bind(this);
     this.componentWillUpdate = this.componentWillUpdate.bind(this);
     this.setCurrentProject = this.setCurrentProject.bind(this);
+    this.handleEditViewSchema = this.handleEditViewSchema.bind(this);
 
     this.fetchProjects();
     this.updateSchemas();
@@ -63,8 +65,6 @@ export default class SchemasLayout extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    console.log('nextState', nextState);
-
   }
 
   setSchemas(list){
@@ -79,10 +79,22 @@ export default class SchemasLayout extends React.Component {
     })
   }
 
+  handleEditViewSchema(event, schemeId){
+    //event.preventDefault();
+    // schemaRedux.dispatch({
+    //   type:'CHANGE_SCHEMA',
+    //   value: schemeId
+    //  })
+    // browserHistory.push('/schema/')
+     console.log('SR---------->', schemaRedux.getState());
+  }
+
   fetchSchemas(callback){
     console.log('========fetchSchemas for proj#', this.state.currentProject);
+    let url = schemaListUrl.replace(':projectId', this.state.currentProject);
+    console.log("url",url);
     request
-    .get('http://localhost:3335/schemas/' + this.state.currentProject)
+    .get(url)
     .withCredentials()
     .end(function (err, res) {
       if (err) {
@@ -109,6 +121,7 @@ export default class SchemasLayout extends React.Component {
 
   fetchProjects(companyId, callback) {
     let url = projectsUrl.replace(':companyId', companyId);
+    console.log("url",url);
     return request
     .get(url)
     .withCredentials()
@@ -160,7 +173,6 @@ export default class SchemasLayout extends React.Component {
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>
-          Here are your schemas
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
@@ -187,6 +199,7 @@ export default class SchemasLayout extends React.Component {
                           label="Edit/View"
                           labelPosition="before"
                           secondary={true}
+                          onClick={(event) => this.handleEditViewSchema(event, scheme.id)}
                           icon={ <EditIcon /> }
                         />
                       </TableRowColumn>

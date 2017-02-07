@@ -21,7 +21,8 @@ const activateProjectUrl = base + '/project/:id/activate';
 const deactivateProjectUrl = base + '/project/:id/deactivate';
 const configsUrl = base + '/configs/:projectId';
 const configUrl = base + '/config';
-const qowsUrl = base + '/schema'
+const schemaListUrl = base + '/schemas/:projectId'
+const schemaUrl = base + '/schema/:schemaId';
 const deleteConfigUrl = base + '/config/:id';
 const watchersUrl = base + '/watcher/:configId';
 const userUrl = base + '/user';
@@ -53,5 +54,7 @@ export {
   activateUserUrl,
   deactivateUserUrl,
   deleteUserUrl,
-  ingestionUrl
+  ingestionUrl,
+  schemaListUrl,
+  schemaUrl
 };

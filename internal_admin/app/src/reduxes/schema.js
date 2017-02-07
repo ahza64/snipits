@@ -4,13 +4,13 @@
 
 import { createStore } from 'redux';
 
-const projectReducer = (state = {}, action) => {
+const schemaReducer = (state = {}, action) => {
   switch(action.type) {
-    case 'CHANGE_PROJECT':
+    case 'CHANGE_SCHEMA':
       return action.value;
     default:
       return ;
   }
 };
 
-export default createStore(projectReducer);
+export default createStore(schemaReducer);
