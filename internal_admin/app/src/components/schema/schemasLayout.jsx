@@ -5,9 +5,17 @@ import request from '../../services/request';
 import authRedux from '../../reduxes/auth';
 import projectRedux from '../../reduxes/project';
 // Components
+import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, qowsUrl } from '../../config';
+import EditIcon from 'material-ui/svg-icons/image/edit'
 import Schema from './schema';
 import DefaultNavbar from '../navbar/defaultNavbar'
 // Styles
+import TextField from 'material-ui/TextField';
+import Badge from 'material-ui/Badge';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+
+import RaisedButton from 'material-ui/RaisedButton';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
@@ -19,26 +27,44 @@ export default class SchemasLayout extends React.Component {
     super();
 
     this.state = {
-      schemaList : []
+      schemaList : [],
+      projects: [],
+      currentProject: null
     }
 
+    this.handleProjectSelectChanged = this.handleProjectSelectChanged.bind(this);
     this.componentWillMount = this.componentWillMount.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
     this.setSchemas = this.setSchemas.bind(this);
     this.fetchSchemas = this.fetchSchemas.bind(this);
     this.updateSchemas = this.updateSchemas.bind(this);
+    this.renderProjectSelectField = this.renderProjectSelectField.bind(this);
+    this.fetchProjects = this.fetchProjects.bind(this);
+    this.componentWillUpdate = this.componentWillUpdate.bind(this);
+    this.setCurrentProject = this.setCurrentProject.bind(this);
 
+    this.fetchProjects();
     this.updateSchemas();
   }
 
   componentWillMount(){
-    console.log(this.state.schemaList);
+    if (this.state.projects.length > 0) {
+      this.setCurrentProject(this.state.projects[0].id);
+    }
   }
 
-
-
   componentDidMount(){
-    this.updateSchemas();
+    if(this.state.projects.length > 0){
+      console.log('set currentProject');
+      this.setState({
+        currentProject : this.state.projects[0]
+      })
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    console.log('nextState', nextState);
+
   }
 
   setSchemas(list){
@@ -47,10 +73,16 @@ export default class SchemasLayout extends React.Component {
     })
   }
 
+  setCurrentProject(projectId){
+    this.setState({
+      currentProject : projectId
+    })
+  }
+
   fetchSchemas(callback){
-    console.log('========fetchSchemas========= proj:', projectRedux.getState());
+    console.log('========fetchSchemas for proj#', this.state.currentProject);
     request
-    .get('http://localhost:3335/schemas/' + projectRedux.getState())
+    .get('http://localhost:3335/schemas/' + this.state.currentProject)
     .withCredentials()
     .end(function (err, res) {
       if (err) {
@@ -68,11 +100,66 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
+  handleProjectSelectChanged(event, project){
+    this.setState({
+      currentProject : project
+    }, this.updateSchemas);
+    this.render();
+  }
+
+  fetchProjects(companyId, callback) {
+    let url = projectsUrl.replace(':companyId', companyId);
+    return request
+    .get(url)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        this.setState({
+          projects: res.body
+        }, this.setState({
+          currentProject : res.body[0]
+        }));
+      }
+    });
+  }
+
+  renderProjectSelectField(){
+    return(
+      <SelectField
+        floatingLabelText="Project"
+        fullWidth={ true }
+        value={ this.state.currentProject }
+        onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) } >
+        { this.state.projects.map((project, idx) => {
+            return(
+              <MenuItem key={ idx } value={ project.id } primaryText={ project.name } />
+            );
+          })
+        }
+      </SelectField>
+    );
+  }
+
   render() {
     return (
-      <span>
+      <div>
         <Row> <DefaultNavbar /> </Row>
         <Row>
+          <Col xs={0} sm={0} md={1} lg={1} ></Col>
+          <Col xs={0} sm={0} md={2} lg={2} >
+
+            { this.renderProjectSelectField() }
+
+            Total Work Projects Found
+            <Badge
+              badgeContent={ this.state.projects.length }
+              secondary={ true }
+            />
+          </Col>
+          <Col xs={8} sm={8} md={8} lg={8} >
+            <Row>
           Here are your schemas
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
@@ -100,7 +187,7 @@ export default class SchemasLayout extends React.Component {
                           label="Edit/View"
                           labelPosition="before"
                           secondary={true}
-                          icon={ <MoreVertIcon /> }
+                          icon={ <EditIcon /> }
                         />
                       </TableRowColumn>
                     </TableRow>
@@ -110,7 +197,10 @@ export default class SchemasLayout extends React.Component {
             </TableBody>
           </Table>
         </Row>
-      </span>
+      </Col>
+      <Col xs={0} sm={0} md={2} lg={2} ></Col>
+      </Row>
+      </div>
     );
   }
 }
