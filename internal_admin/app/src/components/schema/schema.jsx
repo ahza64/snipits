@@ -22,43 +22,44 @@ export default class QowSchema extends React.Component {
 
     this.state = {
       name: '',
-      project: null,
-      fields: false,
+      schema: {},
+      fields: [],
       showCreateRowDialog: false
     };
     this.componentWillMount = this.componentWillMount.bind(this);
     this.renderDialogs = this.renderDialogs.bind(this);
-    this.fetchSchemas = this.fetchSchemas.bind(this);
+    // this.fetchSchemas = this.fetchSchemas.bind(this);
+    this.setSchema = this.setSchema.bind(this);
+    this.renderDialogs = this.renderDialogs.bind(this);
+
   }
 
   componentWillMount(){
-    this.setFields(this.props.schema)
+    this.setSchema(this.props.schema);
+    console.log("this.props.schema", this.props.schema);
   }
 
-  setFields(fields){
-    this.setState({fields : fields})
+  setSchema(schema){
+    this.setState({schema : schema})
   }
-
 
   renderDialogs(){
     return(
-      <CreateRowDialog open={ this.state.showCreateRowDialog }></CreateRowDialog>
+      <CreateFieldDialog open={ this.state.showCreateRowDialog }></CreateFieldDialog>
     )
   }
 
   render() {
     return (
       <div>
-        { this.renderDialogs() }
-        <Row><DefaultNavbar /></Row>
-        <BootstrapTable insertRow={ true } data={ this.state.fields } >
-          <TableHeaderColumn width='20%' dataField='id' isKey={ true }>Job ID</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='name' editable={ { type: 'textarea' } }>Job Name</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='version' editable={ { type: 'select', options: { values: jobTypes } } }>Job Type</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='createdAt' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='updatedAt' editable={ { type: 'datetime' } }>Date Time</TableHeaderColumn>
-
+        <BootstrapTable insertRow={ true } data={ this.state.schema } >
+          <TableHeaderColumn width='10%' dataField='id' isKey={ true }>Schema ID</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='name' editable={ { type: 'textarea' } }>Schema Name</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='version'> Schema Version</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='createdAt'>Created On</TableHeaderColumn>
+          <TableHeaderColumn width='20%' dataField='updatedAt' editable={ { type: 'datetime' } }> Updated On </TableHeaderColumn>
         </BootstrapTable>
+        // { this.renderDialogs() }
       </div>
     );
   }
