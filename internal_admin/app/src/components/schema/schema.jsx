@@ -8,10 +8,13 @@ import schemaRedux from '../../reduxes/schema';
 // Components
 import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, schemaListUrl, schemaUrl } from '../../config';
 import DefaultNavbar from '../navbar/defaultNavbar'
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import * as Table from 'reactabular-table';
 import CreateRowDialog from './dialogs/createRowDialog'
+import RaisedButton from 'material-ui/RaisedButton';
 import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 import { cloneDeep, findIndex } from 'lodash';
 import * as edit from 'react-edit';
@@ -26,40 +29,38 @@ export default class QowSchema extends React.Component {
     this.state = {
       name: '',
       fields: [],
+      schema: {},
       showCreateRowDialog: false
     };
     this.componentWillMount = this.componentWillMount.bind(this);
-    this.renderDialogs = this.renderDialogs.bind(this);
     // this.fetchSchemas = this.fetchSchemas.bind(this);
-    this.setSchema = this.setSchema.bind(this);
-    this.getSchema = this.getSchema.bind(this);
+    this.setSchemaFields = this.setSchemaFields.bind(this);
+    this.getSchemaFields = this.getSchemaFields.bind(this);
     this.renderDialogs = this.renderDialogs.bind(this);
 
-    this.getSchema(res => {
-      setSchema(res)
+    this.getSchemaFields(res => {
+      this.setSchemaFields(res)
     })
   }
 
   componentWillMount(){
-    this.setSchema(this.props.schema);
-    console.log("this.props.schema", this.props.schema);
+    console.log();
   }
 
-  setSchema(schema){
-    this.setState({schema : schema})
+  setSchemaFields(fields){
+    this.setState({fields : fields})
   }
 
-  getSchema(callback){
+  getSchemaFields(callback){
     let url = schemaUrl.replace(':schemaId', schemaRedux.getState())
     console.log('url',url);
-    return request
+    request
     .get(url)
     .withCredentials()
     .end((err,res) => {
       if (err) {
         console.error(err);
       } else {
-        console.log(res.body);
         callback(res.body);
       }
     })
@@ -73,343 +74,57 @@ export default class QowSchema extends React.Component {
 
   render() {
     return (
-      <div>
-        <Row> <DefaultNavbar /> </Row>
-        <BootstrapTable insertRow={ true } data={ this.state.schema } >
-          <TableHeaderColumn width='10%' dataField='id' isKey={ true }>Schema ID</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='name' editable={ { type: 'textarea' } }>Schema Name</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='version'> Schema Version</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='createdAt'>Created On</TableHeaderColumn>
-          <TableHeaderColumn width='20%' dataField='updatedAt' editable={ { type: 'datetime' } }> Updated On </TableHeaderColumn>
-        </BootstrapTable>
-      </div>
+        <div>
+          <Row> <DefaultNavbar /> </Row>
+          <Row>
+            <Col xs={0} sm={0} md={1} lg={1} ></Col>
+            <Col xs={0} sm={0} md={2} lg={2} >
+            </Col>
+            <Col xs={8} sm={8} md={8} lg={8} >
+              <Row>
+            <Table selectable={ false }>
+              <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
+                <TableRow>
+                  <TableHeaderColumn>id</TableHeaderColumn>
+                  <TableHeaderColumn>Name</TableHeaderColumn>
+                  <TableHeaderColumn>Type</TableHeaderColumn>
+                  <TableHeaderColumn className='header-pos'>Version</TableHeaderColumn>
+                  <TableHeaderColumn>Created On</TableHeaderColumn>
+                  <TableHeaderColumn className='header-pos'>Updated On</TableHeaderColumn>
+                  <TableHeaderColumn> Btn </TableHeaderColumn>
+              </TableRow>
+              </TableHeader>
+              <TableBody displayRowCheckbox={ false } selectable={ true }>
+                {
+                  this.state.fields.map((field, idx) => {
+                    return (
+                      <TableRow key={ idx }>
+                        <TableRowColumn>{ idx + 1 }</TableRowColumn>
+                        <TableRowColumn>{ field.name }</TableRowColumn>
+                        <TableRowColumn>{ field.type }</TableRowColumn>
+                        <TableRowColumn>{ field.version }</TableRowColumn>
+                        <TableRowColumn>{ field.createdAt }</TableRowColumn>
+                        <TableRowColumn>{ field.updatedAt }</TableRowColumn>
+                        <TableRowColumn>
+                          <FlatButton
+                            label="Edit/View"
+                            labelPosition="before"
+                            secondary={true}
+                            onClick={ (event) => {} }
+                            icon={ <MoreVertIcon /> }
+                          />
+                        </TableRowColumn>
+                      </TableRow>
+                    );
+                  })
+                }
+              </TableBody>
+            </Table>
+          </Row>
+        </Col>
+        <Col xs={0} sm={0} md={2} lg={2} ></Col>
+        </Row>
+        </div>
     );
   }
 }
-
-// const jobs = [];
-// const jobTypes = [ 'A', 'B', 'C', 'D' ];
-//
-// function addJobs(quantity) {
-//   const startId = jobs.length;
-//   for (let i = 0; i < quantity; i++) {
-//     const id = startId + i;
-//     jobs.push({
-//       id: id,
-//       name: 'Item name ' + id,
-//       type: 'B',
-//       active: i % 2 === 0 ? 'Y' : 'N'
-//     });
-//   }
-// }
-//
-// addJobs(5);
-//
-// export default class DataInsertTypeTable extends React.Component {
-//   render() {
-//     return (
-//       <BootstrapTable data={ jobs } insertRow={ true } >
-//           <TableHeaderColumn dataField='id' isKey={ true }>Job ID</TableHeaderColumn>
-//           <TableHeaderColumn dataField='name' editable={ { type: 'textarea' } }>Job Name</TableHeaderColumn>
-//           <TableHeaderColumn dataField='type' editable={ { type: 'select', options: { values: jobTypes } } }>Job Type</TableHeaderColumn>
-//           <TableHeaderColumn dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
-//       </BootstrapTable>
-//     );
-//   }
-// }
-
-// const products = [];
-//
-// function addProducts(quantity) {
-//   const startId = products.length;
-//   for (let i = 0; i < quantity; i++) {
-//     const id = startId + i;
-//     products.push({
-//       id: id,
-//       name: 'Item name ' + id,
-//       price: 2100 + i
-//     });
-//   }
-// }
-//
-// addProducts(5);
-//
-// function onAfterInsertRow(row) {
-//   let newRowStr = '';
-//
-//   for (const prop in row) {
-//     newRowStr += prop + ': ' + row[prop] + ' \n';
-//   }
-//   alert('The new row is:\n ' + newRowStr);
-// }
-//
-// const options = {
-//   afterInsertRow: onAfterInsertRow   // A hook for after insert rows
-// };
-//
-// export default class InsertRowTable extends React.Component {
-//   render() {
-//     return (
-//       <BootstrapTable data={ products } insertRow={ true } options={ options }>
-//           <TableHeaderColumn dataField='id' isKey={ true }>Product ID</TableHeaderColumn>
-//           <TableHeaderColumn dataField='name'>Product Name</TableHeaderColumn>
-//           <TableHeaderColumn dataField='price'>Product Price</TableHeaderColumn>
-//       </BootstrapTable>
-//     );
-//   }
-// }
-
-// const rows = [
-//   {
-//     id: 100,
-//     name: 'John',
-//     tools: {
-//       hammer: true
-//     },
-//     country: 'fi'
-//   },
-//   {
-//     id: 101,
-//     name: 'Jack',
-//     tools: {
-//       hammer: false
-//     },
-//     country: 'dk'
-//   }
-// ];
-// const countries = {
-//   fi: 'Finland',
-//   dk: 'Denmark'
-// };
-//
-// const columns = [
-//   {
-//     property: 'name',
-//     header: {
-//       label: 'Name',
-//       transforms: [
-//         label => ({
-//           onClick: () => alert(`clicked ${label}`)
-//         })
-//       ]
-//     }
-//   },
-//   {
-//     property: 'tools',
-//     header: {
-//       label: 'Active',
-//       transforms: [
-//         label => ({
-//           onClick: () => alert(`clicked ${label}`)
-//         })
-//       ]
-//     },
-//     cell: {
-//       formatters: [
-//         tools => tools.hammer ? 'Hammertime' : 'nope'
-//       ]
-//     }
-//   },
-//   {
-//     property: 'country',
-//     header: {
-//       label: 'Country',
-//       transforms: [
-//         label => ({
-//           onClick: () => alert(`clicked ${label}`)
-//         })
-//       ]
-//     },
-//     cell: {
-//       formatters: [
-//         country => countries[country]
-//       ]
-//     }
-//   },
-// ];
-//
-// export default class DataInsertTypeTable extends React.Component {
-//   render() {
-//     return (
-//       <Table.Provider
-//         className="pure-table pure-table-striped"
-//         columns={columns}
-//         >
-//         <Table.Header />
-//
-//         <Table.Body rows={rows} rowKey="id" />
-//       </Table.Provider>
-//     )
-//   }
-// }
-
-
-
-
-// const schema = {
-//   type: 'object',
-//   properties: {
-//     id: {
-//       type: 'string'
-//     },
-//     name: {
-//       type: 'string'
-//     },
-//     position: {
-//       type: 'string'
-//     },
-//     salary: {
-//       type: 'integer'
-//     },
-//     active: {
-//       type: 'boolean'
-//     }
-//   },
-//   required: ['id', 'name', 'position', 'salary', 'active']
-// };
-//
-// class CRUDTable extends React.Component {
-//   constructor(props) {
-//     super(props);
-//
-//     this.state = {
-//       rows: generateRows(20, schema), // initial rows
-//       columns: this.getColumns() // initial columns
-//     };
-//
-//     this.onAdd = this.onAdd.bind(this);
-//     this.onRemove = this.onRemove.bind(this);
-//   }
-//   getColumns() {
-//     const editable = edit.edit({
-//       isEditing: ({ columnIndex, rowData }) => columnIndex === rowData.editing,
-//       onActivate: ({ columnIndex, rowData }) => {
-//         const index = findIndex(this.state.rows, { id: rowData.id });
-//         const rows = cloneDeep(this.state.rows);
-//
-//         rows[index].editing = columnIndex;
-//
-//         this.setState({ rows });
-//       },
-//       onValue: ({ value, rowData, property }) => {
-//         const index = findIndex(this.state.rows, { id: rowData.id });
-//         const rows = cloneDeep(this.state.rows);
-//
-//         rows[index][property] = value;
-//         rows[index].editing = false;
-//
-//         this.setState({ rows });
-//       }
-//     });
-//
-//     return [
-//       {
-//         property: 'name',
-//         header: {
-//           label: 'Name'
-//         },
-//         cell: {
-//           transforms: [editable(edit.input())]
-//         }
-//       },
-//       {
-//         property: 'position',
-//         header: {
-//           label: 'Position'
-//         },
-//         cell: {
-//           transforms: [editable(edit.input())]
-//         }
-//       },
-//       {
-//         property: 'salary',
-//         header: {
-//           label: 'Salary'
-//         },
-//         cell: {
-//           transforms: [editable(edit.input({ props: { type: 'number' } }))]
-//         }
-//       },
-//       {
-//         property: 'active',
-//         header: {
-//           label: 'Active'
-//         },
-//         cell: {
-//           transforms: [editable(edit.boolean())],
-//           formatters: [
-//             active => active && <span>&#10003;</span>
-//           ]
-//         }
-//       },
-//       {
-//         props: {
-//           style: {
-//             width: 50
-//           }
-//         },
-//         cell: {
-//           formatters: [
-//             (value, { rowData }) => (
-//               <span
-//                 className="remove"
-//                 onClick={() => this.onRemove(rowData.id)} style={{ cursor: 'pointer' }}
-//               >
-//                 &#10007;
-//               </span>
-//             )
-//           ]
-//         }
-//       }
-//     ];
-//   }
-//   render() {
-//     const { columns, rows } = this.state;
-//
-//     return (
-//       <div>
-//         <Table.Provider
-//           className="pure-table pure-table-striped"
-//           columns={columns}
-//         >
-//           <Table.Header />
-//
-//           <tbody>
-//             <tr>
-//               <td><button type="button" onClick={this.onAdd}>Add new</button></td>
-//               <td></td>
-//               <td></td>
-//               <td></td>
-//               <td></td>
-//             </tr>
-//           </tbody>
-//
-//           <Table.Body rows={rows} rowKey="id" />
-//         </Table.Provider>
-//       </div>
-//     );
-//   }
-//   onAdd(e) {
-//     e.preventDefault();
-//
-//     const rows = cloneDeep(this.state.rows);
-//
-//     rows.unshift({
-//       id: uuid.v4(),
-//       name: 'John Doe'
-//     });
-//
-//     this.setState({ rows });
-//   }
-//   onRemove(id) {
-//     const rows = cloneDeep(this.state.rows);
-//     const idx = findIndex(rows, { id });
-//
-//     // this could go through flux etc.
-//     rows.splice(idx, 1);
-//
-//     this.setState({ rows });
-//   }
-// }
-//
-// <CRUDTable />
