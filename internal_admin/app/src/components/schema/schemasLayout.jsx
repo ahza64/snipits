@@ -57,7 +57,6 @@ export default class SchemasLayout extends React.Component {
 
   componentDidMount(){
     if(this.state.projects.length > 0){
-      console.log('set currentProject');
       this.setState({
         currentProject : this.state.projects[0]
       })
@@ -86,13 +85,10 @@ export default class SchemasLayout extends React.Component {
       value: schemeId
     });
     browserHistory.push('/schema/');
-     console.log('SR---------->', schemaRedux.getState());
   }
 
   fetchSchemas(callback){
-    console.log('========fetchSchemas for proj#', this.state.currentProject);
     let url = schemaListUrl.replace(':projectId', this.state.currentProject);
-    console.log("url",url);
     request
     .get(url)
     .withCredentials()
@@ -121,7 +117,6 @@ export default class SchemasLayout extends React.Component {
 
   fetchProjects(companyId, callback) {
     let url = projectsUrl.replace(':companyId', companyId);
-    console.log("url",url);
     return request
     .get(url)
     .withCredentials()
@@ -165,9 +160,9 @@ export default class SchemasLayout extends React.Component {
 
             { this.renderProjectSelectField() }
 
-            Total Work Projects Found
+            Total Project Schemas Found
             <Badge
-              badgeContent={ this.state.projects.length }
+              badgeContent={ this.state.schemaList.length }
               secondary={ true }
             />
           </Col>

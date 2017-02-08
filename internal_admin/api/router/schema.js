@@ -4,6 +4,7 @@ const router = require('koa-router')();
 const permissions = require('./permissions');
 // App
 const app = koa();
+const _ = require('underscore');
 
 // Constants
 const ACTIVE = 'active';
@@ -20,78 +21,73 @@ router.get(
     var projectId = this.params.projectId;
     var self = this;
     if (permissions.has(this.req.user, companyId)) {
-      yield QowSchemas.findAll({
+      var userSchemas = yield QowSchemas.findAll({
         where: {
           workProjectId: projectId,
          },
         raw: true
       })
-      .then(found => {
-        console.log("res---------->", found);
-        self.body = found;
-      }, notFound =>{
-        console.log("notFound", notFound);
-      });
+      this.body = userSchemas;
     }
   }
 );
 
-router.put('/schemas/:projectId', function*() {
+router.put(
+  '/schemas/:projectId',
+  function*() {
   var companyId = this.req.user.companyId;
   var projectId = this.params.projectId;
   var body = this.request.body;
   var name = body.name;
   var schemaId = body.id || null;
-
-  var self = this;
+  var created;
 
   if (permissions.has(this.req.user, companyId)) {
-    yield QowSchemas.findOne({
+    var targetSchema = yield QowSchemas.findOne({
       where: {
         workProjectId: projectId,
         id: schemaId
        },
       raw: true
     })
-    .then((found, err) => {
-      var created;
-      var version = found ? found.version : 0;
+    console.log("targetSchema", targetSchema);
+    var version = targetSchema.version;
 
-      if(err){
-        console.error(err);
-      }
+    try {
+      created = yield QowSchemas.create({
+        name: name,
+        workProjectId: projectId,
+        version: version + 1,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    this.body = created;
+  }
 
-      try {
-        created = QowSchemas.create({
-          name: name,
-          workProjectId: projectId,
-          version: version + 1,
-          createdAt: Date.now(),
-          updatedAt: Date.now()
-        });
-        self.body =  created;
-      } catch (e) {
-        console.error(e);
-      }
-    }); //then(found,err)
-  } //if
 });
 
-router.get('/schema/:schemaId',function* () {
+router.get('/schema/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
-  var self = this;
   if (permissions.has(this.req.user, companyId)) {
-    yield QowFields.findAll({
+    var targetSchema = yield QowSchemas.findOne({
+        id:schemaId
+    });
+    var version = targetSchema.dataValues.version;
+    var targetFields = yield QowFields.findAll({
       where : {
-        qowSchemaId : schemaId
+        qowSchemaId : schemaId,
+        version: version
       }
-    }).then((res, err)=>{
-      console.log(res);
-      self.body = res;
-    })
+    });
+
+    var vals = _.pluck(targetFields, 'dataValues');
+    this.body = vals;
   }
-})
+});
 
 app.use(router.routes());
 

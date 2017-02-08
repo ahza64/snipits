@@ -37,32 +37,42 @@ export default class QowSchema extends React.Component {
     this.setSchemaFields = this.setSchemaFields.bind(this);
     this.getSchemaFields = this.getSchemaFields.bind(this);
     this.renderDialogs = this.renderDialogs.bind(this);
+    this.updateSchemaFields = this.updateSchemaFields.bind(this);
 
-    this.getSchemaFields(res => {
-      this.setSchemaFields(res)
-    })
+    this.updateSchemaFields();
   }
 
   componentWillMount(){
-    console.log();
+    this.updateSchemaFields();
+  }
+  componentDidMount(){
+    console.log('fields', this.state.fields);
   }
 
   setSchemaFields(fields){
-    this.setState({fields : fields})
+    this.setState({
+      fields : fields
+    });
   }
 
   getSchemaFields(callback){
     let url = schemaUrl.replace(':schemaId', schemaRedux.getState())
     console.log('url',url);
-    request
+    return request
     .get(url)
     .withCredentials()
-    .end((err,res) => {
+    .end((err, res) => {
       if (err) {
-        console.error(err);
+        console.error('errrr', err);
       } else {
         callback(res.body);
       }
+    })
+  }
+
+  updateSchemaFields(){
+    this.getSchemaFields(res => {
+      this.setSchemaFields(res);
     })
   }
 
@@ -107,7 +117,7 @@ export default class QowSchema extends React.Component {
                         <TableRowColumn>{ field.updatedAt }</TableRowColumn>
                         <TableRowColumn>
                           <FlatButton
-                            label="Edit/View"
+                            label="thisisabutton"
                             labelPosition="before"
                             secondary={true}
                             onClick={ (event) => {} }
