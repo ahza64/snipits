@@ -15,7 +15,8 @@ import TextField from 'material-ui/TextField';
 import Badge from 'material-ui/Badge';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
 import RaisedButton from 'material-ui/RaisedButton';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
@@ -34,8 +35,7 @@ export default class SchemasLayout extends React.Component {
     }
 
     this.handleProjectSelectChanged = this.handleProjectSelectChanged.bind(this);
-    this.componentWillMount = this.componentWillMount.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
+    this.renderActionMenu = this.renderActionMenu.bind(this);
     this.setSchemas = this.setSchemas.bind(this);
     this.fetchSchemas = this.fetchSchemas.bind(this);
     this.updateSchemas = this.updateSchemas.bind(this);
@@ -79,6 +79,15 @@ export default class SchemasLayout extends React.Component {
   }
 
   handleEditViewSchema(event, schemeId){
+    event.preventDefault();
+    schemaRedux.dispatch({
+      type:'CHANGE_SCHEMA',
+      value: schemeId
+    });
+    browserHistory.push('/schema/');
+  }
+
+  handleOpenActionMenu(event, schemeId){
     event.preventDefault();
     schemaRedux.dispatch({
       type:'CHANGE_SCHEMA',
@@ -133,14 +142,68 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
-  renderProjectSelectField(){
-    return(
-      <SelectField
-        floatingLabelText="Project"
-        fullWidth={ true }
-        value={ this.state.currentProject }
-        onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) } >
-        { this.state.projects.map((project, idx) => {
+    setCreateDisable(value){
+      this.setState({createDisable:value});
+    }
+
+    renderActionMenu(){
+      return(
+      <Popover
+          open={ this.state.actionMenuOpen }
+          anchorEl={ this.state.actionMenuTarget }
+          anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
+          targetOrigin={ { horizontal: 'right', vertical: 'top' } }
+          onRequestClose={ this.handleCloseActionMenu } >
+          <Menu>
+            <MenuItem value="1" primaryText="Add Ingestion Config"
+              onClick={ this.handleCreateConfig } />
+            <MenuItem value="2" primaryText="Delete Work Project"
+              onClick={ this.handleDeleteProject } />
+            <MenuItem value="3" primaryText="See QOWs"
+            onClick={ this.goToQOWSchemas } />
+          </Menu>
+        </Popover>
+      )
+    }
+
+    handleProjectSelectChanged(event, project){
+      this.setState({
+        currentProject : project,
+        newSchema : false
+      }, this.updateSchemas);
+      this.render();
+    }
+
+    fetchProjects(companyId, callback) {
+      let url = projectsUrl.replace(':companyId', companyId);
+      return request
+      .get(url)
+      .withCredentials()
+      .end((err, res) => {
+        if (err) {
+          console.error(err);
+        }
+        else {
+          this.setState({projects: res.body}, ()=>{
+            this.setState({currentProject : this.state.projects[0].id}, this.updateSchemas);
+            this.render();
+            //console.log("projects: ", this.state.projects);
+          });
+        }
+      })
+    }
+
+
+
+    renderProjectSelectField(){
+      return(
+        <SelectField
+          floatingLabelText="Project"
+          fullWidth={ true }
+          hintText="Select Work Project"
+          value={ this.state.currentProject }
+          onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) } >
+          { this.state.projects.map((project, idx) => {
             return(
               <MenuItem key={ idx } value={ project.id } primaryText={ project.name } />
             );
@@ -194,7 +257,7 @@ export default class SchemasLayout extends React.Component {
                           label="Edit/View"
                           labelPosition="before"
                           secondary={true}
-                          onClick={(event) => this.handleEditViewSchema(event, scheme.id)}
+                          onTouchTap={(event) => this.handleEditViewSchema(event, scheme.id)}
                           icon={ <EditIcon /> }
                         />
                       </TableRowColumn>

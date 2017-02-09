@@ -51,7 +51,7 @@ router.put(
       raw: true
     })
     console.log("targetSchema", targetSchema);
-    var version = targetSchema.version;
+    var version = targetSchema ? targetSchema.version : 0;
 
     try {
       created = yield QowSchemas.create({
@@ -89,6 +89,11 @@ router.get('/schema/:schemaId', function* () {
   }
 });
 
+  router.put('/schemaField/:schemaId', function* () {
+    if (permissions,has(this.req.user, this.req.user.companyId)) {
+
+    }
+  });
 app.use(router.routes());
 
 module.exports = app;

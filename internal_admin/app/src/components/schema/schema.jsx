@@ -8,20 +8,20 @@ import schemaRedux from '../../reduxes/schema';
 // Components
 import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, schemaListUrl, schemaUrl } from '../../config';
 import DefaultNavbar from '../navbar/defaultNavbar'
-import CreateRowDialog from './dialogs/createRowDialog'
+import CreateFieldDialog from './dialogs/CreateFieldDialog'
 import RaisedButton from 'material-ui/RaisedButton';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import AddBoxIcon from 'material-ui/svg-icons/content/add-box';
+import SaveIcon from 'material-ui/svg-icons/content/save';
 
 import { cloneDeep, findIndex } from 'lodash';
 import * as edit from 'react-edit';
 import uuid from 'uuid';
 
-// import { generateRows } from './helpers';
-var jobTypes = ['a','b','s']
 export default class QowSchema extends React.Component {
   constructor() {
     super();
@@ -32,14 +32,23 @@ export default class QowSchema extends React.Component {
       schema: {},
       showCreateRowDialog: false
     };
+
     this.componentWillMount = this.componentWillMount.bind(this);
-    // this.fetchSchemas = this.fetchSchemas.bind(this);
     this.setSchemaFields = this.setSchemaFields.bind(this);
     this.getSchemaFields = this.getSchemaFields.bind(this);
-    this.renderDialogs = this.renderDialogs.bind(this);
     this.updateSchemaFields = this.updateSchemaFields.bind(this);
+    this.renderDialogs = this.renderDialogs.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleAddRow = this.handleAddRow.bind(this);
 
     this.updateSchemaFields();
+  }
+
+  handleAddRow(event){
+    console.log(event);
+    this.setState({
+      showCreateRowDialog : true
+    })
   }
 
   componentWillMount(){
@@ -70,6 +79,10 @@ export default class QowSchema extends React.Component {
     })
   }
 
+  handleSave(event){
+      console.log(event);
+  }
+
   updateSchemaFields(){
     this.getSchemaFields(res => {
       this.setSchemaFields(res);
@@ -78,13 +91,17 @@ export default class QowSchema extends React.Component {
 
   renderDialogs(){
     return(
-      <CreateFieldDialog open={ this.state.showCreateRowDialog }></CreateFieldDialog>
+      <CreateFieldDialog
+        open={ this.state.showCreateRowDialog }
+        onClose={(event) => {  this.setState({ showCreateRowDialog: false})}  } 
+        />
     )
   }
 
   render() {
     return (
         <div>
+          { this.renderDialogs() }
           <Row> <DefaultNavbar /> </Row>
           <Row>
             <Col xs={0} sm={0} md={1} lg={1} ></Col>
@@ -117,7 +134,7 @@ export default class QowSchema extends React.Component {
                         <TableRowColumn>{ field.updatedAt }</TableRowColumn>
                         <TableRowColumn>
                           <FlatButton
-                            label="thisisabutton"
+                            label="Edit"
                             labelPosition="before"
                             secondary={true}
                             onClick={ (event) => {} }
@@ -133,6 +150,21 @@ export default class QowSchema extends React.Component {
           </Row>
         </Col>
         <Col xs={0} sm={0} md={2} lg={2} ></Col>
+        </Row>
+        <Row>
+          <RaisedButton
+            label="Add Row"
+            labelPosition="after"
+            primary={ true }
+            icon= { <AddBoxIcon />}
+            onTouchTap={ (event) => this.handleAddRow(event) }/>
+        </Row>
+        <Row>
+          <RaisedButton
+            label="Save"
+            primary={ false }
+            icon= { <SaveIcon />}
+            onTouchTap={ (event) => this.handleSave(event) }/>
         </Row>
         </div>
     );

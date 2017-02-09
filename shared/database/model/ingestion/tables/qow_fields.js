@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes){
-  var qow_fields = sequelize.define('qow_fields',{
+  var qow_fields = sequelize.define('qow_fields', {
     name: { type: DataTypes.STRING },
     required: { type: DataTypes.BOOLEAN},
     version: { type: DataTypes.INTEGER},
