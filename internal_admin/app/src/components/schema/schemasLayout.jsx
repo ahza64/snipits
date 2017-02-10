@@ -68,6 +68,7 @@ export default class SchemasLayout extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
+
   }
 
   setSchemas(list){
@@ -223,13 +224,10 @@ export default class SchemasLayout extends React.Component {
           this.setState({projects: res.body}, ()=>{
             this.setState({currentProject : this.state.projects[0].id}, this.updateSchemas);
             this.render();
-            //console.log("projects: ", this.state.projects);
           });
         }
       })
     }
-
-
 
     renderProjectSelectField(){
       return(
@@ -241,7 +239,11 @@ export default class SchemasLayout extends React.Component {
           onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) } >
           { this.state.projects.map((project, idx) => {
             return(
-              <MenuItem key={ idx } value={ project.id } primaryText={ project.name } />
+              <MenuItem
+                key={ idx }
+                value={ project.id }
+                primaryText={ project.name }
+                 />
             );
           })
         }

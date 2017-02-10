@@ -30,13 +30,19 @@ export default class CreateRowDialog extends React.Component {
     this.state = {
       name: ''
     };
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.isConfirmButtonDisabled = this.isConfirmButtonDisabled.bind(this);
     this.handleFieldNameChange = this.handleFieldNameChange.bind(this);
+    this.handleAddRowsDialogClose = this.handleAddRowsDialogClose.bind(this);
+    this.validateFieldName = this.validateFieldName.bind(this);
   }
 
-  componentWillMount(){
+  validateFieldName(name){
 
+  }
+
+  componentDidMount(){
+    console.log('Row states', this.state);
   }
 
   handleSubmit(event){
@@ -48,8 +54,17 @@ export default class CreateRowDialog extends React.Component {
       false
     );
   }
-  handleFieldNameChange(){}
+
+  handleAddRowsDialogClose(){
+
+  }
+
+  handleFieldNameChange(event){
+    console.log(event.target.value);
+  }
+
   render(){
+    const validTypes = ['Integer', 'Double', 'String', 'Boolean', 'Other']
     const actions = [
       <RaisedButton
         label="Cancel"
@@ -69,7 +84,7 @@ export default class CreateRowDialog extends React.Component {
       <Dialog
         modal={ true }
         actions = {actions}
-        open={ this.props.open }
+        open= { this.props.open }
         >
         <div>
           For schema: {this.props.schemaName}

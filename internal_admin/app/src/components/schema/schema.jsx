@@ -39,16 +39,27 @@ export default class QowSchema extends React.Component {
     this.updateSchemaFields = this.updateSchemaFields.bind(this);
     this.renderDialogs = this.renderDialogs.bind(this);
     this.handleSave = this.handleSave.bind(this);
-    this.handleAddRow = this.handleAddRow.bind(this);
+    this.handleAddRowDialogOpen = this.handleAddRowDialogOpen.bind(this);
+    this.handleAddRowDialogClose = this.handleAddRowDialogClose.bind(this);
 
     this.updateSchemaFields();
   }
 
-  handleAddRow(event){
+  handleAddRowDialogOpen(event){
     console.log(event);
     this.setState({
       showCreateRowDialog : true
     })
+  }
+
+  handleAddRowDialogClose(saved){
+    this.setState({
+      showCreateRowDialog : false
+    })
+
+    if(saved){
+      this.updateSchemaFields();
+    }
   }
 
   componentWillMount(){
@@ -93,7 +104,8 @@ export default class QowSchema extends React.Component {
     return(
       <CreateFieldDialog
         open={ this.state.showCreateRowDialog }
-        onClose={(event) => {  this.setState({ showCreateRowDialog: false})}  } 
+        onClose={ (saved) => { this.handleAddRowDialogClose(saved) } }
+
         />
     )
   }
@@ -157,7 +169,7 @@ export default class QowSchema extends React.Component {
             labelPosition="after"
             primary={ true }
             icon= { <AddBoxIcon />}
-            onTouchTap={ (event) => this.handleAddRow(event) }/>
+            onTouchTap={ (event) => this.handleAddRowDialogOpen(event) }/>
         </Row>
         <Row>
           <RaisedButton
