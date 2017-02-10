@@ -47,6 +47,7 @@ export default class CreateRowDialog extends React.Component {
 
   handleSubmit(event){
     console.log(event);
+    this.props.onClose(true);
   }
 
   isConfirmButtonDisabled(){
