@@ -11,6 +11,9 @@ import EditIcon from 'material-ui/svg-icons/image/edit'
 import Schema from './schema';
 import DefaultNavbar from '../navbar/defaultNavbar'
 // Styles
+
+import CreateSchema from './dialogs/createSchema'
+
 import TextField from 'material-ui/TextField';
 import Badge from 'material-ui/Badge';
 import SelectField from 'material-ui/SelectField';
@@ -44,15 +47,16 @@ export default class SchemasLayout extends React.Component {
     this.componentWillUpdate = this.componentWillUpdate.bind(this);
     this.setCurrentProject = this.setCurrentProject.bind(this);
     this.handleEditViewSchema = this.handleEditViewSchema.bind(this);
+    this.addSchema = this.addSchema.bind(this);
+    this.setDialog = this.setDialog.bind(this);
+    this.setCreateDisable = this.setCreateDisable.bind(this)
 
     this.fetchProjects();
     this.updateSchemas();
   }
 
   componentWillMount(){
-    if (this.state.projects.length > 0) {
-      this.setCurrentProject(this.state.projects[0].id);
-    }
+
   }
 
   componentDidMount(){
@@ -71,6 +75,12 @@ export default class SchemasLayout extends React.Component {
       schemaList : list
     })
   }
+
+  setDialog(){
+    var open = this.state.open;
+    this.setState({open : ~open});
+  }
+
 
   setCurrentProject(projectId){
     this.setState({
@@ -123,6 +133,32 @@ export default class SchemasLayout extends React.Component {
     }, this.updateSchemas);
     this.render();
   }
+
+  addSchema(name){
+    var newSchema = {
+      name: name
+    };
+
+    let url = schemaListUrl.replace(':projectId', this.state.currentProject);
+    console.log("*****************", this.state.schemaList.length);
+    request
+    .put(url)
+    .send(newSchema)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error("this err", err);
+      } else{
+        console.log(res);
+      }
+
+    })
+  }
+
+  setCreateDisable(value){
+    this.setState({createDisable:value});
+  }
+
 
   fetchProjects(companyId, callback) {
     let url = projectsUrl.replace(':companyId', companyId);
@@ -228,6 +264,16 @@ export default class SchemasLayout extends React.Component {
               badgeContent={ this.state.schemaList.length }
               secondary={ true }
             />
+            <br></br><br></br>
+            <CreateSchema
+              open={this.state.open}
+              setDialog = {this.setDialog}
+              newSchema = {this.state.newSchema}
+              createDisable = {this.state.createDisable}
+              setCreateDisable = {this.setCreateDisable}
+              schemas = {this.state.schemaList}
+              addSchema = {this.addSchema}
+              />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>
