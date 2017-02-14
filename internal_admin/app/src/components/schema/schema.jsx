@@ -43,7 +43,7 @@ export default class QowSchema extends React.Component {
     this.handleAddRowDialogClose = this.handleAddRowDialogClose.bind(this);
 
     this.updateSchemaFields();
-  }
+  };
 
   handleAddRowDialogOpen(event){
     console.log(event);

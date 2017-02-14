@@ -69,6 +69,17 @@ router.put(
 
 });
 
+router.delete('/schema/:schemaId', function* () {
+  var companyId = this.req.user.companyId;
+  var schemaId = this.params.schemaId;
+  if (permissions.has(this.req.user, companyId)) {
+    var targetSchema = yield QowSchemas.find({where: {id: schemaId}})
+    yield targetSchema.update( {status : !targetSchema.status})
+    this.body = targetSchema;
+  }
+
+})
+
 router.get('/schema/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;

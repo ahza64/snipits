@@ -3,7 +3,8 @@ module.exports = function(sequelize, DataTypes){
     name: { type: DataTypes.STRING },
     required: { type: DataTypes.BOOLEAN},
     version: { type: DataTypes.INTEGER},
-    type: { type : DataTypes.STRING }
+    type: { type : DataTypes.STRING },
+    active: {type: DataTypes.BOOLEAN}
   }, {
     classMethods: {
       associate: function (models) {
