@@ -2,9 +2,10 @@ module.exports = function(sequelize, DataTypes){
   var qow_fields = sequelize.define('qow_fields', {
     name: { type: DataTypes.STRING },
     required: { type: DataTypes.BOOLEAN},
+    qowSchemaId: { type: DataTypes.INTEGER},
     version: { type: DataTypes.INTEGER},
     type: { type : DataTypes.STRING },
-    active: {type: DataTypes.BOOLEAN}
+    status: {type: DataTypes.BOOLEAN }
   }, {
     classMethods: {
       associate: function (models) {

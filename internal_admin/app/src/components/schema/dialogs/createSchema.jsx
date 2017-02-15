@@ -3,6 +3,7 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 
 import { configUrl } from '../../../config';
 
@@ -10,14 +11,12 @@ export default class CreateSchema extends React.Component {
   constructor(){
     super();
     this.state = {
-      token: ""
+      token: "",
+      snackbarOpen: false
     };
 
     this.handleNameInput = this.handleNameInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentWillMount(){
   }
 
 
@@ -28,14 +27,30 @@ export default class CreateSchema extends React.Component {
     }
     else setCreateDisable(false);
     this.setState({token:value});
+    this.setState({snackbarOpen: false});
   }
 
   handleSubmit(){
     var addSchema = this.props.addSchema;
     var setDialog = this.props.setDialog;
+    var error = 0;
+
+    console.log("searching names");
+    console.log(this.state.token)
+    for (var i = 0; i < this.props.schemas.length; i++){
+      if (this.state.token == this.props.schemas[i].name){
+        console.log("error name already exists");
+        error = 1;
+        this.setState({snackbarOpen: true});
+        break;
+      }
+    }
+
+    if(!error){
     addSchema(this.state.token);
     setDialog();
-    location.reload();
+    }
+
   }
 
 
@@ -55,13 +70,6 @@ export default class CreateSchema extends React.Component {
         />
     ];
 
-    const styles = {
-      hintStyle: {
-        color: 0b110000,
-        borderColor: 0b110000
-      }
-    };
-
     return (
       <div>
         <RaisedButton
@@ -77,6 +85,11 @@ export default class CreateSchema extends React.Component {
           <TextField
             hintText="Schema Name"
             onChange={this.handleNameInput}
+            />
+          <Snackbar
+            open={this.state.snackbarOpen}
+            message="Error! Schema name already exists."
+            autoHideDuration={5000}
             />
         </Dialog>
       </div>

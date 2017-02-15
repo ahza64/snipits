@@ -4,17 +4,13 @@ import React from 'react';
 
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as Table from 'reactabular-table';
-import AddBoxIcon from 'material-ui/svg-icons/content/add-box';
-import SaveIcon from 'material-ui/svg-icons/content/save';
-// Modules
-// import request from '../../../../services/request';
-
-// Components
 import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import CircularProgress from 'material-ui/CircularProgress';
+import Snackbar from 'material-ui/Snackbar';
+
+
 
 import Row from 'react-bootstrap/lib/Row';
 
@@ -23,79 +19,53 @@ import * as edit from 'react-edit';
 import uuid from 'uuid';
 
 
-export default class CreateRowDialog extends React.Component {
+export default class CreateFieldDialog extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      name: ''
+      name: '',
+      showCreateFieldDialog: false,
+      snackBarOpen: 0
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.isConfirmButtonDisabled = this.isConfirmButtonDisabled.bind(this);
-    this.handleFieldNameChange = this.handleFieldNameChange.bind(this);
-    this.handleAddRowsDialogClose = this.handleAddRowsDialogClose.bind(this);
-    this.validateFieldName = this.validateFieldName.bind(this);
-  }
-
-  validateFieldName(name){
-
-  }
-
-  componentDidMount(){
-    console.log('Row states', this.state);
-  }
-
-  handleSubmit(event){
-    console.log(event);
-    this.props.onClose(true);
-  }
-
-  isConfirmButtonDisabled(){
-    return (
-      false
-    );
-  }
-
-  handleAddRowsDialogClose(){
-
-  }
-
-  handleFieldNameChange(event){
-    console.log(event.target.value);
   }
 
   render(){
-    const validTypes = ['Integer', 'Double', 'String', 'Boolean', 'Other']
     const actions = [
       <RaisedButton
+        label="Create Field"
+        primary={true}
+        disabled={this.props.createDisable}
+        onClick={this.handleSubmit}
+        />,
+      <FlatButton
         label="Cancel"
-        onTouchTap={ (event) => this.props.onClose(false) }
-      />,
-      <RaisedButton
-        label="Save"
-        labelPosition="after"
-        primary={ true }
-        keyboardFocused={ false }
-        disabled={ this.isConfirmButtonDisabled() }
-        onTouchTap={ (event) => this.handleSubmit(event) }
-      />
+        secondary={true}
+        onClick={this.props.setDialog}
+        />
     ];
-
     return(
-      <Dialog
-        modal={ true }
-        actions = {actions}
-        open= { this.props.open }
-        >
-        <div>
-          For schema: {this.props.schemaName}
-        </div>
-        <TextField
-          floatingLabelText='Field Name'
-          hintText='hint!'
-          onChange={ (event) => this.handleFieldNameChange(event) }
+      <div>
+        <RaisedButton
+          label="Add Field"
+          secondary={true}
+          onClick={this.props.setOpen}
           />
-      </Dialog>
+        <Dialog
+          title="Add New Schema Field"
+          open = {this.props.open}
+          actions = {actions}
+          >
+          <TextField
+            hintText="Field Name"
+            />
+          <Snackbar
+            open={false}
+            message="Error! Schema name already exists."
+            autoHideDuration={5000}
+            />
+        </Dialog>
+      </div>
     )
   }
 }

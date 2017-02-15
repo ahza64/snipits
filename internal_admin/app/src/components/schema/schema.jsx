@@ -105,7 +105,6 @@ export default class QowSchema extends React.Component {
       <CreateFieldDialog
         open={ this.state.showCreateRowDialog }
         onClose={ (saved) => { this.handleAddRowDialogClose(saved) } }
-
         />
     )
   }
@@ -113,11 +112,16 @@ export default class QowSchema extends React.Component {
   render() {
     return (
         <div>
-          { this.renderDialogs() }
           <Row> <DefaultNavbar /> </Row>
           <Row>
             <Col xs={0} sm={0} md={1} lg={1} ></Col>
             <Col xs={0} sm={0} md={2} lg={2} >
+              { this.renderDialogs() }
+              <RaisedButton
+                label="Save"
+                primary={ false }
+                icon= { <SaveIcon />}
+                onTouchTap={ (event) => this.handleSave(event) }/>
             </Col>
             <Col xs={8} sm={8} md={8} lg={8} >
               <Row>
@@ -127,6 +131,8 @@ export default class QowSchema extends React.Component {
                   <TableHeaderColumn>id</TableHeaderColumn>
                   <TableHeaderColumn>Name</TableHeaderColumn>
                   <TableHeaderColumn>Type</TableHeaderColumn>
+                  <TableHeaderColumn>Required</TableHeaderColumn>
+
                   <TableHeaderColumn className='header-pos'>Version</TableHeaderColumn>
                   <TableHeaderColumn>Created On</TableHeaderColumn>
                   <TableHeaderColumn className='header-pos'>Updated On</TableHeaderColumn>
@@ -141,6 +147,7 @@ export default class QowSchema extends React.Component {
                         <TableRowColumn>{ idx + 1 }</TableRowColumn>
                         <TableRowColumn>{ field.name }</TableRowColumn>
                         <TableRowColumn>{ field.type }</TableRowColumn>
+                        <TableRowColumn>{ field.required }</TableRowColumn>
                         <TableRowColumn>{ field.version }</TableRowColumn>
                         <TableRowColumn>{ field.createdAt }</TableRowColumn>
                         <TableRowColumn>{ field.updatedAt }</TableRowColumn>
@@ -163,21 +170,8 @@ export default class QowSchema extends React.Component {
         </Col>
         <Col xs={0} sm={0} md={2} lg={2} ></Col>
         </Row>
-        <Row>
-          <RaisedButton
-            label="Add Row"
-            labelPosition="after"
-            primary={ true }
-            icon= { <AddBoxIcon />}
-            onTouchTap={ (event) => this.handleAddRowDialogOpen(event) }/>
-        </Row>
-        <Row>
-          <RaisedButton
-            label="Save"
-            primary={ false }
-            icon= { <SaveIcon />}
-            onTouchTap={ (event) => this.handleSave(event) }/>
-        </Row>
+
+
         </div>
     );
   }

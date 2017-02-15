@@ -101,9 +101,37 @@ router.get('/schema/:schemaId', function* () {
 });
 
   router.put('/schemaField/:schemaId', function* () {
-    if (permissions,has(this.req.user, this.req.user.companyId)) {
+    try{
+      var schemaId = this.params.schemaId;
+      var body    = this.request.body;
+      var name    = body.name;
+      var fieldId = body.id;
+      var version = body.version || 0;
+      var status  = body.status || true;
+      var type    = body.type;
+      var required= body.required || true;
+      if (permissions.has(this.req.user, this.req.user.companyId)) {
+        var field = {
+          qowSchemaId: schemaId,
+          type: type,
+          required: required,
+          version: version + 1,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          status: status
+        };
+        var targetSchema = yield QowSchemas.findOne({ id : schemaId});
 
-    }
+        if (!targetSchema){
+          throw(404);
+        }
+
+        var f = yield QowFields.create(field);
+        this.body = f;
+      }
+  } catch(err){
+    console.error(err);
+  }
   });
 app.use(router.routes());
 

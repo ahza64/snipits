@@ -134,7 +134,6 @@ export default class SchemasLayout extends React.Component {
       type:'CHANGE_SCHEMA',
       value: scheme.id
     });
-    console.log('------>', event.currentTarget, event);
     console.log("this.state.actionMenuTarget", this.state.actionMenuTarget);
     this.setState({
       actionMenuOpen: true,
