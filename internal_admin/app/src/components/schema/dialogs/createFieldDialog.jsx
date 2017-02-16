@@ -4,21 +4,23 @@ import React from 'react';
 
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import * as Table from 'reactabular-table';
-import AddBoxIcon from 'material-ui/svg-icons/content/add-box';
-import SaveIcon from 'material-ui/svg-icons/content/save';
-// Modules
-// import request from '../../../../services/request';
-
-// Components
 import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
+<<<<<<< HEAD
 import TextField from 'material-ui/TextField';
 import CircularProgress from 'material-ui/CircularProgress';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
 
+=======
+import Snackbar from 'material-ui/Snackbar';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+
+>>>>>>> 6d2e9f0149b5f0c174bcbbd28cb6bf02f7f41655
 
 import Row from 'react-bootstrap/lib/Row';
 
@@ -27,47 +29,48 @@ import * as edit from 'react-edit';
 import uuid from 'uuid';
 
 
-export default class CreateRowDialog extends React.Component {
+export default class CreateFieldDialog extends React.Component {
   constructor() {
     super();
 
     this.state = {
       name: '',
+<<<<<<< HEAD
       types: ["Int", "String"],
       dataTypeValue: 0
+=======
+      schemaId: null,
+      snackBarOpen: 0,
+      createDisabled: true
+>>>>>>> 6d2e9f0149b5f0c174bcbbd28cb6bf02f7f41655
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.isConfirmButtonDisabled = this.isConfirmButtonDisabled.bind(this);
-    this.handleFieldNameChange = this.handleFieldNameChange.bind(this);
-    this.handleAddRowsDialogClose = this.handleAddRowsDialogClose.bind(this);
-    this.validateFieldName = this.validateFieldName.bind(this);
+
+    this.validate = this.validate.bind(this);
+    this.showAddRowDialog = this.showAddRowDialog.bind(this);
+    this.toggleShowAddFieldDialog = this.toggleShowAddFieldDialog.bind(this);
   }
 
-  validateFieldName(name){
+  showAddRowDialog(){
+    this.setState({
+      showCreateFieldDialog : true
+     });
+  }
 
+  toggleShowAddFieldDialog(){
+    this.setState({
+     });
   }
 
   componentDidMount(){
-    console.log('Row states', this.state);
-  }
-
-  handleSubmit(event){
-    console.log(event);
-    this.props.onClose(true);
-  }
-
-  isConfirmButtonDisabled(){
-    return (
-      false
-    );
-  }
-
-  handleAddRowsDialogClose(){
 
   }
 
-  handleFieldNameChange(event){
-    console.log(event.target.value);
+  validate(){
+
+  }
+
+  addField(){
+
   }
 
   handleSelectDataType(event){
@@ -75,47 +78,45 @@ export default class CreateRowDialog extends React.Component {
   }
 
   render(){
-    const validTypes = ['Integer', 'Double', 'String', 'Boolean', 'Other']
     const actions = [
       <RaisedButton
-        label="Cancel"
-        onTouchTap={ (event) => this.props.onClose(false) }
-      />,
-      <RaisedButton
-        label="Save"
-        labelPosition="after"
+        label="Create"
         primary={ true }
-        keyboardFocused={ false }
-        disabled={ this.isConfirmButtonDisabled() }
-        onTouchTap={ (event) => this.handleSubmit(event) }
-      />
+        disabled={this.props.createDisable}
+        onClick={this.handleSubmit}
+        />,
+      <FlatButton
+        label="Cancel"
+        secondary={ true }
+        onClick={(event) =>{}}
+        />
     ];
-
+    const dataTypes = [
+      'Integer', 'Float', 'Boolean', 'String', 'Date', 'Other'
+    ];
     return(
-      <Dialog
-        modal={ true }
-        actions = {actions}
-        open= { this.props.open }
-        >
-        <div>
-          For schema: {this.props.schemaName}
-        </div>
-        <row>
-          <TextField
-            floatingLabelText='Field Name'
-            hintText='Enter new field name'
-            onChange={ (event) => this.handleFieldNameChange(event) }
+        <Dialog
+          title="Add New Schema Field"
+          open= { this.props.open }
+          actions= { actions }
+          >
+            <TextField
+              hintText="Field Name"
             />
-          <DropDownMenu value = {this.state.dataTypeValue}>
-            <MenuItem value={0} primaryText="Select Data Type" />
-              {
-                this.state.types.map((type, idx) => {
-                  return (<MenuItem key={ idx + 1 } value={ idx + 1 } primaryText = { type } />)
-                })
-              }
-          </DropDownMenu>
-        </row>
-      </Dialog>
-    )
+            <SelectField
+              floatingLabelText="Schema Field"
+              fullWidth={ true }
+              >
+              { dataTypes.map((type, idx) => {
+                <MenuItem key={ idx } value={ type } />
+              } ) }
+            </SelectField>
+            <Snackbar
+              open={ false }
+              message="Error! Field name already exists."
+              autoHideDuration={5000}
+              />
+        </Dialog>
+    );
   }
 }

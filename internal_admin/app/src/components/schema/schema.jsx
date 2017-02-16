@@ -30,32 +30,38 @@ export default class QowSchema extends React.Component {
     this.state = {
       name: '',
       fields: [],
+<<<<<<< HEAD
       schemaId: 0,
       showCreateRowDialog: false
+=======
+      schema: {},
+      createFieldDialogOpen: false
+>>>>>>> 6d2e9f0149b5f0c174bcbbd28cb6bf02f7f41655
     };
 
     this.componentWillMount = this.componentWillMount.bind(this);
     this.setSchemaFields = this.setSchemaFields.bind(this);
     this.getSchemaFields = this.getSchemaFields.bind(this);
     this.updateSchemaFields = this.updateSchemaFields.bind(this);
-    this.renderDialogs = this.renderDialogs.bind(this);
+    this.renderCreateFieldDialog = this.renderCreateFieldDialog.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleAddRowDialogOpen = this.handleAddRowDialogOpen.bind(this);
     this.handleAddRowDialogClose = this.handleAddRowDialogClose.bind(this);
 
     this.updateSchemaFields();
-  }
+  };
 
   handleAddRowDialogOpen(event){
-    console.log(event);
     this.setState({
-      showCreateRowDialog : true
-    })
+      createFieldDialogOpen : true
+    });
+
+    console.log(event);
   }
 
   handleAddRowDialogClose(saved){
     this.setState({
-      showCreateRowDialog : false
+      createFieldDialogOpen : false
     })
 
     if(saved){
@@ -66,9 +72,6 @@ export default class QowSchema extends React.Component {
   componentWillMount(){
     this.setState({schemaId: schemaRedux.getState()})
     this.updateSchemaFields();
-  }
-  componentDidMount(){
-    console.log('fields', this.state.fields);
   }
 
   setSchemaFields(fields){
@@ -93,8 +96,8 @@ export default class QowSchema extends React.Component {
     })
   }
 
-  handleSave(event){
-      console.log(event);
+  handleSave(event) {
+    console.log(event);
   }
 
   updateSchemaFields(){
@@ -103,24 +106,23 @@ export default class QowSchema extends React.Component {
     })
   }
 
-  renderDialogs(){
+  renderCreateFieldDialog(){
     return(
       <CreateFieldDialog
-        open={ this.state.showCreateRowDialog }
+        open={ this.state.createFieldDialogOpen }
         onClose={ (saved) => { this.handleAddRowDialogClose(saved) } }
-
         />
-    )
+    );
   }
 
   render() {
     return (
         <div>
-          { this.renderDialogs() }
           <Row> <DefaultNavbar /> </Row>
           <Row>
             <Col xs={0} sm={0} md={1} lg={1} ></Col>
             <Col xs={0} sm={0} md={2} lg={2} >
+<<<<<<< HEAD
               <Row>
                 <br></br>
               <RaisedButton
@@ -138,6 +140,14 @@ export default class QowSchema extends React.Component {
                 icon= { <SaveIcon />}
                 onTouchTap={ (event) => this.handleSave(event) }/>
             </Row>
+=======
+              <RaisedButton
+                label="Add Field"
+                secondary={true}
+                onTouchTap={ (event) => {this.handleAddRowDialogOpen(event)} }
+                />
+              { this.renderCreateFieldDialog() }
+>>>>>>> 6d2e9f0149b5f0c174bcbbd28cb6bf02f7f41655
             </Col>
             <Col xs={8} sm={8} md={8} lg={8} >
               <Row>
@@ -147,6 +157,12 @@ export default class QowSchema extends React.Component {
                   <TableHeaderColumn>id</TableHeaderColumn>
                   <TableHeaderColumn>Name</TableHeaderColumn>
                   <TableHeaderColumn>Type</TableHeaderColumn>
+<<<<<<< HEAD
+=======
+                  <TableHeaderColumn>Required</TableHeaderColumn>
+                  <TableHeaderColumn className='header-pos'>Version</TableHeaderColumn>
+                  <TableHeaderColumn>Created On</TableHeaderColumn>
+>>>>>>> 6d2e9f0149b5f0c174bcbbd28cb6bf02f7f41655
                   <TableHeaderColumn className='header-pos'>Updated On</TableHeaderColumn>
                   <TableHeaderColumn> Required </TableHeaderColumn>
               </TableRow>
@@ -159,6 +175,12 @@ export default class QowSchema extends React.Component {
                         <TableRowColumn>{ idx + 1 }</TableRowColumn>
                         <TableRowColumn>{ field.name }</TableRowColumn>
                         <TableRowColumn>{ field.type }</TableRowColumn>
+<<<<<<< HEAD
+=======
+                        <TableRowColumn>{ field.required ? "TRUE" : "FALSE" }</TableRowColumn>
+                        <TableRowColumn>{ field.version }</TableRowColumn>
+                        <TableRowColumn>{ field.createdAt }</TableRowColumn>
+>>>>>>> 6d2e9f0149b5f0c174bcbbd28cb6bf02f7f41655
                         <TableRowColumn>{ field.updatedAt }</TableRowColumn>
                         <TableRowColumn><Checkbox/></TableRowColumn>
                       </TableRow>
