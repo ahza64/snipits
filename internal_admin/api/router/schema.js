@@ -33,7 +33,7 @@ router.get(
   }
 );
 
-router.put(
+router.post(
   '/schemas/:projectId',
   function*() {
   var companyId = this.req.user.companyId;
@@ -41,7 +41,8 @@ router.put(
   var body = this.request.body;
   var name = body.name;
   var schemaId = body.id || null;
-  var created;
+  //var status = body.status;
+  var result;
 
   if (permissions.has(this.req.user, companyId)) {
     var targetSchema = yield QowSchemas.findOne({
@@ -55,17 +56,18 @@ router.put(
     var version = targetSchema ? targetSchema.version : 0;
 
     try {
-      created = yield QowSchemas.create({
+      result = yield QowSchemas.create({
         name: name,
         workProjectId: projectId,
         version: version + 1,
         createdAt: Date.now(),
-        updatedAt: Date.now()
+        updatedAt: Date.now(),
+        status: true
       });
     } catch (e) {
       console.error(e);
     }
-    this.body = created;
+    this.body = result;
   }
 });
 

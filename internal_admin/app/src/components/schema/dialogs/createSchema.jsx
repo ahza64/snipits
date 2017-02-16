@@ -20,7 +20,6 @@ export default class CreateSchema extends React.Component {
 
     this.handleNameInput = this.handleNameInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.toggleDialog = this.toggleDialog.bind(this);
     this.setCreateDisable = this.setCreateDisable.bind(this);
     this.addSchema = this.addSchema.bind(this);
   }
@@ -30,11 +29,6 @@ export default class CreateSchema extends React.Component {
 
   setCreateDisable(value){
     this.setState({createDisable:value});
-  }
-
-  toggleDialog(){
-    var open = this.state.open;
-    this.setState({open : ~open});
   }
 
   handleNameInput(event, value){
@@ -51,11 +45,8 @@ export default class CreateSchema extends React.Component {
 
   handleSubmit(){
     var error = false;
-    console.log("searching names");
-    console.log(this.state.token)
     for (var i = 0; i < this.props.schemas.length; i++) {
       if (this.state.token == this.props.schemas[i].name){
-        console.log("Error: Schema name already exists");
         error = true;
         this.setState({snackbarOpen: true});
         break;
@@ -74,7 +65,7 @@ export default class CreateSchema extends React.Component {
     };
     let url = schemaListUrl.replace(':projectId', this.props.currentProject);
     request
-    .put(url)
+    .post(url)
     .send(newSchema)
     .withCredentials()
     .end((err, res) => {

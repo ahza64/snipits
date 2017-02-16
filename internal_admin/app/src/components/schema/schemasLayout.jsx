@@ -7,7 +7,6 @@ import schemaRedux from '../../reduxes/schema';
 
 // Components
 import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, schemaListUrl, schemaUrl } from '../../config';
-import EditIcon from 'material-ui/svg-icons/image/edit'
 import Schema from './schema';
 import DefaultNavbar from '../navbar/defaultNavbar'
 import CreateSchema from './dialogs/createSchema'
@@ -24,6 +23,8 @@ import Col from 'react-bootstrap/lib/Col';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import EditIcon from 'material-ui/svg-icons/image/edit'
+import Checkbox from 'material-ui/Checkbox'
 
 export default class SchemasLayout extends React.Component {
   constructor() {
@@ -37,11 +38,12 @@ export default class SchemasLayout extends React.Component {
       schemaName: null,
       actionMenuTarget: null,
       actionMenuOpen: false,
-      createSchemaDialogOpen: false
+      createSchemaDialogOpen: false,
+      showInactiveSchemas: true
     }
 
     this.handleProjectSelectChanged = this.handleProjectSelectChanged.bind(this);
-    this.renderActionMenu = this.renderActionMenu.bind(this);
+    //this.renderActionMenu = this.renderActionMenu.bind(this);
     this.setSchemaList = this.setSchemaList.bind(this);
     this.fetchSchemas = this.fetchSchemas.bind(this);
     this.updateSchemas = this.updateSchemas.bind(this);
@@ -55,6 +57,8 @@ export default class SchemasLayout extends React.Component {
     this.toggleSchemaStatus = this.toggleSchemaStatus.bind(this);
     this.handleAddSchemaDialogOpen= this.handleAddSchemaDialogOpen.bind(this);
     this.handleAddSchemaDialogClose = this.handleAddSchemaDialogClose.bind(this);
+    this.handleShowInactiveSchemas= this.handleShowInactiveSchemas.bind(this);
+
     this.fetchProjects();
     this.updateSchemas();
   }
@@ -105,8 +109,12 @@ export default class SchemasLayout extends React.Component {
     })
   }
 
-  handleEditViewSchema(event){
+  handleEditViewSchema(event, scheme){
     event.preventDefault();
+    schemaRedux.dispatch({
+      type:'CHANGE_SCHEMA',
+      value: scheme.id
+    });
     browserHistory.push('/schema/');
   }
 
@@ -169,11 +177,6 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
-    setCreateDisable(value){
-      this.setState({
-        createDisable:value
-      });
-    }
 
     handleCloseActionMenu(event){
       this.setState({
@@ -232,21 +235,26 @@ export default class SchemasLayout extends React.Component {
       });
     }
 
-    renderActionMenu(){
-      return (
-      <Popover
-          open={ this.state.actionMenuOpen }
-          anchorEl={ this.state.actionMenuTarget }
-          anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
-          targetOrigin={ { horizontal: 'right', vertical: 'top' } }
-          onRequestClose={ (event)=>{this.handleCloseActionMenu(event)} } >
-          <Menu>
-            <MenuItem value="1" primaryText="edit/view"
-              onClick={ (event) => this.handleEditViewSchema(event) } />
-          </Menu>
-        </Popover>
-      )
+    handleShowInactiveSchemas(event, isChecked){
+      this.setState({
+        showInactiveSchemas : isChecked
+      })
     }
+    // renderActionMenu(){
+    //   return (
+    //   <Popover
+    //       open={ this.state.actionMenuOpen }
+    //       anchorEl={ this.state.actionMenuTarget }
+    //       anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
+    //       targetOrigin={ { horizontal: 'right', vertical: 'top' } }
+    //       onRequestClose={ (event)=>{this.handleCloseActionMenu(event)} } >
+    //       <Menu>
+    //         <MenuItem value="1" primaryText="edit/view"
+    //           onClick={ (event) => this.handleEditViewSchema(event) } />
+    //       </Menu>
+    //     </Popover>
+    //   )
+    // }
 
     renderProjectSelectField(){
       return(
@@ -296,6 +304,11 @@ export default class SchemasLayout extends React.Component {
               schemas= { this.state.schemaList }
               currentProject={ this.state.currentProject }
               />
+            <label>Show Inactive schemas<Checkbox
+              defaultChecked={true}
+              onCheck={(event, isChecked) => this.handleShowInactiveSchemas(event, isChecked)}
+              labelPosition="right"
+              ></Checkbox></label>
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>
@@ -314,6 +327,9 @@ export default class SchemasLayout extends React.Component {
             <TableBody displayRowCheckbox={ false } selectable={ false }>
               {
                 this.state.schemaList.map((scheme, idx) => {
+                  if (!this.state.showInactiveSchemas && !scheme.status){
+                    return;
+                  }
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn>{ idx + 1 }</TableRowColumn>
@@ -324,11 +340,11 @@ export default class SchemasLayout extends React.Component {
                       <TableRowColumn>{ scheme.updatedAt }</TableRowColumn>
                       <TableRowColumn>
                         <FlatButton
-                          label="Menu"
+                          label="Edit/View"
                           labelPosition="before"
                           secondary={true}
-                          onTouchTap={(event) => this.handleOpenActionMenu(event, scheme)}
-                          icon={ <MoreVertIcon /> }
+                          onTouchTap={(event) => this.handleEditViewSchema(event, scheme)}
+                          icon={ <EditIcon /> }
                         />
                       </TableRowColumn>
                     </TableRow>
@@ -341,7 +357,6 @@ export default class SchemasLayout extends React.Component {
       </Col>
       <Col xs={0} sm={0} md={2} lg={2} ></Col>
       </Row>
-      { this.renderActionMenu() }
       </div>
     );
   }
