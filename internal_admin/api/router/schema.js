@@ -67,7 +67,6 @@ router.put(
     }
     this.body = created;
   }
-
 });
 
 router.delete('/schema/:schemaId', function* () {
@@ -97,9 +96,27 @@ router.get('/schema/:schemaId', function* () {
 
     var vals = _.pluck(targetFields, 'dataValues');
     this.body = vals;
-  }
-});
+    }
+  });
 
+  router.post('/schemaField/:schemaId', function* () {
+    var body = this.request.body;
+    var schemaId = this.params.schemaId;
+    if (permissions.has(this.req.user, this.req.user.companyId)) {
+      var schema = yield QowSchemas.findOne({ id: schemaId });
+      console.log(schema);
+      if(schema){
+        var field = {
+          name: body.name,
+          required: body.required,
+          qowSchemaId: schemaId,
+          type: body.type,
+          status: body.status
+        };
+        this.body = yield QowFields.create(field);
+      }
+    }
+  });
   router.patch('/schemaField/:schemaId', function* () {
     var body = this.request.body;
     var fieldId = body.id;

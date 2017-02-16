@@ -48,7 +48,8 @@ export default class QowSchema extends React.Component {
   handleAddRowDialogOpen(event){
     this.setState({
       createFieldDialogOpen : true
-    })
+    });
+    console.log(event);
   }
 
   handleAddRowDialogClose(saved){
@@ -63,10 +64,6 @@ export default class QowSchema extends React.Component {
 
   componentWillMount(){
     this.updateSchemaFields();
-  }
-
-  componentDidMount(){
-    console.log('fields', this.state.fields);
   }
 
   setSchemaFields(fields){
@@ -116,12 +113,12 @@ export default class QowSchema extends React.Component {
           <Row>
             <Col xs={0} sm={0} md={1} lg={1} ></Col>
             <Col xs={0} sm={0} md={2} lg={2} >
-              { this.renderCreateFieldDialog() }
               <RaisedButton
-                label="Save"
-                primary={ false }
-                icon= { <SaveIcon />}
-                onTouchTap={ (event) => this.handleSave(event) }/>
+                label="Add Field"
+                secondary={true}
+                onTouchTap={ (event) => {this.handleAddRowDialogOpen(event)} }
+                />
+              { this.renderCreateFieldDialog() }
             </Col>
             <Col xs={8} sm={8} md={8} lg={8} >
               <Row>
@@ -146,7 +143,7 @@ export default class QowSchema extends React.Component {
                         <TableRowColumn>{ idx + 1 }</TableRowColumn>
                         <TableRowColumn>{ field.name }</TableRowColumn>
                         <TableRowColumn>{ field.type }</TableRowColumn>
-                        <TableRowColumn>{ field.required }</TableRowColumn>
+                        <TableRowColumn>{ field.required ? "TRUE" : "FALSE" }</TableRowColumn>
                         <TableRowColumn>{ field.version }</TableRowColumn>
                         <TableRowColumn>{ field.createdAt }</TableRowColumn>
                         <TableRowColumn>{ field.updatedAt }</TableRowColumn>
@@ -169,8 +166,6 @@ export default class QowSchema extends React.Component {
         </Col>
         <Col xs={0} sm={0} md={2} lg={2} ></Col>
         </Row>
-
-
         </div>
     );
   }

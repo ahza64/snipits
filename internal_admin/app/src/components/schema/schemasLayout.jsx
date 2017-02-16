@@ -174,7 +174,6 @@ export default class SchemasLayout extends React.Component {
       });
     }
 
-
     handleCloseActionMenu(event){
       this.setState({
         actionMenuOpen: false,

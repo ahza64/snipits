@@ -27,18 +27,25 @@ export default class CreateFieldDialog extends React.Component {
     this.state = {
       name: '',
       schemaId: null,
-      snackBarOpen: 0
+      snackBarOpen: 0,
+      createDisabled: true
     };
 
     this.validate = this.validate.bind(this);
     this.showAddRowDialog = this.showAddRowDialog.bind(this);
   }
+
   showAddRowDialog(){
     this.setState({
       showCreateFieldDialog : true
      });
   }
+
   validate(){
+
+  }
+
+  addField(){
 
   }
 
@@ -60,15 +67,9 @@ export default class CreateFieldDialog extends React.Component {
       'Integer', 'Float', 'Boolean', 'String', 'Date', 'Other'
     ];
     return(
-      <div>
-        <RaisedButton
-          label="Add Field"
-          secondary={true}
-          onClick={(event) => { this.showAddRowDialog(event) } }
-          />
         <Dialog
           title="Add New Schema Field"
-          open= { this.props.createFieldDialogOpen }
+          open= { this.props.open }
           actions= { actions }
           >
             <TextField
@@ -88,7 +89,6 @@ export default class CreateFieldDialog extends React.Component {
               autoHideDuration={5000}
               />
         </Dialog>
-      </div>
-    )
+    );
   }
 }
