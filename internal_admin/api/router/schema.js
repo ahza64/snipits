@@ -76,11 +76,12 @@ router.get('/schema/:schemaId', function* () {
     var targetSchema = yield QowSchemas.findOne({
         id:schemaId
     });
-    var version = targetSchema.dataValues.version;
-    var targetFields = yield QowFields.findAll({
+    if(targetSchema != null){
+      console.log("found schema++", targetSchema);
+    }
+      var targetFields = yield QowFields.findAll({
       where : {
         qowSchemaId : schemaId,
-        version: version
       }
     });
 

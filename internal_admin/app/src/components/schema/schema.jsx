@@ -17,6 +17,7 @@ import FlatButton from 'material-ui/FlatButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import AddBoxIcon from 'material-ui/svg-icons/content/add-box';
 import SaveIcon from 'material-ui/svg-icons/content/save';
+import Checkbox from 'material-ui/Checkbox';
 
 import { cloneDeep, findIndex } from 'lodash';
 import * as edit from 'react-edit';
@@ -29,7 +30,7 @@ export default class QowSchema extends React.Component {
     this.state = {
       name: '',
       fields: [],
-      schema: {},
+      schemaId: 0,
       showCreateRowDialog: false
     };
 
@@ -63,6 +64,7 @@ export default class QowSchema extends React.Component {
   }
 
   componentWillMount(){
+    this.setState({schemaId: schemaRedux.getState()})
     this.updateSchemaFields();
   }
   componentDidMount(){
@@ -76,6 +78,7 @@ export default class QowSchema extends React.Component {
   }
 
   getSchemaFields(callback){
+    console.log("++++++++++++schemaID: ", schemaRedux.getState());
     let url = schemaUrl.replace(':schemaId', schemaRedux.getState())
     console.log('url',url);
     return request
@@ -118,6 +121,23 @@ export default class QowSchema extends React.Component {
           <Row>
             <Col xs={0} sm={0} md={1} lg={1} ></Col>
             <Col xs={0} sm={0} md={2} lg={2} >
+              <Row>
+                <br></br>
+              <RaisedButton
+                label="Add Row"
+                labelPosition="after"
+                primary={ true }
+                icon= { <AddBoxIcon />}
+                onTouchTap={ (event) => this.handleAddRowDialogOpen(event) }/>
+            </Row>
+            <br></br>
+            <Row>
+              <RaisedButton
+                label="Save"
+                primary={ false }
+                icon= { <SaveIcon />}
+                onTouchTap={ (event) => this.handleSave(event) }/>
+            </Row>
             </Col>
             <Col xs={8} sm={8} md={8} lg={8} >
               <Row>
@@ -127,10 +147,8 @@ export default class QowSchema extends React.Component {
                   <TableHeaderColumn>id</TableHeaderColumn>
                   <TableHeaderColumn>Name</TableHeaderColumn>
                   <TableHeaderColumn>Type</TableHeaderColumn>
-                  <TableHeaderColumn className='header-pos'>Version</TableHeaderColumn>
-                  <TableHeaderColumn>Created On</TableHeaderColumn>
                   <TableHeaderColumn className='header-pos'>Updated On</TableHeaderColumn>
-                  <TableHeaderColumn> Btn </TableHeaderColumn>
+                  <TableHeaderColumn> Required </TableHeaderColumn>
               </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={ false } selectable={ true }>
@@ -141,18 +159,8 @@ export default class QowSchema extends React.Component {
                         <TableRowColumn>{ idx + 1 }</TableRowColumn>
                         <TableRowColumn>{ field.name }</TableRowColumn>
                         <TableRowColumn>{ field.type }</TableRowColumn>
-                        <TableRowColumn>{ field.version }</TableRowColumn>
-                        <TableRowColumn>{ field.createdAt }</TableRowColumn>
                         <TableRowColumn>{ field.updatedAt }</TableRowColumn>
-                        <TableRowColumn>
-                          <FlatButton
-                            label="Edit"
-                            labelPosition="before"
-                            secondary={true}
-                            onClick={ (event) => {} }
-                            icon={ <MoreVertIcon /> }
-                          />
-                        </TableRowColumn>
+                        <TableRowColumn><Checkbox/></TableRowColumn>
                       </TableRow>
                     );
                   })
@@ -162,21 +170,6 @@ export default class QowSchema extends React.Component {
           </Row>
         </Col>
         <Col xs={0} sm={0} md={2} lg={2} ></Col>
-        </Row>
-        <Row>
-          <RaisedButton
-            label="Add Row"
-            labelPosition="after"
-            primary={ true }
-            icon= { <AddBoxIcon />}
-            onTouchTap={ (event) => this.handleAddRowDialogOpen(event) }/>
-        </Row>
-        <Row>
-          <RaisedButton
-            label="Save"
-            primary={ false }
-            icon= { <SaveIcon />}
-            onTouchTap={ (event) => this.handleSave(event) }/>
         </Row>
         </div>
     );

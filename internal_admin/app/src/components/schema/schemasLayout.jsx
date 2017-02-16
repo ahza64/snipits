@@ -90,6 +90,7 @@ export default class SchemasLayout extends React.Component {
   }
 
   handleEditViewSchema(event, schemeId){
+    console.log("------------", schemeId)
     event.preventDefault();
     schemaRedux.dispatch({
       type:'CHANGE_SCHEMA',

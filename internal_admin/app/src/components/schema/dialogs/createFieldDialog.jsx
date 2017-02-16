@@ -15,6 +15,10 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import CircularProgress from 'material-ui/CircularProgress';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+
+
 
 import Row from 'react-bootstrap/lib/Row';
 
@@ -28,7 +32,9 @@ export default class CreateRowDialog extends React.Component {
     super();
 
     this.state = {
-      name: ''
+      name: '',
+      types: ["Int", "String"],
+      dataTypeValue: 0
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.isConfirmButtonDisabled = this.isConfirmButtonDisabled.bind(this);
@@ -64,6 +70,10 @@ export default class CreateRowDialog extends React.Component {
     console.log(event.target.value);
   }
 
+  handleSelectDataType(event){
+    this.setState({dataTypeValue: event.target.value})
+  }
+
   render(){
     const validTypes = ['Integer', 'Double', 'String', 'Boolean', 'Other']
     const actions = [
@@ -90,11 +100,21 @@ export default class CreateRowDialog extends React.Component {
         <div>
           For schema: {this.props.schemaName}
         </div>
-        <TextField
-          floatingLabelText='Field Name'
-          hintText='hint!'
-          onChange={ (event) => this.handleFieldNameChange(event) }
-          />
+        <row>
+          <TextField
+            floatingLabelText='Field Name'
+            hintText='Enter new field name'
+            onChange={ (event) => this.handleFieldNameChange(event) }
+            />
+          <DropDownMenu value = {this.state.dataTypeValue}>
+            <MenuItem value={0} primaryText="Select Data Type" />
+              {
+                this.state.types.map((type, idx) => {
+                  return (<MenuItem key={ idx + 1 } value={ idx + 1 } primaryText = { type } />)
+                })
+              }
+          </DropDownMenu>
+        </row>
       </Dialog>
     )
   }
