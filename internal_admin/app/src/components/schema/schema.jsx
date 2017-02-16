@@ -30,14 +30,14 @@ export default class QowSchema extends React.Component {
       name: '',
       fields: [],
       schema: {},
-      showCreateRowDialog: false
+      createFieldDialogOpen: null
     };
 
     this.componentWillMount = this.componentWillMount.bind(this);
     this.setSchemaFields = this.setSchemaFields.bind(this);
     this.getSchemaFields = this.getSchemaFields.bind(this);
     this.updateSchemaFields = this.updateSchemaFields.bind(this);
-    this.renderDialogs = this.renderDialogs.bind(this);
+    this.renderCreateFieldDialog = this.renderCreateFieldDialog.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleAddRowDialogOpen = this.handleAddRowDialogOpen.bind(this);
     this.handleAddRowDialogClose = this.handleAddRowDialogClose.bind(this);
@@ -46,15 +46,14 @@ export default class QowSchema extends React.Component {
   };
 
   handleAddRowDialogOpen(event){
-    console.log(event);
     this.setState({
-      showCreateRowDialog : true
+      createFieldDialogOpen : true
     })
   }
 
   handleAddRowDialogClose(saved){
     this.setState({
-      showCreateRowDialog : false
+      createFieldDialogOpen : false
     })
 
     if(saved){
@@ -65,6 +64,7 @@ export default class QowSchema extends React.Component {
   componentWillMount(){
     this.updateSchemaFields();
   }
+
   componentDidMount(){
     console.log('fields', this.state.fields);
   }
@@ -90,8 +90,8 @@ export default class QowSchema extends React.Component {
     })
   }
 
-  handleSave(event){
-      console.log(event);
+  handleSave(event) {
+    console.log(event);
   }
 
   updateSchemaFields(){
@@ -100,13 +100,13 @@ export default class QowSchema extends React.Component {
     })
   }
 
-  renderDialogs(){
+  renderCreateFieldDialog(){
     return(
       <CreateFieldDialog
-        open={ this.state.showCreateRowDialog }
+        open={ this.state.createFieldDialogOpen }
         onClose={ (saved) => { this.handleAddRowDialogClose(saved) } }
         />
-    )
+    );
   }
 
   render() {
@@ -116,7 +116,7 @@ export default class QowSchema extends React.Component {
           <Row>
             <Col xs={0} sm={0} md={1} lg={1} ></Col>
             <Col xs={0} sm={0} md={2} lg={2} >
-              { this.renderDialogs() }
+              { this.renderCreateFieldDialog() }
               <RaisedButton
                 label="Save"
                 primary={ false }
@@ -132,7 +132,6 @@ export default class QowSchema extends React.Component {
                   <TableHeaderColumn>Name</TableHeaderColumn>
                   <TableHeaderColumn>Type</TableHeaderColumn>
                   <TableHeaderColumn>Required</TableHeaderColumn>
-
                   <TableHeaderColumn className='header-pos'>Version</TableHeaderColumn>
                   <TableHeaderColumn>Created On</TableHeaderColumn>
                   <TableHeaderColumn className='header-pos'>Updated On</TableHeaderColumn>

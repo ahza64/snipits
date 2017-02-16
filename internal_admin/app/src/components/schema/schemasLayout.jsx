@@ -36,12 +36,13 @@ export default class SchemasLayout extends React.Component {
       schemaId: null,
       schemaName: null,
       actionMenuTarget: null,
-      actionMenuOpen: false
+      actionMenuOpen: false,
+      createSchemaDialogOpen: false
     }
 
     this.handleProjectSelectChanged = this.handleProjectSelectChanged.bind(this);
     this.renderActionMenu = this.renderActionMenu.bind(this);
-    this.setSchemas = this.setSchemas.bind(this);
+    this.setSchemaList = this.setSchemaList.bind(this);
     this.fetchSchemas = this.fetchSchemas.bind(this);
     this.updateSchemas = this.updateSchemas.bind(this);
     this.renderProjectSelectField = this.renderProjectSelectField.bind(this);
@@ -49,9 +50,6 @@ export default class SchemasLayout extends React.Component {
     this.renderToggle = this.renderToggle.bind(this);
     this.setCurrentProject = this.setCurrentProject.bind(this);
     this.handleEditViewSchema = this.handleEditViewSchema.bind(this);
-    this.addSchema = this.addSchema.bind(this);
-    this.setDialog = this.setDialog.bind(this);
-    this.setCreateDisable = this.setCreateDisable.bind(this);
     this.handleOpenActionMenu = this.handleOpenActionMenu.bind(this);
     this.handleCloseActionMenu = this.handleCloseActionMenu.bind(this);
     this.toggleSchemaStatus = this.toggleSchemaStatus.bind(this);
@@ -60,17 +58,6 @@ export default class SchemasLayout extends React.Component {
     this.updateSchemas();
   }
 
-
-  componentDidMount(){
-    if(this.state.projects.length > 0){
-      this.setState({
-        currentProject : this.state.projects[0]
-      })
-    }
-  }
-
-
-/** @TODO {toggleSchemaStatus} */
   renderToggle(schema) {
     return (
       <Toggle
@@ -105,17 +92,11 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
-  setSchemas(list){
+  setSchemaList(list){
     this.setState({
       schemaList : list
     })
   }
-
-  setDialog(){
-    var open = this.state.open;
-    this.setState({open : ~open});
-  }
-
 
   setCurrentProject(projectId){
     this.setState({
@@ -134,15 +115,10 @@ export default class SchemasLayout extends React.Component {
       type:'CHANGE_SCHEMA',
       value: scheme.id
     });
-    console.log("this.state.actionMenuTarget", this.state.actionMenuTarget);
     this.setState({
       actionMenuOpen: true,
       actionMenuTarget: event.currentTarget,
     }, () => console.log("this.state.actionMenuTarget", this.state.actionMenuTarget));
-  }
-
-  handleCloseActionMenu(event, par){
-
   }
 
   fetchSchemas(callback){
@@ -161,8 +137,8 @@ export default class SchemasLayout extends React.Component {
   }
 
   updateSchemas(){
-    this.fetchSchemas( res =>{
-      this.setSchemas(res.body);
+    this.fetchSchemas( res => {
+      this.setSchemaList(res.body);
     });
   }
 
@@ -171,28 +147,6 @@ export default class SchemasLayout extends React.Component {
       currentProject : project
     }, this.updateSchemas);
     this.render();
-  }
-
-  addSchema(name){
-    var newSchema = {
-      name: name
-    };
-    let url = schemaListUrl.replace(':projectId', this.state.currentProject);
-    request
-    .put(url)
-    .send(newSchema)
-    .withCredentials()
-    .end((err, res) => {
-      if (err) {
-        console.error("this err", err);
-      } else{
-        console.log(res);
-      }
-    })
-  }
-
-  setCreateDisable(value){
-    this.setState({createDisable:value});
   }
 
 
@@ -220,26 +174,13 @@ export default class SchemasLayout extends React.Component {
       });
     }
 
-    renderActionMenu(){
-      return(
-      <Popover
-          open={ this.state.actionMenuOpen }
-          anchorEl={ this.state.actionMenuTarget }
-          anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
-          targetOrigin={ { horizontal: 'right', vertical: 'top' } }
-          onRequestClose={ this.handleCloseActionMenu } >
-          <Menu>
-            <MenuItem value="1" primaryText="edit/view"
-              onClick={ (event) => this.handleEditViewSchema(event) } />
-            <MenuItem value="2" primaryText="Delete Work Schema"
-              onClick={ ()=>{} } />
-            <MenuItem value="3" primaryText="See QOWs"
-            onClick={ this.goToQOWSchemas } />
-          </Menu>
-        </Popover>
-      )
-    }
 
+    handleCloseActionMenu(event){
+      this.setState({
+        actionMenuOpen: false,
+        actionMenuTarget: null
+      });
+    }
     handleProjectSelectChanged(event, project){
       this.setState({
         currentProject : project,
@@ -270,14 +211,29 @@ export default class SchemasLayout extends React.Component {
       .end((err, res) => {
         if (err) {
           console.error(err);
-        }
-        else {
+        } else {
           this.setState({projects: res.body}, ()=>{
             this.setState({currentProject : this.state.projects[0].id}, this.updateSchemas);
             this.render();
           });
         }
       })
+    }
+
+    renderActionMenu(){
+      return (
+      <Popover
+          open={ this.state.actionMenuOpen }
+          anchorEl={ this.state.actionMenuTarget }
+          anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
+          targetOrigin={ { horizontal: 'right', vertical: 'top' } }
+          onRequestClose={ (event)=>{this.handleCloseActionMenu(event)} } >
+          <Menu>
+            <MenuItem value="1" primaryText="edit/view"
+              onClick={ (event) => this.handleEditViewSchema(event) } />
+          </Menu>
+        </Popover>
+      )
     }
 
     renderProjectSelectField(){
@@ -309,9 +265,7 @@ export default class SchemasLayout extends React.Component {
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
           <Col xs={0} sm={0} md={2} lg={2} >
-
             { this.renderProjectSelectField() }
-
             Total Project Schemas Found
             <Badge
               badgeContent={ this.state.schemaList.length }
@@ -319,13 +273,9 @@ export default class SchemasLayout extends React.Component {
             />
             <br></br><br></br>
             <CreateSchema
-              open={this.state.open}
+              open={this.state.createSchemaDialogOpen}
               setDialog = {this.setDialog}
-              newSchema = {this.state.newSchema}
-              createDisable = {this.state.createDisable}
-              setCreateDisable = {this.setCreateDisable}
               schemas = {this.state.schemaList}
-              addSchema = {this.addSchema}
               />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >

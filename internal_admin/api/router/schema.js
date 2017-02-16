@@ -78,7 +78,6 @@ router.delete('/schema/:schemaId', function* () {
     yield targetSchema.update( {status : !targetSchema.status})
     this.body = targetSchema;
   }
-
 })
 
 router.get('/schema/:schemaId', function* () {

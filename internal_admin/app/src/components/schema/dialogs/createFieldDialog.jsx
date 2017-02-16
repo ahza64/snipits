@@ -9,7 +9,8 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
-
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 
 import Row from 'react-bootstrap/lib/Row';
@@ -25,45 +26,67 @@ export default class CreateFieldDialog extends React.Component {
 
     this.state = {
       name: '',
-      showCreateFieldDialog: false,
+      schemaId: null,
       snackBarOpen: 0
     };
+
+    this.validate = this.validate.bind(this);
+    this.showAddRowDialog = this.showAddRowDialog.bind(this);
+  }
+  showAddRowDialog(){
+    this.setState({
+      showCreateFieldDialog : true
+     });
+  }
+  validate(){
+
   }
 
   render(){
     const actions = [
       <RaisedButton
-        label="Create Field"
-        primary={true}
+        label="Create"
+        primary={ true }
         disabled={this.props.createDisable}
         onClick={this.handleSubmit}
         />,
       <FlatButton
         label="Cancel"
-        secondary={true}
-        onClick={this.props.setDialog}
+        secondary={ true }
+        onClick={(event) =>{}}
         />
+    ];
+    const dataTypes = [
+      'Integer', 'Float', 'Boolean', 'String', 'Date', 'Other'
     ];
     return(
       <div>
         <RaisedButton
           label="Add Field"
           secondary={true}
-          onClick={this.props.setOpen}
+          onClick={(event) => { this.showAddRowDialog(event) } }
           />
         <Dialog
           title="Add New Schema Field"
-          open = {this.props.open}
-          actions = {actions}
+          open= { this.props.createFieldDialogOpen }
+          actions= { actions }
           >
-          <TextField
-            hintText="Field Name"
+            <TextField
+              hintText="Field Name"
             />
-          <Snackbar
-            open={false}
-            message="Error! Schema name already exists."
-            autoHideDuration={5000}
-            />
+            <SelectField
+              floatingLabelText="Schema Field"
+              fullWidth={ true }
+              >
+              { dataTypes.map((type, idx) => {
+                <MenuItem key={ idx } value={ type } />
+              } ) }
+            </SelectField>
+            <Snackbar
+              open={ false }
+              message="Error! Field name already exists."
+              autoHideDuration={5000}
+              />
         </Dialog>
       </div>
     )
