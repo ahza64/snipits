@@ -53,7 +53,8 @@ export default class SchemasLayout extends React.Component {
     this.handleOpenActionMenu = this.handleOpenActionMenu.bind(this);
     this.handleCloseActionMenu = this.handleCloseActionMenu.bind(this);
     this.toggleSchemaStatus = this.toggleSchemaStatus.bind(this);
-
+    this.handleAddSchemaDialogOpen= this.handleAddSchemaDialogOpen.bind(this);
+    this.handleAddSchemaDialogClose = this.handleAddSchemaDialogClose.bind(this);
     this.fetchProjects();
     this.updateSchemas();
   }
@@ -118,7 +119,7 @@ export default class SchemasLayout extends React.Component {
     this.setState({
       actionMenuOpen: true,
       actionMenuTarget: event.currentTarget,
-    }, () => console.log("this.state.actionMenuTarget", this.state.actionMenuTarget));
+    });
   }
 
   fetchSchemas(callback){
@@ -219,6 +220,18 @@ export default class SchemasLayout extends React.Component {
       })
     }
 
+    handleAddSchemaDialogClose(event){
+      this.setState({
+        createSchemaDialogOpen: false
+      })
+    }
+
+    handleAddSchemaDialogOpen(event){
+      this.setState({
+        createSchemaDialogOpen: true
+      });
+    }
+
     renderActionMenu(){
       return (
       <Popover
@@ -270,11 +283,18 @@ export default class SchemasLayout extends React.Component {
               badgeContent={ this.state.schemaList.length }
               secondary={ true }
             />
-            <br></br><br></br>
+          <br></br>
+          <br></br>
+            <RaisedButton
+              label="Add Schema"
+              secondary={true}
+              onTouchTap={ (event) => {this.handleAddSchemaDialogOpen(event)} }
+              />
             <CreateSchema
-              open={this.state.createSchemaDialogOpen}
-              setDialog = {this.setDialog}
-              schemas = {this.state.schemaList}
+              open={ this.state.createSchemaDialogOpen }
+              onClose={(event) => {this.handleAddSchemaDialogClose(event)}}
+              schemas= { this.state.schemaList }
+              currentProject={ this.state.currentProject }
               />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >

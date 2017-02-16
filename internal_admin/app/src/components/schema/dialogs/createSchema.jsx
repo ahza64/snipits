@@ -4,8 +4,9 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
+import request from '../../../services/request';
 
-import { configUrl } from '../../../config';
+import { configUrl, schemaListUrl } from '../../../config';
 
 export default class CreateSchema extends React.Component {
   constructor(){
@@ -13,7 +14,8 @@ export default class CreateSchema extends React.Component {
     this.state = {
       token: "",
       snackbarOpen: false,
-      createDisable: true
+      createDisable: true,
+      dialogOpen: false
     };
 
     this.handleNameInput = this.handleNameInput.bind(this);
@@ -21,6 +23,9 @@ export default class CreateSchema extends React.Component {
     this.toggleDialog = this.toggleDialog.bind(this);
     this.setCreateDisable = this.setCreateDisable.bind(this);
     this.addSchema = this.addSchema.bind(this);
+  }
+
+  componentDidMount(){
   }
 
   setCreateDisable(value){
@@ -40,15 +45,15 @@ export default class CreateSchema extends React.Component {
     }
     this.setState({
       token: value,
-      snackbarOpen: false}
-    );
+      snackbarOpen: false
+    });
   }
 
   handleSubmit(){
     var error = false;
     console.log("searching names");
     console.log(this.state.token)
-    for (var i = 0; i < this.props.schemas.length; i++){
+    for (var i = 0; i < this.props.schemas.length; i++) {
       if (this.state.token == this.props.schemas[i].name){
         console.log("Error: Schema name already exists");
         error = true;
@@ -57,18 +62,17 @@ export default class CreateSchema extends React.Component {
       }
     }
 
-    if(!error){
+    if (!error) {
       this.addSchema(this.state.token);
-      this.toggleDialog();
+      this.props.onClose();
     }
-
   }
 
   addSchema(name){
     var newSchema = {
       name: name
     };
-    let url = schemaListUrl.replace(':projectId', this.state.currentProject);
+    let url = schemaListUrl.replace(':projectId', this.props.currentProject);
     request
     .put(url)
     .send(newSchema)
@@ -92,23 +96,19 @@ export default class CreateSchema extends React.Component {
         onClick={this.handleSubmit}
         />,
       <FlatButton
-        label="Exit"
+        label="Cancel"
         secondary={true}
-        onClick={this.toggleDialog}
+        onClick={this.props.onClose}
         />
     ];
 
     return (
       <div>
-        <RaisedButton
-          label="Add Schema"
-          secondary={true}
-          onClick={this.toggleDialog}
-          />
         <Dialog
           title="Create New Schema"
-          open = {this.props.open}
-          actions = {actions}
+          open={ this.props.open }
+          actions={actions}
+          onClose={ this.props.onClose}
           >
           <TextField
             hintText="Schema Name"

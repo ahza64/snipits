@@ -30,7 +30,7 @@ export default class QowSchema extends React.Component {
       name: '',
       fields: [],
       schema: {},
-      createFieldDialogOpen: null
+      createFieldDialogOpen: false
     };
 
     this.componentWillMount = this.componentWillMount.bind(this);
@@ -49,6 +49,7 @@ export default class QowSchema extends React.Component {
     this.setState({
       createFieldDialogOpen : true
     });
+
     console.log(event);
   }
 

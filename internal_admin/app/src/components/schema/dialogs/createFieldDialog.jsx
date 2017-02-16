@@ -33,12 +33,22 @@ export default class CreateFieldDialog extends React.Component {
 
     this.validate = this.validate.bind(this);
     this.showAddRowDialog = this.showAddRowDialog.bind(this);
+    this.toggleShowAddFieldDialog = this.toggleShowAddFieldDialog.bind(this);
   }
 
   showAddRowDialog(){
     this.setState({
       showCreateFieldDialog : true
      });
+  }
+
+  toggleShowAddFieldDialog(){
+    this.setState({
+     });
+  }
+
+  componentDidMount(){
+
   }
 
   validate(){
