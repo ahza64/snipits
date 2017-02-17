@@ -50,15 +50,12 @@ export default class QowSchema extends React.Component {
     this.setState({
       createFieldDialogOpen : true
     });
-
-    console.log(event);
   }
 
   handleAddRowDialogClose(saved){
     this.setState({
       createFieldDialogOpen : false
     })
-
     if(saved){
       this.updateSchemaFields();
     }
@@ -75,11 +72,7 @@ export default class QowSchema extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        console.log('res===========>',res);
-        console.log("field=================>",field, "this.state.fields.indexOf(field)",this.state.fields.indexOf(field) );
-        console.log("this.state.fields==========>", this.state.fields);
         var newFields = this.state.fields.filter(x=> {return x.id !== field.id});
-        console.log("newFields",newFields);
         this.setState({
           fields : newFields
         });
@@ -163,7 +156,9 @@ export default class QowSchema extends React.Component {
               </TableHeader>
               <TableBody displayRowCheckbox={ false } selectable={ true }>
                 {
-                  this.state.fields.map((field, idx) => {
+                  this.state.fields
+                  .sort((a,b) => {return a.id - b.id})
+                  .map((field, idx) => {
                     return (
                       <TableRow key={ idx }>
                         <TableRowColumn>{ idx + 1 }</TableRowColumn>
