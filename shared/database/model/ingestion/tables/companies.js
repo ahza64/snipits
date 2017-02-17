@@ -14,6 +14,8 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
-
+//get by qowID remove set status
+// add datasource
+// keep versions updated
   return Companies;
 };

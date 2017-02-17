@@ -105,7 +105,7 @@ export default class DefaultNavbar extends React.Component {
   }
 
   showSchemas(){
-    return (<MenuItem eventKey={1.9} onClick={ this.goToSchemas }>QOW Schemas</MenuItem>);
+    return (<MenuItem eventKey={1.9} onClick={ this.goToSchemas }>Schemas</MenuItem>);
   }
 
   render() {

@@ -31,20 +31,72 @@ export default class QowSchema extends React.Component {
       name: '',
       fields: [],
       schema: {},
+      schemaList: [],
+      projectId: null,
       createFieldDialogOpen: false
     };
-
-    this.componentWillMount = this.componentWillMount.bind(this);
+    this.fetchSchemaList = this.fetchSchemaList.bind(this);
+    this.fetchSchema = this.fetchSchema.bind(this);
     this.setSchemaFields = this.setSchemaFields.bind(this);
     this.getSchemaFields = this.getSchemaFields.bind(this);
     this.updateSchemaFields = this.updateSchemaFields.bind(this);
     this.renderCreateFieldDialog = this.renderCreateFieldDialog.bind(this);
     this.handleAddRowDialogOpen = this.handleAddRowDialogOpen.bind(this);
     this.handleAddRowDialogClose = this.handleAddRowDialogClose.bind(this);
-    this.renderDeleteBtn = this.renderDeleteBtn.bind(this);
     this.deleteField = this.deleteField.bind(this);
+    this.fetchSchemaList = this.fetchSchemaList.bind(this);
+    this.refreshSchemaList = this.refreshSchemaList.bind(this);
+    this.renderSchemaSelectField = this.renderSchemaSelectField.bind(this);
+
+    this.refreshSchemaList();
     this.updateSchemaFields();
   };
+
+  refreshSchemaList(){
+    this.fetchSchema((body) => this.fetchSchemaList(body.workProjectId));
+  }
+
+  fetchSchemaList(projectId){
+    let url = schemaListUrl.replace(':projectId', projectId);
+    var self = this;
+    request
+    .get(url)
+    .withCredentials()
+    .end(function (err, res) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("SCHEMALIST ______",res.body);
+        self.setState({
+          schemaList: res.body
+        })
+      }
+    })
+  }
+
+  fetchSchema(cb){
+    let url = schemaUrl.replace(':schemaId', schemaRedux.getState());
+    request
+    .get(url)
+    .withCredentials()
+    .end((err,res) => {
+      if (err) {
+          console.error("error",err);
+      }
+      console.log("res", res);
+      if (cb) {
+        this.setState({
+          schema: res.body,
+          projectId: res.body.workProjectId
+        }, cb(res.body) );
+      } else {
+        this.setState({
+          schema: res.body,
+          projectId: res.body.workProjectId
+        });
+      }
+     })
+  }
 
   handleAddRowDialogOpen(event){
     this.setState({
@@ -63,6 +115,7 @@ export default class QowSchema extends React.Component {
 
   deleteField(event, field){
     console.log('deleteField', field);
+    console.log("schema", this.state.schema);
     let url = schemaFieldUrl.replace(':schemaFieldId', field.id)
     console.log(url);
     request
@@ -92,8 +145,8 @@ export default class QowSchema extends React.Component {
   }
 
   getSchemaFields(callback){
-    let url = schemaUrl.replace(':schemaId', schemaRedux.getState())
-    console.log('url',url);
+    let url = schemaFieldUrl.replace(':schemaFieldId', schemaRedux.getState())
+    console.log('url', url);
     return request
     .get(url)
     .withCredentials()
@@ -121,8 +174,9 @@ export default class QowSchema extends React.Component {
     );
   }
 
-  renderDeleteBtn(field){
-    return;
+
+  renderSchemaSelectField(){
+
   }
 
   render() {

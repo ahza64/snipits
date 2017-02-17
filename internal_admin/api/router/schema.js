@@ -71,17 +71,24 @@ router.post(
   }
 });
 
+router.get('/schema/:schemaId', function* () {
+    var schemaId = this.params.schemaId;
+    if (permissions.has(this.req.user, this.req.user.companyId) && schemaId) {
+      var schema = yield QowSchemas.findOne({where:{id : schemaId}});
+      this.body = schema.dataValues;
+    }
+})
 router.delete('/schema/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
   if (permissions.has(this.req.user, companyId) && schemaId) {
     var targetSchema = yield QowSchemas.find({where: {id: schemaId}})
-    yield targetSchema.update( {status : !targetSchema.status})
+    yield targetSchema.update({status : !targetSchema.status})
     this.body = targetSchema;
   }
 })
 
-router.get('/schema/:schemaId', function* () {
+router.get('/schemaField/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
   if (permissions.has(this.req.user, companyId) && schemaId) {
@@ -96,6 +103,7 @@ router.get('/schema/:schemaId', function* () {
     });
 
     var vals = _.pluck(targetFields, 'dataValues');
+    console.log("get schema /id", vals);
     this.body = vals;
     }
   });
@@ -162,7 +170,6 @@ router.get('/schema/:schemaId', function* () {
       var schemaId = this.params.schemaId;
       var body    = this.request.body;
       var name    = body.name;
-      // var fieldId = body.id;
       var type    = body.type;
       var status  = body.status || true;
       var required= body.required || true;
