@@ -6,7 +6,7 @@ import authRedux from '../../reduxes/auth';
 import schemaRedux from '../../reduxes/schema';
 
 // Components
-import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, schemaListUrl, schemaUrl } from '../../config';
+import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, schemaListUrl, schemaUrl, schemaFieldUrl } from '../../config';
 import DefaultNavbar from '../navbar/defaultNavbar'
 import CreateFieldDialog from './dialogs/CreateFieldDialog'
 import RaisedButton from 'material-ui/RaisedButton';
@@ -16,7 +16,7 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import FlatButton from 'material-ui/FlatButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import AddBoxIcon from 'material-ui/svg-icons/content/add-box';
-import SaveIcon from 'material-ui/svg-icons/content/save';
+import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import Checkbox from 'material-ui/Checkbox';
 
 import { cloneDeep, findIndex } from 'lodash';
@@ -39,10 +39,10 @@ export default class QowSchema extends React.Component {
     this.getSchemaFields = this.getSchemaFields.bind(this);
     this.updateSchemaFields = this.updateSchemaFields.bind(this);
     this.renderCreateFieldDialog = this.renderCreateFieldDialog.bind(this);
-    this.handleSave = this.handleSave.bind(this);
     this.handleAddRowDialogOpen = this.handleAddRowDialogOpen.bind(this);
     this.handleAddRowDialogClose = this.handleAddRowDialogClose.bind(this);
-
+    this.renderDeleteBtn = this.renderDeleteBtn.bind(this);
+    this.deleteField = this.deleteField.bind(this);
     this.updateSchemaFields();
   };
 
@@ -64,6 +64,28 @@ export default class QowSchema extends React.Component {
     }
   }
 
+  deleteField(event, field){
+    console.log('deleteField', field);
+    let url = schemaFieldUrl.replace(':schemaFieldId', field.id)
+    console.log(url);
+    request
+    .delete(url)
+    .withCredentials()
+    .end((err,res) =>{
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('res===========>',res);
+        console.log("field=================>",field, this.state.fields.indexOf(field));
+        var newFields = this.state.fields.splice(this.state.fields.indexOf(field), 1);
+        console.log(newFields);
+        this.setState({
+          fields : newFields
+        });
+      }
+    })
+  }
+
   componentWillMount(){
     this.setState({schemaId: schemaRedux.getState()})
     this.updateSchemaFields();
@@ -75,8 +97,8 @@ export default class QowSchema extends React.Component {
     });
   }
 
+
   getSchemaFields(callback){
-    console.log("++++++++++++schemaID: ", schemaRedux.getState());
     let url = schemaUrl.replace(':schemaId', schemaRedux.getState())
     console.log('url',url);
     return request
@@ -89,10 +111,6 @@ export default class QowSchema extends React.Component {
         callback(res.body);
       }
     })
-  }
-
-  handleSave(event) {
-    console.log(event);
   }
 
   updateSchemaFields(){
@@ -108,6 +126,10 @@ export default class QowSchema extends React.Component {
         onClose={ (saved) => { this.handleAddRowDialogClose(saved) } }
         />
     );
+  }
+
+  renderDeleteBtn(field){
+    return;
   }
 
   render() {
@@ -129,14 +151,14 @@ export default class QowSchema extends React.Component {
             <Table selectable={ false }>
               <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
                 <TableRow>
-                  <TableHeaderColumn>id</TableHeaderColumn>
+                  <TableHeaderColumn>#</TableHeaderColumn>
                   <TableHeaderColumn>Name</TableHeaderColumn>
                   <TableHeaderColumn>Type</TableHeaderColumn>
                   <TableHeaderColumn>Required</TableHeaderColumn>
                   <TableHeaderColumn className='header-pos'>Version</TableHeaderColumn>
                   <TableHeaderColumn>Created On</TableHeaderColumn>
                   <TableHeaderColumn className='header-pos'>Updated On</TableHeaderColumn>
-                  <TableHeaderColumn> Required </TableHeaderColumn>
+                  <TableHeaderColumn> Delete </TableHeaderColumn>
               </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={ false } selectable={ true }>
@@ -151,6 +173,14 @@ export default class QowSchema extends React.Component {
                         <TableRowColumn>{ field.version }</TableRowColumn>
                         <TableRowColumn>{ field.createdAt }</TableRowColumn>
                         <TableRowColumn>{ field.updatedAt }</TableRowColumn>
+                        <TableRowColumn>
+                          <RaisedButton
+                                onClick={ (event) => { this.deleteField(event, field) } }
+                                label="delete"
+                                labelPosition="after"
+                                icon={ <DeleteIcon />}
+                              />
+                        </TableRowColumn>
                       </TableRow>
                     );
                   })

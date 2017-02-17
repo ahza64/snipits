@@ -88,12 +88,10 @@ router.get('/schema/:schemaId', function* () {
     var targetSchema = yield QowSchemas.findOne({
         id:schemaId
     });
-    if(targetSchema != null){
-      console.log("found schema++", targetSchema);
-    }
       var targetFields = yield QowFields.findAll({
       where : {
         qowSchemaId : schemaId,
+        status: true
       }
     });
 
@@ -121,32 +119,43 @@ router.get('/schema/:schemaId', function* () {
     }
   });
   router.patch('/schemaField/:schemaId', function* () {
-    var body = this.request.body;
-    var fieldId = body.id;
-    try {
-      var changes = {};
-      var originalField = yield QowFields.findOne( {
-        where: {
-          id: fieldId
-         }
-      });
-      originalField = originalField.dataValues;
-      for (var key in body) {
-        if(body[key] !== originalField[key]) {
-          console.log(changes[key], body[key]);
-          changes[key] = body[key];
+    if (permissions.has(this.req.user, this.req.user.companyId)) {
+      var body = this.request.body;
+      var fieldId = body.id;
+      try {
+        var changes = {};
+        var originalField = yield QowFields.findOne( {
+          where: {
+            id: fieldId
+           }
+        });
+        originalField = originalField.dataValues;
+        for (var key in body) {
+          if(body[key] !== originalField[key]) {
+            console.log(changes[key], body[key]);
+            changes[key] = body[key];
+          }
         }
+        this.body = yield QowFields.update(changes, {
+          where: {
+            id: fieldId
+          }
+        });
+        console.log("changes", changes);
+      } catch (e) {
+        console.error(e);
       }
-      this.body = yield QowFields.update(changes, {
-        where: {
-          id: fieldId
-        }
-      });
-      console.log("changes", changes);
-    } catch (e) {
-      console.error(e);
     }
+  });
 
+  router.delete('/schemaField/:schemaFieldId', function* () {
+    if (permissions.has(this.req.user, this.req.user.companyId)) {
+      var body     = this.request.body;
+      var schemaFieldId = this.params.schemaFieldId;
+      console.log("deleting fields");
+      this.body = yield QowFields.update({status: false}, {where : {id:schemaFieldId} });
+      console.log(this.body);
+    }
   });
 
   router.put('/schemaField/:schemaId', function* () {

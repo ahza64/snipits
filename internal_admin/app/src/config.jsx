@@ -22,7 +22,7 @@ const deactivateProjectUrl = base + '/project/:id/deactivate';
 const configsUrl = base + '/configs/:projectId';
 const configUrl = base + '/config';
 const schemaListUrl = base + '/schemas/:projectId';
-const schemaFieldUrl = base + '//';
+const schemaFieldUrl = base + '/schemaField/:schemaFieldId';
 const schemaUrl = base + '/schema/:schemaId';
 const deleteConfigUrl = base + '/config/:id';
 const watchersUrl = base + '/watcher/:configId';
@@ -57,5 +57,6 @@ export {
   deleteUserUrl,
   ingestionUrl,
   schemaListUrl,
-  schemaUrl
+  schemaUrl,
+  schemaFieldUrl
 };

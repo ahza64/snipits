@@ -216,7 +216,9 @@ export default class SchemasLayout extends React.Component {
           console.error(err);
         } else {
           this.setState({projects: res.body}, ()=>{
-            this.setState({currentProject : this.state.projects[0].id}, this.updateSchemas);
+            this.setState({
+              currentProject : this.state.projects[0].id
+            }, this.updateSchemas);
             this.render();
           });
         }
@@ -272,8 +274,7 @@ export default class SchemasLayout extends React.Component {
                 primaryText={ project.name }
                  />
             );
-          })
-        }
+          })}
       </SelectField>
     );
   }
@@ -307,7 +308,7 @@ export default class SchemasLayout extends React.Component {
             <label>Show Inactive schemas<Checkbox
               defaultChecked={true}
               onCheck={(event, isChecked) => this.handleShowInactiveSchemas(event, isChecked)}
-              labelPosition="right"
+              labelPosition="left"
               ></Checkbox></label>
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
@@ -341,7 +342,7 @@ export default class SchemasLayout extends React.Component {
                       <TableRowColumn>
                         <FlatButton
                           label="Edit/View"
-                          labelPosition="before"
+                          labelPosition="left"
                           secondary={true}
                           onTouchTap={(event) => this.handleEditViewSchema(event, scheme)}
                           icon={ <EditIcon /> }
