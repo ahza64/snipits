@@ -21,7 +21,7 @@ router.get(
     var companyId = this.req.user.companyId;
     var projectId = this.params.projectId;
     var self = this;
-    if (permissions.has(this.req.user, companyId)) {
+    if (permissions.has(this.req.user, companyId) && projectId) {
       var userSchemas = yield QowSchemas.findAll({
         where: {
           workProjectId: projectId,
@@ -44,14 +44,14 @@ router.post(
   //var status = body.status;
   var result;
 
-  if (permissions.has(this.req.user, companyId)) {
+  if (permissions.has(this.req.user, companyId) && projectId) {
     var targetSchema = yield QowSchemas.findOne({
       where: {
         workProjectId: projectId,
         id: schemaId
        },
       raw: true
-    })
+    });
     console.log("targetSchema", targetSchema);
     var version = targetSchema ? targetSchema.version : 0;
 
@@ -74,7 +74,7 @@ router.post(
 router.delete('/schema/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
-  if (permissions.has(this.req.user, companyId)) {
+  if (permissions.has(this.req.user, companyId) && schemaId) {
     var targetSchema = yield QowSchemas.find({where: {id: schemaId}})
     yield targetSchema.update( {status : !targetSchema.status})
     this.body = targetSchema;
@@ -84,7 +84,7 @@ router.delete('/schema/:schemaId', function* () {
 router.get('/schema/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
-  if (permissions.has(this.req.user, companyId)) {
+  if (permissions.has(this.req.user, companyId) && schemaId) {
     var targetSchema = yield QowSchemas.findOne({
         id:schemaId
     });
@@ -118,10 +118,10 @@ router.get('/schema/:schemaId', function* () {
       }
     }
   });
-  router.patch('/schemaField/:schemaId', function* () {
-    if (permissions.has(this.req.user, this.req.user.companyId)) {
-      var body = this.request.body;
-      var fieldId = body.id;
+  router.patch('/schemaField/', function* () {
+    var body = this.request.body;
+    var fieldId = body.id;
+    if (permissions.has(this.req.user, this.req.user.companyId) && fieldId) {
       try {
         var changes = {};
         var originalField = yield QowFields.findOne( {
@@ -152,7 +152,6 @@ router.get('/schema/:schemaId', function* () {
     if (permissions.has(this.req.user, this.req.user.companyId)) {
       var body     = this.request.body;
       var schemaFieldId = this.params.schemaFieldId;
-      console.log("deleting fields");
       this.body = yield QowFields.update({status: false}, {where : {id:schemaFieldId} });
       console.log(this.body);
     }

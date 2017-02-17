@@ -73,7 +73,7 @@ export default class SchemasLayout extends React.Component {
     );
   }
 
-  toggleSchemaStatus(event, schemaId, callback) {
+  toggleSchemaStatus(event, schemaId) {
     let url = schemaUrl.replace(':schemaId', schemaId);
     request
     .delete(url)
@@ -83,19 +83,19 @@ export default class SchemasLayout extends React.Component {
         console.error(err);
       } else {
         console.log(res, res.body);
-        callback(res.body);
+        this.updateSchemas();
       }
     })
   }
 
-  handleActionMenu(event, schema) {
-    this.setState({
-      actionMenuOpen: true,
-      actionMenuTarget: event.currentTarget,
-      schemaId: schema.id,
-      schemaName: schema.name
-    });
-  }
+  // handleActionMenu(event, schema) {
+  //   this.setState({
+  //     actionMenuOpen: true,
+  //     actionMenuTarget: event.currentTarget,
+  //     schemaId: schema.id,
+  //     schemaName: schema.name
+  //   });
+  // }
 
   setSchemaList(list){
     this.setState({
@@ -155,7 +155,6 @@ export default class SchemasLayout extends React.Component {
     this.setState({
       currentProject : project
     }, this.updateSchemas);
-    this.render();
   }
 
 
@@ -177,13 +176,13 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
-
     handleCloseActionMenu(event){
       this.setState({
         actionMenuOpen: false,
         actionMenuTarget: null
       });
     }
+
     handleProjectSelectChanged(event, project){
       this.setState({
         currentProject : project,
@@ -240,7 +239,7 @@ export default class SchemasLayout extends React.Component {
     handleShowInactiveSchemas(event, isChecked){
       this.setState({
         showInactiveSchemas : isChecked
-      })
+      }, this.updateSchemas)
     }
     // renderActionMenu(){
     //   return (
@@ -327,7 +326,9 @@ export default class SchemasLayout extends React.Component {
             </TableHeader>
             <TableBody displayRowCheckbox={ false } selectable={ false }>
               {
-                this.state.schemaList.map((scheme, idx) => {
+                this.state.schemaList
+                .sort((a,b) => {return a.id - b.id})
+                .map((scheme, idx) => {
                   if (!this.state.showInactiveSchemas && !scheme.status){
                     return;
                   }
@@ -342,7 +343,7 @@ export default class SchemasLayout extends React.Component {
                       <TableRowColumn>
                         <FlatButton
                           label="Edit/View"
-                          labelPosition="left"
+                          labelPosition="before"
                           secondary={true}
                           onTouchTap={(event) => this.handleEditViewSchema(event, scheme)}
                           icon={ <EditIcon /> }

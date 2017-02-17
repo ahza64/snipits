@@ -76,9 +76,10 @@ export default class QowSchema extends React.Component {
         console.error(err);
       } else {
         console.log('res===========>',res);
-        console.log("field=================>",field, this.state.fields.indexOf(field));
-        var newFields = this.state.fields.splice(this.state.fields.indexOf(field), 1);
-        console.log(newFields);
+        console.log("field=================>",field, "this.state.fields.indexOf(field)",this.state.fields.indexOf(field) );
+        console.log("this.state.fields==========>", this.state.fields);
+        var newFields = this.state.fields.filter(x=> {return x.id !== field.id});
+        console.log("newFields",newFields);
         this.setState({
           fields : newFields
         });
@@ -96,7 +97,6 @@ export default class QowSchema extends React.Component {
       fields : fields
     });
   }
-
 
   getSchemaFields(callback){
     let url = schemaUrl.replace(':schemaId', schemaRedux.getState())
