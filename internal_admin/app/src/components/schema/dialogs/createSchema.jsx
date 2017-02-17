@@ -20,27 +20,19 @@ export default class CreateSchema extends React.Component {
 
     this.handleNameInput = this.handleNameInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.setCreateDisable = this.setCreateDisable.bind(this);
     this.addSchema = this.addSchema.bind(this);
-  }
-
-  componentDidMount(){
-  }
-
-  setCreateDisable(value){
-    this.setState({createDisable:value});
+    this.validName = this.validName.bind(this);
   }
 
   handleNameInput(event, value){
-    if(value.length === 0){
-      this.setCreateDisable(true);
-    } else {
-      this.setCreateDisable(false);
-    }
     this.setState({
       token: value,
       snackbarOpen: false
     });
+  }
+
+  validName(){
+    return this.state.token.match(/^[\w\.]+$/g);
   }
 
   handleSubmit(){
@@ -69,9 +61,9 @@ export default class CreateSchema extends React.Component {
     .send(newSchema)
     .withCredentials()
     .end((err, res) => {
-      if (err) {
+      if(err) {
         console.error("this err", err);
-      } else{
+      } else {
         console.log(res);
       }
     })
@@ -83,7 +75,7 @@ export default class CreateSchema extends React.Component {
       <RaisedButton
         label="Create Schema"
         primary={true}
-        disabled={this.state.createDisable}
+        disabled={!this.validName()}
         onClick={this.handleSubmit}
         />,
       <FlatButton

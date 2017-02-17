@@ -150,7 +150,6 @@ export default class QowSchema extends React.Component {
                   <TableHeaderColumn>Required</TableHeaderColumn>
                   <TableHeaderColumn className='header-pos'>Version</TableHeaderColumn>
                   <TableHeaderColumn>Created On</TableHeaderColumn>
-                  <TableHeaderColumn className='header-pos'>Updated On</TableHeaderColumn>
                   <TableHeaderColumn> Delete </TableHeaderColumn>
               </TableRow>
               </TableHeader>
@@ -167,7 +166,6 @@ export default class QowSchema extends React.Component {
                         <TableRowColumn>{ field.required ? "TRUE" : "FALSE" }</TableRowColumn>
                         <TableRowColumn>{ field.version }</TableRowColumn>
                         <TableRowColumn>{ field.createdAt }</TableRowColumn>
-                        <TableRowColumn>{ field.updatedAt }</TableRowColumn>
                         <TableRowColumn>
                           <RaisedButton
                                 onClick={ (event) => { this.deleteField(event, field) } }

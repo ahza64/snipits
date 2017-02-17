@@ -105,14 +105,14 @@ router.get('/schema/:schemaId', function* () {
     var schemaId = this.params.schemaId;
     if (permissions.has(this.req.user, this.req.user.companyId)) {
       var schema = yield QowSchemas.findOne({ id: schemaId });
-      console.log(schema);
       if(schema){
         var field = {
           name: body.name,
           required: body.required,
           qowSchemaId: schemaId,
+          version: 1,
           type: body.type,
-          status: body.status
+          status: true
         };
         this.body = yield QowFields.create(field);
       }

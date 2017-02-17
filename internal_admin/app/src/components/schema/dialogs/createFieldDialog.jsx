@@ -13,11 +13,10 @@ import MenuItem from 'material-ui/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import Row from 'react-bootstrap/lib/Row';
-
-import { cloneDeep, findIndex } from 'lodash';
-import * as edit from 'react-edit';
-import uuid from 'uuid';
-
+import Checkbox from 'material-ui/Checkbox'
+import schemaRedux from '../../../reduxes/schema';
+import request from '../../../services/request';
+import { configUrl, schemaFieldUrl } from '../../../config';
 
 export default class CreateFieldDialog extends React.Component {
   constructor() {
@@ -27,23 +26,15 @@ export default class CreateFieldDialog extends React.Component {
       name: '',
       schemaId: null,
       snackBarOpen: 0,
-      createDisabled: true
+      createDisabled: true,
+      required: false,
+      type: ''
     };
-
+    this.handleTypeChanged = this.handleTypeChanged.bind(this);
+    this.validName = this.validName.bind(this);
     this.validate = this.validate.bind(this);
-    this.showAddRowDialog = this.showAddRowDialog.bind(this);
-    this.toggleShowAddFieldDialog = this.toggleShowAddFieldDialog.bind(this);
-  }
-
-  showAddRowDialog(){
-    this.setState({
-      showCreateFieldDialog : true
-     });
-  }
-
-  toggleShowAddFieldDialog(){
-    this.setState({
-     });
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleNameChanged = this.handleNameChanged.bind(this);
   }
 
   componentDidMount(){
@@ -51,15 +42,50 @@ export default class CreateFieldDialog extends React.Component {
   }
 
   validate(){
+    if (this.validName() && this.state.type) {
+      return true
+    }
+    return false;
+  }
 
+  validName(){
+    return this.state.name.match(/^[\w\.]+$/g);
+  }
+
+  handleNameChanged(event){
+    this.setState({name: event.target.value})
   }
 
   addField(){
 
   }
 
-  handleSelectDataType(event){
-    this.setState({dataTypeValue: event.target.value})
+  handleSubmit(){
+    var newField = {
+      name: this.state.name,
+      required: this.state.required,
+      type: this.state.type
+    }
+    let url = schemaFieldUrl.replace(':schemaFieldId', schemaRedux.getState());
+    console.log("url:",url);
+    request
+    .post(url)
+    .send(newField)
+    .withCredentials()
+    .end((err,res)=>{
+      if(err){
+        console.error(err);
+      } else {
+        console.log(res.body);
+        this.props.onClose(true);
+      }
+    })
+  }
+
+  handleTypeChanged(event, index, type){
+    this.setState({
+      type: type
+    })
   }
 
   render(){
@@ -67,17 +93,17 @@ export default class CreateFieldDialog extends React.Component {
       <RaisedButton
         label="Create"
         primary={ true }
-        disabled={this.props.createDisable}
-        onClick={this.handleSubmit}
+        disabled={ !this.validate() }
+        onClick={ this.handleSubmit }
         />,
       <FlatButton
         label="Cancel"
-        secondary={ true }
-        onClick={(event) =>{}}
+        default={ true }
+        onClick={(event)=>this.props.onClose(false)}
         />
     ];
     const dataTypes = [
-      'Integer', 'Float', 'Boolean', 'String', 'Date', 'Other'
+      'Integer', 'Float', 'Boolean', 'String', 'Date', 'JSON', 'GeoCoordinates', 'JPEG'
     ];
     return(
         <Dialog
@@ -86,16 +112,34 @@ export default class CreateFieldDialog extends React.Component {
           actions= { actions }
           >
             <TextField
-              hintText="Field Name"
+              hintText="Enter a Field Name"
+              value= {this.state.name}
+              floatingLabelText="Field Name"
+              onChange={(event)=>{this.handleNameChanged(event)}}
             />
             <SelectField
-              floatingLabelText="Schema Field"
+              floatingLabelText="Data Type"
               fullWidth={ true }
+              hintText="Field Type"
+              value={ this.state.type }
+              onChange={ (event, index, value) => this.handleTypeChanged(event, index, value) }
               >
-              { dataTypes.map((type, idx) => {
-                <MenuItem key={ idx } value={ type } />
-              } ) }
+              {
+                dataTypes.map((type, idx) => {
+                return (
+                  <MenuItem
+                    key={ idx }
+                    value={ type }
+                    primaryText={ type }/>
+                  );
+              })
+            }
             </SelectField>
+            <Checkbox
+              label="Required Field?"
+              defaultChecked={ false }
+              onCheck={ (event, isChecked) => { this.setState({required : isChecked}) } }
+              />
             <Snackbar
               open={ false }
               message="Error! Field name already exists."

@@ -36,8 +36,6 @@ export default class SchemasLayout extends React.Component {
       currentProject: null,
       schemaId: null,
       schemaName: null,
-      actionMenuTarget: null,
-      actionMenuOpen: false,
       createSchemaDialogOpen: false,
       showInactiveSchemas: true
     }
@@ -227,7 +225,7 @@ export default class SchemasLayout extends React.Component {
     handleAddSchemaDialogClose(event){
       this.setState({
         createSchemaDialogOpen: false
-      })
+      }, this.fetchProjects)
     }
 
     handleAddSchemaDialogOpen(event){
@@ -241,21 +239,6 @@ export default class SchemasLayout extends React.Component {
         showInactiveSchemas : isChecked
       }, this.updateSchemas)
     }
-    // renderActionMenu(){
-    //   return (
-    //   <Popover
-    //       open={ this.state.actionMenuOpen }
-    //       anchorEl={ this.state.actionMenuTarget }
-    //       anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
-    //       targetOrigin={ { horizontal: 'right', vertical: 'top' } }
-    //       onRequestClose={ (event)=>{this.handleCloseActionMenu(event)} } >
-    //       <Menu>
-    //         <MenuItem value="1" primaryText="edit/view"
-    //           onClick={ (event) => this.handleEditViewSchema(event) } />
-    //       </Menu>
-    //     </Popover>
-    //   )
-    // }
 
     renderProjectSelectField(){
       return(
@@ -304,18 +287,19 @@ export default class SchemasLayout extends React.Component {
               schemas= { this.state.schemaList }
               currentProject={ this.state.currentProject }
               />
-            <label>Show Inactive schemas<Checkbox
+            <Checkbox
               defaultChecked={true}
               onCheck={(event, isChecked) => this.handleShowInactiveSchemas(event, isChecked)}
+              label="Show Inactive Schemas"
               labelPosition="left"
-              ></Checkbox></label>
+              ></Checkbox>
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
-                <TableHeaderColumn>id</TableHeaderColumn>
+                <TableHeaderColumn>#</TableHeaderColumn>
                 <TableHeaderColumn>Name</TableHeaderColumn>
                 <TableHeaderColumn>Active</TableHeaderColumn>
                 <TableHeaderColumn className='header-pos'>Version</TableHeaderColumn>
