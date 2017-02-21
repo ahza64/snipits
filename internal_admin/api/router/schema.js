@@ -25,6 +25,7 @@ router.get(
       var userSchemas = yield QowSchemas.findAll({
         where: {
           workProjectId: projectId,
+          newest: true
          },
         raw: true
       })
@@ -63,7 +64,8 @@ router.post(
         version: version + 1,
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        status: true
+        status: true,
+        newest: true
       });
     } catch (e) {
       console.error(e);
@@ -72,7 +74,7 @@ router.post(
     this.body = result;
   }
 });
-//Get all user schemas
+//Get a user schema
 router.get('/schema/:schemaId', function* () {
     var schemaId = this.params.schemaId;
     if (permissions.has(this.req.user, this.req.user.companyId) && schemaId) {
@@ -82,13 +84,17 @@ router.get('/schema/:schemaId', function* () {
 })
 //set !status of a schema
 router.delete('/schema/:schemaId', function* () {
+  console.log("DEL------------------------");
+
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
   if (permissions.has(this.req.user, companyId) && schemaId) {
     var targetSchema = yield QowSchemas.find({where: {id: schemaId}})
     yield targetSchema.update({status : !targetSchema.status})
     this.body = targetSchema;
-    incrementSchema(targetSchema.dataValues);
+
+    yield incrementSchema(targetSchema.dataValues);
+    console.log("schema------------------------", targetSchema);
   }
 })
 
@@ -100,13 +106,12 @@ router.get('/schemaField/:schemaId', function* () {
     var targetSchema = yield QowSchemas.findOne({
         id:schemaId
     });
-      var targetFields = yield QowFields.findAll({
+    var targetFields = yield QowFields.findAll({
       where : {
         qowSchemaId : schemaId,
         status: true
       }
     });
-
     var vals = _.pluck(targetFields, 'dataValues');
     this.body = vals;
     }
@@ -128,46 +133,11 @@ router.get('/schemaField/:schemaId', function* () {
           type: body.type,
           status: true
         };
-        console.log("schema------------------------", schema);
-        incrementSchema(schema.dataValues)
+        yield incrementSchema(schema.dataValues)
         this.body = yield QowFields.create(field);
       }
     }
   });
-
-  // // update Schema Fields
-  // router.patch('/schemaField/:fieldId', function* () {
-  //   var body = this.request.body;
-  //   var fieldId = body.id;
-  //   if (permissions.has(this.req.user, this.req.user.companyId) && fieldId) {
-  //     try {
-  //       var changes = {};
-  //       var originalField = yield QowFields.findOne( {
-  //         where: {
-  //           id: fieldId
-  //          }
-  //       });
-  //       originalField = originalField.dataValues;
-  //       for (var key in body) {
-  //         if(body[key] !== originalField[key]) {
-  //           console.log(changes[key], body[key]);
-  //           changes[key] = body[key];
-  //         }
-  //       }
-  //
-  //       this.body = yield QowFields.update(changes, {
-  //         where: {
-  //           id: fieldId
-  //         }
-  //       });
-  //       console.log("changes", changes);
-  //       incrementSchema(originalField.qowSchemaId);
-  //
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   }
-  // });
 
   //should delete a specific field
   router.delete('/schemaField/:schemaFieldId', function* () {
@@ -187,45 +157,33 @@ router.get('/schemaField/:schemaId', function* () {
       this.body = yield targetSchemaInstance.update({status: targetFieldInstance.dataValues.status});
       console.log('DELETE /schemaField/:schemaFieldId', this.body);
 
-      incrementSchema( targetSchemaInstance.dataValues);
+      yield incrementSchema( targetSchemaInstance.dataValues);
     }
   });
 
-  // //new schemafield
-  // router.put('/schemaField/:schemaId', function* () {
-  //   try{
-  //     var schemaId= this.params.schemaId;
-  //     var body    = this.request.body;
-  //     var name    = body.name;
-  //     var type    = body.type;
-  //     var status  = body.status || true;
-  //     var required= body.required || true;
-  //     if (permissions.has(this.req.user, this.req.user.companyId)) {
-  //       var field = {
-  //         qowSchemaId: schemaId,
-  //         type: type,
-  //         required: required,
-  //         version: 1,
-  //         createdAt: Date.now(),
-  //         updatedAt: Date.now(),
-  //         status: status
-  //       };
-  //       var targetSchema = yield QowSchemas.findOne({ id : schemaId});
-  //       if (!targetSchema){
-  //         throw(404);
-  //       }
-  //       this.body = yield QowFields.create(field);
-  //       console.log("ADDING FIELDS------------------------",targetSchema.dataValues);
-  //       incrementSchema(targetSchema.dataValues);
-  //     }
-  // } catch(err) {
-  //   console.error(err);
-  //   }
-  // });
+function* incrementSchema(schema) {
+  schema.version = schema.version + 1;
+  var originalSchemaId = schema.id;
+  schema = _.omit(schema,['id','createdAt']);
+  var updatedSchema = yield QowSchemas.create(schema);
+  updatedSchema = updatedSchema.dataValues;
 
-function incrementSchema(schema) {
-  console.log(schema);
-  QowSchemas.update({version: schema.version + 1}, {where:{id:schema.id}})
+  yield QowSchemas.update({
+    newest:false
+  },{
+    where:{
+      id:originalSchemaId
+    }
+  });
+
+  yield QowFields.update({
+    qowSchemaId: updatedSchema.id
+  },{
+     where: {
+      qowSchemaId:originalSchemaId
+     }
+  });
+
 }
 
 app.use(router.routes());

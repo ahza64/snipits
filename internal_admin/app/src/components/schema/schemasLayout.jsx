@@ -9,7 +9,7 @@ import schemaRedux from '../../reduxes/schema';
 import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, schemaListUrl, schemaUrl } from '../../config';
 import Schema from './schema';
 import DefaultNavbar from '../navbar/defaultNavbar'
-import CreateSchema from './dialogs/createSchema'
+import CreateSchemaDialog from './dialogs/createSchemaDialog'
 import TextField from 'material-ui/TextField';
 import Badge from 'material-ui/Badge';
 import SelectField from 'material-ui/SelectField';
@@ -164,7 +164,7 @@ export default class SchemasLayout extends React.Component {
   handleProjectSelectChanged(event, project){
     this.setState({
       currentProject : project
-    }, () => this.updateSchemas);
+    }, () => this.updateSchemas());
   }
 
 
@@ -181,7 +181,6 @@ export default class SchemasLayout extends React.Component {
         this.setState({
           projects: res.body
         }, () => {
-            console.log("CB!!");
             this.setState({
               currentProject : res.body[0]
             });
@@ -204,7 +203,7 @@ export default class SchemasLayout extends React.Component {
       this.setState({
         currentProject : project,
         newSchema : false
-      }, this.updateSchemas);
+      }, ()=> this.updateSchemas());
       this.render();
     }
 
@@ -237,7 +236,7 @@ export default class SchemasLayout extends React.Component {
             this.setState({
               currentProject : this.state.projects[0].id
             },()=>{
-              this.updateSchemas()
+              this.updateSchemas();
             });
           });
         }
@@ -247,7 +246,7 @@ export default class SchemasLayout extends React.Component {
     handleAddSchemaDialogClose(event){
       this.setState({
         createSchemaDialogOpen: false
-      }, () => this.fetchProjects())
+      }, () => this.updateSchemas())
     }
 
     handleAddSchemaDialogOpen(event){
@@ -321,7 +320,7 @@ export default class SchemasLayout extends React.Component {
               secondary={true}
               onTouchTap={ (event) => {this.handleAddSchemaDialogOpen(event)} }
               />
-            <CreateSchema
+            <CreateSchemaDialog
               open={ this.state.createSchemaDialogOpen }
               onClose={(event) => {this.handleAddSchemaDialogClose(event)}}
               schemas= { this.state.schemaList }

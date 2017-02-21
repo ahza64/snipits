@@ -85,7 +85,6 @@ export default class QowSchema extends React.Component {
       if (err) {
         console.error("error",err);
       }
-      console.log("res", res);
       if (cb) {
         this.setState({
           schema: res.body,
@@ -109,10 +108,7 @@ export default class QowSchema extends React.Component {
   handleCreateFieldDialogClose(saved){
     this.setState({
       createFieldDialogOpen : false
-    })
-    if(saved){
-      this.updateSchemaFields();
-    }
+    }, ()=> this.updateSchemas)
   }
 
   deleteField(event, field){
