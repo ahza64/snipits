@@ -113,7 +113,6 @@ export default class SchemasLayout extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        console.log(res, res.body);
         this.updateSchemas();
       }
     })
@@ -231,7 +230,6 @@ export default class SchemasLayout extends React.Component {
         if (err) {
           console.error(err);
         } else {
-          console.log("projects", res);
           this.setState({projects: res.body}, ()=>{
             this.setState({
               currentProject : this.state.projects[0].id

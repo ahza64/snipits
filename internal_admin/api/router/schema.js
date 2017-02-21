@@ -153,10 +153,7 @@ router.get('/schemaField/:schemaId', function* () {
       if (!targetSchemaInstance){
         throw(403);
       }
-
       this.body = yield targetSchemaInstance.update({status: targetFieldInstance.dataValues.status});
-      console.log('DELETE /schemaField/:schemaFieldId', this.body);
-
       yield incrementSchema( targetSchemaInstance.dataValues);
     }
   });

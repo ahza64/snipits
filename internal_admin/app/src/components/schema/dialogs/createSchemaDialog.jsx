@@ -64,7 +64,8 @@ export default class CreateSchema extends React.Component {
       if(err) {
         console.error("this err", err);
       } else {
-        console.log(res);
+        this.props.updateSchemas()
+        
       }
     })
   }

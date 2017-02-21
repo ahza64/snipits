@@ -67,7 +67,6 @@ export default class CreateFieldDialog extends React.Component {
       type: this.state.type
     }
     let url = schemaFieldUrl.replace(':schemaFieldId', schemaRedux.getState());
-    console.log("url:",url);
     request
     .post(url)
     .send(newField)
@@ -76,7 +75,6 @@ export default class CreateFieldDialog extends React.Component {
       if(err){
         console.error(err);
       } else {
-        console.log(res.body);
         this.props.onClose(true);
       }
     })
