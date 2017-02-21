@@ -44,12 +44,13 @@ export default class QowSchema extends React.Component {
     this.setSchemaFields = this.setSchemaFields.bind(this);
     this.getSchemaFields = this.getSchemaFields.bind(this);
     this.updateSchemaFields = this.updateSchemaFields.bind(this);
-    this.renderCreateFieldDialog = this.renderCreateFieldDialog.bind(this);
-    this.handleAddRowDialogOpen = this.handleAddRowDialogOpen.bind(this);
-    this.handleAddRowDialogClose = this.handleAddRowDialogClose.bind(this);
     this.deleteField = this.deleteField.bind(this);
-    this.renderSchemaSelectField = this.renderSchemaSelectField.bind(this);
 
+    this.handleCreateFieldDialogOpen = this.handleCreateFieldDialogOpen.bind(this);
+    this.handleCreateFieldDialogClose = this.handleCreateFieldDialogClose.bind(this);
+
+    this.renderCreateFieldDialog = this.renderCreateFieldDialog.bind(this);
+    this.renderSchemaSelectField = this.renderSchemaSelectField.bind(this);
     this.refreshSchemaList();
     this.updateSchemaFields();
   };
@@ -99,13 +100,13 @@ export default class QowSchema extends React.Component {
      })
   }
 
-  handleAddRowDialogOpen(event){
+  handleCreateFieldDialogOpen(event){
     this.setState({
       createFieldDialogOpen : true
     });
   }
 
-  handleAddRowDialogClose(saved){
+  handleCreateFieldDialogClose(saved){
     this.setState({
       createFieldDialogOpen : false
     })
@@ -115,10 +116,7 @@ export default class QowSchema extends React.Component {
   }
 
   deleteField(event, field){
-    console.log('deleteField', field);
-    console.log("schema", this.state.schema);
     let url = schemaFieldUrl.replace(':schemaFieldId', field.id)
-    console.log(url);
     request
     .delete(url)
     .withCredentials()
@@ -148,8 +146,6 @@ export default class QowSchema extends React.Component {
     var schemaId = schemaRedux.getState();
     if (!schemaId) {return}
     let url = schemaFieldUrl.replace(':schemaFieldId', schemaId)
-    console.log('url', url);
-
     return request
     .get(url)
     .withCredentials()
@@ -163,15 +159,12 @@ export default class QowSchema extends React.Component {
   }
 
   updateSchemaFields(){
-    console.log("SR", schemaRedux.getState());
-
     this.getSchemaFields(res => {
       this.setSchemaFields(res);
     })
   }
 
   handleSchemaChange(event, value){
-    console.log("event",event,"value",value);
     this.setState({
       schemaId: value
     })
@@ -186,7 +179,7 @@ export default class QowSchema extends React.Component {
     return(
       <CreateFieldDialog
         open={ this.state.createFieldDialogOpen }
-        onClose={ (saved) => { this.handleAddRowDialogClose(saved) } }
+        onClose={ (saved) => { this.handleCreateFieldDialogClose(saved) } }
         />
     );
   }
@@ -218,7 +211,7 @@ export default class QowSchema extends React.Component {
               <RaisedButton
                 label="Add Field"
                 secondary={true}
-                onTouchTap={ (event) => {this.handleAddRowDialogOpen(event)} }
+                onTouchTap={ (event) => {this.handleCreateFieldDialogOpen(event)} }
                 />
               { this.renderSchemaSelectField() }
               { this.renderCreateFieldDialog() }

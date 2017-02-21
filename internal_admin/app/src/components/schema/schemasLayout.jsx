@@ -43,22 +43,23 @@ export default class SchemasLayout extends React.Component {
       showInactiveSchemas: true
     }
     this.fetchCompanies = this.fetchCompanies.bind(this);
-    this.handleProjectSelectChanged = this.handleProjectSelectChanged.bind(this);
-    this.setSchemaList = this.setSchemaList.bind(this);
-    this.fetchSchemas = this.fetchSchemas.bind(this);
-    this.updateSchemas = this.updateSchemas.bind(this);
-    this.renderProjectSelectField = this.renderProjectSelectField.bind(this);
+    this.handleCompanySelectChanged = this.handleCompanySelectChanged.bind(this);
     this.fetchProjects = this.fetchProjects.bind(this);
-    this.renderToggle = this.renderToggle.bind(this);
+    this.handleProjectSelectChanged = this.handleProjectSelectChanged.bind(this);
     this.setCurrentProject = this.setCurrentProject.bind(this);
+    this.setSchemaList = this.setSchemaList.bind(this);
+    this.updateSchemas = this.updateSchemas.bind(this);
+    this.fetchSchemas = this.fetchSchemas.bind(this);
     this.handleEditViewSchema = this.handleEditViewSchema.bind(this);
-    this.handleCloseActionMenu = this.handleCloseActionMenu.bind(this);
+    this.handleShowInactiveSchemas= this.handleShowInactiveSchemas.bind(this);
     this.toggleSchemaStatus = this.toggleSchemaStatus.bind(this);
+
     this.handleAddSchemaDialogOpen= this.handleAddSchemaDialogOpen.bind(this);
     this.handleAddSchemaDialogClose = this.handleAddSchemaDialogClose.bind(this);
-    this.handleShowInactiveSchemas= this.handleShowInactiveSchemas.bind(this);
+
+    this.renderToggle = this.renderToggle.bind(this);
+    this.renderProjectSelectField = this.renderProjectSelectField.bind(this);
     this.renderCompanySelectField= this.renderCompanySelectField.bind(this);
-    this.handleCompanySelectChanged = this.handleCompanySelectChanged.bind(this);
 
     this.fetchCompanies();
   }
@@ -93,7 +94,6 @@ export default class SchemasLayout extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        console.log("COMPANIES", res.body);
         var firstCompany = (res.body.length > 0) ? res.body[0] : null;
         this.setState({
           companies: res.body,
