@@ -10,7 +10,7 @@ const diff = require('deep-diff').diff;
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 
-// Collection
+// Collections
 const QowSchemas = require('dsp_shared/database/model/ingestion/tables').qow_schemas;
 const QowFields = require('dsp_shared/database/model/ingestion/tables').qow_fields;
 
@@ -33,6 +33,7 @@ router.get(
   }
 );
 
+//create a new schema
 router.post(
   '/schemas/:projectId',
   function*() {
@@ -70,7 +71,7 @@ router.post(
     this.body = result;
   }
 });
-
+//Get all user schemas
 router.get('/schema/:schemaId', function* () {
     var schemaId = this.params.schemaId;
     if (permissions.has(this.req.user, this.req.user.companyId) && schemaId) {
@@ -78,6 +79,7 @@ router.get('/schema/:schemaId', function* () {
       this.body = schema.dataValues;
     }
 })
+//set !status of a schema
 router.delete('/schema/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
@@ -88,6 +90,16 @@ router.delete('/schema/:schemaId', function* () {
   }
 })
 
+router.put('/schema/:schemaId', function* () {
+  var schemaId = this.params.schemaId;
+  if (permissions.has(this.req.user, companyId) && schemaId) {
+    var targetSchema = yield QowSchemas.find({where: {id: schemaId}})
+    yield targetSchema.update({status : !targetSchema.status})
+    this.body = targetSchema;
+  }
+})
+
+//get a specific field
 router.get('/schemaField/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
@@ -108,6 +120,7 @@ router.get('/schemaField/:schemaId', function* () {
     }
   });
 
+  //Create a new schemaField
   router.post('/schemaField/:schemaId', function* () {
     var body = this.request.body;
     var schemaId = this.params.schemaId;
@@ -126,6 +139,8 @@ router.get('/schemaField/:schemaId', function* () {
       }
     }
   });
+
+  // update Schema Fields
   router.patch('/schemaField/', function* () {
     var body = this.request.body;
     var fieldId = body.id;
@@ -156,6 +171,7 @@ router.get('/schemaField/:schemaId', function* () {
     }
   });
 
+  //should delete ad specific field
   router.delete('/schemaField/:schemaFieldId', function* () {
     if (permissions.has(this.req.user, this.req.user.companyId)) {
       var body     = this.request.body;
@@ -165,9 +181,10 @@ router.get('/schemaField/:schemaId', function* () {
     }
   });
 
+  //new schemaId
   router.put('/schemaField/:schemaId', function* () {
     try{
-      var schemaId = this.params.schemaId;
+      var schemaId= this.params.schemaId;
       var body    = this.request.body;
       var name    = body.name;
       var type    = body.type;

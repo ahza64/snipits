@@ -7,7 +7,7 @@ import { createStore } from 'redux';
 const schemaReducer = (state = {}, action) => {
   switch(action.type) {
     case 'CHANGE_SCHEMA':
-      return action.value;
+      return action.schema;
     default:
       return ;
   }

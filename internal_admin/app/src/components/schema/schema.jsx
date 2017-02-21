@@ -18,6 +18,8 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import AddBoxIcon from 'material-ui/svg-icons/content/add-box';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import Checkbox from 'material-ui/Checkbox';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 import { cloneDeep, findIndex } from 'lodash';
 import * as edit from 'react-edit';
@@ -30,13 +32,15 @@ export default class QowSchema extends React.Component {
     this.state = {
       name: '',
       fields: [],
-      schema: {},
       schemaList: [],
+      schemaId: null,
       projectId: null,
       createFieldDialogOpen: false
     };
     this.fetchSchemaList = this.fetchSchemaList.bind(this);
+    this.refreshSchemaList = this.refreshSchemaList.bind(this);
     this.fetchSchema = this.fetchSchema.bind(this);
+
     this.setSchemaFields = this.setSchemaFields.bind(this);
     this.getSchemaFields = this.getSchemaFields.bind(this);
     this.updateSchemaFields = this.updateSchemaFields.bind(this);
@@ -44,8 +48,6 @@ export default class QowSchema extends React.Component {
     this.handleAddRowDialogOpen = this.handleAddRowDialogOpen.bind(this);
     this.handleAddRowDialogClose = this.handleAddRowDialogClose.bind(this);
     this.deleteField = this.deleteField.bind(this);
-    this.fetchSchemaList = this.fetchSchemaList.bind(this);
-    this.refreshSchemaList = this.refreshSchemaList.bind(this);
     this.renderSchemaSelectField = this.renderSchemaSelectField.bind(this);
 
     this.refreshSchemaList();
@@ -66,7 +68,6 @@ export default class QowSchema extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        console.log("SCHEMALIST ______",res.body);
         self.setState({
           schemaList: res.body
         })
@@ -81,7 +82,7 @@ export default class QowSchema extends React.Component {
     .withCredentials()
     .end((err,res) => {
       if (err) {
-          console.error("error",err);
+        console.error("error",err);
       }
       console.log("res", res);
       if (cb) {
@@ -135,7 +136,6 @@ export default class QowSchema extends React.Component {
 
   componentWillMount(){
     this.setState({schemaId: schemaRedux.getState()})
-    this.updateSchemaFields();
   }
 
   setSchemaFields(fields){
@@ -145,8 +145,11 @@ export default class QowSchema extends React.Component {
   }
 
   getSchemaFields(callback){
-    let url = schemaFieldUrl.replace(':schemaFieldId', schemaRedux.getState())
+    var schemaId = schemaRedux.getState();
+    if (!schemaId) {return}
+    let url = schemaFieldUrl.replace(':schemaFieldId', schemaId)
     console.log('url', url);
+
     return request
     .get(url)
     .withCredentials()
@@ -160,9 +163,23 @@ export default class QowSchema extends React.Component {
   }
 
   updateSchemaFields(){
+    console.log("SR", schemaRedux.getState());
+
     this.getSchemaFields(res => {
       this.setSchemaFields(res);
     })
+  }
+
+  handleSchemaChange(event, value){
+    console.log("event",event,"value",value);
+    this.setState({
+      schemaId: value
+    })
+    schemaRedux.dispatch({
+      type:'CHANGE_SCHEMA',
+      schema: value
+    });
+    this.updateSchemaFields()
   }
 
   renderCreateFieldDialog(){
@@ -174,9 +191,21 @@ export default class QowSchema extends React.Component {
     );
   }
 
-
   renderSchemaSelectField(){
-
+    return(
+      <SelectField
+        floatingLabelText="Select a Schema"
+        fullWidth={ true }
+        value={ this.state.schemaId }
+        onChange={ (event, index, value) => this.handleSchemaChange(event, value) } >
+        { this.state.schemaList.map((s, idx) => {
+            return(
+              <MenuItem key={ idx } value={ s.id } primaryText={ s.name } />
+            );
+          })
+        }
+      </SelectField>
+    )
   }
 
   render() {
@@ -191,6 +220,7 @@ export default class QowSchema extends React.Component {
                 secondary={true}
                 onTouchTap={ (event) => {this.handleAddRowDialogOpen(event)} }
                 />
+              { this.renderSchemaSelectField() }
               { this.renderCreateFieldDialog() }
             </Col>
             <Col xs={8} sm={8} md={8} lg={8} >
