@@ -47,6 +47,7 @@ export default class CreateSchema extends React.Component {
 
     if (!error) {
       this.addSchema(this.state.token);
+      this.setState({snackbarOpen: false});
       this.props.onClose();
     }
   }
@@ -64,8 +65,7 @@ export default class CreateSchema extends React.Component {
       if(err) {
         console.error("this err", err);
       } else {
-        this.props.updateSchemas()
-        
+        this.props.updateSchemas();
       }
     })
   }

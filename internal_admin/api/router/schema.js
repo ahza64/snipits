@@ -123,7 +123,13 @@ router.get('/schemaField/:schemaId', function* () {
     var schemaId = this.params.schemaId;
     console.log("body",body, "schemaId",schemaId);
     if (permissions.has(this.req.user, this.req.user.companyId)) {
-      var schema = yield QowSchemas.findOne({where:{ id: schemaId }});
+      var schema = yield QowSchemas.findOne({
+        where:{
+         id: schemaId
+       }
+     });
+     yield incrementSchema(schema.dataValues);
+
       if (schema){
         var field = {
           name: body.name,
@@ -133,7 +139,6 @@ router.get('/schemaField/:schemaId', function* () {
           type: body.type,
           status: true
         };
-        yield incrementSchema(schema.dataValues)
         this.body = yield QowFields.create(field);
       }
     }
@@ -153,7 +158,9 @@ router.get('/schemaField/:schemaId', function* () {
       if (!targetSchemaInstance){
         throw(403);
       }
-      this.body = yield targetSchemaInstance.update({status: targetFieldInstance.dataValues.status});
+      this.body = yield targetSchemaInstance.update({
+        status: targetFieldInstance.dataValues.status
+      });
       yield incrementSchema( targetSchemaInstance.dataValues);
     }
   });
@@ -180,6 +187,8 @@ function* incrementSchema(schema) {
       qowSchemaId:originalSchemaId
      }
   });
+
+  console.log("FIELD PUDATE!!!==============",a);
 
 }
 

@@ -323,6 +323,7 @@ export default class SchemasLayout extends React.Component {
               onClose={(event) => {this.handleAddSchemaDialogClose(event)}}
               schemas= { this.state.schemaList }
               currentProject={ this.state.currentProject }
+              updateSchemas={this.updateSchemas}
               />
             <Checkbox
               defaultChecked={true}
@@ -348,7 +349,7 @@ export default class SchemasLayout extends React.Component {
             <TableBody displayRowCheckbox={ false } selectable={ false }>
               {
                 this.state.schemaList
-                .sort((a,b) => {return a.id - b.id})
+                .sort((a,b) => {return a.name > b.name})
                 .map((scheme, idx) => {
                   if (!this.state.showInactiveSchemas && !scheme.status){
                     return;
