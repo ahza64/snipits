@@ -29,7 +29,8 @@ export default class DefaultNavbar extends React.Component {
     this.showUsers = this.showUsers.bind(this);
     this.goToSchemas = this.goToSchemas.bind(this);
     this.showSchemas = this.showSchemas.bind(this);
-
+    this.goToTaxonomy = this.goToTaxonomy.bind(this);
+    this.showTaxonomy = this.showTaxonomy.bind(this);
   }
 
   handleLogout(event) {
@@ -108,6 +109,14 @@ export default class DefaultNavbar extends React.Component {
     return (<MenuItem eventKey={1.9} onClick={ this.goToSchemas }>Schemas</MenuItem>);
   }
 
+  goToTaxonomy(){
+    browserHistory.push(urlPrefix + 'taxonomy/');
+  }
+
+  showTaxonomy(){
+    return (<MenuItem eventKey={2.1} onClick={ this.goToTaxonomy }>Taxonomy</MenuItem>);
+  }
+
   render() {
     return (
       <Navbar>
@@ -128,6 +137,7 @@ export default class DefaultNavbar extends React.Component {
               { this.showIngest() }
               { this.showUsers() }
               { this.showSchemas() }
+              { this.showTaxonomy() }
               <MenuItem divider />
               <MenuItem eventKey={1.4} onClick={ this.handleLogout }>Logout</MenuItem>
             </NavDropdown>
