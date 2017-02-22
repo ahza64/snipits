@@ -9,7 +9,7 @@ import schemaRedux from '../../reduxes/schema';
 import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, schemaListUrl, schemaUrl } from '../../config';
 import Schema from './schema';
 import DefaultNavbar from '../navbar/defaultNavbar'
-import CreateSchema from './dialogs/createSchema'
+import CreateSchemaDialog from './dialogs/createSchemaDialog'
 import TextField from 'material-ui/TextField';
 import Badge from 'material-ui/Badge';
 import SelectField from 'material-ui/SelectField';
@@ -31,6 +31,9 @@ export default class SchemasLayout extends React.Component {
     super();
 
     this.state = {
+      companies: [],
+      companyName: null,
+      companyId: null,
       schemaList : [],
       projects: [],
       currentProject: null,
@@ -39,26 +42,26 @@ export default class SchemasLayout extends React.Component {
       createSchemaDialogOpen: false,
       showInactiveSchemas: true
     }
-
-    this.handleProjectSelectChanged = this.handleProjectSelectChanged.bind(this);
-    //this.renderActionMenu = this.renderActionMenu.bind(this);
-    this.setSchemaList = this.setSchemaList.bind(this);
-    this.fetchSchemas = this.fetchSchemas.bind(this);
-    this.updateSchemas = this.updateSchemas.bind(this);
-    this.renderProjectSelectField = this.renderProjectSelectField.bind(this);
+    this.fetchCompanies = this.fetchCompanies.bind(this);
+    this.handleCompanySelectChanged = this.handleCompanySelectChanged.bind(this);
     this.fetchProjects = this.fetchProjects.bind(this);
-    this.renderToggle = this.renderToggle.bind(this);
+    this.handleProjectSelectChanged = this.handleProjectSelectChanged.bind(this);
     this.setCurrentProject = this.setCurrentProject.bind(this);
+    this.setSchemaList = this.setSchemaList.bind(this);
+    this.updateSchemas = this.updateSchemas.bind(this);
+    this.fetchSchemas = this.fetchSchemas.bind(this);
     this.handleEditViewSchema = this.handleEditViewSchema.bind(this);
-    this.handleOpenActionMenu = this.handleOpenActionMenu.bind(this);
-    this.handleCloseActionMenu = this.handleCloseActionMenu.bind(this);
+    this.handleShowInactiveSchemas= this.handleShowInactiveSchemas.bind(this);
     this.toggleSchemaStatus = this.toggleSchemaStatus.bind(this);
+
     this.handleAddSchemaDialogOpen= this.handleAddSchemaDialogOpen.bind(this);
     this.handleAddSchemaDialogClose = this.handleAddSchemaDialogClose.bind(this);
-    this.handleShowInactiveSchemas= this.handleShowInactiveSchemas.bind(this);
 
-    this.fetchProjects();
-    this.updateSchemas();
+    this.renderToggle = this.renderToggle.bind(this);
+    this.renderProjectSelectField = this.renderProjectSelectField.bind(this);
+    this.renderCompanySelectField= this.renderCompanySelectField.bind(this);
+
+    this.fetchCompanies();
   }
 
   renderToggle(schema) {
@@ -71,6 +74,36 @@ export default class SchemasLayout extends React.Component {
     );
   }
 
+  handleCompanySelectChanged(event, companyId) {
+    let companies = this.state.companies.filter(c => {
+      return c.id == companyId;
+    });
+    let companyName = (companies.length > 0) ? companies[0].name : null;
+    this.setState({
+      companyId: companyId,
+      companyName: companyName
+    }, ()=>
+    this.fetchProjects(this.state.companyId)
+  )}
+
+  fetchCompanies(loadProjects) {
+    return request
+    .get(companyUrl)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        var firstCompany = (res.body.length > 0) ? res.body[0] : null;
+        this.setState({
+          companies: res.body,
+          companyId: firstCompany ? firstCompany.id : null,
+          companyName: firstCompany ? firstCompany.name : null
+        }, () => this.fetchProjects(this.state.companyId))
+      }
+    });
+  }
+
   toggleSchemaStatus(event, schemaId) {
     let url = schemaUrl.replace(':schemaId', schemaId);
     request
@@ -80,20 +113,10 @@ export default class SchemasLayout extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        console.log(res, res.body);
         this.updateSchemas();
       }
     })
   }
-
-  // handleActionMenu(event, schema) {
-  //   this.setState({
-  //     actionMenuOpen: true,
-  //     actionMenuTarget: event.currentTarget,
-  //     schemaId: schema.id,
-  //     schemaName: schema.name
-  //   });
-  // }
 
   setSchemaList(list){
     this.setState({
@@ -111,21 +134,9 @@ export default class SchemasLayout extends React.Component {
     event.preventDefault();
     schemaRedux.dispatch({
       type:'CHANGE_SCHEMA',
-      value: scheme.id
+      schema: scheme.id
     });
     browserHistory.push('/schema/');
-  }
-
-  handleOpenActionMenu(event, scheme){
-    event.preventDefault();
-    schemaRedux.dispatch({
-      type:'CHANGE_SCHEMA',
-      value: scheme.id
-    });
-    this.setState({
-      actionMenuOpen: true,
-      actionMenuTarget: event.currentTarget,
-    });
   }
 
   fetchSchemas(callback){
@@ -152,7 +163,7 @@ export default class SchemasLayout extends React.Component {
   handleProjectSelectChanged(event, project){
     this.setState({
       currentProject : project
-    }, this.updateSchemas);
+    }, () => this.updateSchemas());
   }
 
 
@@ -165,11 +176,17 @@ export default class SchemasLayout extends React.Component {
       if (err) {
         console.error(err);
       } else {
+        try{
         this.setState({
           projects: res.body
-        }, this.setState({
-          currentProject : res.body[0]
-        }));
+        }, () => {
+            this.setState({
+              currentProject : res.body[0]
+            });
+          });
+        } catch(e){
+          console.error("error",e)
+        }
       }
     });
   }
@@ -185,7 +202,7 @@ export default class SchemasLayout extends React.Component {
       this.setState({
         currentProject : project,
         newSchema : false
-      }, this.updateSchemas);
+      }, ()=> this.updateSchemas());
       this.render();
     }
 
@@ -204,6 +221,7 @@ export default class SchemasLayout extends React.Component {
     }
 
     fetchProjects(companyId, callback) {
+      if (!companyId) return;
       let url = projectsUrl.replace(':companyId', companyId);
       return request
       .get(url)
@@ -215,8 +233,9 @@ export default class SchemasLayout extends React.Component {
           this.setState({projects: res.body}, ()=>{
             this.setState({
               currentProject : this.state.projects[0].id
-            }, this.updateSchemas);
-            this.render();
+            },()=>{
+              this.updateSchemas();
+            });
           });
         }
       })
@@ -225,7 +244,7 @@ export default class SchemasLayout extends React.Component {
     handleAddSchemaDialogClose(event){
       this.setState({
         createSchemaDialogOpen: false
-      }, this.fetchProjects)
+      }, () => this.updateSchemas())
     }
 
     handleAddSchemaDialogOpen(event){
@@ -237,7 +256,24 @@ export default class SchemasLayout extends React.Component {
     handleShowInactiveSchemas(event, isChecked){
       this.setState({
         showInactiveSchemas : isChecked
-      }, this.updateSchemas)
+      })
+    }
+
+    renderCompanySelectField() {
+      return(
+        <SelectField
+          floatingLabelText="Company"
+          fullWidth={ true }
+          value={ this.state.companyId }
+          onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) } >
+          { this.state.companies.map((company, idx) => {
+              return(
+                <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
+              );
+            })
+          }
+        </SelectField>
+      );
     }
 
     renderProjectSelectField(){
@@ -269,6 +305,7 @@ export default class SchemasLayout extends React.Component {
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
           <Col xs={0} sm={0} md={2} lg={2} >
             { this.renderProjectSelectField() }
+            { this.renderCompanySelectField() }
             Total Project Schemas Found
             <Badge
               badgeContent={ this.state.schemaList.length }
@@ -281,11 +318,12 @@ export default class SchemasLayout extends React.Component {
               secondary={true}
               onTouchTap={ (event) => {this.handleAddSchemaDialogOpen(event)} }
               />
-            <CreateSchema
+            <CreateSchemaDialog
               open={ this.state.createSchemaDialogOpen }
               onClose={(event) => {this.handleAddSchemaDialogClose(event)}}
               schemas= { this.state.schemaList }
               currentProject={ this.state.currentProject }
+              updateSchemas={this.updateSchemas}
               />
             <Checkbox
               defaultChecked={true}
@@ -311,7 +349,7 @@ export default class SchemasLayout extends React.Component {
             <TableBody displayRowCheckbox={ false } selectable={ false }>
               {
                 this.state.schemaList
-                .sort((a,b) => {return a.id - b.id})
+                .sort((a,b) => {return a.name > b.name})
                 .map((scheme, idx) => {
                   if (!this.state.showInactiveSchemas && !scheme.status){
                     return;
