@@ -3,7 +3,6 @@
 import React from 'react';
 
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import * as Table from 'reactabular-table';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
