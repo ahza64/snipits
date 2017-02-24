@@ -1,21 +1,18 @@
 // added packages reactabular lodash react-edit uuid
 // react-bootstrap-table babel-preset-stage-0 (in .babelrc) babelify react-hot-loader toastr
 import React from 'react';
-
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
-import Row from 'react-bootstrap/lib/Row';
 import Checkbox from 'material-ui/Checkbox';
+
 import schemaRedux from '../../../reduxes/schema';
 import request from '../../../services/request';
-import { configUrl, schemaFieldUrl } from '../../../config';
+import { schemaFieldUrl } from '../../../config';
 
 export default class CreateFieldDialog extends React.Component {
   constructor() {
@@ -36,10 +33,6 @@ export default class CreateFieldDialog extends React.Component {
     this.handleNameChanged = this.handleNameChanged.bind(this);
   }
 
-  componentDidMount() {
-
-  }
-
   validate() {
     if (this.validName() && this.state.type) {
       return true;
@@ -53,10 +46,6 @@ export default class CreateFieldDialog extends React.Component {
 
   handleNameChanged(event) {
     this.setState({ name: event.target.value });
-  }
-
-  addField() {
-
   }
 
   handleSubmit() {
@@ -81,7 +70,7 @@ export default class CreateFieldDialog extends React.Component {
 
   handleTypeChanged(event, index, type) {
     this.setState({
-      type,
+      type: type
     });
   }
 
@@ -96,7 +85,7 @@ export default class CreateFieldDialog extends React.Component {
       <FlatButton
         label="Cancel"
         default
-        onClick={ event => this.props.onClose(false) }
+        onClick={ (event) => { this.props.onClose(false); } }
       />,
     ];
     const dataTypes = [
