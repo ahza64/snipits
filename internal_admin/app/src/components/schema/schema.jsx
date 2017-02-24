@@ -85,17 +85,12 @@ export default class QowSchema extends React.Component {
       if (err) {
         console.error("error",err);
       }
-      if (cb) {
-        this.setState({
-          schema: res.body,
-          projectId: res.body.workProjectId
-        }, cb(res.body) );
-      } else {
-        this.setState({
-          schema: res.body,
-          projectId: res.body.workProjectId
-        });
-      }
+
+    this.setState({
+      schema: res.body,
+      projectId: res.body.workProjectId
+    });
+
      })
   }
 
@@ -108,7 +103,7 @@ export default class QowSchema extends React.Component {
   handleCreateFieldDialogClose(saved){
     this.setState({
       createFieldDialogOpen : false
-    }, ()=> this.updateSchemas)
+    }, ()=> this.updateSchemaFields())
   }
 
   deleteField(event, field){
