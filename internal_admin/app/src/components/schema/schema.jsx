@@ -49,6 +49,24 @@ export default class QowSchema extends React.Component {
     this.updateSchemaFields();
   }
 
+  componentWillMount() {
+    this.setState({
+      schemaId: schemaRedux.getState()
+    });
+  }
+
+  setSchemaFields(fields) {
+    this.setState({
+      fields: fields
+    });
+  }
+
+  updateSchemaFields() {
+    this.getSchemaFields((res) => {
+      this.setSchemaFields(res);
+    });
+  }
+
   getSchemaFields(callback) {
     var schemaId = schemaRedux.getState();
     if (!schemaId) { return; }
@@ -66,7 +84,7 @@ export default class QowSchema extends React.Component {
   }
 
   refreshSchemaList() {
-    this.fetchSchema((body) => this.fetchSchemaList(body.workProjectId));
+    this.fetchSchema((body) => { this.fetchSchemaList(body.workProjectId); });
   }
 
   fetchSchemaList(projectId) {
@@ -86,7 +104,7 @@ export default class QowSchema extends React.Component {
     });
   }
 
-  fetchSchema() {
+  fetchSchema(cb) {
     let url = schemaUrl.replace(':schemaId', schemaRedux.getState());
     request
     .get(url)
@@ -99,6 +117,7 @@ export default class QowSchema extends React.Component {
         schema: res.body,
         projectId: res.body.workProjectId
       });
+      cb(res.body);
     });
   }
 
@@ -128,24 +147,6 @@ export default class QowSchema extends React.Component {
           fields: newFields
         });
       }
-    });
-  }
-
-  componentWillMount() {
-    this.setState({
-      schemaId: schemaRedux.getState()
-    });
-  }
-
-  setSchemaFields(fields) {
-    this.setState({
-      fields: fields
-    });
-  }
-
-  updateSchemaFields() {
-    this.getSchemaFields((res) => {
-      this.setSchemaFields(res);
     });
   }
 
