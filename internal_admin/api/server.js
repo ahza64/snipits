@@ -37,7 +37,7 @@ app.use(mount(config.url_prefix, require('./router/watcher')));
 app.use(mount(config.url_prefix, require('./router/config')));
 app.use(mount(config.url_prefix, require('./router/download')));
 app.use(mount(config.url_prefix, require('./router/schema')));
-
+app.use(mount(config.url_prefix, require('./router/taxonomy')));
 
 
 // Port
