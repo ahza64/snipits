@@ -9,13 +9,13 @@ import request from '../../../services/request';
 import { configUrl, schemaListUrl } from '../../../config';
 
 export default class CreateSchema extends React.Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
-      token: "",
+      token: '',
       snackbarOpen: false,
       createDisable: true,
-      dialogOpen: false
+      dialogOpen: false,
     };
 
     this.handleNameInput = this.handleNameInput.bind(this);
@@ -24,66 +24,65 @@ export default class CreateSchema extends React.Component {
     this.validName = this.validName.bind(this);
   }
 
-  handleNameInput(event, value){
+  handleNameInput(event, value) {
     this.setState({
       token: value,
-      snackbarOpen: false
+      snackbarOpen: false,
     });
   }
 
-  validName(){
+  validName() {
     return this.state.token.match(/^[\w\.]+$/g);
   }
 
-  handleSubmit(){
-    var error = false;
-    for (var i = 0; i < this.props.schemas.length; i++) {
-      if (this.state.token == this.props.schemas[i].name){
+  handleSubmit() {
+    let error = false;
+    for (let i = 0; i < this.props.schemas.length; i++) {
+      if (this.state.token == this.props.schemas[i].name) {
         error = true;
-        this.setState({snackbarOpen: true});
+        this.setState({ snackbarOpen: true });
         break;
       }
     }
 
     if (!error) {
       this.addSchema(this.state.token);
-      this.setState({snackbarOpen: false});
+      this.setState({ snackbarOpen: false });
       this.props.onClose();
     }
   }
 
-  addSchema(name){
-    var newSchema = {
-      name: name
+  addSchema(name) {
+    const newSchema = {
+      name,
     };
-    let url = schemaListUrl.replace(':projectId', this.props.currentProject);
+    const url = schemaListUrl.replace(':projectId', this.props.currentProject);
     request
     .post(url)
     .send(newSchema)
     .withCredentials()
     .end((err, res) => {
-      if(err) {
-        console.error("this err", err);
+      if (err) {
+        console.error('this err', err);
       } else {
         this.props.updateSchemas();
       }
-    })
+    });
   }
 
   render() {
-
     const actions = [
       <RaisedButton
         label="Create Schema"
-        primary={true}
-        disabled={!this.validName()}
-        onClick={this.handleSubmit}
-        />,
+        primary
+        disabled={ !this.validName() }
+        onClick={ this.handleSubmit }
+      />,
       <FlatButton
         label="Cancel"
-        secondary={true}
-        onClick={this.props.onClose}
-        />
+        secondary
+        onClick={ this.props.onClose }
+      />,
     ];
 
     return (
@@ -91,18 +90,18 @@ export default class CreateSchema extends React.Component {
         <Dialog
           title="Create New Schema"
           open={ this.props.open }
-          actions={actions}
-          onClose={ this.props.onClose}
-          >
+          actions={ actions }
+          onClose={ this.props.onClose }
+        >
           <TextField
             hintText="Schema Name"
-            onChange={this.handleNameInput}
-            />
+            onChange={ this.handleNameInput }
+          />
           <Snackbar
-            open={this.state.snackbarOpen}
+            open={ this.state.snackbarOpen }
             message="Error: Schema name already exists."
-            autoHideDuration={5000}
-            />
+            autoHideDuration={ 5000 }
+          />
         </Dialog>
       </div>
     );
