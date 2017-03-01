@@ -17,13 +17,14 @@ const QowTaxonomies = require('dsp_shared/database/model/ingestion/tables').qow_
 router.get(
   '/taxonomies/:schemaId',
   function*() {
+    console.log("taxonomies endpoint hit{{{{{{{{{{{}}}}}}}}}}}");
     var companyId = this.req.user.companyId;
     var schemaId = this.params.schemaId;
     var self = this;
     if (permissions.has(this.req.user, companyId) && schemaId) {
       var schemaTaxonomies = yield QowTaxonomies.findAll({
         where: {
-          schemaId: schemaId,
+          qowSchemaId: schemaId,
          },
         raw: true
       })
@@ -38,24 +39,37 @@ router.post(
   function*() {
   var companyId = this.req.user.companyId;
   var body = this.request.body;
-  var field_name = body.name;
-  var schemaId = body.id;
+  var field_name = body.fieldName;
+  var schemaId = body.schemaId;
   var order = body.order;
-  var node_type = body.node_type;
+  var node_type = body.nodeType;
   var keys = body.keys;
+  var taxId = body.id
   var result;
 
-  if (permissions.has(this.req.user, companyId) && schemaId) {
+  if (permissions.has(this.req.user, companyId)) {
     try {
-      result = yield QowTaxonomies.create({
-        field_name: name,
-        schemaId: schemaId,
-        order: order,
-        node_type: node_type,
-        keys: keys,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
+      if (taxId) {
+        taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
+        result = yield taxonomy.updateAttributes({
+          fieldName: field_name,
+          qowSchemaId: schemaId,
+          order: order,
+          nodeType: node_type,
+          keys: keys
+        });
+      } else {
+        console.log("----------------", this.request.body);
+        result = yield QowTaxonomies.create({
+          fieldName: field_name,
+          qowSchemaId: schemaId,
+          order: order,
+          nodeType: node_type,
+          keys: keys,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        });
+      }
     } catch (e) {
       console.error(e);
     }

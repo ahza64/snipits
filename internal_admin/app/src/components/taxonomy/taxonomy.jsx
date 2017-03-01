@@ -128,11 +128,10 @@ export default class Taxonomy extends React.Component {
     }
   }
 
-//TODO finish
   fetchTaxonomies(schemaId) {
     console.log("************ schemaId", schemaId);
     if (schemaId) {
-      let url = taxonomiesUrl.replace(':schemaId', schemaId);
+      let url = taxonomiesUrl + '/' + schemaId;
       return request
       .get(url)
       .withCredentials()
@@ -141,10 +140,9 @@ export default class Taxonomy extends React.Component {
           console.error(err);
         } else {
           this.setState({
-            taxonomy: res.body,
-  // TODO fetchProjects() to add to schemaName and schemaId
+            taxonomies: res.body,
           });
-          console.log("============", res.body);
+          console.log("============ taxonomies", res.body);
         }
       });
     }
@@ -196,6 +194,10 @@ export default class Taxonomy extends React.Component {
     this.setState({
       showEditTaxonomyDialog: false
     });
+  }
+
+  handleActionEdit(event, taxonomy) {
+    console.log("taxonomy edit to be added");
   }
 
   renderCompanySelectField() {
@@ -255,7 +257,13 @@ export default class Taxonomy extends React.Component {
         <EditTaxonomyDialog
           open={ this.state.showEditTaxonomyDialog }
           title={ (this.state.taxonomySelected.id ? "Edit" : "Create") + " Taxonomy"}
-          onClose={ () => this.handleEditTaxonomyDialogClose() } />
+          companyId={ this.state.companyId }
+          companyName={ this.state.companyName }
+          projectId={ this.state.projectId }
+          projectName={ this.state.projectName }
+          schemaId={ this.state.schemaId }
+          schemaName={ this.state.schemaName }
+          onClose={ (saved) => this.handleEditTaxonomyDialogClose(saved) } />
       </div>
     );
   }
@@ -276,9 +284,11 @@ export default class Taxonomy extends React.Component {
             { this.renderCompanySelectField() }
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
-            Total Taxonomy Found
+            <div>
+              Total Taxonomy Fields Found
+            </div>
             <Badge
-              badgeContent="9999"
+              badgeContent={ this.state.taxonomies.length }
               secondary={ true }/>
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
@@ -287,17 +297,36 @@ export default class Taxonomy extends React.Component {
                 <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
                   <TableRow>
                     <TableHeaderColumn>#</TableHeaderColumn>
-                    <TableHeaderColumn>Company</TableHeaderColumn>
-                    <TableHeaderColumn>Work Project</TableHeaderColumn>
                     <TableHeaderColumn>Field Name</TableHeaderColumn>
                     <TableHeaderColumn>Created On</TableHeaderColumn>
                     <TableHeaderColumn className='header-pos'>Order</TableHeaderColumn>
-                    <TableHeaderColumn>Node</TableHeaderColumn>
+                    <TableHeaderColumn>Node Type</TableHeaderColumn>
                     <TableHeaderColumn>Keys</TableHeaderColumn>
+                    <TableHeaderColumn>Action</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
-
+                <TableBody selectable={ false } displayRowCheckbox={ false }>
+                    {
+                      this.state.taxonomies.map((taxonomy, index) => {
+                        return (
+                          <TableRow key={ index }>
+                              <TableRowColumn>{ index + 1 }</TableRowColumn>
+                              <TableRowColumn>{ taxonomy.fieldName }</TableRowColumn>
+                              <TableRowColumn>{ taxonomy.createdAt }</TableRowColumn>
+                              <TableRowColumn>{ taxonomy.order }</TableRowColumn>
+                              <TableRowColumn>{ taxonomy.nodeType }</TableRowColumn>
+                              <TableRowColumn>{ taxonomy.keys }</TableRowColumn>
+                              <TableRowColumn>
+                                <FlatButton
+                                  label="Edit"
+                                  secondary={ true }
+                                  onTouchTap={ event => this.handleActionEdit(event, taxonomy)}
+                                />
+                              </TableRowColumn>
+                          </TableRow>
+                        );
+                      })
+                    }
                 </TableBody>
               </Table>
             </Row>
