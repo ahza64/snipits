@@ -1,0 +1,148 @@
+"path" "/Users/gabriellittman/Development/services/shared/lib/test/resource_test.out"
+"----- Testing Basic CRUD opperations"
+"CREATED" {
+    "_id": "111111111111111111111111",
+    "id": 1,
+    "field1": "First Field 1",
+    "__v": 0,
+    "created": "1970-01-01T00:00:00.000Z",
+    "updated": "1970-01-01T00:00:00.000Z"
+}
+"Created UnCHANGED" false
+"Updated UnCHANGED" false
+"READ DATA" {
+    "_id": "111111111111111111111111",
+    "id": 1,
+    "field1": "First Field 1",
+    "__v": 0,
+    "created": "1970-01-01T00:00:00.000Z",
+    "updated": "1970-01-01T00:00:00.000Z"
+}
+"UPDATED CHANGED" true
+"CLEAN UPDATED" {
+    "_id": "111111111111111111111111",
+    "field1": "Second Field 1",
+    "field2": "Frist Field 2",
+    "id": 1,
+    "created": "1970-01-01T00:00:00.000Z",
+    "updated": "1970-01-01T00:00:00.000Z"
+}
+"PATCHED CHANGED" false
+"PATCHED" {
+    "_id": "111111111111111111111111",
+    "field1": "Thrid Field 1",
+    "field2": "Frist Field 2",
+    "id": 1,
+    "created": "1970-01-01T00:00:00.000Z",
+    "updated": "1970-01-01T00:00:00.000Z"
+}
+"DELETED RESOURCE" {
+    "_id": "111111111111111111111111",
+    "field1": "Thrid Field 1",
+    "field2": "Frist Field 2",
+    "id": 1,
+    "created": "1970-01-01T00:00:00.000Z",
+    "updated": "1970-01-01T00:00:00.000Z"
+}
+"READ DELETED RESOURCE" null
+"UNDELETED RESOURCE" {
+    "_id": "111111111111111111111111",
+    "field1": "Thrid Field 1",
+    "field2": "Frist Field 2",
+    "id": 1,
+    "created": "1970-01-01T00:00:00.000Z",
+    "updated": "1970-01-01T00:00:00.000Z"
+}
+"READ DELETED RESOURCE" {
+    "_id": "111111111111111111111111",
+    "field1": "Thrid Field 1",
+    "field2": "Frist Field 2",
+    "id": 1,
+    "created": "1970-01-01T00:00:00.000Z",
+    "updated": "1970-01-01T00:00:00.000Z"
+}
+"OVERWRITE WITH ONE FIELD" {
+    "_id": "111111111111111111111111",
+    "field2": "Second Field 2",
+    "id": 1,
+    "created": "1970-01-01T00:00:00.000Z",
+    "updated": "1970-01-01T00:00:00.000Z"
+}
+"CREATE SECOND RESORUCE" {
+    "_id": "222222222222222222222222",
+    "id": 2,
+    "field1": "First Field 1",
+    "__v": 0,
+    "created": "1970-01-01T00:00:00.000Z",
+    "updated": "1970-01-01T00:00:00.000Z"
+}
+"SORTING" {
+    "created": 1
+}
+"LIST ALL RESOURCES" [
+    {
+        "_id": "111111111111111111111111",
+        "field2": "Second Field 2",
+        "id": 1,
+        "created": "1970-01-01T00:00:00.000Z",
+        "updated": "1970-01-01T00:00:00.000Z"
+    },
+    {
+        "_id": "222222222222222222222222",
+        "id": 2,
+        "field1": "First Field 1",
+        "__v": 0,
+        "created": "1970-01-01T00:00:00.000Z",
+        "updated": "1970-01-01T00:00:00.000Z"
+    }
+]
+"SORTING" {
+    "created": 1
+}
+"LIMIT 1 RESOURCES" [
+    {
+        "_id": "111111111111111111111111",
+        "field2": "Second Field 2",
+        "id": 1,
+        "created": "1970-01-01T00:00:00.000Z",
+        "updated": "1970-01-01T00:00:00.000Z"
+    }
+]
+"SORTING" {
+    "created": -1
+}
+"LIMIT 1 REVERSE" [
+    {
+        "_id": "222222222222222222222222",
+        "id": 2,
+        "field1": "First Field 1",
+        "__v": 0,
+        "created": "1970-01-01T00:00:00.000Z",
+        "updated": "1970-01-01T00:00:00.000Z"
+    }
+]
+"SORTING" {
+    "created": -1
+}
+"LIMIT 1 REVERSE OFFSET 1" [
+    {
+        "_id": "111111111111111111111111",
+        "field2": "Second Field 2",
+        "id": 1,
+        "created": "1970-01-01T00:00:00.000Z",
+        "updated": "1970-01-01T00:00:00.000Z"
+    }
+]
+"SORTING" {
+    "created": 1
+}
+"ONLY 2" [
+    {
+        "_id": "222222222222222222222222",
+        "id": 2,
+        "field1": "First Field 1",
+        "__v": 0,
+        "created": "1970-01-01T00:00:00.000Z",
+        "updated": "1970-01-01T00:00:00.000Z"
+    }
+]
