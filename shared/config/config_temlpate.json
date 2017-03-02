@@ -30,6 +30,12 @@
         "mongo_db_name": "prod_trans",
         "name":"dispatchr"
     },
+    "schema":{
+               "name":"schema",
+               "mongo_db_host": "localhost",
+               "mongo_db_name": "minishiva",
+               "mongo_db_port": 27017
+   },    
     "meteor":{
         "mongo_db_host": "localhost",
         "mongo_db_name": "dev_meteor",
