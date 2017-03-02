@@ -25,8 +25,31 @@ export default class EditTaxonomyDialog extends React.Component {
     this.handleTaxonomySubmit = this.handleTaxonomySubmit.bind(this);
   }
 
-  // TODO bring in selectedTax props and check, then reset to empty to clear
+  // TODO bring in selectedTax props for edit sequence and check, then reset to empty to clear
   // form after submition/cancel
+
+  loadProps(props) {
+    // var taxFieldValues = [];
+    // if (props.fieldValues) {
+    //   taxFieldValues = props.fieldValues.map(function (fv) {
+    //     // return fv.something
+    //   })
+    // }
+    this.setState({
+      taxFieldName: props.fieldName ? props.fieldName : '',
+      taxOrder: props.order ? props.order : '',
+      taxNodeType: props.nodeType ? props.nodeType : '',
+      taxKeys: props.keys ? props.keys : '',
+      taxId: props.taxId,
+      // taxFieldValues: this.state.taxFieldValues
+    });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if ((nextProps.open === true) && (this.props.open === false)) {
+      this.loadProps(nextProps);
+    }
+  }
 
   // loadProps(props) {
   //
@@ -39,12 +62,6 @@ export default class EditTaxonomyDialog extends React.Component {
   //     emails: emails,
   //     emailsListChanged: false
   //   });
-  // }
-
-  // componentWillUpdate(nextProps, nextState) {
-  //   if ((nextProps.open === true) && (this.props.open === false)) {
-  //     this.loadProps(nextProps);
-  //   }
   // }
 
   handleFieldNameChange(event, value) {

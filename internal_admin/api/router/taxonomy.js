@@ -33,7 +33,7 @@ router.get(
   }
 );
 
-//create a new taxonomy
+//create or edit a taxonomy
 router.post(
   '/taxonomies',
   function*() {

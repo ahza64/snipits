@@ -51,6 +51,7 @@ export default class Taxonomy extends React.Component {
     this.handleCreateTaxonomy = this.handleCreateTaxonomy.bind(this);
     this.handleEditChangeTax = this.handleEditChangeTax.bind(this);
     this.handleEditDeleteTax = this.handleEditDeleteTax.bind(this);
+    this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
   }
 
   componentWillMount() {
@@ -189,7 +190,8 @@ export default class Taxonomy extends React.Component {
 
   handleCreateTaxonomy() {
     this.setState({
-      showEditTaxonomyDialog: true
+      showEditTaxonomyDialog: true,
+      taxonomySelected: {}
     });
   }
 
@@ -206,11 +208,21 @@ export default class Taxonomy extends React.Component {
       actionMenuTarget: event.currentTarget,
       taxonomySelected: taxonomy
     });
-    console.log("action menu selected tax", this.state.actionMenuOpen);
+    console.log("action menu selected tax", this.state.taxonomySelected);
+  }
+
+  handleCloseEditMenu() {
+    this.setState({
+      actionMenuOpen: false
+    });
   }
 
   handleEditChangeTax() {
-    console.log("handleEditChangeTax");
+    this.setState({
+      actionMenuOpen: false,
+      showEditTaxonomyDialog: true
+    });
+    console.log("handleEditChangeTax", this.taxonomySelected);
   }
 
   handleEditDeleteTax() {
@@ -275,6 +287,7 @@ export default class Taxonomy extends React.Component {
         anchorEl={ this.state.actionMenuTarget }
         anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
         targetOrigin={ { horizontal: 'right', vertical: 'top' } }
+        onRequestClose={ this.handleCloseEditMenu }
         >
         <Menu>
           <MenuItem
@@ -305,6 +318,12 @@ export default class Taxonomy extends React.Component {
           projectName={ this.state.projectName }
           schemaId={ this.state.schemaId }
           schemaName={ this.state.schemaName }
+          fieldName={ this.state.taxonomySelected.fieldName }
+          order={ this.state.taxonomySelected.order }
+          nodeType={ this.state.taxonomySelected.nodeType }
+          keys={ this.state.taxonomySelected.keys }
+          taxId={ this.state.taxonomySelected.id }
+
           onClose={ (saved) => this.handleEditTaxonomyDialogClose(saved) } />
       </div>
     );
@@ -318,11 +337,6 @@ export default class Taxonomy extends React.Component {
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
           <Col xs={0} sm={0} md={2} lg={2} >
-            <RaisedButton
-              label='Add Taxonomy'
-              primary={ true }
-              fullWidth={ true }
-              onClick={ this.handleCreateTaxonomy } />
             { this.renderCompanySelectField() }
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
@@ -332,6 +346,11 @@ export default class Taxonomy extends React.Component {
             <Badge
               badgeContent={ this.state.taxonomies.length }
               secondary={ true }/>
+            <RaisedButton
+              label='Add Taxonomy'
+              primary={ true }
+              fullWidth={ true }
+              onClick={ this.handleCreateTaxonomy } />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>
