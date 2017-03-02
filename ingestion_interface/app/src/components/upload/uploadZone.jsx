@@ -1,6 +1,6 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
+import request from '../../services/request';
 import Dropzone from 'react-dropzone';
 import { s3authUrl, ingestionRecordUrl, fileCheckUrl } from '../../config';
 
@@ -13,6 +13,9 @@ import UploadLib from './uploadLib';
 import History from './history/history';
 import FileExistsWarn from './notification/fileExistsWarn';
 import SelectConfigDialog from './dialogs/selectConfigDialog';
+import Search from '../find/findMain';
+import SearchBar from '../find/searchbar/searchBar';
+import Filters from './filters/filters';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -35,9 +38,13 @@ export default class UploadZone extends UploadLib {
       percent: 0,
       showSelectConfigDialog: false,
       uploadFileName: null,
-      selectedConfig: {}
+      selectedConfig: {},
+      token: '',
+      projectId: 0,
+      configId: 0
     };
 
+    this.setToken = this.setToken.bind(this);
     this.setFiles = this.setFiles.bind(this);
     this.setHistories = this.setHistories.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
@@ -46,6 +53,26 @@ export default class UploadZone extends UploadLib {
     this.setFileExistsWarn = this.setFileExistsWarn.bind(this);
     this.setTotal = this.setTotal.bind(this);
     this.displayProgressBar = this.displayProgressBar.bind(this);
+    this.setSearchTotal = this.setSearchTotal.bind(this);
+    this.setProjectId = this.setProjectId.bind(this);
+    this.setConfigId = this.setConfigId.bind(this);
+
+  }
+
+  setFiles(files) {
+    this.setState({ files: files });
+  }
+
+  setToken(token) {
+    this.setState({ token: token });
+  }
+
+  setProjectId(projectId){
+    this.setState({projectId: projectId})
+  }
+
+  setConfigId(configId){
+    this.setState({configId: configId})
   }
 
   componentWillMount() {
@@ -61,7 +88,7 @@ export default class UploadZone extends UploadLib {
       if (err) {
         console.error(err);
       } else {
-        this.setState({ total: res.body });
+        this.setState( res.body );
       }
     });
     this.getUploadedFiles(0, this.setFiles);
@@ -79,8 +106,16 @@ export default class UploadZone extends UploadLib {
     this.setState({ total: bool ? curTotal + 1 : curTotal - 1 });
   }
 
+  setSearchTotal(total) {
+    this.setState({ total: total });
+  }
+
   setFiles(files) {
-    this.setState({ files: files });
+    if (files.ingestions){
+      this.setState({ files: files.ingestions})
+    } else {
+      this.setState({ files: files });
+    }
   }
 
   setHistories(heatmapData, historiesData) {
@@ -154,7 +189,7 @@ export default class UploadZone extends UploadLib {
           .send({
             name: s3FileName,
             type: file.type,
-            company: company,
+            companyId: companyId,
             action: 'putObject'
           })
           .withCredentials()
@@ -162,7 +197,18 @@ export default class UploadZone extends UploadLib {
             if (err) {
               console.error(err);
             } else {
+              request
+              .get(ingestionRecordUrl + '/total/' + companyId)
+              .withCredentials()
+              .end((err, res) => {
+                if (err) {
+                  console.error(err);
+                } else {
+                  this.setState( res.body );
+                }
+              });
               this.uploadFile(file, s3FileName, configId, res.text);
+              this.fetchHistories();
             }
           });
         } else {
@@ -187,6 +233,7 @@ export default class UploadZone extends UploadLib {
     this.setState({
       showSelectConfigDialog: false,
     });
+    console.log("state after dialog close=====>", this.state);
     if(configId) {
       this.setState({
         selectedConfig: {
@@ -220,17 +267,13 @@ export default class UploadZone extends UploadLib {
   }
 
   handleFileDeleted(fileId) {
-    this.fetchHistories();
-    this.setTotal(false);
-    var files=[];
-    for (var i = 0; i < this.state.files.length; i++) {
-      var file = this.state.files[i];
-      if (file.id !== fileId ) {
-        files.push(file);
-      }
-    }
-    this.setState({
-      files: files
+    var offset = pageRedux.getState();
+    this.getUploadedFiles(offset, (files) => {
+      this.setFiles(files);
+      this.getHistory((heatmapData, historiesData) => {
+        this.setHistories(heatmapData, historiesData);
+        this.setTotal(false);
+      });
     });
   }
 
@@ -264,7 +307,8 @@ export default class UploadZone extends UploadLib {
           <Col xs={4} sm={4} md={4} lg={4} >
             <Dropzone onDrop={ this.onDrop }  className='dropzone' multiple={ false }>
               <div className='dropzone-text'>
-                Drop Your File Here
+                Drop Your File Here,
+                <h3>select project and configuration after dropping your file.</h3>
                 <LinearProgress
                   mode='determinate'
                   value={ this.state.percent }
@@ -276,6 +320,22 @@ export default class UploadZone extends UploadLib {
             </Dropzone>
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
+            <SearchBar
+              setFiles={ this.setFiles }
+              setToken={ this.setToken }
+              setSearchTotal={ this.setSearchTotal }
+              projectId={ this.state.projectId}
+              configId={ this.state.configId }
+            />
+            <Filters
+              files={ this.state.files }
+              token={ this.state.token }
+              setFiles={ this.setFiles }
+              setSearchTotal={ this.setSearchTotal }
+              setProjectId={ this.setProjectId }
+              setConfigId={ this.setConfigId }
+              companyId={ this.state.companyId }
+            />
             <UploadedFiles
               onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
               onFileDescriptionChanged={ (fileId, newDescription) =>
@@ -287,6 +347,7 @@ export default class UploadZone extends UploadLib {
               setFiles={ this.setFiles }
               setTotal={ this.setTotal }
               total={ this.state.total }
+              token={ this.state.token }
             />
           </Col>
         </Row>

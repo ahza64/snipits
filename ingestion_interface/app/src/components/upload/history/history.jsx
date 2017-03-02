@@ -1,6 +1,5 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
 const moment = require('moment');
 const ReactHighcharts = require('react-highcharts');
 require('highcharts-more')(ReactHighcharts.Highcharts);
@@ -84,7 +83,7 @@ export default class History extends UploadLib {
             history[key].forEach(record => {
               var name = record.name;
               var action = record['ingestion_histories.action'];
-              var fileName = record['ingestion_histories.ingestion_file.customerFileName'];
+              var fileName = record['ingestion_histories.customerFileName'];
               var time = record['ingestion_histories.createdAt'];
 
               str += name + ' ' + action + ' ' + fileName + ' on ' + moment(time).format('MMM DD hh:mm:ss') + '<br>';
@@ -110,17 +109,6 @@ export default class History extends UploadLib {
       heatmap: this.hmConfig,
       histories: {},
     };
-  }
-
-  componentWillMount() {
-    var heatmapData = this.props.heatmap;
-    var historiesData = this.props.histories;
-
-    this.hmConfig.series[0].data = heatmapData;
-    this.setState({
-      heatmap: this.hmConfig,
-      histories: historiesData
-    });
   }
 
   componentWillReceiveProps(nextProps) {

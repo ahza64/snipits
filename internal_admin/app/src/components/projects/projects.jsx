@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import { browserHistory } from 'react-router';
-import * as request from 'superagent';
+import request from '../../services/request';
 const moment = require('moment');
 
 // Components
@@ -9,7 +9,7 @@ import DefaultNavbar from '../navbar/defaultNavbar';
 import CreateProjectDialog from './dialogs/create';
 import DeleteProjectDialog from './dialogs/delete';
 import EditConfigDialog from '../configs/dialogs/edit';
-import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl } from '../../config';
+import { companyUrl, projectsUrl, activateProjectUrl, deactivateProjectUrl, qowsUrl } from '../../config';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -26,6 +26,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Toggle from 'material-ui/Toggle';
 import Badge from 'material-ui/Badge';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import '../../../styles/header.scss';
 
 // Constants
 const STATUS_ACTIVE = 'active';
@@ -55,6 +56,7 @@ export default class Projects extends React.Component {
     this.handleAddProject = this.handleAddProject.bind(this);
     this.handleDeleteProject = this.handleDeleteProject.bind(this);
     this.handleCreateConfig = this.handleCreateConfig.bind(this);
+    this.goToQOWSchemas = this.goToQOWSchemas.bind(this);
   }
 
   componentWillMount() {
@@ -233,6 +235,10 @@ export default class Projects extends React.Component {
     });
   }
 
+  goToQOWSchemas(){
+    browserHistory.push('/schemas/');
+  }
+
   renderActionMenu() {
     return(
       <Popover
@@ -242,10 +248,12 @@ export default class Projects extends React.Component {
           targetOrigin={ { horizontal: 'right', vertical: 'top' } }
           onRequestClose={ this.handleCloseActionMenu } >
           <Menu>
-            <MenuItem value="1" primaryText="Add Igestion Config"
+            <MenuItem value="1" primaryText="Add Ingestion Config"
               onClick={ this.handleCreateConfig } />
             <MenuItem value="2" primaryText="Delete Work Project"
               onClick={ this.handleDeleteProject } />
+            <MenuItem value="3" primaryText="See QOWs"
+            onClick={ this.goToQOWSchemas } />
           </Menu>
         </Popover>
     );
@@ -305,6 +313,7 @@ export default class Projects extends React.Component {
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
           <Col xs={0} sm={0} md={2} lg={2} >
             <RaisedButton label='Add Work Project' primary={ true } fullWidth={ true }
+              disabled={ this.state.companies.length === 0 }
               onClick={ this.handleAddProject } />
             { this.renderCompanySelectField() }
             <TextField
@@ -326,9 +335,9 @@ export default class Projects extends React.Component {
                   <TableRow>
                     <TableHeaderColumn>#</TableHeaderColumn>
                     <TableHeaderColumn>Work Project</TableHeaderColumn>
-                    <TableHeaderColumn>Active</TableHeaderColumn>
+                    <TableHeaderColumn className='header-pos'>Active</TableHeaderColumn>
                     <TableHeaderColumn>Created On</TableHeaderColumn>
-                    <TableHeaderColumn>Action</TableHeaderColumn>
+                    <TableHeaderColumn className='header-pos'>Action</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={ false } selectable={ false }>

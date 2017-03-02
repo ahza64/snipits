@@ -1,6 +1,6 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
+import request from '../../../services/request';
 
 // Components
 import UploadLib from '../uploadLib';

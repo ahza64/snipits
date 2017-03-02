@@ -1,6 +1,6 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
+import request from '../../../services/request';
 
 // Components
 import Dialog from 'material-ui/Dialog';
@@ -17,24 +17,32 @@ export default class CreateProjectDialog extends React.Component {
 
     this.state = {
       projectName: '',
+      projectNameError: null,
       creating: false
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleProjectNameChanged(event) {
-    var name = event.target.value;
-    if (this.props.value) {
-      this.props.value = name;
+  validateProjectName(projectName) {
+    var projectNameError = null;
+    if ((projectName) && (projectName.length > 0)) {
+      var correct = projectName.match( /^[\w\.]+$/g );
+      projectNameError = correct ? null : 'Allowed characters: alphanumeric, \'_\' and \'.\'';
     }
     this.setState({
-      projectName: name
+      projectName: projectName,
+      projectNameError: projectNameError
     });
   }
 
+  handleProjectNameChanged(event) {
+    var name = event.target.value;
+    this.validateProjectName(name);
+  }
+
   isConfirmButtonDisabled() {
-    if (this.state.creating) {
+    if (this.state.creating || this.state.projectNameError) {
       return true;
     } else {
       var name = this.state.projectName;
@@ -70,7 +78,7 @@ export default class CreateProjectDialog extends React.Component {
   renderCircularProgress() {
     if (this.state.creating) {
       return(
-        <CircularProgress size={ 0.5 } hidden={ true } />
+        <CircularProgress size={ 20 } hidden={ true } />
       );
     } else {
       return;
@@ -103,6 +111,7 @@ export default class CreateProjectDialog extends React.Component {
             value={ this.state.projectName }
             hintText="Enter New Work Project Name"
             floatingLabelText="Work Project Name"
+            errorText={ this.state.projectNameError }
             onChange={ (event) => this.handleProjectNameChanged(event) } />
           { this.renderCircularProgress() }
         </Dialog>

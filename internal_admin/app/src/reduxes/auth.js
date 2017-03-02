@@ -15,10 +15,14 @@ function restore() {
 }
 
 function backup(user) {
-  if (user) {
-    sessionStorage.setItem('redux.user', JSON.stringify(user));
-  } else {
-    sessionStorage.setItem('redux.user', null);
+  try {
+    if (user) {
+      sessionStorage.setItem('redux.user', JSON.stringify(user));
+    } else {
+      sessionStorage.setItem('redux.user', null);
+    }
+  } catch (e) {
+    // Ignore saving error
   }
 }
 

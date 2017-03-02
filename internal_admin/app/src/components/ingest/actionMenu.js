@@ -1,6 +1,7 @@
 // Modules
 import React from 'react';
 import * as request from 'superagent';
+import { s3authUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -24,6 +25,7 @@ export default class ActionMenu extends IngestLib {
     this.handleSetIngested = this.handleSetIngested.bind(this);
     this.handleUnSetIngested = this.handleUnSetIngested.bind(this);
     this.updateIngestionStatus = this.updateIngestionStatus.bind(this);
+    this.handleDownloadFile = this.handleDownloadFile.bind(this);
   }
 
   componentWillMount() {
@@ -51,6 +53,26 @@ export default class ActionMenu extends IngestLib {
     this.setIngested(this.state.ingestion.id, false, this.updateIngestionStatus);
   }
 
+  handleDownloadFile() {
+
+    request
+    .post(s3authUrl)
+    .send({
+      name: this.state.ingestion.s3FileName,
+      type: 'image/png',
+      companyId: this.state.ingestion.companyId,
+      action: 'getObject'
+    })
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        window.open(res.text);
+      }
+    });
+
+  }
 
   render() {
     return (
@@ -69,6 +91,10 @@ export default class ActionMenu extends IngestLib {
             primaryText='Unset ingestion'
             disabled={ !this.state.ingestion.ingested }
             onClick={ this.handleUnSetIngested }
+          />
+          <MenuItem
+            primaryText='Dowload File'
+            onClick={ this.handleDownloadFile }
           />
         </IconMenu>
       </div>

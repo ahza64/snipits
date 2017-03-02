@@ -4,6 +4,7 @@ const router = require('koa-router')();
 const moment = require('moment');
 const _ = require('underscore');
 const notifications = require('./notifications');
+const permissions = require('./permissions');
 
 // Collection
 const Histories = require('dsp_shared/database/model/ingestion/tables').ingestion_histories;
@@ -21,7 +22,6 @@ router.post(
     var body = this.request.body;
     var email = body.email;
     var action = body.action;
-
     // Check whether the user exists
     try {
       var user = yield Users.findOne({ where: { email: email }, raw: true });
@@ -34,12 +34,17 @@ router.post(
 
     // Check whether the ingestion exists
     var ingestion = yield Ingestions.findOne({ where: { id: body.ingestionFileId }, raw: true });
-    if (!ingestion.id) { this.throw(403); }
+
+    if (!(ingestion && permissions.has(this.req.user, ingestion.companyId))) {
+      this.throw(403);
+    }
 
     yield notifications.send(this.req.user, ingestion, action);
 
     var obj = {
       action: action,
+      s3FileName: ingestion.s3FileName,
+      customerFileName: ingestion.customerFileName,
       userName: user.name,
       userId: user.id,
       companyId: ingestion.companyId,
@@ -50,7 +55,6 @@ router.post(
     try {
       yield Histories.create(obj);
     } catch (e) {
-      console.error(e);
       this.throw(500);
     }
 
@@ -79,7 +83,7 @@ var historyMassage = (histories) => {
   histories.forEach(h => {
     var time = h['ingestion_histories.createdAt'];
     if (time) {
-      h.timeKey = moment(time).format('ww e');
+      h.timeKey = moment(time).format('W E');
     }
   });
 
@@ -106,10 +110,14 @@ router.get(
   function*() {
     var companyId = this.params.companyId;
 
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
+
     try {
       var histories = yield Users.findAll({
         where: { companyId: companyId },
-        include: [ { model: Histories, include: [Ingestions] }],
+        include: [ { model: Histories }],
         raw: true
       });
 
@@ -129,7 +137,6 @@ router.get(
         };
       }
 
-      //console.log(histories);
       histories = historyMassage(histories);
     } catch(e) {
       console.error(e);

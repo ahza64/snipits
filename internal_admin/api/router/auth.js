@@ -34,12 +34,14 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
     where: { email: email },
     raw: true
   }).then(user => {
-    var isAuthenticated = Admins.build(user).validPassword(password);
-    if (user && isAuthenticated) {
-      done(null, user);
-    } else {
-      done(null, false);
+    var res = false;
+    if (user) {
+      var isAuthenticated = Admins.build(user).validPassword(password);
+      if (isAuthenticated) {
+        res = user;
+      }
     }
+    done(null, res);
   }).catch(err => {
     done(err, false);
   });

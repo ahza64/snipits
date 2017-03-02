@@ -1,6 +1,5 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
 const moment = require('moment');
 
 // Components
@@ -8,6 +7,7 @@ import authRedux from '../../reduxes/auth';
 import pageRedux from '../../reduxes/page';
 import UploadLib from './uploadLib';
 import ActionMenu from './menu/actionMenu';
+import searchBar from '../find/searchbar/searchBar'
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -19,6 +19,9 @@ import Snackbar from 'material-ui/Snackbar';
 import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import IconButton from 'material-ui/IconButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+
 
 const offsetInterval = 5;
 
@@ -28,21 +31,30 @@ export default class UploadedFiles extends UploadLib {
 
     this.state = {
       files: [],
+      displayedFiles: [],
       notice: false,
       noticeMessage: '',
-      total: 0
+      total: 0,
+      projectValue: 0,
+      configValue: 0,
+      configMenuDisable: true
     };
 
     this.setNotification = this.setNotification.bind(this);
     this.changePage = this.changePage.bind(this);
     this.renderPage = this.renderPage.bind(this);
+    this.handleProjectChange = this.handleProjectChange.bind(this);
+    this.handleConfigChange = this.handleConfigChange.bind(this);
   }
 
   componentWillMount() {
     this.setState({
       files: this.props.files,
-      total: this.props.total
+      total: this.props.total,
+      projectValue: 0,
+      configValue: 0
     });
+    //console.log(files);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -98,8 +110,23 @@ export default class UploadedFiles extends UploadLib {
     } else if (offset < 0) {
       pageRedux.dispatch({ type: 'NEXT' });
     } else {
-      this.getUploadedFiles(offset, this.props.setFiles);
+      this.getSearchResults(this.props.token, this.props.setFiles, offset);
     }
+  }
+
+  handleProjectChange(event, index, value){
+    this.setState({projectValue : value});
+    if(value != 0){
+      this.setState({configMenuDisable : false})
+    }
+    else{
+      this.setState({configValue : 0});
+      this.setState({configMenuDisable : true});
+    }
+
+  }
+  handleConfigChange(event, index, value){
+    this.setState({configValue: value});
   }
 
   renderPage() {
@@ -109,13 +136,14 @@ export default class UploadedFiles extends UploadLib {
   render() {
     return (
       <div>
-        <Row>
+        <Row style={{ height: '300px' }}>
           <Table selectable={ false }>
             <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
               <TableRow>
                 <TableHeaderColumn style={{ width: '5px' }}>#</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '350px' }}>File Name</TableHeaderColumn>
-                <TableHeaderColumn style={{ width: '350px' }}>Sytem File Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '200px' }}>File Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '150px' }}>Project Name</TableHeaderColumn>
+                <TableHeaderColumn style={{ width: '150px' }}>Config Type</TableHeaderColumn>
                 <TableHeaderColumn style={{ width: '150px' }}>Last Modified Time</TableHeaderColumn>
                 <TableHeaderColumn>Status</TableHeaderColumn>
                 <TableHeaderColumn>Menu</TableHeaderColumn>
@@ -127,10 +155,11 @@ export default class UploadedFiles extends UploadLib {
                   return (
                     <TableRow key={ idx }>
                       <TableRowColumn style={{ width: '5px' }}>{ pageRedux.getState() + idx + 1 }</TableRowColumn>
-                      <TableRowColumn style={{ width: '350px' }}>{ file.customerFileName }</TableRowColumn>
-                      <TableRowColumn style={{ width: '350px' }}>{ file.s3FileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '200px' }}>{ file.customerFileName }</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ file['ingestion_configuration.work_project.name']}</TableRowColumn>
+                      <TableRowColumn style={{ width: '150px' }}>{ file['ingestion_configuration.fileType'] }</TableRowColumn>
                       <TableRowColumn style={{ width: '150px' }}>{ moment(file.updatedAt).format('YYYY-MM-DD H:m') }</TableRowColumn>
-                      <TableRowColumn>{ file.status }</TableRowColumn>
+                      <TableRowColumn>{ file.ingested ? 'INGESTED' : 'NOT INGESTED' }</TableRowColumn>
                       <TableRowColumn>
                         <ActionMenu
                           companyId={ file.companyId }
@@ -141,46 +170,46 @@ export default class UploadedFiles extends UploadLib {
                           description={ file.description }
                           onDescriptionChanged={ (fileId, newDescription) =>
                             this.handleDescriptionChanged(fileId, newDescription) }
-                          onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
-                            this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
-                          onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
-                          onError={ (err) => this.handleError(err) }
-                          type={ 'UPLOAD' }
-                        />
-                      </TableRowColumn>
-                    </TableRow>
-                  );
-                })
-              }
-            </TableBody>
-          </Table>
-        </Row>
-          <Col xs={10} sm={10} md={10} lg={10} ></Col>
-          <Col xs={2} sm={2} md={2} lg={2} >
-            <Row>
-              <IconButton
-                disabled={ pageRedux.getState() <= 0 }
-                onClick={ () => this.changePage('PREV') }>
-                <ChevronLeft/>
-              </IconButton>
-              <IconButton
-                disabled={ pageRedux.getState() + offsetInterval > this.state.total }
-                onClick={ () => this.changePage('NEXT') }>
-                <ChevronRight/>
-              </IconButton>
+                            onConfigurationChanged={ (fileId, projectId, configId, newS3FileName) =>
+                              this.handleConfigurationChanged(fileId, projectId, configId, newS3FileName) }
+                              onFileDeleted={ (fileId) => this.handleFileDeleted(fileId) }
+                              onError={ (err) => this.handleError(err) }
+                              type={ 'UPLOAD' }
+                              />
+                          </TableRowColumn>
+                        </TableRow>
+                      );
+                    })
+                  }
+                </TableBody>
+              </Table>
             </Row>
+            <Col xs={10} sm={10} md={10} lg={10} ></Col>
+            <Col xs={2} sm={2} md={2} lg={2} >
+              <Row>
+                <IconButton
+                  disabled={ pageRedux.getState() <= 0 }
+                  onClick={ () => this.changePage('PREV') }>
+                  <ChevronLeft/>
+                </IconButton>
+                <IconButton
+                  disabled={ pageRedux.getState() + offsetInterval >= this.state.total }
+                  onClick={ () => this.changePage('NEXT') }>
+                  <ChevronRight/>
+                </IconButton>
+              </Row>
+              <Row>
+                { this.renderPage() }
+              </Row>
+            </Col>
             <Row>
-              { this.renderPage() }
             </Row>
-          </Col>
-        <Row>
-        </Row>
-        <Snackbar
-          open={ this.state.notice }
-          message={ this.state.noticeMessage }
-          autoHideDuration={ 2500 }
-        />
-      </div>
-    );
-  }
-}
+            <Snackbar
+              open={ this.state.notice }
+              message={ this.state.noticeMessage }
+              autoHideDuration={ 2500 }
+              />
+          </div>
+        );
+      }
+    }

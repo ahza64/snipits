@@ -36,7 +36,6 @@ router.put(
       console.error(e);
       this.throw(500);
     }
-
     this.throw(200);
   }
 );
@@ -81,9 +80,10 @@ router.post(
     var ingestion = yield Ingestions.findOne({ where: { id: body.ingestionFileId }, raw: true });
     if (!ingestion.id) { this.throw(403); }
 
-
     var obj = {
       action: action,
+      s3FileName: ingestion.s3FileName,
+      customerFileName: ingestion.customerFileName,
       adminName: admin.name,
       dispatchrAdminId: admin.id,
       companyId: ingestion.companyId,

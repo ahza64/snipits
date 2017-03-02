@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
-import request from 'superagent';
-import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, watcherUrl, searchUrl, ingestionConfigUrl } from '../../config';
+import request from '../../services/request';
+import { fileHistoryUrl, deleteFileUrl, ingestionRecordUrl, searchUrl, ingestionConfigUrl } from '../../config';
 
 // Components
 import authRedux from '../../reduxes/auth';
@@ -11,18 +11,11 @@ export default class UploadLib extends React.Component {
     super();
 
     this.writeHistory = this.writeHistory.bind(this);
-    this.getFileStatus = this.getFileStatus.bind(this);
     this.getUploadedFiles = this.getUploadedFiles.bind(this);
     this.deleteUploadedFile = this.deleteUploadedFile.bind(this);
     this.createIngestionRecord = this.createIngestionRecord.bind(this);
-    this.setWatcherEmail = this.setWatcherEmail.bind(this);
-    this.getWatcherEmail = this.getWatcherEmail.bind(this);
     this.getHistory = this.getHistory.bind(this);
     this.getSearchResults = this.getSearchResults.bind(this);
-  }
-
-  getFileStatus(ingestion) {
-    return ingestion.ingested ? 'INGESTED' : 'NOT INGESTED';
   }
 
   getUploadedFiles(offset, callback) {
@@ -36,19 +29,16 @@ export default class UploadLib extends React.Component {
         console.error(err);
       } else {
         var files = res.body;
-        files.forEach(f => {
-          f.status = this.getFileStatus(f);
-        });
         callback(files);
       }
     });
   }
 
-  getSearchResults(token, callback) {
+  getSearchResults(token, callback, offset = 0, projectsFilter = 0, ingestionsFilter = 0) {
     var companyId = authRedux.getState()['company.id'];
 
     request
-    .get(searchUrl + '/' + companyId + '/' + token)
+    .get(searchUrl + '/' + companyId + '/' + projectsFilter + '/' + ingestionsFilter + '/' + offset + '/' + token)
     .withCredentials()
     .on('progress', (event) => {
       this.setState({ searching: event.percent });
@@ -116,39 +106,6 @@ export default class UploadLib extends React.Component {
     });
   }
 
-  getWatcherEmail(fileName, callback) {
-    request
-    .get(watcherUrl + '/' + fileName)
-    .withCredentials()
-    .end((err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        callback(res.body);
-      }
-    });
-  }
-
-  setWatcherEmail(fileName, watcherEmails, callback) {
-    var companyId = authRedux.getState()['company.id'];
-
-    request
-    .post(watcherUrl)
-    .withCredentials()
-    .send({
-      fileName: fileName,
-      watcherEmails: watcherEmails,
-      companyId: companyId
-    })
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        callback();
-      }
-    });
-  }
-
   writeHistory(file, action, callback) {
     request
     .post(fileHistoryUrl)
@@ -156,6 +113,7 @@ export default class UploadLib extends React.Component {
     .send({
       email: authRedux.getState().email,
       ingestionFileId: file.id,
+      customerFileName: file.customerFileName,
       action: action
     })
     .end(err => {
@@ -181,6 +139,23 @@ export default class UploadLib extends React.Component {
         callback(body.heatmapData, body.historiesData);
       }
     });
+  }
+
+  getAllFiles(callback){
+    var companyId = authRedux.getState()['company.id'];
+
+    request
+    .get(ingestionRecordUrl + '/projectIds/' + companyId)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        var body = res.body;
+        callback(body);
+      }
+    });
+
   }
 
   changeFileConfiguration(fileId, newConfigId, callback) {

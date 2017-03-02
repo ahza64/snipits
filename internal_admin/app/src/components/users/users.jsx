@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import { browserHistory } from 'react-router';
-import * as request from 'superagent';
+import request from '../../services/request';
 const _ = require('underscore');
 
 // Components
@@ -19,6 +19,7 @@ import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import Toggle from 'material-ui/Toggle';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import '../../../styles/header.scss';
 
 export default class Users extends React.Component {
   constructor() {
@@ -239,7 +240,7 @@ export default class Users extends React.Component {
                     <TableHeaderColumn>Company</TableHeaderColumn>
                     <TableHeaderColumn>Role</TableHeaderColumn>
                     <TableHeaderColumn>Status</TableHeaderColumn>
-                    <TableHeaderColumn>Active/Inactive</TableHeaderColumn>
+                    <TableHeaderColumn className='header-pos'>Active/Inactive</TableHeaderColumn>
                     <TableHeaderColumn>Edit</TableHeaderColumn>
                     <TableHeaderColumn>Delete</TableHeaderColumn>
                   </TableRow>

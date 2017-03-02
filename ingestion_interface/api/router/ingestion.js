@@ -5,6 +5,7 @@ const permissions = require('./permissions');
 const s3 = require('dsp_shared/aws/s3');
 const config = require('dsp_shared/conf.d/config.json').mooncake;
 const s3Prefix = config.env + '.';
+const _ = require('underscore');
 
 // App
 const app = koa();
@@ -23,12 +24,17 @@ router.post(
   function*() {
     var body = this.request.body;
 
+    if (!permissions.has(this.req.user, body.companyId)) {
+      this.throw(403);
+    }
+
     var record = {
       customerFileName: body.customerFileName,
       s3FileName: body.s3FileName,
       ingested: false,
       companyId: body.companyId,
-      ingestionConfigurationId: body.ingestionConfigurationId
+      ingestionConfigurationId: body.ingestionConfigurationId,
+      description: body.description
     };
 
     try {
@@ -50,14 +56,24 @@ router.put(
     var description = body.description;
     var fileId = body.fileId;
     if (fileId) {
+      var ingestion = null;
       try {
-        var ingestion = yield Ingestions.find({ where: { id: fileId } });
-        ingestion = yield ingestion.updateAttributes({
-          description: description
-        });
+        ingestion = yield Ingestions.find({ where: { id: fileId } });
       } catch(e) {
         console.error(e);
         this.throw(500);
+      }
+      if ((ingestion) && (permissions.has(this.req.user, ingestion.companyId))) {
+        try {
+          ingestion = yield ingestion.updateAttributes({
+            description: description
+          });
+        } catch(e) {
+          console.error(e);
+          this.throw(500);
+        }
+      } else {
+        this.throw(403);
       }
     } else {
       console.error('fileId not found');
@@ -82,6 +98,8 @@ var createNewS3FileName = function(ingestion, company, newProject, newConfig) {
 var addToHistory = function*(file, user, action) {
   var obj = {
     action: action,
+    s3FileName: file.s3FileName,
+    customerFileName: file.customerFileName,
     userName: user.name,
     userId: user.id,
     companyId: file.companyId,
@@ -160,6 +178,10 @@ router.get(
   function*() {
     var companyId = this.params.companyId;
 
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
+
     try {
       var total = yield Ingestions.count({
         where: { companyId: companyId }
@@ -168,8 +190,9 @@ router.get(
       console.error(e);
       this.throw(500);
     }
+    this.body = {};
+    this.body.total = total;
 
-    this.body = total;
   }
 );
 
@@ -180,6 +203,10 @@ router.get(
     var companyId = this.params.companyId;
     var offset = this.params.offset;
 
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
+
     try {
       var ingestions = yield Ingestions.findAll({
         limit: 5,
@@ -187,8 +214,10 @@ router.get(
         where: { companyId: companyId },
         include: [{
           model: Configs,
-          attributes: [['workProjectId','projectId']],
-          required: false
+          required: true,
+          include:[{
+            model: Projects
+          }],
         }],
         order: [['createdAt', 'desc']],
         raw: true
@@ -197,10 +226,10 @@ router.get(
       console.error(e);
       this.throw(500);
     }
-
     this.body = ingestions;
   }
 );
+
 
 // Get the ingestion record
 router.get(
@@ -208,6 +237,10 @@ router.get(
   function*() {
     var fileName = this.params.fileName;
     var companyId = this.params.companyId;
+
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
 
     try {
       var ingestion = yield Ingestions.findOne({
@@ -226,29 +259,71 @@ router.get(
   }
 );
 
-// Search the ingestion record
+// Search and/or filter the ingestion record
 router.get(
-  '/searchingestions/:companyId/:token(.*)',
+  '/searchingestions/:companyId/:projectsFilter/:ingestionsFilter/:offset/:token(.*)',
   function*() {
     var companyId = this.params.companyId;
+    var projectsFilter = this.params.projectsFilter;
+    var ingestionsFilter = this.params.ingestionsFilter;
     var token = this.params.token;
+    var offset = this.params.offset;
+    if (!permissions.has(this.req.user, companyId)) {
+      this.throw(403);
+    }
+
     try {
-      var ingestions = yield Ingestions.findAll({
-        where: {
-          companyId: companyId,
-          customerFileName: {
-            $like: '%' + token + '%'
-          }
-        },
-        include: [{
+      var whereQuery = {
+        companyId: companyId,
+        customerFileName: {
+          $like: '%' + token + '%'
+        }
+      };
+
+      var includeQuery = {
+        model: Configs,
+        required: true,
+        include:[{
+          model: Projects
+        }]
+      };
+
+      if (projectsFilter !== '0') {
+        includeQuery = {
           model: Configs,
-          attributes: [['workProjectId','projectId']],
-          required: false
-        }],
+          required: true,
+          include:[{
+            model: Projects
+          }],
+          where: {
+            workProjectId: projectsFilter
+          }
+        };
+        if (ingestionsFilter !== '0') {
+          whereQuery.ingestionConfigurationId = ingestionsFilter;
+        };
+      };
+
+      var total = yield Ingestions.count({
+        where: whereQuery,
+        include: [ includeQuery ],
+        order: [['createdAt', 'desc']],
         raw: true
       });
 
-      this.body = ingestions;
+      var ingestions = yield Ingestions.findAll({
+        limit: 5,
+        offset: offset,
+        where: whereQuery,
+        include: [ includeQuery ],
+        order: [['createdAt', 'desc']],
+        raw: true
+      });
+
+      this.body = {
+        ingestions: ingestions,
+        total: total
+      };
     } catch(e) {
       console.error(e);
       this.throw(500);

@@ -1,15 +1,14 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
 import { fileHistoryUrl, deleteFileUrl } from '../../../config';
 
 // Components
 import authRedux from '../../../reduxes/auth';
 import pageRedux from '../../../reduxes/page';
 import UploadLib from '../uploadLib';
-import WatcherNotification from './watcherNotification';
 import DescriptionBox from './descriptionBox';
 import SelectConfigDialog from '../dialogs/selectConfigDialog';
+import DeleteDialog from '../dialogs/confirmFileDelete';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -24,9 +23,9 @@ export default class ActionMenu extends UploadLib {
     super();
 
     this.state = {
-      showWatcherModal: false,
       showDescriptionModal: false,
       showSelectConfigDialog: false,
+      showDeleteDialog: false,
       type: 'UPLOAD',
       fileId: null,
       fileName: '',
@@ -39,6 +38,7 @@ export default class ActionMenu extends UploadLib {
     this.close = this.close.bind(this);
     this.open = this.open.bind(this);
     this.handleDeleteIngestion = this.handleDeleteIngestion.bind(this);
+    this.handleDescriptionChanged = this.handleDescriptionChanged.bind(this);
   }
 
   setStateFromProps(props) {
@@ -74,6 +74,7 @@ export default class ActionMenu extends UploadLib {
   }
 
   handleFileDeleted() {
+    this.close('showDeleteDialog');
     if (this.props.onFileDeleted) {
       this.props.onFileDeleted(this.props.fileId);
     }
@@ -121,13 +122,13 @@ export default class ActionMenu extends UploadLib {
             primaryText='Set Description'
             onClick={ () => this.open('showDescriptionModal') }
           />
-          <MenuItem
+        {/*}<MenuItem
             primaryText='Set Configuration'
             onClick={ () => this.open('showSelectConfigDialog') }
-          />
+          />*/}
           <MenuItem
             primaryText='Delete'
-            onClick={ this.handleDeleteIngestion }
+            onClick={ () => this.open('showDeleteDialog') }
           />
         </IconMenu>
         <DescriptionBox
@@ -143,6 +144,12 @@ export default class ActionMenu extends UploadLib {
           fileName={ this.state.fileName }
           onClose={ (projectId, configId, projectName, configName) =>
             this.handleSelectConfigDialogClose(projectId, configId, projectName, configName) }
+        />
+      <DeleteDialog open={ this.state.showDeleteDialog }
+          fileId={ this.props.fileId }
+          fileName={ this.props.fileName }
+          onClose= { (event) => this.close('showDeleteDialog') }
+          onDelete={ (event) => this.handleDeleteIngestion() }
         />
       </div>
     );

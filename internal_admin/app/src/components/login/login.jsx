@@ -2,7 +2,7 @@
 const urlPrefix = require('dsp_shared/conf.d/config.json').admin.url_prefix;
 import React from 'react';
 import { browserHistory } from 'react-router';
-import * as request from 'superagent';
+import request from '../../services/request';
 import authRedux from '../../reduxes/auth';
 import { loginUrl } from '../../config';
 import { getDefaultRoute } from '../auth/auth';
@@ -13,6 +13,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
+import Snackbar from 'material-ui/Snackbar';
 import smLogo from '../../../styles/assets/sm-logo.png';
 import '../../../styles/logo.scss';
 const loginContainerStyle = {
@@ -30,7 +31,8 @@ export default class Login extends React.Component {
     super();
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      showMessage: false
     };
     this.handleLoginEmail = this.handleLoginEmail.bind(this);
     this.handleLoginPassword = this.handleLoginPassword.bind(this);
@@ -39,27 +41,44 @@ export default class Login extends React.Component {
 
   handleLoginEmail(event) {
     this.setState({
-      email: event.target.value
+      email: event.target.value,
+      showMessage: false
     });
   }
   handleLoginPassword(event) {
     this.setState({
-      password: event.target.value
-    }); 
+      password: event.target.value,
+      showMessage: false
+    });
   }
 
-  handleClick(event) {
-    event.preventDefault();
+  showErrorMessage() {
+    this.setState({
+      showMessage: true
+    });
+    setTimeout(() => {
+      this.setState({ showMessage: false });
+    }, 3000);
+  }
 
-    const loginData = this.state;
-
+  login(loginData, callback) {
     request
     .post(loginUrl)
     .send(loginData)
     .withCredentials()
     .end((err, res) => {
+      callback(err, res);
+    });
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+    const loginData = this.state;
+
+    this.login(loginData, (err, res) => {
       if (err) {
         console.error(err);
+        this.showErrorMessage();
       } else {
         authRedux.dispatch({
           type: 'LOGIN',
@@ -79,20 +98,28 @@ export default class Login extends React.Component {
             <div>
               <img className='sm-logo' src={ smLogo } />
               <div>
-                Username: 
+                {
+                  // Username:
+                }
                 <TextField value={ this.state.email } onChange={ this.handleLoginEmail } hintText='Email Address'/>
               </div>
               <div>
-                Password: 
-                <TextField value={ this.state.password } onChange={ this.handleLoginPassword } hintText='password' type='password'/>
+                {
+                  // Password:
+                }
+                <TextField value={ this.state.password } onChange={ this.handleLoginPassword } hintText='Password' type='password'/>
               </div>
               <div>
-                <RaisedButton onClick={ this.handleClick } label='LOGIN'/>
+                <RaisedButton keyboardFocused={true} onClick={ this.handleClick } label='ADMIN LOGIN'/>
               </div>
             </div>
           </Paper>
         </Col>
         <Col xs={0} sm={1} md={4} lg={4} ></Col>
+        <Snackbar
+          open={ this.state.showMessage }
+          message="Invalid login or password. Please try again."
+        />
       </Row>
     );
   }

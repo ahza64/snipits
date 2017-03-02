@@ -1,6 +1,8 @@
 // Modules
 import React from 'react';
-import request from 'superagent';
+import request from '../../../services/request';
+import _ from 'underscore';
+import pageRedux from '../../../reduxes/page';
 
 // Components
 import UploadLib from '../../upload/uploadLib';
@@ -26,13 +28,25 @@ export default class SearchBar extends UploadLib {
   }
 
   handleSearchInput(event, value) {
-    this.setState({ token: value });
-    this.props.setToken(value);
+    this.setState({ token: value }, () => {
+      this.props.setToken(value);
+      this.handleSearch();
+    });
   }
 
   handleSearch() {
     var token = this.state.token;
-    this.getSearchResults(token, this.props.setFiles);
+    var setFiles = this.props.setFiles;
+    var setSearchTotal = this.props.setSearchTotal;
+    var projectId = this.props.projectId;
+    var configId = this.props.configId;
+    _.debounce(() => {
+      pageRedux.dispatch({ type: 'RESET' });
+      this.getSearchResults(token, (body) => {
+        setFiles(body.ingestions);
+        setSearchTotal(body.total);
+      }, 0, projectId, configId)}, 350
+    )();
   }
 
   render() {
@@ -43,11 +57,6 @@ export default class SearchBar extends UploadLib {
           fullWidth={true}
           value={ this.state.token }
           onChange={ this.handleSearchInput }
-        />
-        <RaisedButton
-          label='Search'
-          fullWidth={true}
-          onClick={ this.handleSearch }
         />
       </div>
     );

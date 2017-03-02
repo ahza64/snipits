@@ -1,7 +1,7 @@
 // Modules
 import React from 'react';
 import { browserHistory } from 'react-router';
-import * as request from 'superagent';
+import request from '../../services/request';
 const moment = require('moment');
 
 // Components
@@ -25,6 +25,7 @@ import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import '../../../styles/header.scss';
 
 export default class Companies extends React.Component {
   constructor() {
@@ -205,7 +206,7 @@ export default class Companies extends React.Component {
                     <TableHeaderColumn>#</TableHeaderColumn>
                     <TableHeaderColumn>Company Name</TableHeaderColumn>
                     <TableHeaderColumn>Created On</TableHeaderColumn>
-                    <TableHeaderColumn>Action</TableHeaderColumn>
+                    <TableHeaderColumn className='header-pos'>Action</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={ false } selectable={ false }>

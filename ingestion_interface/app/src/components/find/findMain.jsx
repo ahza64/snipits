@@ -2,7 +2,6 @@
 import React from 'react';
 
 // Components
-import DefaultNavbar from '../navbar/defaultNavbar';
 import SearchBar from './searchbar/searchBar';
 import ResultList from './resultlist/resultList';
 
@@ -28,13 +27,12 @@ export default class FindMain extends React.Component {
   }
 
   setToken(token) {
-    this.setState({ token: token }); 
+    this.setState({ token: token });
   }
 
   render() {
     return (
       <div>
-        <Row><DefaultNavbar /></Row>
         <Row>
           <Col xs={2} sm={2} md={2} lg={2} ></Col>
           <Col xs={8} sm={8} md={8} lg={8} >
@@ -55,6 +53,6 @@ export default class FindMain extends React.Component {
           <Col xs={2} sm={2} md={2} lg={2} ></Col>
         </Row>
       </div>
-    );    
+    );
   }
 }

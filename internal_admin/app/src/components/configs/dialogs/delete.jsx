@@ -1,6 +1,6 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
+import request from '../../../services/request';
 
 // Components
 import Dialog from 'material-ui/Dialog';
@@ -45,7 +45,7 @@ export default class DeleteConfigDialog extends React.Component {
   renderCircularProgress() {
     if (this.state.deleting) {
       return(
-        <CircularProgress size={ 0.5 } hidden={ true } />
+        <CircularProgress size={ 20 } hidden={ true } />
       );
     } else {
       return;

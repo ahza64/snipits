@@ -2,7 +2,7 @@
 const urlPrefix = require('dsp_shared/conf.d/config.json').mooncake.url_prefix;
 import React from 'react';
 import { browserHistory } from 'react-router';
-import * as request from 'superagent';
+import request from '../../services/request';
 import authRedux from '../../reduxes/auth';
 import { logoutUrl } from '../../config';
 
@@ -63,9 +63,6 @@ export default class DefaultNavbar extends React.Component {
         <Navbar.Collapse>
           <Nav pullRight>
             <NavDropdown eventKey={1} title='Menu' id='basic-nav-dropdown'>
-              <MenuItem eventKey={1.1} onClick={ this.goToUpload }>Upload</MenuItem>
-              <MenuItem eventKey={1.2} onClick={ this.goToFind }>Find</MenuItem>
-              <MenuItem divider />
               <MenuItem eventKey={1.3} onClick={ this.handleLogout }>Logout</MenuItem>
             </NavDropdown>
           </Nav>

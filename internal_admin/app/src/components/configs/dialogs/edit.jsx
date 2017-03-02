@@ -1,6 +1,6 @@
 // Modules
 import React from 'react';
-import * as request from 'superagent';
+import request from '../../../services/request';
 
 // Components
 import Dialog from 'material-ui/Dialog';
@@ -34,32 +34,45 @@ export default class EditConfigDialog extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if ((nextProps.open === true) && (this.props.open === false)) {
-      var emails = [];
-      if (nextProps.watchers) {
-        emails = nextProps.watchers.map(function(w){
-          return w.email;
-        });
-      }
-      this.setState({
-        configType: nextProps.fileType ? nextProps.fileType : '',
-        configStatus: nextProps.status ? nextProps.status : STATUS_ACTIVE,
-        configDescription: nextProps.description ? nextProps.description : '',
-        configId: nextProps.configId,
-        configTypeError: null,
-        emails: emails,
-        emailsListChanged: false
+  loadProps(props) {
+    var emails = [];
+    if (props.watchers) {
+      emails = props.watchers.map(function(w){
+        return w.email;
       });
     }
+    this.setState({
+      configType: props.fileType ? props.fileType : '',
+      configStatus: props.status ? props.status : STATUS_ACTIVE,
+      configDescription: props.description ? props.description : '',
+      configId: props.configId,
+      configTypeError: null,
+      emails: emails,
+      emailsListChanged: false
+    });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if ((nextProps.open === true) && (this.props.open === false)) {
+      this.loadProps(nextProps);
+    }
+  }
+
+  validateConfigType(configType) {
+    var configTypeError = null;
+    if ((configType) && (configType.length > 0)) {
+      var correct = configType.match( /^[\w\.]+$/g );
+      configTypeError = correct ? null : 'Allowed characters: alphanumeric, \'_\' and \'.\'';
+    }
+    this.setState({
+      configType: configType,
+      configTypeError: configTypeError
+    });
   }
 
   handleConfigTypeChanged(event) {
     var configType = event.target.value;
-    this.setState({
-      configType: configType,
-      configTypeError: null
-    });
+    this.validateConfigType(configType);
   }
 
   handleConfigDescriptionChanged(event) {
@@ -70,7 +83,7 @@ export default class EditConfigDialog extends React.Component {
   }
 
   isConfirmButtonDisabled() {
-    if (this.state.creating) {
+    if (this.state.creating || this.state.configTypeError) {
       return true;
     } else {
       var configType = this.state.configType;
@@ -130,7 +143,7 @@ export default class EditConfigDialog extends React.Component {
   renderCircularProgress() {
     if (this.state.saving) {
       return(
-        <CircularProgress size={ 0.5 } hidden={ true } />
+        <CircularProgress size={ 20 } hidden={ true } />
       );
     } else {
       return;
