@@ -5,6 +5,7 @@ import request from '../../../services/request';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import FieldsList from './fieldList';
 
 import { taxonomiesUrl } from '../../../config';
 
@@ -17,15 +18,34 @@ export default class EditTaxonomyDialog extends React.Component {
       taxFieldName: '',
       taxOrder: '',
       taxNodeType: '',
-      taxKeys: ''
+      taxKeys: '',
+      taxFieldValues: []
     }
 
     this.handleTaxonomySubmit = this.handleTaxonomySubmit.bind(this);
   }
 
-  componentWillMount() {
-    console.log("tax dialog will mount");
-  }
+  // TODO bring in selectedTax props and check, then reset to empty to clear
+  // form after submition/cancel
+
+  // loadProps(props) {
+  //
+  //   this.setState({
+  //     configType: props.fileType ? props.fileType : '',
+  //     configStatus: props.status ? props.status : STATUS_ACTIVE,
+  //     configDescription: props.description ? props.description : '',
+  //     configId: props.configId,
+  //     configTypeError: null,
+  //     emails: emails,
+  //     emailsListChanged: false
+  //   });
+  // }
+
+  // componentWillUpdate(nextProps, nextState) {
+  //   if ((nextProps.open === true) && (this.props.open === false)) {
+  //     this.loadProps(nextProps);
+  //   }
+  // }
 
   handleFieldNameChange(event, value) {
     var fieldName = event.target.value;
@@ -53,6 +73,12 @@ export default class EditTaxonomyDialog extends React.Component {
     this.setState({
       taxKeys: keys
     })
+  }
+
+  handleFieldValuesChanged(fieldValues) {
+    this.setState({
+      taxFieldValues: fieldValues
+    });
   }
 
   handleTaxonomySubmit(event) {
@@ -143,10 +169,19 @@ export default class EditTaxonomyDialog extends React.Component {
               <td>
                 <TextField
                   name="fieldName"
-                  hintText="Enter Taxonomy Field Name"
+                  hintText="i.e. state, county or city"
                   value={ this.state.taxFieldName }
                   fullWidth={ true }
                   onChange={ (event) => this.handleFieldNameChange(event) }
+                  />
+              </td>
+            </tr>
+            <tr>
+              <td>Field Values</td>
+              <td>
+                <FieldsList
+                  fieldValues={ this.state.taxFieldValues }
+                  onChange={ (fieldValues) => this.handleFieldValuesChanged(fieldValues) }
                   />
               </td>
             </tr>
@@ -155,7 +190,7 @@ export default class EditTaxonomyDialog extends React.Component {
               <td>
                 <TextField
                   name="order"
-                  hintText="Enter Taxonomy Field Order"
+                  hintText="i.e. state:1, county:2, city:3"
                   value={ this.state.taxOrder }
                   fullWidth={ true }
                   onChange={ (event) => this.handleOrderChange(event) }

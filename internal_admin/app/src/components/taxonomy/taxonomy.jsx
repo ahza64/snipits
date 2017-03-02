@@ -43,11 +43,14 @@ export default class Taxonomy extends React.Component {
       schemaId: null,
       schemaName: null,
       taxonomySelected: {},
-      showEditTaxonomyDialog: false
+      showEditTaxonomyDialog: false,
+      actionMenuOpen: false
     };
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
     this.handleCreateTaxonomy = this.handleCreateTaxonomy.bind(this);
+    this.handleEditChangeTax = this.handleEditChangeTax.bind(this);
+    this.handleEditDeleteTax = this.handleEditDeleteTax.bind(this);
   }
 
   componentWillMount() {
@@ -194,10 +197,24 @@ export default class Taxonomy extends React.Component {
     this.setState({
       showEditTaxonomyDialog: false
     });
+    this.fetchTaxonomies(this.state.schemaId);
   }
 
-  handleActionEdit(event, taxonomy) {
-    console.log("taxonomy edit to be added");
+  handleActionMenu(event, taxonomy) {
+    this.setState({
+      actionMenuOpen: true,
+      actionMenuTarget: event.currentTarget,
+      taxonomySelected: taxonomy
+    });
+    console.log("action menu selected tax", this.state.actionMenuOpen);
+  }
+
+  handleEditChangeTax() {
+    console.log("handleEditChangeTax");
+  }
+
+  handleEditDeleteTax() {
+    console.log("handleEditDeleteTax");
   }
 
   renderCompanySelectField() {
@@ -251,6 +268,31 @@ export default class Taxonomy extends React.Component {
     );
   }
 
+  renderEditMenu() {
+    return(
+      <Popover
+        open={ this.state.actionMenuOpen }
+        anchorEl={ this.state.actionMenuTarget }
+        anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
+        targetOrigin={ { horizontal: 'right', vertical: 'top' } }
+        >
+        <Menu>
+          <MenuItem
+            value="1"
+            primaryText="Edit Taxonomy"
+            onClick={ this.handleEditChangeTax }
+            />
+          <MenuItem
+            value="2"
+            primaryText="Delete Taxonomy"
+            onClick={ this.handleEditDeleteTax}
+            />
+        </Menu>
+      </Popover>
+    )
+  }
+
+//TODO pass selectedTax as props to dialog
   renderDialogs() {
     return (
       <div>
@@ -319,8 +361,9 @@ export default class Taxonomy extends React.Component {
                               <TableRowColumn>
                                 <FlatButton
                                   label="Edit"
+                                  labelPosition="before"
                                   secondary={ true }
-                                  onTouchTap={ event => this.handleActionEdit(event, taxonomy)}
+                                  onTouchTap={ event => this.handleActionMenu(event, taxonomy)}
                                 />
                               </TableRowColumn>
                           </TableRow>
@@ -332,6 +375,7 @@ export default class Taxonomy extends React.Component {
             </Row>
           </Col>
         </Row>
+        { this.renderEditMenu() }
       </div>
     );
   }

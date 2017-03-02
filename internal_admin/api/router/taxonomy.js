@@ -12,12 +12,12 @@ const INACTIVE = 'inactive';
 
 // Collections
 const QowTaxonomies = require('dsp_shared/database/model/ingestion/tables').qow_taxonomies;
+const QowExpectedTaxonomies = require('dsp_shared/database/model/ingestion/tables').qow_expected_taxonomies;
 
 // Get all schema taxonomies
 router.get(
   '/taxonomies/:schemaId',
   function*() {
-    console.log("taxonomies endpoint hit{{{{{{{{{{{}}}}}}}}}}}");
     var companyId = this.req.user.companyId;
     var schemaId = this.params.schemaId;
     var self = this;
@@ -44,11 +44,14 @@ router.post(
   var order = body.order;
   var node_type = body.nodeType;
   var keys = body.keys;
-  var taxId = body.id
+  var taxId = body.id;
+  var field_value = body.fieldValue;
+  var parent_id = body.parentId;
   var result;
 
   if (permissions.has(this.req.user, companyId)) {
     try {
+      console.log("----------------", this.request.body);
       if (taxId) {
         taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
         result = yield taxonomy.updateAttributes({
@@ -59,7 +62,6 @@ router.post(
           keys: keys
         });
       } else {
-        console.log("----------------", this.request.body);
         result = yield QowTaxonomies.create({
           fieldName: field_name,
           qowSchemaId: schemaId,
@@ -67,7 +69,15 @@ router.post(
           nodeType: node_type,
           keys: keys,
           createdAt: Date.now(),
-          updatedAt: Date.now(),
+          updatedAt: Date.now()
+        });
+        yield QowExpectedTaxonomies.create({
+          fieldName: field_name,
+          qowSchemaId: schemaId,
+          fieldValue: field_value,
+          parentId: parent_id,
+          createdAt: Date.now(),
+          updatedAt: Date.now()
         });
       }
     } catch (e) {
