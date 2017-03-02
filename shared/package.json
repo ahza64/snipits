@@ -10,6 +10,7 @@
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.4.0",
     "co": "^4.6.0",
+    "co-emitter": "^0.2.3",
     "co-fs": "^1.2.0",
     "co-timer": "0.0.1",
     "csv-parse": "^1.1.1",
@@ -18,13 +19,14 @@
     "json2csv": "^3.6.3",
     "koa-bodyparser": "^2.2.0",
     "koa-session": "^3.3.1",
+    "lodash": "^4.17.4",
     "log4js": "https://github.com/gabe0x02/log4js-node.git",
     "log4js-json-layout": "https://github.com/gabe0x02/log4js-json-layout.git",
     "log4js-node-mongodb": "^1.0.0",
     "minimist": "^1.2.0",
     "moment": "^2.15.2",
-    "mongoose": "^4.4.19",
-    "mongoose-auto-increment": "^5.0.1",
+    "mongoose": "4.8.4",
+    "mongoose-auto-increment": "5.0.1",
     "node-geocoder": "^3.11.0",
     "object-hash": "^1.1.4",
     "pg": "^6.1.0",
@@ -32,6 +34,7 @@
     "request": "^2.75.0",
     "request-promise": "^4.1.1",
     "restler": "^3.4.0",
+    "semver": "^5.3.0",
     "sequelize": "^3.24.0",
     "sha1": "^1.1.1",
     "sugar": "^1.4.1",
@@ -39,6 +42,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "diff": "^3.2.0",
     "should": "^11.1.1"
   },
   "scripts": {
