@@ -27,6 +27,9 @@ export default class DefaultNavbar extends React.Component {
     this.goToIngest = this.goToIngest.bind(this);
     this.goToUsers = this.goToUsers.bind(this);
     this.showUsers = this.showUsers.bind(this);
+    this.goToSchemas = this.goToSchemas.bind(this);
+    this.showSchemas = this.showSchemas.bind(this);
+
   }
 
   handleLogout(event) {
@@ -97,6 +100,14 @@ export default class DefaultNavbar extends React.Component {
     }
   }
 
+  goToSchemas(){
+    browserHistory.push(urlPrefix + 'schemas/');
+  }
+
+  showSchemas(){
+    return (<MenuItem eventKey={1.9} onClick={ this.goToSchemas }>Schemas</MenuItem>);
+  }
+
   render() {
     return (
       <Navbar>
@@ -116,6 +127,7 @@ export default class DefaultNavbar extends React.Component {
               { this.showConfigs() }
               { this.showIngest() }
               { this.showUsers() }
+              { this.showSchemas() }
               <MenuItem divider />
               <MenuItem eventKey={1.4} onClick={ this.handleLogout }>Logout</MenuItem>
             </NavDropdown>
