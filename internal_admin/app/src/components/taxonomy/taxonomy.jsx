@@ -7,6 +7,7 @@ const moment = require('moment');
 // Components
 import DefaultNavbar from '../navbar/defaultNavbar';
 import EditTaxonomyDialog from './dialogs/edit';
+import DeleteTaxonomyDialog from './dialogs/delete';
 import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl } from '../../config';
 
 // Styles
@@ -44,7 +45,8 @@ export default class Taxonomy extends React.Component {
       schemaName: null,
       taxonomySelected: {},
       showEditTaxonomyDialog: false,
-      actionMenuOpen: false
+      actionMenuOpen: false,
+      showDeleteTaxonomyDialog: false
     };
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
@@ -227,6 +229,17 @@ export default class Taxonomy extends React.Component {
 
   handleEditDeleteTax() {
     console.log("handleEditDeleteTax");
+    this.setState({
+      actionMenuOpen: false,
+      showDeleteTaxonomyDialog: true
+    });
+  }
+
+  handleDeleteTaxDialogClose() {
+    this.setState({
+      showDeleteTaxonomyDialog: false
+    });
+    this.fetchTaxonomies(this.state.schemaId)
   }
 
   renderCompanySelectField() {
@@ -306,6 +319,7 @@ export default class Taxonomy extends React.Component {
   }
 
 //TODO pass selectedTax as props to dialog
+//TODO finish taxonomy delete
   renderDialogs() {
     return (
       <div>
@@ -323,8 +337,12 @@ export default class Taxonomy extends React.Component {
           nodeType={ this.state.taxonomySelected.nodeType }
           keys={ this.state.taxonomySelected.keys }
           taxId={ this.state.taxonomySelected.id }
-
           onClose={ (saved) => this.handleEditTaxonomyDialogClose(saved) } />
+        <DeleteTaxonomyDialog
+          open={ this.state.showDeleteTaxonomyDialog }
+          onClose={ (deleted) => this.handleDeleteTaxDialogClose(deleted) }
+          taxId={ this.state.taxonomySelected.id }
+          />
       </div>
     );
   }
@@ -341,13 +359,13 @@ export default class Taxonomy extends React.Component {
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
             <div>
-              Total Taxonomy Fields Found
+              Total Taxonomy Field Names Found
             </div>
             <Badge
               badgeContent={ this.state.taxonomies.length }
               secondary={ true }/>
             <RaisedButton
-              label='Add Taxonomy'
+              label='Add Field Name'
               primary={ true }
               fullWidth={ true }
               onClick={ this.handleCreateTaxonomy } />
@@ -379,7 +397,7 @@ export default class Taxonomy extends React.Component {
                               <TableRowColumn>{ taxonomy.keys }</TableRowColumn>
                               <TableRowColumn>
                                 <FlatButton
-                                  label="Edit"
+                                  label="Edit/Delete"
                                   labelPosition="before"
                                   secondary={ true }
                                   onTouchTap={ event => this.handleActionMenu(event, taxonomy)}

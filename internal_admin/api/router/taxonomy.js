@@ -14,6 +14,15 @@ const INACTIVE = 'inactive';
 const QowTaxonomies = require('dsp_shared/database/model/ingestion/tables').qow_taxonomies;
 const QowExpectedTaxonomies = require('dsp_shared/database/model/ingestion/tables').qow_expected_taxonomies;
 
+var updateFieldValues = function*(taxonomy, fieldValues) {
+  console.log("/////////////// fieldValues", fieldValues);
+  for ( var i=0; i<fieldValues.length; i++) {
+    yield QowExpectedTaxonomies.create({
+      fieldValue: fieldValues[i]
+    });
+  }
+};
+
 // Get all schema taxonomies
 router.get(
   '/taxonomies/:schemaId',
@@ -33,6 +42,23 @@ router.get(
   }
 );
 
+router.delete(
+  '/taxonomies/:taxonomyId',
+  function*() {
+    var taxonomyId = this.params.taxonomyId;
+    if (permissions.has(this.req.user, null)) {
+      try {
+        this.body = yield QowTaxonomies.destroy({ where: { id: taxonomyId } });
+      } catch (e) {
+        console.error(e);
+        this.throw(500);
+      }
+    } else {
+      this.throw(403);
+    }
+  }
+)
+
 //create or edit a taxonomy
 router.post(
   '/taxonomies',
@@ -45,16 +71,14 @@ router.post(
   var node_type = body.nodeType;
   var keys = body.keys;
   var taxId = body.id;
-  var field_value = body.fieldValue;
-  var parent_id = body.parentId;
-  var result;
+  var taxonomy;
 
   if (permissions.has(this.req.user, companyId)) {
     try {
       console.log("----------------", this.request.body);
       if (taxId) {
         taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
-        result = yield taxonomy.updateAttributes({
+        taxonomy = yield taxonomy.updateAttributes({
           fieldName: field_name,
           qowSchemaId: schemaId,
           order: order,
@@ -62,7 +86,7 @@ router.post(
           keys: keys
         });
       } else {
-        result = yield QowTaxonomies.create({
+        taxonomy = yield QowTaxonomies.create({
           fieldName: field_name,
           qowSchemaId: schemaId,
           order: order,
@@ -71,19 +95,12 @@ router.post(
           createdAt: Date.now(),
           updatedAt: Date.now()
         });
-        yield QowExpectedTaxonomies.create({
-          fieldName: field_name,
-          qowSchemaId: schemaId,
-          fieldValue: field_value,
-          parentId: parent_id,
-          createdAt: Date.now(),
-          updatedAt: Date.now()
-        });
       }
+      yield updateFieldValues(taxonomy, fieldValues)
     } catch (e) {
       console.error(e);
     }
-    this.body = result;
+    this.body = taxonomy;
   }
 });
 

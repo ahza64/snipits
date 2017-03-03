@@ -5,7 +5,6 @@ import request from '../../../services/request';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import FieldsList from './fieldList';
 
 import { taxonomiesUrl } from '../../../config';
 
@@ -18,8 +17,7 @@ export default class EditTaxonomyDialog extends React.Component {
       taxFieldName: '',
       taxOrder: '',
       taxNodeType: '',
-      taxKeys: '',
-      taxFieldValues: []
+      taxKeys: ''
     }
 
     this.handleTaxonomySubmit = this.handleTaxonomySubmit.bind(this);
@@ -29,19 +27,12 @@ export default class EditTaxonomyDialog extends React.Component {
   // form after submition/cancel
 
   loadProps(props) {
-    // var taxFieldValues = [];
-    // if (props.fieldValues) {
-    //   taxFieldValues = props.fieldValues.map(function (fv) {
-    //     // return fv.something
-    //   })
-    // }
     this.setState({
       taxFieldName: props.fieldName ? props.fieldName : '',
       taxOrder: props.order ? props.order : '',
       taxNodeType: props.nodeType ? props.nodeType : '',
       taxKeys: props.keys ? props.keys : '',
       taxId: props.taxId,
-      // taxFieldValues: this.state.taxFieldValues
     });
   }
 
@@ -50,19 +41,6 @@ export default class EditTaxonomyDialog extends React.Component {
       this.loadProps(nextProps);
     }
   }
-
-  // loadProps(props) {
-  //
-  //   this.setState({
-  //     configType: props.fileType ? props.fileType : '',
-  //     configStatus: props.status ? props.status : STATUS_ACTIVE,
-  //     configDescription: props.description ? props.description : '',
-  //     configId: props.configId,
-  //     configTypeError: null,
-  //     emails: emails,
-  //     emailsListChanged: false
-  //   });
-  // }
 
   handleFieldNameChange(event, value) {
     var fieldName = event.target.value;
@@ -92,12 +70,6 @@ export default class EditTaxonomyDialog extends React.Component {
     })
   }
 
-  handleFieldValuesChanged(fieldValues) {
-    this.setState({
-      taxFieldValues: fieldValues
-    });
-  }
-
   handleTaxonomySubmit(event) {
     console.log("::::::::: taxonomy state values", this.props);
 
@@ -107,7 +79,7 @@ export default class EditTaxonomyDialog extends React.Component {
       order: this.state.taxOrder,
       nodeType: this.state.taxNodeType,
       keys: this.state.taxKeys,
-      schemaId: this.props.schemaId
+      schemaId: this.props.schemaId,
     }
 
     request
@@ -190,15 +162,6 @@ export default class EditTaxonomyDialog extends React.Component {
                   value={ this.state.taxFieldName }
                   fullWidth={ true }
                   onChange={ (event) => this.handleFieldNameChange(event) }
-                  />
-              </td>
-            </tr>
-            <tr>
-              <td>Field Values</td>
-              <td>
-                <FieldsList
-                  fieldValues={ this.state.taxFieldValues }
-                  onChange={ (fieldValues) => this.handleFieldValuesChanged(fieldValues) }
                   />
               </td>
             </tr>
