@@ -12,10 +12,6 @@ const http = require('http');
 co(function *build_app() {
   const app = koa();
   app.use(logger());
-  app.use(function*(next) {
-    console.log('=============> ', this.request.body);
-    yield next;
-  });
   const schemas = yield Schema.find({ _api: "v4" });  
   for (let i = 0; i < schemas.length; i++) {
     console.log("SCHEMAS", schemas[i]);

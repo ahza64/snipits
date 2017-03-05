@@ -1,26 +1,25 @@
 /**
  * @fileOverview This script will generate fake data using api v4
- * 1. Create a schema
- * 2. Create multiple documents in that schema
+ * Create multiple documents in that schema
  */
 
-const co = require('co');
 const faker = require('faker');
 const rp = require('request-promise');
 const config = require('dsp_shared/config/config').get();
-const apiV4util = require('dsp_shared/database/model/schema/util');
+const util = require('dsp_shared/lib/cmd_utils');
+util.connect(['schema']);
 
-co(function *fake_data_gen() {
+function *create_records(schema_name, count) {
+  console.log(`Calling create_records for ${schema_name} generating ${count} ${typeof count} records`);
   // Create records
   let option = {
     method: 'POST',
-    uri: 'http://localhost:3000/api/v4/tests',
-    // uri: `http://${config.api_host}:${config.api_port}/api/v4/${schema_name}`,
+    uri: `http://${config.api_host}:${config.api_port}/api/v4/${schema_name}`,
     body: {},
     json: true
   };
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < count; i++) {
     let body = {
       company: faker.company.companyName(),
       name: faker.commerce.product(),
@@ -31,8 +30,8 @@ co(function *fake_data_gen() {
       location: {
         type : 'Point',
         coordinates : [ 
-          faker.address.longitude(),
-          faker.address.latitude()
+          parseInt(faker.address.longitude()),
+          parseInt(faker.address.latitude())
         ]
       }
     };
@@ -45,6 +44,9 @@ co(function *fake_data_gen() {
       console.error(`error when creating records in the database: ${e}`);
     }
   }
-}).catch((e) => {
-  console.error(`error while generating fake data for api v4: ${e}`);
-});
+}
+
+if (require.main === module) {
+  util.bakerGen(create_records);
+  util.bakerRun();
+}
