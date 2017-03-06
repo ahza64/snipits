@@ -24,7 +24,7 @@ export default class FieldsList extends React.Component {
   }
 
   handleAddField() {
-    var field = this.state.field
+    var field = this.state.field;
     var fieldValues = this.props.fieldValues;
     fieldValues.push(field);
     if (this.props.onChange) {

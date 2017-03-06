@@ -31,6 +31,8 @@ export default class DefaultNavbar extends React.Component {
     this.showSchemas = this.showSchemas.bind(this);
     this.goToTaxonomy = this.goToTaxonomy.bind(this);
     this.showTaxonomy = this.showTaxonomy.bind(this);
+    this.goToTaxonomyFieldValues = this.goToTaxonomyFieldValues.bind(this);
+    this.showTaxonomyFieldValues = this.showTaxonomyFieldValues.bind(this);
   }
 
   handleLogout(event) {
@@ -114,7 +116,15 @@ export default class DefaultNavbar extends React.Component {
   }
 
   showTaxonomy(){
-    return (<MenuItem eventKey={2.1} onClick={ this.goToTaxonomy }>Taxonomy</MenuItem>);
+    return <MenuItem eventKey={2.1} onClick={ this.goToTaxonomy }>Taxonomy</MenuItem>
+  }
+
+  goToTaxonomyFieldValues(){
+    browserHistory.push(urlPrefix + 'taxfields/')
+  }
+
+  showTaxonomyFieldValues(){
+    return <MenuItem eventKey={2.2} onClick={ this.goToTaxonomyFieldValues }>Taxonomy Field Values</MenuItem>
   }
 
   render() {
@@ -138,6 +148,7 @@ export default class DefaultNavbar extends React.Component {
               { this.showUsers() }
               { this.showSchemas() }
               { this.showTaxonomy() }
+              { this.showTaxonomyFieldValues() }
               <MenuItem divider />
               <MenuItem eventKey={1.4} onClick={ this.handleLogout }>Logout</MenuItem>
             </NavDropdown>

@@ -14,26 +14,16 @@ const INACTIVE = 'inactive';
 const QowTaxonomies = require('dsp_shared/database/model/ingestion/tables').qow_taxonomies;
 const QowExpectedTaxonomies = require('dsp_shared/database/model/ingestion/tables').qow_expected_taxonomies;
 
-var updateFieldValues = function*(taxonomy, fieldValues) {
-  console.log("/////////////// fieldValues", fieldValues);
-  for ( var i=0; i<fieldValues.length; i++) {
-    yield QowExpectedTaxonomies.create({
-      fieldValue: fieldValues[i]
-    });
-  }
-};
-
 // Get all schema taxonomies
 router.get(
   '/taxonomies/:schemaId',
   function*() {
     var companyId = this.req.user.companyId;
     var schemaId = this.params.schemaId;
-    var self = this;
     if (permissions.has(this.req.user, companyId) && schemaId) {
       var schemaTaxonomies = yield QowTaxonomies.findAll({
         where: {
-          qowSchemaId: schemaId,
+          qowSchemaId: schemaId
          },
         raw: true
       })
@@ -75,7 +65,6 @@ router.post(
 
   if (permissions.has(this.req.user, companyId)) {
     try {
-      console.log("----------------", this.request.body);
       if (taxId) {
         taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
         taxonomy = yield taxonomy.updateAttributes({
@@ -103,6 +92,24 @@ router.post(
     this.body = taxonomy;
   }
 });
+
+router.get(
+  '/taxfields/:taxName',
+  function*() {
+    console.log("-----------------", this.params.taxName);
+    var companyId = this.req.user.companyId;
+    var fieldName = this.params.taxName;
+    if (permissions.has(this.req.user, companyId) && fieldName) {
+      var expectedTaxonomies = yield QowExpectedTaxonomies.findAll({
+        where: {
+          fieldName: fieldName
+        },
+        raw: true
+      })
+      this.body = expectedTaxonomies;
+    }
+  }
+)
 
 app.use(router.routes());
 

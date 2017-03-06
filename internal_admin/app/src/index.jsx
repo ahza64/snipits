@@ -16,6 +16,7 @@ import Users from './components/users/users.jsx';
 import SchemasLayout from './components/schema/schemasLayout.jsx';
 import Schema from './components/schema/schema.jsx';
 import Taxonomy from './components/taxonomy/taxonomy.jsx';
+import TaxFields from './components/taxFields/taxFields.jsx';
 
 // Router
 ReactDOM.render(
@@ -30,6 +31,7 @@ ReactDOM.render(
       <Route onEnter={ isRouteAuthorized } path='schemas/' component={ SchemasLayout }></Route>
       <Route onEnter={ isRouteAuthorized } path='schema/' component={ Schema }></Route>
       <Route onEnter={ isRouteAuthorized } path='taxonomy/' component={ Taxonomy }></Route>
+      <Route onEnter={ isRouteAuthorized } path='taxfields/' component={ TaxFields }></Route>
     </Route>
   </Router>,
 document.getElementById('app'));
