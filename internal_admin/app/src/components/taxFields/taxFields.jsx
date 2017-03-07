@@ -12,6 +12,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Badge from 'material-ui/Badge';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 
@@ -36,13 +37,13 @@ export default class TaxFields extends React.Component {
       schemaName: null,
       taxonomyId: null,
       taxonomyName: null,
-      taxonomySelected: {},
+      taxValueSelected: {},
       showEditTaxonomyDialog: false,
       actionMenuOpen: false,
       showDeleteTaxonomyDialog: false
     };
 
-    this.fetchCompanies = this.fetchCompanies.bind(this);
+    // this.fetchCompanies = this.fetchCompanies.bind(this);
     // this.handleCreateTaxonomy = this.handleCreateTaxonomy.bind(this);
     // this.handleEditChangeTax = this.handleEditChangeTax.bind(this);
     // this.handleEditDeleteTax = this.handleEditDeleteTax.bind(this);
@@ -142,7 +143,6 @@ export default class TaxFields extends React.Component {
             taxonomyId: firstTax ? firstTax.id : null,
             taxonomyName: firstTax ? firstTax.fieldName : null
           });
-          console.log("============ taxonomies", res.body);
           if(firstTax) {
             this.fetchTaxValues(firstTax.fieldName);
           }
@@ -152,7 +152,6 @@ export default class TaxFields extends React.Component {
   }
 
   fetchTaxValues(taxFieldName) {
-    console.log("fetch tax values name", taxFieldsUrl);
     if (taxFieldName) {
       let url = taxFieldsUrl + '/' + taxFieldName;
       return request
@@ -169,6 +168,10 @@ export default class TaxFields extends React.Component {
         }
       });
     }
+  }
+
+  handleCreateTaxField() {
+    console.log("creating a tax field");
   }
 
   renderCompanySelectField() {
@@ -239,6 +242,18 @@ export default class TaxFields extends React.Component {
     );
   }
 
+  renderDialogs() {
+    <div>
+      <EditTaxonomyDialog
+        open={ this.state.showEditTaxonomyDialog }
+        title={ (this.state.taxValueSelected.id ? "Edit" : "Create") + "Taxonomy Value"}
+        />
+      <DeleteTaxonomyDialog
+
+        />
+    </div>
+  }
+
   render(){
     return(
       <div>
@@ -261,7 +276,7 @@ export default class TaxFields extends React.Component {
               label='Add Field Value'
               primary={ true }
               fullWidth={ true }
-              onClick={ this.handleCreateTaxonomy }
+              onClick={ this.handleCreateTaxField }
               />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
@@ -287,7 +302,13 @@ export default class TaxFields extends React.Component {
                           <TableRowColumn>{ taxValue.fieldName }</TableRowColumn>
                           <TableRowColumn>{ taxValue.parentId }</TableRowColumn>
                           <TableRowColumn>{ taxValue.createdAt }</TableRowColumn>
-                          <TableRowColumn>Action</TableRowColumn>
+                          <TableRowColumn>
+                            <FlatButton
+                              label="Edit/Delete"
+                              secondary={ true }
+                              onClick={ event => this.handleActionMenu(event, taxField) }
+                              />
+                          </TableRowColumn>
                         </TableRow>
                       )
                     })

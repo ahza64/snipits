@@ -351,6 +351,7 @@ export default class Taxonomy extends React.Component {
     return (
       <div>
         { this.renderDialogs() }
+        { this.renderEditMenu() }
         <Row> <DefaultNavbar /> </Row>
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
@@ -412,7 +413,6 @@ export default class Taxonomy extends React.Component {
             </Row>
           </Col>
         </Row>
-        { this.renderEditMenu() }
       </div>
     );
   }
