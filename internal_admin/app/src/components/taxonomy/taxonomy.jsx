@@ -178,16 +178,16 @@ export default class Taxonomy extends React.Component {
     this.fetchSchemas(projectId);
   }
 
-  handleSchemaSelectChanged(event, projectId) {
-    let projects = this.state.projects.filter(p => {
-      return p.id == projectId;
+  handleSchemaSelectChanged(event, schemaId) {
+    let schemas = this.state.schemas.filter(p => {
+      return p.id == schemaId;
     });
-    let projectName = (projects.length > 0) ? projects[0].name : null;
+    let schemaName = (schemas.length > 0) ? schemas[0].name : null;
     this.setState({
-      projectId: projectId,
-      projectName: projectName
+      schemaId: schemaId,
+      schemaName: schemaName
     });
-    this.fetchSchemas(projectId);
+    this.fetchTaxonomies(schemaId);
   }
 
   handleCreateTaxonomy() {

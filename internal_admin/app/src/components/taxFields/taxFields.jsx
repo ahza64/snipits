@@ -43,6 +43,7 @@ export default class TaxFields extends React.Component {
       showDeleteTaxonomyDialog: false
     };
 
+    this.handleCreateTaxField = this.handleCreateTaxField.bind(this);
     // this.fetchCompanies = this.fetchCompanies.bind(this);
     // this.handleCreateTaxonomy = this.handleCreateTaxonomy.bind(this);
     // this.handleEditChangeTax = this.handleEditChangeTax.bind(this);
@@ -141,7 +142,8 @@ export default class TaxFields extends React.Component {
           this.setState({
             taxonomies: res.body,
             taxonomyId: firstTax ? firstTax.id : null,
-            taxonomyName: firstTax ? firstTax.fieldName : null
+            taxonomyName: firstTax ? firstTax.fieldName : null,
+            taxonomyOrder: firstTax ? firstTax.order : null
           });
           if(firstTax) {
             this.fetchTaxValues(firstTax.fieldName);
@@ -161,17 +163,80 @@ export default class TaxFields extends React.Component {
         if (err) {
           console.error(err);
         } else {
+          var firstTaxValue = (res.body.length > 0) ? res.body[0] : null;
           this.setState({
-            taxonomyValues: res.body
+            taxonomyValues: res.body,
+            taxonomyValueId: firstTaxValue ? firstTaxValue.id : null,
+            taxonomyValue: firstTaxValue ? firstTaxValue.fieldValue : null,
+            taxonomyValueName: firstTaxValue ? firstTaxValue.fieldName : null
           });
-          console.log("taxonomyValues", res.body);
         }
       });
     }
   }
 
+  handleCompanySelectChanged(event, companyId) {
+    let companies = this.state.companies.filter(c => {
+      return c.id == companyId;
+    });
+    let companyName = (companies.length > 0) ? companies[0].name : null;
+    this.setState({
+      companyId: companyId,
+      companyName: companyName
+    });
+    this.fetchProjects(companyId);
+  }
+
+  handleProjectSelectChanged(event, projectId) {
+    let projects = this.state.projects.filter(p => {
+      return p.id == projectId;
+    });
+    let projectName = (projects.length > 0) ? projects[0].name : null;
+    this.setState({
+      projectId: projectId,
+      projectName: projectName
+    });
+    this.fetchSchemas(projectId);
+  }
+
+  handleSchemaSelectChanged(event, schemaId) {
+    let schemas = this.state.schemas.filter(p => {
+      return p.id == schemaId;
+    });
+    let schemaName = (schemas.length > 0) ? schemas[0].name : null;
+    this.setState({
+      schemaId: schemaId,
+      schemaName: schemaName
+    });
+    this.fetchTaxonomies(schemaId);
+  }
+
+  handleTaxonomySelectChanged(event, taxonomyId) {
+    let taxonomies = this.state.taxonomies.filter(p => {
+      return p.id == taxonomyId;
+    });
+    let taxonomyName = (taxonomies.length > 0) ? taxonomies[0].fieldName : null;
+    let taxonomyOrder = (taxonomies.length > 0) ? taxonomies[0].order : null;
+    this.setState({
+      taxonomyId: taxonomyId,
+      taxonomyName: taxonomyName,
+      taxonomyOrder: taxonomyOrder
+    });
+    this.fetchTaxValues(taxonomyName);
+  }
+
+  // handleCreateTaxonomy() {
+  //   this.setState({
+  //     showEditTaxonomyDialog: true,
+  //     taxonomySelected: {}
+  //   });
+  // }
+
   handleCreateTaxField() {
-    console.log("creating a tax field");
+    console.log("button pressed");
+    this.setState({
+      showEditTaxonomyDialog: true
+    });
   }
 
   renderCompanySelectField() {
@@ -231,7 +296,7 @@ export default class TaxFields extends React.Component {
         floatingLabelText="Taxonomy Field Name"
         fullWidth={true}
         value={ this.state.taxonomyId }
-        onChange={ (event, index, value) => this.handleSchemaSelectChanged(event, value) } >
+        onChange={ (event, index, value) => this.handleTaxonomySelectChanged(event, value) } >
         { this.state.taxonomies.map((taxonomy, idx) => {
             return(
               <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldName } />
@@ -241,6 +306,25 @@ export default class TaxFields extends React.Component {
       </SelectField>
     );
   }
+
+  renderTaxFieldSelectField() {
+    if (this.state.taxonomyOrder !== 1){
+      return(
+        <SelectField
+          floatingLabelText="Taxonomy Field Value"
+          fullWidth={true}
+          value={ this.state.taxonomyValueId }
+          onChange={ (event, index, value) => this.handleTaxonomySelectChanged(event, value) } >
+          { this.state.taxonomyValues.map((taxonomy, idx) => {
+            return(
+              <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldValue } />
+            );
+          })
+        }
+      </SelectField>
+    );
+  }
+}
 
   renderDialogs() {
     <div>
@@ -265,6 +349,7 @@ export default class TaxFields extends React.Component {
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
             { this.renderTaxonomySelectField() }
+            { this.renderTaxFieldSelectField() }
             <div>
               Total Taxonomy Field Values Found
             </div>
@@ -295,12 +380,18 @@ export default class TaxFields extends React.Component {
                 <TableBody selectable={ false } displayRowCheckbox={ false }>
                   {
                     this.state.taxonomyValues.map((taxValue, index) => {
+                      var pId;
+                      if (this.state.taxonomyOrder === 1) {
+                        pId = "Top Parent";
+                      } else {
+                        pId = taxValue.parentId;
+                      }
                       return (
                         <TableRow key={ index }>
                           <TableRowColumn>{ index + 1 }</TableRowColumn>
                           <TableRowColumn>{ taxValue.fieldValue }</TableRowColumn>
                           <TableRowColumn>{ taxValue.fieldName }</TableRowColumn>
-                          <TableRowColumn>{ taxValue.parentId }</TableRowColumn>
+                          <TableRowColumn>{ pId }</TableRowColumn>
                           <TableRowColumn>{ taxValue.createdAt }</TableRowColumn>
                           <TableRowColumn>
                             <FlatButton
