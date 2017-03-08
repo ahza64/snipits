@@ -225,6 +225,20 @@ export default class TaxFields extends React.Component {
     this.fetchTaxValues(taxonomyName);
   }
 
+  handleTaxonomyValueSelectChanged(event, taxonomyValueId) {
+    let taxonomyValues = this.state.taxonomyValues.filter(p => {
+      return p.id == taxonomyValueId;
+    });
+    let taxonomyValueName = (taxonomyValues.length > 0) ? taxonomyValues[0].fieldName : null;
+    let taxonomyValueField = (taxonomyValues.length > 0) ? taxonomyValues[0].fieldValue : null;
+    this.setState({
+      taxonomyValueId: taxonomyValueId,
+      taxonomyValueName: taxonomyValueName,
+      taxonomyValueField: taxonomyValueField
+    });
+    // this.fetchTaxValues(taxonomyName);
+  }
+
   // handleCreateTaxonomy() {
   //   this.setState({
   //     showEditTaxonomyDialog: true,
@@ -314,7 +328,7 @@ export default class TaxFields extends React.Component {
           floatingLabelText="Taxonomy Field Value"
           fullWidth={true}
           value={ this.state.taxonomyValueId }
-          onChange={ (event, index, value) => this.handleTaxonomySelectChanged(event, value) } >
+          onChange={ (event, index, value) => this.handleTaxonomyValueSelectChanged(event, value) } >
           { this.state.taxonomyValues.map((taxonomy, idx) => {
             return(
               <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldValue } />
