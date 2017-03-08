@@ -251,7 +251,13 @@ export default class TaxFields extends React.Component {
     this.setState({
       showEditTaxonomyDialog: true
     });
-    console.log("button pressed", this.state.showEditTaxonomyDialog);
+    console.log("button pressed", this.state.taxonomyValueId);
+  }
+
+  handleEditTaxValueDialogClose() {
+    this.setState({
+      showEditTaxonomyDialog: false
+    });
   }
 
   renderCompanySelectField() {
@@ -345,7 +351,11 @@ export default class TaxFields extends React.Component {
       <div>
         <EditTaxValueDialog
           open={ this.state.showEditTaxonomyDialog }
-          title={"hi"}
+          title={ (this.state.taxValueSelected.id ? "Edit" : "Create") + " Taxonomy Value" }
+          onClose={ (saved) => this.handleEditTaxValueDialogClose()}
+          taxFieldName={ this.state.taxonomyName }
+          taxFieldValueId={ this.state.taxonomyOrder }
+          taxParentList={ this.state.taxonomyValues }
           />
 
       </div>
