@@ -4,6 +4,7 @@ import request from '../../services/request';
 
 import DefaultNavbar from '../navbar/defaultNavbar';
 import Taxonomy from '../taxonomy/taxonomy'
+import EditTaxValueDialog from './dialogs/edit'
 import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl, taxFieldsUrl } from '../../config';
 
 import Row from 'react-bootstrap/lib/Row';
@@ -247,10 +248,10 @@ export default class TaxFields extends React.Component {
   // }
 
   handleCreateTaxField() {
-    console.log("button pressed");
     this.setState({
       showEditTaxonomyDialog: true
     });
+    console.log("button pressed", this.state.showEditTaxonomyDialog);
   }
 
   renderCompanySelectField() {
@@ -333,28 +334,28 @@ export default class TaxFields extends React.Component {
             return(
               <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldValue } />
             );
-          })
-        }
-      </SelectField>
-    );
+          })}
+        </SelectField>
+      );
+    }
   }
-}
 
   renderDialogs() {
-    <div>
-      <EditTaxonomyDialog
-        open={ this.state.showEditTaxonomyDialog }
-        title={ (this.state.taxValueSelected.id ? "Edit" : "Create") + "Taxonomy Value"}
-        />
-      <DeleteTaxonomyDialog
+    return(
+      <div>
+        <EditTaxValueDialog
+          open={ this.state.showEditTaxonomyDialog }
+          title={"hi"}
+          />
 
-        />
-    </div>
+      </div>
+    )
   }
 
   render(){
     return(
       <div>
+        { this.renderDialogs() }
         <Row><DefaultNavbar/></Row>
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
@@ -364,18 +365,18 @@ export default class TaxFields extends React.Component {
             { this.renderSchemaSelectField() }
             { this.renderTaxonomySelectField() }
             { this.renderTaxFieldSelectField() }
+            <RaisedButton
+              label={ ((this.state.taxonomyOrder === 1) ? "Add Root" : "Add Child") + " Value" }
+              primary={ true }
+              fullWidth={ true }
+              onClick={ this.handleCreateTaxField }
+              />
             <div>
               Total Taxonomy Field Values Found
             </div>
             <Badge
               badgeContent={ this.state.taxonomyValues.length }
               secondary={ true }
-              />
-            <RaisedButton
-              label='Add Field Value'
-              primary={ true }
-              fullWidth={ true }
-              onClick={ this.handleCreateTaxField }
               />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
@@ -396,7 +397,7 @@ export default class TaxFields extends React.Component {
                     this.state.taxonomyValues.map((taxValue, index) => {
                       var pId;
                       if (this.state.taxonomyOrder === 1) {
-                        pId = "Top Parent";
+                        pId = "Root";
                       } else {
                         pId = taxValue.parentId;
                       }

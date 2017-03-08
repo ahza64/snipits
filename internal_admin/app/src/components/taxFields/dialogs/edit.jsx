@@ -1,11 +1,21 @@
 
 import React from 'react';
 
-export default class EditTaxFieldDialog extends React.Component {
+import Dialog from 'material-ui/Dialog';
+
+export default class EditTaxValueDialog extends React.Component {
 
   render() {
-    <div>
-      hi
-    </div>
+    return(
+      <Dialog
+        title={ this.props.title }
+        modal={ true }
+        open={ this.props.open }
+        contentStyle={ { maxWidth: '600px' } }
+        autoScrollBodyContent={ true }
+        >
+        hi
+      </Dialog>
+    );
   }
 }
