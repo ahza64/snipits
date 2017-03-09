@@ -1,17 +1,32 @@
 var _ = require('underscore');
 var mongoose = require('mongoose');
-var component = require('./outage_layer.json');
-// var Schema = mongoose.
+var file = require('./outage_layer.json');
+var connection = mongoose.connect('mongodb://localhost:27017/migrate');
 
-var result; 
+var fileName = process.argv[2];
+var result = {};
+var schema = mongoose.Schema.Types;
+var mTypes = {
+  "string" : mongoose.Schema.Types.String,
+  "number" : schema.Number,
+  "date"   : schema.Date,
+  "boolean": schema.Boolean,
+  "object" : schema.Object,
+  "array"  : schema.Array
+};
 
-var res = _.map(component, function (value, key) {
-  return {key, value};
-
+var newDoc = new mongoose.Model(result);
+_.each(file, function (value, key, {}) {
+  console.log("val", value, "key", key);
+  var type = typeof value;
+  result[key] = mTypes[type];
 });
 
-console.log("RES==>", res);
+var newSchema = new mongoose.Schema(result);
+var model = connection.model(fileName, newSchema);
 
-//
+console.log(result);
+
+
 // var schema = new mongoose.Schema({
 // });
