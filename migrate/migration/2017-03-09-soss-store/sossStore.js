@@ -2,6 +2,12 @@ var _ = require('underscore');
 var mongoose = require('mongoose');
 var file = require('./outage_layer.json');
 var connection = mongoose.connect('mongodb://localhost:27017/migrate');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("Database connected");
+});
+
 
 var fileName = process.argv[2];
 var result = {};
@@ -15,17 +21,21 @@ var mTypes = {
   "array"  : schema.Array
 };
 
-var newDoc = new mongoose.Model(result);
 _.each(file, function (value, key, {}) {
-  console.log("val", value, "key", key);
   var type = typeof value;
   result[key] = mTypes[type];
 });
 
 var newSchema = new mongoose.Schema(result);
-var model = connection.model(fileName, newSchema);
+// var model = connection.model(fileName, newSchema);
+var Model = mongoose.model('schema', newSchema);
+var connect = connection.model("schema", newSchema);
 
-console.log(result);
+var saveSchema = new Model({name : "Joe"});
+saveSchema.save(function (err, saveSchema) {
+  if (err) return console.error(err);
+  console.log("added to database");
+});
 
 
 // var schema = new mongoose.Schema({
