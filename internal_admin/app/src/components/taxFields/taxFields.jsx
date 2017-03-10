@@ -30,6 +30,7 @@ export default class TaxFields extends React.Component {
       schemas: [],
       taxonomies: [],
       taxonomyValues: [],
+      taxParentValues: [],
       companyId: null,
       companyName: null,
       projectId: null,
@@ -38,7 +39,10 @@ export default class TaxFields extends React.Component {
       schemaName: null,
       taxonomyId: null,
       taxonomyName: null,
+      parentOrder: null,
+      parentSelected: {},
       taxValueSelected: {},
+      taxonomySelected: {},
       showEditTaxonomyDialog: false,
       actionMenuOpen: false,
       showDeleteTaxonomyDialog: false
@@ -148,6 +152,9 @@ export default class TaxFields extends React.Component {
           });
           if(firstTax) {
             this.fetchTaxValues(firstTax.fieldName);
+            this.setState({
+              taxonomySelected: firstTax
+            });
           }
         }
       });
@@ -173,6 +180,36 @@ export default class TaxFields extends React.Component {
           });
         }
       });
+    }
+  }
+
+  fetchParentValues(parentName){
+    let url = taxFieldsUrl + '/' + parentName;
+    return request
+    .get(url)
+    .withCredentials()
+    .end((err, res) => {
+      if(err) {
+        console.error(err);
+      } else {
+        this.setState({
+          taxParentValues: res.body
+        });
+      }
+    });
+  }
+
+  findParentOrder(){
+    let parentOrder = this.state.taxonomySelected.order - 1;
+    if (parentOrder > 0) {
+      let parentSelected = this.state.taxonomies.filter(p => {
+        return p.order == parentOrder
+      });
+      this.setState({
+        parentSelected: parentSelected[0]
+      })
+      let parentName = parentSelected[0].fieldName;
+      this.fetchParentValues(parentName);
     }
   }
 
@@ -218,10 +255,12 @@ export default class TaxFields extends React.Component {
     });
     let taxonomyName = (taxonomies.length > 0) ? taxonomies[0].fieldName : null;
     let taxonomyOrder = (taxonomies.length > 0) ? taxonomies[0].order : null;
+    let taxonomySelected = (taxonomies.length > 0) ? taxonomies[0] : null;
     this.setState({
       taxonomyId: taxonomyId,
       taxonomyName: taxonomyName,
-      taxonomyOrder: taxonomyOrder
+      taxonomyOrder: taxonomyOrder,
+      taxonomySelected: taxonomySelected
     });
     this.fetchTaxValues(taxonomyName);
   }
@@ -248,10 +287,10 @@ export default class TaxFields extends React.Component {
   // }
 
   handleCreateTaxField() {
+    this.findParentOrder();
     this.setState({
       showEditTaxonomyDialog: true
     });
-    console.log("button pressed", this.state.taxonomyValueId);
   }
 
   handleEditTaxValueDialogClose() {
@@ -355,7 +394,8 @@ export default class TaxFields extends React.Component {
           onClose={ (saved) => this.handleEditTaxValueDialogClose()}
           taxFieldName={ this.state.taxonomyName }
           taxFieldValueId={ this.state.taxonomyOrder }
-          taxParentList={ this.state.taxonomyValues }
+          taxParentList={ this.state.taxParentValues }
+          parentSelected={ this.state.parentSelected }
           />
 
       </div>

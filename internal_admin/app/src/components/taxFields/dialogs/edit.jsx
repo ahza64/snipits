@@ -4,21 +4,46 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 export default class EditTaxValueDialog extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      parentFieldName: ""
+    }
+  }
+
+  handleParentNameChange(event, value) {
+    this.setState({
+      parentFieldName: value
+    });
+  }
 
   renderParentIdSelectField() {
     if(this.props.taxFieldValueId !== 1) {
       return(
         <tr>
-          <td>Select Parent Id</td>
+          <td>Select Parent Value from "{ this.props.parentSelected.fieldName }"</td>
           <td>
-            <TextField
-              name="selectParentId"
+            <SelectField
               fullWidth={ true }
-              disabled={ true }
-              value={ this.props.taxParentList }
-              />
+              value={ this.state.parentFieldName }
+              onChange={ (event, index, value) => this.handleParentNameChange(event, value) }
+              >
+              { this.props.taxParentList.map((parent, index) => {
+                  return(
+                    <MenuItem
+                      key={ index }
+                      value={ parent.id }
+                      primaryText={ parent.fieldValue }
+                    />
+                  );
+                })
+              }
+            </SelectField>
           </td>
         </tr>
       )
