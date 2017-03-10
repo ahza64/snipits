@@ -23,13 +23,16 @@ var mTypes = {
 
 _.each(file, function (value, key, {}) {
   var type = typeof value;
+  console.log(key, value, type);
   result[key] = type;
-  console.log(key , type);
 });
-
 var newSchema = new mongoose.Schema(result);
+
+_.each(file, function (value, key, {}) {
+  result[key] = value;
+});
 // var model = connection.model(fileName, newSchema);
-var Model = mongoose.model(fileName, newSchema);
+var Model = mongoose.model(file.name, newSchema);
 // var connect = connection.model("schema", newSchema);
 
 var saveSchema = new Model(result);
