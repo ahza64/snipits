@@ -17,13 +17,12 @@ var mTypes = {
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log("Database connected");
-  main();
+ main();
 });
-
 
 function main() {
   for (var i = 2; i < process.argv.length; i++) {
-    var filePath = './' + process.argv[i];
+    var filePath = process.cwd() + '/' + process.argv[i];
     filePath = path.resolve(filePath);
     migrateFile(filePath);
   }
@@ -37,45 +36,40 @@ function migrateFolder(filePath){
 }
 
 function migrateFile(filePath) {
-  var Model;
-  var filePathObject = path.parse(filePath);
   if (fs.lstatSync(filePath).isDirectory()){
     migrateFolder(filePath);
     return;
   }
-  if (filePathObject.ext !== '.json') {
-    console.error("not a .json F");
-    return;
-  }
+  var Model;
+  var schemaFormat = {};
+  var doc = {};
   var file = require(filePath);
-  var result = {};
 
-  _.each(file, (value, key, {}) => {
-    var type = typeof value;
-    result[key] = type;
-  });
-  result.project  = mTypes['string'];
-  result.company  = mTypes['string'];
-  var newSchema = new mongoose.Schema(result);
-
-  _.each(file, (value, key, {}) => {
-    result[key] = value
-  });
-  result.project  = 'text';
-  result.company  = 'text';
-
-  if (mongoose.models[file.name]) {
-    Model = mongoose.model(file.name)
-  } else {
+  if (!mongoose.models[file.name]) {
+    _.each(file, (value, key, {}) => {
+      var type = typeof value;
+      schemaFormat[key] = type;
+    });
+    schemaFormat.project  = mTypes['string'];
+    schemaFormat.company  = mTypes['string'];
+    var newSchema = new mongoose.Schema(schemaFormat);
     Model = mongoose.model(file.name, newSchema, file.name);
+  } else {
+    Model = mongoose.model(file.name);
   }
 
-  var saveSchema = new Model(result);
-  saveSchema.save((err, newSchema) => {
+  _.each(file, (value, key, {}) => {
+    doc[key] = value
+  });
+  doc.project  = 'text';
+  doc.company  = 'text';
+
+  var newDoc = new Model(doc);
+  newDoc.save((err) => {
     if (err) {
-      console.error("FAILED:", err, filePath);
+      console.trace("FAILED:", err, filePath);
     } else {
-      console.log("success: ", file.name, filePath);
+      console.info('.');
     }
   });
 
