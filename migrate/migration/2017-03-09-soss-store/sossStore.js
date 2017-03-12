@@ -1,7 +1,6 @@
 const path= require('path');
 const fs  = require('fs');
 const _   = require('underscore');
-g=0;
 var mongoose = require('mongoose');
 var connection = mongoose.connect('mongodb://localhost:27017/migrate');
 var db = mongoose.connection;
@@ -18,20 +17,17 @@ var mTypes = {
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log("Database connected");
+  main();
 });
-main();
+
 
 function main() {
   for (var i = 2; i < process.argv.length; i++) {
     var filePath = './' + process.argv[i];
-    console.log(filePath);
     filePath = path.resolve(filePath);
     migrateFile(filePath);
-
   }
 }
-
-
 
 function migrateFolder(filePath){
   var directoryFiles = fs.readdirSync(filePath);
@@ -51,7 +47,6 @@ function migrateFile(filePath) {
     console.error("not a .json F");
     return;
   }
-  console.log(filePath);
   var file = require(filePath);
   var result = {};
 
@@ -61,7 +56,6 @@ function migrateFile(filePath) {
   });
   result.project  = mTypes['string'];
   result.company  = mTypes['string'];
-
   var newSchema = new mongoose.Schema(result);
 
   _.each(file, (value, key, {}) => {
@@ -76,13 +70,11 @@ function migrateFile(filePath) {
     Model = mongoose.model(file.name, newSchema, file.name);
   }
 
-  console.log(file.name);
   var saveSchema = new Model(result);
   saveSchema.save((err, newSchema) => {
     if (err) {
       console.error("FAILED:", err, filePath);
     } else {
-      ++g;
       console.log("success: ", file.name, filePath);
     }
   });
