@@ -1,0 +1,10 @@
+{
+  "cufs": {
+    "query": {},
+    "delete_fields": {
+      "assigned_workorders": 1,
+      "division_data": 1,
+      "scheduled_data": 1
+    }
+  }
+}
