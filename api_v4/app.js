@@ -1,4 +1,5 @@
 const koa = require('koa');
+const logger = require('koa-logger');
 const mount = require('koa-mount');
 const co = require('co');
 const config = require('dsp_shared/config/config').get();
@@ -10,8 +11,8 @@ const http = require('http');
 
 co(function *build_app() {
   const app = koa();
-  const schemas = yield Schema.find({ _api: "v4" });
-  console.log("SDFSDFSDFFDS");
+  app.use(logger());
+  const schemas = yield Schema.find({ _api: "v4" });  
   for (let i = 0; i < schemas.length; i++) {
     console.log("SCHEMAS", schemas[i]);
     const Model = schemas[i].getModel();

@@ -13,9 +13,9 @@ function *getLatestSchema(name) {
   return schema[0];
 }
 
-function *create(name, version) {
+function *create(name, version, api) {
   const v = version || '0.0.1';
-  return yield Schema.create({ _name: name, _version: v });
+  return yield Schema.create({ _name: name, _version: v, _api: api });
 }
 
 
@@ -57,3 +57,11 @@ if (require.main === module) {
   util.bakerGen(bump);
   util.bakerRun();
 }
+
+module.exports = {
+  getLatestSchema: getLatestSchema,
+  create: create,
+  add_field: add_field,
+  drop_field: drop_field,
+  bump: bump,
+};

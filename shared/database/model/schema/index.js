@@ -43,6 +43,7 @@ const s = {
   id: { type: Number, index: true },
   created: Date,
   updated: Date,
+  _api: String,
   //other_field: {enum: ["String", "Number", "Date", "Boolean", "ForeignKey"]}
 };
 const reserved_keys = Object.keys(s).concat(["_id", "__v", "_api"]);
