@@ -180,7 +180,7 @@ function createRouter(resource, _options) {
 
   if (!read_only) {
     // PUT update request for specific resoruce
-    route.put(`${res_url}/:id`, function *overWrite() {
+    route.put(`${res_url}/:id`, function *put_route() {
       try {
         this.body = yield resource.update(this.params.id, this.request.body);
       } catch (e) {
@@ -189,7 +189,7 @@ function createRouter(resource, _options) {
     });
 
     // PATCH request updates fields in a particular Object
-    route.put(`${res_url}/:id`, function *overWrite() {
+    route.patch(`${res_url}/:id`, function *patch_route() {
       try {
         this.body = yield resource.patch(this.params.id, this.request.body);
       } catch (e) {
