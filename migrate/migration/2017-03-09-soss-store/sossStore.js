@@ -22,7 +22,7 @@ db.once('open', function() {
 
 function main() {
   for (var i = 2; i < process.argv.length; i++) {
-    var filePath
+    var filePath;
     filePath = process.cwd() + '/' + process.argv[i];
     filePath = path.resolve(filePath);
     migrateFile(filePath);
@@ -51,8 +51,7 @@ function migrateFile(filePath) {
       var type = typeof value;
       schemaFormat[key] = type;
     });
-    schemaFormat.project  = mTypes['string'];
-    schemaFormat.company  = mTypes['string'];
+    schemaFormat.appId  = mTypes['string'];
     var newSchema = new mongoose.Schema(schemaFormat);
     Model = mongoose.model(file.name, newSchema, file.name);
   } else {
@@ -62,8 +61,8 @@ function migrateFile(filePath) {
   _.each(file, (value, key, {}) => {
     doc[key] = value
   });
-  doc.project  = 'text';
-  doc.company  = 'text';
+
+  doc.appId = '48'
 
   var newDoc = new Model(doc);
   newDoc.save((err) => {
