@@ -143,6 +143,9 @@ export default class TaxFields extends React.Component {
         if (err) {
           console.error(err);
         } else {
+          res.body.sort(function (a, b) {
+            return a.order - b.order
+          })
           var firstTax = (res.body.length > 0) ? res.body[0] : null;
           this.setState({
             taxonomies: res.body,
