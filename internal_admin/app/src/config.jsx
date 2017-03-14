@@ -32,6 +32,8 @@ const activateUserUrl = base + '/users/:id/activate';
 const deactivateUserUrl = base + '/users/:id/deactivate';
 const deleteUserUrl = base + '/users/:id';
 const ingestionUrl = base + '/ingestions';
+const taxonomiesUrl = base + '/taxonomies';
+const taxFieldsUrl = base + '/taxfields';
 
 export {
   loginUrl,
@@ -58,5 +60,7 @@ export {
   ingestionUrl,
   schemaListUrl,
   schemaUrl,
-  schemaFieldUrl
+  schemaFieldUrl,
+  taxonomiesUrl,
+  taxFieldsUrl
 };
