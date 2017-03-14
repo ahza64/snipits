@@ -56,7 +56,6 @@ function ripSchema(file) {
 function readFile(filePath){
   var absolutePath = path.resolve(filePath);
   if( fs.lstatSync(absolutePath).isDirectory() ) {
-    console.log('lstatSync');
     readFolder(filePath);
     return;
   }
