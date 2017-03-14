@@ -22,7 +22,8 @@ db.once('open', function() {
 
 function main() {
   for (var i = 2; i < process.argv.length; i++) {
-    var filePath = process.cwd() + '/' + process.argv[i];
+    var filePath
+    filePath = process.cwd() + '/' + process.argv[i];
     filePath = path.resolve(filePath);
     migrateFile(filePath);
   }

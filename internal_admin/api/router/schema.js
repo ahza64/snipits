@@ -89,7 +89,6 @@ router.delete('/schema/:schemaId', function* () {
     yield targetSchema.update({status : !targetSchema.status})
     this.body = targetSchema;
     yield incrementSchema(targetSchema.dataValues);
-    console.log("schema------------------------", targetSchema);
   }
 })
 
@@ -116,7 +115,6 @@ router.get('/schemaField/:schemaId', function* () {
   router.post('/schemaField/:schemaId', function* () {
     var body = this.request.body;
     var schemaId = this.params.schemaId;
-    console.log("body=================================================",body, "schemaId",schemaId);
     if (permissions.has(this.req.user, this.req.user.companyId)) {
       var schema = yield QowSchemas.findOne({
         where:{
@@ -125,8 +123,6 @@ router.get('/schemaField/:schemaId', function* () {
      });
 
      updatedSchema = yield incrementSchema(schema.dataValues);
-
-     console.log("REJERRRT====================================================", schema);
       if (schema){
         var field = {
           name: body.name,
