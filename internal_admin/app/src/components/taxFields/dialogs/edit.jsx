@@ -6,19 +6,29 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu';
 
 export default class EditTaxValueDialog extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      parentFieldName: ""
+      parentFieldName: '',
+      taxParentList: []
     }
   }
 
-  handleParentNameChange(event, value) {
+  componentWillReceiveProps() {
     this.setState({
-      parentFieldName: value
+      taxParentList: this.props.taxParentList,
+      parentFieldName: this.props.taxParentList[0] ? this.props.taxParentList[0].id : ""
+    })
+  }
+
+  handleParentNameChange(event, value) {
+    let pValue = value;
+    this.setState({
+      parentFieldName: pValue
     });
   }
 
@@ -35,18 +45,14 @@ export default class EditTaxValueDialog extends React.Component {
               >
               { this.props.taxParentList.map((parent, index) => {
                   return(
-                    <MenuItem
-                      key={ index }
-                      value={ parent.id }
-                      primaryText={ parent.fieldValue }
-                    />
+                    <MenuItem key={ index } value={ parent.id } primaryText={ parent.fieldValue } />
                   );
                 })
               }
             </SelectField>
           </td>
         </tr>
-      )
+      );
     }
   }
 

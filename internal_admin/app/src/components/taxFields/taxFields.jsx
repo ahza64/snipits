@@ -178,6 +178,7 @@ export default class TaxFields extends React.Component {
             taxonomyValue: firstTaxValue ? firstTaxValue.fieldValue : null,
             taxonomyValueName: firstTaxValue ? firstTaxValue.fieldName : null
           });
+          this.findParentOrder();
         }
       });
     }
@@ -195,6 +196,7 @@ export default class TaxFields extends React.Component {
         this.setState({
           taxParentValues: res.body
         });
+        console.log("parentName", this.state.taxParentValues);
       }
     });
   }

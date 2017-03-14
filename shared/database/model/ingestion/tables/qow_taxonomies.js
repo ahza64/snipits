@@ -4,7 +4,10 @@ module.exports = function (sequelize, DataTypes) {
     fieldName: { type: DataTypes.STRING },
     order: { type: DataTypes.INTEGER },
     nodeType: { type: DataTypes.STRING },
-    keys: { type: DataTypes.STRING }
+    keys: { type: DataTypes.STRING },
+    companyId: { type: DataTypes.INTEGER },
+    workProjectId: { type: DataTypes.INTEGER },
+    qowSchemaId: { type: DataTypes.INTEGER }
   }, {
     classMethods: {
       associate: function (models) {
