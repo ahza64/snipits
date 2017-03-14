@@ -44,7 +44,7 @@ export default class DeleteTaxonomyDialog extends React.Component {
         open={ this.props.open }
         actions={ actions }
         >
-
+        Are you sure you'd like to delete "{ this.props.taxName }" Taxonomy?
       </Dialog>
     )
   }
