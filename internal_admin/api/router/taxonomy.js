@@ -53,7 +53,7 @@ router.delete(
 router.post(
   '/taxonomies',
   function*() {
-  var companyId = this.req.user.companyId;
+  var companyUserId = this.req.user.companyId;
   var body = this.request.body;
   var field_name = body.fieldName;
   var schemaId = body.schemaId;
@@ -61,9 +61,11 @@ router.post(
   var node_type = body.nodeType;
   var keys = body.keys;
   var taxId = body.id;
+  var projectId = body.projectId;
+  var companyId = body.companyId;
   var taxonomy;
 
-  if (permissions.has(this.req.user, companyId)) {
+  if (permissions.has(this.req.user, companyUserId)) {
     try {
       if (taxId) {
         taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
@@ -81,6 +83,8 @@ router.post(
           order: order,
           nodeType: node_type,
           keys: keys,
+          companyId: companyId,
+          workProjectId: projectId,
           createdAt: Date.now(),
           updatedAt: Date.now()
         });

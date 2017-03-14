@@ -32,7 +32,7 @@ export default class EditTaxonomyDialog extends React.Component {
       taxOrder: props.order ? props.order : '',
       taxNodeType: props.nodeType ? props.nodeType : '',
       taxKeys: props.keys ? props.keys : '',
-      taxId: props.taxId,
+      taxId: props.taxId
     });
   }
 
@@ -80,6 +80,8 @@ export default class EditTaxonomyDialog extends React.Component {
       nodeType: this.state.taxNodeType,
       keys: this.state.taxKeys,
       schemaId: this.props.schemaId,
+      companyId: this.props.companyId,
+      projectId: this.props.projectId
     }
 
     request

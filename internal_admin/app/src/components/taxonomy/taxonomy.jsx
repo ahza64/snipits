@@ -337,6 +337,8 @@ export default class Taxonomy extends React.Component {
           nodeType={ this.state.taxonomySelected.nodeType }
           keys={ this.state.taxonomySelected.keys }
           taxId={ this.state.taxonomySelected.id }
+          companyId={ this.state.companyId }
+          projectId={ this.state.projectId }
           onClose={ (saved) => this.handleEditTaxonomyDialogClose(saved) } />
         <DeleteTaxonomyDialog
           open={ this.state.showDeleteTaxonomyDialog }
