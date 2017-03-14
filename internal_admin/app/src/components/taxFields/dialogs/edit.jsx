@@ -60,14 +60,18 @@ export default class EditTaxValueDialog extends React.Component {
     }
   }
 
-  render() {
-    const actions = [
-      <RaisedButton
-        label="Cancel"
-        onClick={ (event) => this.props.onClose(false) }
+  actions() {
+    return(
+      [
+        <RaisedButton
+          label="Cancel"
+          onClick={ (event) => this.props.onClose(false) }
         />
-    ];
+      ]
+    )
+  }
 
+  render() {
     return(
       <Dialog
         title={ this.props.title }
@@ -75,7 +79,7 @@ export default class EditTaxValueDialog extends React.Component {
         open={ this.props.open }
         contentStyle={ { maxWidth: '600px' } }
         autoScrollBodyContent={ true }
-        actions={ actions }
+        actions={ this.actions() }
         >
         <table style={ { width: '100%' } }>
           <tbody>

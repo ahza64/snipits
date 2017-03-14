@@ -97,25 +97,28 @@ export default class EditTaxonomyDialog extends React.Component {
     });
   }
 
+  actions() {
+    return(
+      [
+        <RaisedButton
+          label="Cancel"
+          onTouchTap={ (event) => this.props.onClose(false) }
+        />,
+        <RaisedButton
+          label="Confirm"
+          primary={ true }
+          keyboardFocused={ false }
+          onTouchTap={ (event) => this.handleTaxonomySubmit(event) }
+        />
+      ]
+    )
+  }
+
   render() {
-
-    const actions = [
-      <RaisedButton
-        label="Cancel"
-        onTouchTap={ (event) => this.props.onClose(false) }
-      />,
-      <RaisedButton
-        label="Confirm"
-        primary={ true }
-        keyboardFocused={ false }
-        onTouchTap={ (event) => this.handleTaxonomySubmit(event) }
-      />
-    ];
-
     return (
       <Dialog
         title={ this.props.title }
-        actions={ actions }
+        actions={ this.actions() }
         open={ this.props.open }
         modal={ true }
         autoScrollBodyContent={ true }

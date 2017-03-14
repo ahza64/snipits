@@ -49,11 +49,6 @@ export default class TaxFields extends React.Component {
     };
 
     this.handleCreateTaxField = this.handleCreateTaxField.bind(this);
-    // this.fetchCompanies = this.fetchCompanies.bind(this);
-    // this.handleCreateTaxonomy = this.handleCreateTaxonomy.bind(this);
-    // this.handleEditChangeTax = this.handleEditChangeTax.bind(this);
-    // this.handleEditDeleteTax = this.handleEditDeleteTax.bind(this);
-    // this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
   }
 
   componentWillMount() {
