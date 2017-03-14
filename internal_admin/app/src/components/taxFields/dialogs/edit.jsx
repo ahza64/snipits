@@ -13,7 +13,7 @@ export default class EditTaxValueDialog extends React.Component {
     super(props);
 
     this.state = {
-      parentFieldName: '',
+      parentFieldId: '',
       taxParentList: []
     }
   }
@@ -21,14 +21,14 @@ export default class EditTaxValueDialog extends React.Component {
   componentWillReceiveProps() {
     this.setState({
       taxParentList: this.props.taxParentList,
-      parentFieldName: this.props.taxParentList[0] ? this.props.taxParentList[0].id : ""
+      parentFieldId: this.props.taxParentList[0] ? this.props.taxParentList[0].id : ""
     })
   }
 
   handleParentNameChange(event, value) {
     let pValue = value;
     this.setState({
-      parentFieldName: pValue
+      parentFieldId: pValue
     });
   }
 
@@ -40,12 +40,16 @@ export default class EditTaxValueDialog extends React.Component {
           <td>
             <SelectField
               fullWidth={ true }
-              value={ this.state.parentFieldName }
+              value={ this.state.parentFieldId }
               onChange={ (event, index, value) => this.handleParentNameChange(event, value) }
               >
               { this.props.taxParentList.map((parent, index) => {
                   return(
-                    <MenuItem key={ index } value={ parent.id } primaryText={ parent.fieldValue } />
+                    <MenuItem
+                      key={ index }
+                      value={ parent.id }
+                      primaryText={ parent.fieldValue }
+                    />
                   );
                 })
               }
