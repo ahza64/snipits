@@ -145,6 +145,9 @@ export default class Taxonomy extends React.Component {
         if (err) {
           console.error(err);
         } else {
+          res.body.sort(function (a, b) {
+            return a.order - b.order
+          })
           this.setState({
             taxonomies: res.body,
           });
