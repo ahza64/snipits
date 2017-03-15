@@ -23,8 +23,12 @@ db.once('open', function() {
 function main() {
   for (var i = 2; i < process.argv.length; i++) {
     var filePath;
-    filePath = process.cwd() + '/' + process.argv[i];
-    filePath = path.resolve(filePath);
+    if (path.isAbsolute(process.argv[i])) {
+      filePath = process.argv[i];
+    } else {
+      filePath = process.cwd() + '/' + process.argv[i];
+      filePath = path.resolve(filePath);
+    }
     migrateFile(filePath);
   }
 }
@@ -68,12 +72,12 @@ function migrateFile(filePath) {
   });
   var fileObject = path.parse(filePath);
   doc.fileName = fileObject.base;
-  doc.appId = '48'
+  doc.appId = '48';
 
   var newDoc = new Model(doc);
   newDoc.save((err) => {
     if (err) {
-      console.trace("FAILED:", err, filePath);
+      console.error("FAILED:", err, filePath);
     } else {
       console.info('ok');
     }
