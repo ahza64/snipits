@@ -15,9 +15,8 @@ import Badge from 'material-ui/Badge';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-
-
-
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
 
 
 export default class TaxFields extends React.Component {
@@ -49,6 +48,7 @@ export default class TaxFields extends React.Component {
     };
 
     this.handleCreateTaxField = this.handleCreateTaxField.bind(this);
+    this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
   }
 
   componentWillMount() {
@@ -298,6 +298,20 @@ export default class TaxFields extends React.Component {
     });
   }
 
+  handleCloseEditMenu() {
+    this.setState({
+      actionMenuOpen: false
+    })
+  }
+
+  handleActionMenu(event, taxValue) {
+    this.setState({
+      actionMenuOpen: true,
+      actionMenuTarget: event.currentTarget,
+      taxValueSelected: taxValue
+    })
+  }
+
   renderCompanySelectField() {
     return(
       <SelectField
@@ -384,6 +398,29 @@ export default class TaxFields extends React.Component {
     }
   }
 
+  renderEditMenu() {
+    return(
+      <Popover
+        open={ this.state.actionMenuOpen }
+        anchorEl={ this.state.actionMenuTarget }
+        anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
+        targetOrigin={ { horizontal: 'right', vertical: 'top' } }
+        onRequestClose={ this.handleCloseEditMenu }
+        >
+        <Menu>
+          <MenuItem
+            value="1"
+            primaryText="Edit Taxonomy Value"
+            />
+          <MenuItem
+            value="2"
+            primaryText="Delete Taxonomy Value"
+          />
+        </Menu>
+      </Popover>
+    )
+  }
+
   renderDialogs() {
     return(
       <div>
@@ -396,7 +433,6 @@ export default class TaxFields extends React.Component {
           taxParentList={ this.state.taxParentValues }
           parentSelected={ this.state.parentSelected }
           />
-
       </div>
     )
   }
@@ -405,6 +441,7 @@ export default class TaxFields extends React.Component {
     return(
       <div>
         { this.renderDialogs() }
+        { this.renderEditMenu() }
         <Row><DefaultNavbar/></Row>
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
@@ -461,7 +498,7 @@ export default class TaxFields extends React.Component {
                             <FlatButton
                               label="Edit/Delete"
                               secondary={ true }
-                              onClick={ event => this.handleActionMenu(event, taxField) }
+                              onClick={ event => this.handleActionMenu(event, taxValue) }
                               />
                           </TableRowColumn>
                         </TableRow>

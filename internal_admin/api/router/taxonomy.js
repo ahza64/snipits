@@ -55,41 +55,20 @@ router.post(
   function*() {
   var companyUserId = this.req.user.companyId;
   var body = this.request.body;
-  var field_name = body.fieldName;
-  var schemaId = body.schemaId;
-  var order = body.order;
-  var node_type = body.nodeType;
-  var keys = body.keys;
   var taxId = body.id;
-  var projectId = body.projectId;
-  var companyId = body.companyId;
   var taxonomy;
 
   if (permissions.has(this.req.user, companyUserId)) {
     try {
       if (taxId) {
         taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
-        taxonomy = yield taxonomy.updateAttributes({
-          fieldName: field_name,
-          qowSchemaId: schemaId,
-          order: order,
-          nodeType: node_type,
-          keys: keys
-        });
+        taxonomy = yield taxonomy.updateAttributes(body);
       } else {
-        taxonomy = yield QowTaxonomies.create({
-          fieldName: field_name,
-          qowSchemaId: schemaId,
-          order: order,
-          nodeType: node_type,
-          keys: keys,
-          companyId: companyId,
-          workProjectId: projectId,
-          createdAt: Date.now(),
-          updatedAt: Date.now()
-        });
+        body.createdAt = Date.now();
+        body.updatedAt = Date.now();
+        taxonomy = yield QowTaxonomies.create(body);
       }
-      yield updateFieldValues(taxonomy, fieldValues)
+      // yield updateFieldValues(taxonomy, fieldValues) TODO update expected tax fieldName when tax fieldName changes
     } catch (e) {
       console.error(e);
     }

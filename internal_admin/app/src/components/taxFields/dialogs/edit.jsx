@@ -1,5 +1,6 @@
 
 import React from 'react';
+import request from '../../../services/request';
 
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -7,6 +8,8 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
+
+import { taxFieldsUrl } from '../../../config';
 
 export default class EditTaxValueDialog extends React.Component {
   constructor() {
@@ -60,12 +63,38 @@ export default class EditTaxValueDialog extends React.Component {
     }
   }
 
+  handleTaxValueSubmit(event) {
+    console.log(">>>>>>>>>> tax values for submit", this.props);
+    //TODO finish adding data to be posted
+    var taxVale = {
+
+    }
+
+    // TODO add post to API
+    request
+    .post(taxFieldsUrl)
+    .send(taxValue)
+    .withCredentials()
+    .end(err => {
+      if (err) {
+        console.error(err);
+      } else {
+        this.props.onClose(true)
+      }
+    })
+  }
+
   actions() {
     return(
       [
         <RaisedButton
           label="Cancel"
           onClick={ (event) => this.props.onClose(false) }
+        />,
+        <RaisedButton
+          label="Confirm"
+          primary={ true }
+          onClick={ (event) => this.handleTaxValueSubmit(event) }
         />
       ]
     )

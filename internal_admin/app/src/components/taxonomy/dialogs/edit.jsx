@@ -79,9 +79,9 @@ export default class EditTaxonomyDialog extends React.Component {
       order: this.state.taxOrder,
       nodeType: this.state.taxNodeType,
       keys: this.state.taxKeys,
-      schemaId: this.props.schemaId,
+      qowSchemaId: this.props.schemaId,
       companyId: this.props.companyId,
-      projectId: this.props.projectId
+      workProjectId: this.props.projectId
     }
 
     request
