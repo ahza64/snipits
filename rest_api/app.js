@@ -42,9 +42,9 @@ app.use(session({ key: 'dispatchr:sess' }, app));
 
 //Mount the login endpoint first
 app.use(mount('/api/v3', login));
-
+app.use(mount('/api/v3', require('./route/assign/assign')));
 // Don't require login but include it
-app.use(require('./middleware').auth);
+//app.use(require('./middleware').auth);
 
 app.use(require('./middleware').requestLog);
 
@@ -57,7 +57,6 @@ app.use(mount('/api/v3', require('./route/package')));
 app.use(mount('/api/v3', require('./route/asset')));
 app.use(mount('/api/v3', require('./route/update_tree')));
 app.use(mount('/api/v3', require('./route/layer')));
-
 
 //This is runnable as a stand alone server
 if (require.main === module) {
