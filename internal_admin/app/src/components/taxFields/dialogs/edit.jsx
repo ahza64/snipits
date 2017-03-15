@@ -34,10 +34,10 @@ export default class EditTaxValueDialog extends React.Component {
     var taxValue = {
       fieldName: this.props.taxFieldName,
       fieldValue: this.state.fieldValue,
-      parentId: this.state.parentId,
+      parentId: this.state.parentId ? this.state.parentId : null,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      qowSchemaId: this.props.qowSchemaId,
+      qowSchemaId: null, //this.props.qowSchemaId,
       workProjectId: this.props.workProjectId,
       companyId: this.props.companyId
     }

@@ -53,33 +53,33 @@ router.delete(
 router.post(
   '/taxonomies',
   function*() {
-  var companyUserId = this.req.user.companyId;
-  var body = this.request.body;
-  var taxId = body.id;
-  var taxonomy;
+    var companyUserId = this.req.user.companyId;
+    var body = this.request.body;
+    var taxId = body.id;
+    var taxonomy;
 
-  if (permissions.has(this.req.user, companyUserId)) {
-    try {
-      if (taxId) {
-        taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
-        taxonomy = yield taxonomy.updateAttributes(body);
-      } else {
-        body.createdAt = Date.now();
-        body.updatedAt = Date.now();
-        taxonomy = yield QowTaxonomies.create(body);
+    if (permissions.has(this.req.user, companyUserId)) {
+      try {
+        if (taxId) {
+          taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
+          taxonomy = yield taxonomy.updateAttributes(body);
+        } else {
+          body.createdAt = Date.now();
+          body.updatedAt = Date.now();
+          taxonomy = yield QowTaxonomies.create(body);
+        }
+        // yield updateFieldValues(taxonomy, fieldValues) TODO update expected tax fieldName when tax fieldName changes
+      } catch (e) {
+        console.error(e);
       }
-      // yield updateFieldValues(taxonomy, fieldValues) TODO update expected tax fieldName when tax fieldName changes
-    } catch (e) {
-      console.error(e);
+      this.body = taxonomy;
     }
-    this.body = taxonomy;
   }
-});
+);
 
 router.get(
   '/taxfields/:taxName',
   function*() {
-    console.log("-----------------", this.params.taxName);
     var companyId = this.req.user.companyId;
     var fieldName = this.params.taxName;
     if (permissions.has(this.req.user, companyId) && fieldName) {
@@ -94,7 +94,29 @@ router.get(
   }
 )
 
-// TODO taxfields post
+router.post(
+  '/taxfields/',
+  function*() {
+    var body = this.request.body;
+    var taxValId = body.id;
+    var companyUserId = this.req.user.companyId;
+    var taxValue;
+    
+    if (permissions.has(this.req.user, companyUserId)) {
+      try {
+        if (taxValId) {
+          taxValue = yield QowExpectedTaxonomies.find({ where: { id: taxValId } });
+          taxValue = yield taxValue.updateAttributes(body);
+        } else {
+          taxValue = yield QowExpectedTaxonomies.create(body);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      this.body = taxValue;
+    }
+  }
+);
 
 app.use(router.routes());
 
