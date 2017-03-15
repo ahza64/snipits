@@ -1,6 +1,7 @@
 const path= require('path');
 const fs  = require('fs');
 const _   = require('underscore');
+const async = require('async');
 var mongoose = require('mongoose');
 var connection = mongoose.connect('mongodb://localhost:27017/migrate');
 var db = mongoose.connection.db;
@@ -27,13 +28,35 @@ function main() {
   var files = fs.readdirSync(dataFolder);
   readFolder(dataFolder);
   collectionNames = _.unique(collectionNames);
-
-  var sossApp = findDocsByAppId(12, (res) => {
+  console.log(collectionNames);
+  var sossApp = findDocsByAppId(48, (res) => {
+    console.log("AAAAAAAAAAAAA");
     result = _.union(result, res);
-    console.log(result);
+    outputJSON(res);
    });
-
 }
+
+
+function outputJSON(res) {
+  console.log(res);
+  var result ={};
+  async.each(res, (json) => {
+
+    json = json.toObject();
+    var pathx = dataFolder + '/output/';
+    pathx = path.resolve(pathx + '/' + json.fileName);
+    console.log("PATH111", pathx , json);
+    fs.writeFileSync(pathx, JSON.stringify(json), (err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("OK", res);
+      }
+    });
+
+  })
+}
+
 
 function ripSchema(file) {
   var Model;
@@ -67,14 +90,14 @@ function readFile(filePath){
 
 function readFolder(filePath) {
   var files = fs.readdirSync(filePath);
-  _.each(files, (file) => {
+  async.each(files, (file) => {
     readFile(path.join(filePath, file))
   })
 }
 
 function findDocsByAppId(id, callback) {
   var result = [];
-  _.each(collectionNames, (name) => {
+  async.each(collectionNames, (name) => {
     var Model = Models[name];
     Model
     .find({ appId : id })
@@ -82,7 +105,7 @@ function findDocsByAppId(id, callback) {
       if (err) {
         console.error('errr',err);
       } else {
-        callback(res)
+        callback(res);
       }
     });
   })

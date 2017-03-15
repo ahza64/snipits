@@ -17,12 +17,8 @@ var mTypes = {
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log("Database connected");
- main();
+  main();
 });
-
-function outputJSON(json) {
-  
-}
 
 function main() {
   for (var i = 2; i < process.argv.length; i++) {
@@ -45,18 +41,21 @@ function migrateFile(filePath) {
     migrateFolder(filePath);
     return;
   }
+  if (!filePath.endsWith('.json')) {
+    return;
+  }
   var Model;
+  console.log(filePath);
   var file = require(filePath);
   var schemaFormat = {};
   var doc = {};
-  var fileObject = path.parse(filePath);
 
   if (!mongoose.models[file.name]) {
     _.each(file, (value, key, {}) => {
       var type = typeof value;
       schemaFormat[key] = type;
     });
-    schemaFormat.file_name = mTypes['string'];
+    schemaFormat.fileName = mTypes['string'];
     schemaFormat.appId  = mTypes['string'];
     var newSchema = new mongoose.Schema(schemaFormat);
     Model = mongoose.model(file.name, newSchema, file.name);
@@ -67,8 +66,8 @@ function migrateFile(filePath) {
   _.each(file, (value, key, {}) => {
     doc[key] = value
   });
-
-  doc.file_name = fileObject.base;
+  var fileObject = path.parse(filePath);
+  doc.fileName = fileObject.base;
   doc.appId = '48'
 
   var newDoc = new Model(doc);
@@ -76,7 +75,7 @@ function migrateFile(filePath) {
     if (err) {
       console.trace("FAILED:", err, filePath);
     } else {
-      console.info('.');
+      console.info('ok');
     }
   });
 
