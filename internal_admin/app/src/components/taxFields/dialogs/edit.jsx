@@ -30,17 +30,16 @@ export default class EditTaxValueDialog extends React.Component {
   }
 
   handleTaxValueSubmit(event) {
-    console.log(">>>>>>>>>> tax values for submit", this.props);
-    //TODO finish adding data to be posted
+
     var taxValue = {
-      fieldName: '',
+      fieldName: this.props.taxFieldName,
       fieldValue: this.state.fieldValue,
       parentId: this.state.parentId,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      qowSchemaId: '',
-      workProjectId: '',
-      companyId: ''
+      qowSchemaId: this.props.qowSchemaId,
+      workProjectId: this.props.workProjectId,
+      companyId: this.props.companyId
     }
 
     // TODO add post to API
