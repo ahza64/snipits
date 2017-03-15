@@ -14,11 +14,11 @@ var mTypes = {
   "object" : sType.Object,
   "array"  : sType.Array
 };
-
 var dataFolder = '../../buildr-mp/api/soss/sossComponents';
 const appId = 48;
 var Models = {};
 var collectionNames = []
+
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -51,7 +51,7 @@ function readFile(filePath){
 function readFolder(filePath) {
   var files = fs.readdirSync(filePath);
   async.each(files, (file) => {
-    readFile(path.join(filePath, file))
+    readFile(path.join(filePath, file));
   })
 }
 
@@ -95,7 +95,7 @@ function outputJSON(res) {
     json = json.toObject();
     var pathx = path.resolve( dataFolder, 'output' , json.fileName);
     console.log(pathx);
-    fs.writeFileSync(pathx, JSON.stringify(json), (err) => {
+    fs.writeFileSync(pathx, JSON.stringify(json, null, 2), (err) => {
       if (err) {
         console.error(err);
       } else {
