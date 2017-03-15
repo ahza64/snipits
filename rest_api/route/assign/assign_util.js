@@ -15,6 +15,10 @@ module.exports = {
     yield Cufs.update({_id: id}, { '$set': {last_sent_at: moment.utc().toDate()}});
   },
 
+  *updatePmd(pmds, id) {
+    yield Pmds.update({ pge_pmd_num: {$in : pmds }}, { $addToSet: { cufs: id }});
+  },
+
   *createWO(id, qows) {
     var tree_limits = {
       tree_inspect: 300,
@@ -31,9 +35,13 @@ module.exports = {
     var incomplete_trees = assignedQows.filter(item => !(trees_need_workorder.indexOf(item) > -1));
 
     var newWO = yield this.create(trees_need_workorder);
+
+    var pmds = newWO.map( (wo) => {
+      return wo.pge_pmd_num;
+    });
+    yield this.updatePmd(pmds, id);
     var workorders_incomplete = current_workorders.filter(workorder => incomplete_trees.some(tree => this.complete(tree, workorder)));
     var sorted_WO = yield this.sort_by_span(newWO, crew._id);
-    console.log('sorted_WO', sorted_WO);
     var cuf_workorders = workorders_incomplete.concat(sorted_WO);
     for(var i=0; i<cuf_workorders.length; i++) {
       var pge_pmd_num = cuf_workorders[i].pge_pmd_num;
@@ -192,10 +200,8 @@ module.exports = {
   },
 
   *sort_by_span(workorders, cufId) {
-    console.log('In sort by span --->', workorders, cufId);
     var currentCufProjects = yield Pmds.find({ cufs: cufId }, { pge_pmd_num: 1, _id: -1 });
     var projectsCufCurrentUniq = _.uniq(currentCufProjects.map(pmd => pmd.pge_pmd_num));
-    console.log('projectsCufCurrentUniq', currentCufProjects, projectsCufCurrentUniq);
     var sorted_workorders = [];
 
     projectsCufCurrentUniq.forEach(function(project){
@@ -204,7 +210,7 @@ module.exports = {
       var sorted_project = _.sortBy(workorders, 'span_name');
       sorted_workorders = sorted_workorders.concat(sorted_project);
     });
-
+    console.log('sorted_workorders', sorted_workorders);
     return sorted_workorders;
   },
 
