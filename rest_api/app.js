@@ -9,6 +9,7 @@ var logger = require('koa-logger');
 var compress = require('koa-compress');
 var mount = require('koa-mount');
 var koa = require('koa');
+var cors = require('kcors');
 var resources = require('./resources.json');
 var requestId = require('koa-request-id');
 var session = require('koa-session');
@@ -19,6 +20,10 @@ var bodyParser = require('koa-body-parser');
 var app = koa();
 
 // middleware
+app.use(cors({
+  allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  credentials: true
+}));
 app.use(bodyParser());
 app.use(logger());
 app.use(compress());
