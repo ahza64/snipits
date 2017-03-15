@@ -1,12 +1,14 @@
-
+// Modules
 import React from 'react';
 import request from '../../services/request';
 
+// Components
 import DefaultNavbar from '../navbar/defaultNavbar';
 import Taxonomy from '../taxonomy/taxonomy'
 import EditTaxValueDialog from './dialogs/edit'
 import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl, taxFieldsUrl } from '../../config';
 
+// Styles
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import SelectField from 'material-ui/SelectField';
@@ -182,6 +184,7 @@ export default class TaxFields extends React.Component {
     }
   }
 
+// find parent taxonomy values
   fetchParentValues(parentName){
     let url = taxFieldsUrl + '/' + parentName;
     return request
@@ -198,6 +201,7 @@ export default class TaxFields extends React.Component {
     });
   }
 
+// find the available parent taxonomy value order's value
   findParentOrder(){
     let parentOrder = this.state.taxonomySelected.order - 1;
     if (parentOrder > 0) {
@@ -318,7 +322,8 @@ export default class TaxFields extends React.Component {
         floatingLabelText="Company"
         fullWidth={true}
         value={ this.state.companyId }
-        onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) } >
+        onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) }
+        >
         { this.state.companies.map((company, idx) => {
             return(
               <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
@@ -335,7 +340,8 @@ export default class TaxFields extends React.Component {
         floatingLabelText="Work Project"
         fullWidth={true}
         value={ this.state.projectId }
-        onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) } >
+        onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) }
+        >
         { this.state.projects.map((project, idx) => {
             return(
               <MenuItem key={ idx } value={ project.id } primaryText={ project.name } />
@@ -352,7 +358,8 @@ export default class TaxFields extends React.Component {
         floatingLabelText="Project Schemas"
         fullWidth={true}
         value={ this.state.schemaId }
-        onChange={ (event, index, value) => this.handleSchemaSelectChanged(event, value) } >
+        onChange={ (event, index, value) => this.handleSchemaSelectChanged(event, value) }
+        >
         { this.state.schemas.map((schema, idx) => {
             return(
               <MenuItem key={ idx } value={ schema.id } primaryText={ schema.name } />
@@ -369,7 +376,8 @@ export default class TaxFields extends React.Component {
         floatingLabelText="Taxonomy Field Name"
         fullWidth={true}
         value={ this.state.taxonomyId }
-        onChange={ (event, index, value) => this.handleTaxonomySelectChanged(event, value) } >
+        onChange={ (event, index, value) => this.handleTaxonomySelectChanged(event, value) }
+        >
         { this.state.taxonomies.map((taxonomy, idx) => {
             return(
               <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldName } />
@@ -381,13 +389,14 @@ export default class TaxFields extends React.Component {
   }
 
   renderTaxFieldSelectField() {
-    if (this.state.taxonomyOrder !== 1){
+    if (this.state.taxonomyOrder !== 1 && this.state.taxonomyValues.length > 0){
       return(
         <SelectField
           floatingLabelText="Taxonomy Field Value"
           fullWidth={true}
           value={ this.state.taxonomyValueId }
-          onChange={ (event, index, value) => this.handleTaxonomyValueSelectChanged(event, value) } >
+          onChange={ (event, index, value) => this.handleTaxonomyValueSelectChanged(event, value) }
+          >
           { this.state.taxonomyValues.map((taxonomy, idx) => {
             return(
               <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldValue } />
@@ -411,7 +420,7 @@ export default class TaxFields extends React.Component {
           <MenuItem
             value="1"
             primaryText="Edit Taxonomy Value"
-            />
+          />
           <MenuItem
             value="2"
             primaryText="Delete Taxonomy Value"
@@ -432,7 +441,7 @@ export default class TaxFields extends React.Component {
           taxFieldValueId={ this.state.taxonomyOrder }
           taxParentList={ this.state.taxParentValues }
           parentSelected={ this.state.parentSelected }
-          />
+        />
       </div>
     )
   }
@@ -456,14 +465,14 @@ export default class TaxFields extends React.Component {
               primary={ true }
               fullWidth={ true }
               onClick={ this.handleCreateTaxField }
-              />
+            />
             <div>
               Total Taxonomy Field Values Found
             </div>
             <Badge
               badgeContent={ this.state.taxonomyValues.length }
               secondary={ true }
-              />
+            />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>

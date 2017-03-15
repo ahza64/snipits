@@ -71,7 +71,6 @@ export default class EditTaxonomyDialog extends React.Component {
   }
 
   handleTaxonomySubmit(event) {
-    console.log("::::::::: taxonomy state values", this.props);
 
     var taxonomy = {
       id: this.state.taxId,

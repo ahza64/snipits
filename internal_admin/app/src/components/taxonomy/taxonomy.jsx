@@ -121,7 +121,6 @@ export default class Taxonomy extends React.Component {
             schemaId: firstSchema ? firstSchema.id : null,
             schemaName: firstSchema ? firstSchema.name : null
           });
-          console.log("..............", this.state.schemas);
           if (firstSchema) {
             this.fetchTaxonomies(firstSchema.id);
           } else {
@@ -135,7 +134,6 @@ export default class Taxonomy extends React.Component {
   }
 
   fetchTaxonomies(schemaId) {
-    console.log("************ schemaId", schemaId);
     if (schemaId) {
       let url = taxonomiesUrl + '/' + schemaId;
       return request
@@ -151,7 +149,6 @@ export default class Taxonomy extends React.Component {
           this.setState({
             taxonomies: res.body,
           });
-          console.log("============ taxonomies", res.body);
         }
       });
     }
@@ -213,7 +210,6 @@ export default class Taxonomy extends React.Component {
       actionMenuTarget: event.currentTarget,
       taxonomySelected: taxonomy
     });
-    console.log("action menu selected tax", this.state.taxonomySelected);
   }
 
   handleCloseEditMenu() {
@@ -227,11 +223,9 @@ export default class Taxonomy extends React.Component {
       actionMenuOpen: false,
       showEditTaxonomyDialog: true
     });
-    console.log("handleEditChangeTax", this.taxonomySelected);
   }
 
   handleEditDeleteTax() {
-    console.log("handleEditDeleteTax");
     this.setState({
       actionMenuOpen: false,
       showDeleteTaxonomyDialog: true
@@ -322,7 +316,6 @@ export default class Taxonomy extends React.Component {
   }
 
 //TODO pass selectedTax as props to dialog
-//TODO finish taxonomy delete
   renderDialogs() {
     return (
       <div>
