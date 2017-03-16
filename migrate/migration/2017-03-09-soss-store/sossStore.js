@@ -17,13 +17,18 @@ var mTypes = {
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log("Database connected");
- main();
+  main();
 });
 
 function main() {
   for (var i = 2; i < process.argv.length; i++) {
-    var filePath = process.cwd() + '/' + process.argv[i];
-    filePath = path.resolve(filePath);
+    var filePath;
+    if (path.isAbsolute(process.argv[i])) {
+      filePath = process.argv[i];
+    } else {
+      filePath = process.cwd() + '/' + process.argv[i];
+      filePath = path.resolve(filePath);
+    }
     migrateFile(filePath);
   }
 }
@@ -40,18 +45,22 @@ function migrateFile(filePath) {
     migrateFolder(filePath);
     return;
   }
+  if (!filePath.endsWith('.json')) {
+    return;
+  }
   var Model;
+  console.log(filePath);
+  var file = require(filePath);
   var schemaFormat = {};
   var doc = {};
-  var file = require(filePath);
 
   if (!mongoose.models[file.name]) {
     _.each(file, (value, key, {}) => {
       var type = typeof value;
       schemaFormat[key] = type;
     });
-    schemaFormat.project  = mTypes['string'];
-    schemaFormat.company  = mTypes['string'];
+    schemaFormat.fileName = mTypes['string'];
+    schemaFormat.appId  = mTypes['string'];
     var newSchema = new mongoose.Schema(schemaFormat);
     Model = mongoose.model(file.name, newSchema, file.name);
   } else {
@@ -61,15 +70,16 @@ function migrateFile(filePath) {
   _.each(file, (value, key, {}) => {
     doc[key] = value
   });
-  doc.project  = 'text';
-  doc.company  = 'text';
+  var fileObject = path.parse(filePath);
+  doc.fileName = fileObject.base;
+  doc.appId = '48';
 
   var newDoc = new Model(doc);
   newDoc.save((err) => {
     if (err) {
-      console.trace("FAILED:", err, filePath);
+      console.error("FAILED:", err, filePath);
     } else {
-      console.info('.');
+      console.info('ok');
     }
   });
 
