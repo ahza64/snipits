@@ -279,15 +279,7 @@ export default class TaxFields extends React.Component {
       taxonomyValueName: taxonomyValueName,
       taxonomyValueField: taxonomyValueField
     });
-    // this.fetchTaxValues(taxonomyName);
   }
-
-  // handleCreateTaxonomy() {
-  //   this.setState({
-  //     showEditTaxonomyDialog: true,
-  //     taxonomySelected: {}
-  //   });
-  // }
 
   handleCreateTaxField() {
     this.findParentOrder();
