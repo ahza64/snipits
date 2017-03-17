@@ -20,7 +20,7 @@ router.post('/assign', function *assign(next) {
     yield assignUtils.updateTrees(crew, qows);
     yield assignUtils.updateCrew(crew);
     yield assignUtils.createWO(crew, qows);
-    this.body = "Done";
+    this.body = { done: true };
   } catch(e) {
     console.error('Error assigning:', e.message);
   }
@@ -36,7 +36,7 @@ router.post('/unassign', function *unassign(next) {
     yield unassignUtils.unassignTrees(project, crew);
     yield unassignUtils.unassignPmd(project, crew);
     yield unassignUtils.unassignCuf(project, crew);
-    this.body = "Done";
+    this.body = { done: true };
   } catch(e) {
     console.error('Error unassigning:', e.message);
   }

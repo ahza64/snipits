@@ -17,9 +17,15 @@ require('dsp_shared/database/sequelize')(config.postgres);
 var login = require('./auth/auth');
 var bodyParser = require('koa-body-parser');
 var app = koa();
+const cors = require('kcors');
+
 
 // middleware
 app.use(bodyParser());
+app.use(cors({
+  allowMethods: ['GET', 'POST', 'PUT', 'PATCH'],
+  credentials: true
+}));
 app.use(logger());
 app.use(compress());
 app.use(requestId());
