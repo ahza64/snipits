@@ -55,25 +55,50 @@ router.post(
   function*() {
     var companyUserId = this.req.user.companyId;
     var body = this.request.body;
-    var taxId = body.id;
-    var taxonomy;
+    var taxonomies = [];
+    console.log("taxFields taxValue(s) body>>>>>>>>>>>>>>>>>", body);
 
     if (permissions.has(this.req.user, companyUserId)) {
       try {
-        if (taxId) {
-          taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
-          taxonomy = yield taxonomy.updateAttributes(body);
-        } else {
-          body.createdAt = Date.now();
-          body.updatedAt = Date.now();
-          taxonomy = yield QowTaxonomies.create(body);
-        }
+        yield QowTaxonomies.destroy({
+          where: {},
+          truncate: true
+        });
+        var taxonomy;
+        console.log("body length>>>>>>>>>>>", body.length);
+        for( i = 0; i < body.length; i++) {
+          taxonomy = yield (QowTaxonomies.create(body[i]));
+          taxonomies.push(taxonomy);
+        };
         // yield updateFieldValues(taxonomy, fieldValues) TODO update expected tax fieldName when tax fieldName changes
       } catch (e) {
         console.error(e);
       }
       this.body = taxonomy;
     }
+
+    // var companyUserId = this.req.user.companyId;
+    // var body = this.request.body;
+    // var taxId = body.id;
+    // var taxonomy;
+    // console.log("taxFields taxValue(s) body>>>>>>>>>>>>>>>>>", body);
+    //
+    // if (permissions.has(this.req.user, companyUserId)) {
+    //   try {
+    //     if (taxId) {
+    //       taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
+    //       taxonomy = yield taxonomy.updateAttributes(body);
+    //     } else {
+    //       body.createdAt = Date.now();
+    //       body.updatedAt = Date.now();
+    //       taxonomy = yield QowTaxonomies.create(body);
+    //     }
+    //     // yield updateFieldValues(taxonomy, fieldValues) TODO update expected tax fieldName when tax fieldName changes
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    //   this.body = taxonomy;
+    // }
   }
 );
 
@@ -101,7 +126,6 @@ router.post(
     var taxValId = body.id;
     var companyUserId = this.req.user.companyId;
     var taxValue;
-    
     if (permissions.has(this.req.user, companyUserId)) {
       try {
         if (taxValId) {

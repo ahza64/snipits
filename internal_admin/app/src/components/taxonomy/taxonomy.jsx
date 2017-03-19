@@ -54,6 +54,7 @@ export default class Taxonomy extends React.Component {
     this.handleEditChangeTax = this.handleEditChangeTax.bind(this);
     this.handleEditDeleteTax = this.handleEditDeleteTax.bind(this);
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
+    this.handleListSubmit = this.handleListSubmit.bind(this);
   }
 
   componentWillMount() {
@@ -152,6 +153,21 @@ export default class Taxonomy extends React.Component {
         }
       });
     }
+  }
+
+  handleListSubmit() {
+    console.log("this.state.taxonomies", this.state.taxonomies);
+    request
+    .post(taxonomiesUrl)
+    .send(this.state.taxonomies)
+    .withCredentials()
+    .end(err => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("yup");
+      }
+    });
   }
 
   handleCompanySelectChanged(event, companyId) {
@@ -410,6 +426,12 @@ export default class Taxonomy extends React.Component {
                     }
                 </TableBody>
               </Table>
+              <RaisedButton
+                label="Save Taxonomy List"
+                primary={ true }
+                fullWidth={ true }
+                onClick={ this.handleListSubmit }
+              />
             </Row>
           </Col>
         </Row>
