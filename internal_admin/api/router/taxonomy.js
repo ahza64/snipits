@@ -66,6 +66,8 @@ router.post(
           truncate: true
         });
         for( i = 0; i < body.length; i++) {
+          console.log("mmmmmmmmmmm", body);
+          body[i].order = i + 1;
           taxonomy = yield (QowTaxonomies.create(body[i]));
           taxonomies.push(taxonomy);
         };
