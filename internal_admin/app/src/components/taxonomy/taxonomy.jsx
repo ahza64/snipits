@@ -332,7 +332,6 @@ export default class Taxonomy extends React.Component {
     )
   }
 
-//TODO pass selectedTax as props to dialog
   renderDialogs() {
     return (
       <div>
