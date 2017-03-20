@@ -56,6 +56,7 @@ router.post(
     var companyUserId = this.req.user.companyId;
     var body = this.request.body;
     var taxonomies = [];
+    var taxonomy;
     console.log("taxFields taxValue(s) body>>>>>>>>>>>>>>>>>", body);
 
     if (permissions.has(this.req.user, companyUserId)) {
@@ -64,8 +65,6 @@ router.post(
           where: {},
           truncate: true
         });
-        var taxonomy;
-        console.log("body length>>>>>>>>>>>", body.length);
         for( i = 0; i < body.length; i++) {
           taxonomy = yield (QowTaxonomies.create(body[i]));
           taxonomies.push(taxonomy);
@@ -74,7 +73,7 @@ router.post(
       } catch (e) {
         console.error(e);
       }
-      this.body = taxonomy;
+      this.body = taxonomies;
     }
 
     // var companyUserId = this.req.user.companyId;

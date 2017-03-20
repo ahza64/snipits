@@ -71,7 +71,7 @@ export default class EditTaxonomyDialog extends React.Component {
   }
 
   handleTaxonomySubmit(event) {
-
+this.props.onClose(true);
     var taxonomy = {
       id: this.state.taxId,
       fieldName: this.state.taxFieldName,
@@ -83,17 +83,19 @@ export default class EditTaxonomyDialog extends React.Component {
       workProjectId: this.props.projectId
     }
 
-    request
-    .post(taxonomiesUrl)
-    .send(taxonomy)
-    .withCredentials()
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        this.props.onClose(true)
-      }
-    });
+    this.props.taxonomies.push(taxonomy);
+    console.log("event", this.props.taxonomies);
+    // request
+    // .post(taxonomiesUrl)
+    // .send(taxonomy)
+    // .withCredentials()
+    // .end(err => {
+    //   if (err) {
+    //     console.error(err);
+    //   } else {
+    //     this.props.onClose(true)
+    //   }
+    // });
   }
 
   actions() {

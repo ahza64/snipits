@@ -161,11 +161,14 @@ export default class Taxonomy extends React.Component {
     .post(taxonomiesUrl)
     .send(this.state.taxonomies)
     .withCredentials()
-    .end(err => {
+    .end((err, res) => {
       if (err) {
         console.error(err);
       } else {
-        console.log("yup");
+        this.setState({
+          taxonomies: res.body
+        });
+        console.log("res.body", res.body);
       }
     });
   }
@@ -213,11 +216,13 @@ export default class Taxonomy extends React.Component {
     });
   }
 
-  handleEditTaxonomyDialogClose() {
+  handleEditTaxonomyDialogClose(saved) {
+    console.log("saved", saved);
     this.setState({
       showEditTaxonomyDialog: false
     });
-    this.fetchTaxonomies(this.state.schemaId);
+    // this.fetchTaxonomies(this.state.schemaId);
+    // this.state.taxonomies = this.state.taxonomies.push(saved);
   }
 
   handleActionMenu(event, taxonomy) {
@@ -351,6 +356,7 @@ export default class Taxonomy extends React.Component {
           taxId={ this.state.taxonomySelected.id }
           companyId={ this.state.companyId }
           projectId={ this.state.projectId }
+          taxonomies={ this.state.taxonomies }
           onClose={ (saved) => this.handleEditTaxonomyDialogClose(saved) }
         />
         <DeleteTaxonomyDialog
