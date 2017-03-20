@@ -8,7 +8,7 @@ import { taxonomiesUrl } from '../../../config';
 
 
 export default class DeleteTaxonomyDialog extends React.Component {
-  
+
   handleDelete(event) {
     var deleteTaxIndex;
     deleteTaxIndex = this.props.taxonomies.findIndex(q => {

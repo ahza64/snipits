@@ -6,6 +6,7 @@ import request from '../../services/request';
 import DefaultNavbar from '../navbar/defaultNavbar';
 import Taxonomy from '../taxonomy/taxonomy'
 import EditTaxValueDialog from './dialogs/edit'
+import DeleteTaxValueDialog from './dialogs/delete'
 import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl, taxFieldsUrl } from '../../config';
 
 // Styles
@@ -46,11 +47,12 @@ export default class TaxFields extends React.Component {
       taxonomySelected: {},
       showEditTaxonomyDialog: false,
       actionMenuOpen: false,
-      showDeleteTaxonomyDialog: false
+      showDeleteTaxValDialog: false
     };
 
     this.handleCreateTaxField = this.handleCreateTaxField.bind(this);
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
+    this.handleDeleteTaxVal = this.handleDeleteTaxVal.bind(this);
   }
 
   componentWillMount() {
@@ -309,6 +311,20 @@ export default class TaxFields extends React.Component {
     })
   }
 
+  handleDeleteTaxVal() {
+    this.setState({
+      actionMenuOpen: false,
+      showDeleteTaxValDialog: true
+    });
+  }
+
+  handleDeleteTaxValDialogClose() {
+    this.setState({
+      showDeleteTaxValDialog: false
+    });
+    this.fetchTaxValues(this.state.taxonomySelected.fieldName);
+  }
+
   renderCompanySelectField() {
     return(
       <SelectField
@@ -417,6 +433,7 @@ export default class TaxFields extends React.Component {
           <MenuItem
             value="2"
             primaryText="Delete Taxonomy Value"
+            onClick={ this.handleDeleteTaxVal }
           />
         </Menu>
       </Popover>
@@ -438,6 +455,11 @@ export default class TaxFields extends React.Component {
           workProjectId={ this.state.projectId }
           companyId={ this.state.companyId }
         />
+      <DeleteTaxValueDialog
+        open={ this.state.showDeleteTaxValDialog }
+        onClose={ (deleted) => this.handleDeleteTaxValDialogClose(deleted) }
+        taxValId={  this.state.taxValueSelected.id }
+      />
       </div>
     )
   }
