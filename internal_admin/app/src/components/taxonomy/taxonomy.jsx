@@ -257,7 +257,7 @@ export default class Taxonomy extends React.Component {
     this.setState({
       showDeleteTaxonomyDialog: false
     });
-    this.fetchTaxonomies(this.state.schemaId)
+    // this.fetchTaxonomies(this.state.schemaId)
   }
 
   renderCompanySelectField() {
@@ -364,6 +364,7 @@ export default class Taxonomy extends React.Component {
           onClose={ (deleted) => this.handleDeleteTaxDialogClose(deleted) }
           taxId={ this.state.taxonomySelected.id }
           taxName={ this.state.taxonomySelected ? this.state.taxonomySelected.fieldName : "this" }
+          taxonomies={ this.state.taxonomies }
         />
       </div>
     );
@@ -433,7 +434,7 @@ export default class Taxonomy extends React.Component {
                 </TableBody>
               </Table>
               <RaisedButton
-                label="Save Taxonomy List"
+                label="Save Taxonomy List to Database"
                 primary={ true }
                 fullWidth={ true }
                 onClick={ this.handleListSubmit }
