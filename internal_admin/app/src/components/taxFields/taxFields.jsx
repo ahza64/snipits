@@ -313,7 +313,6 @@ export default class TaxFields extends React.Component {
   }
 
   handleActionMenu(event, taxValue) {
-    console.log("tax value edit clicked");
     this.setState({
       actionMenuOpen: true,
       actionMenuTarget: event.currentTarget,

@@ -82,17 +82,11 @@ export default class EditTaxonomyDialog extends React.Component {
 
     if (!taxonomy.id) {
       this.props.taxonomies.push(taxonomy);
-      console.log("event", taxonomy);
     } else {
-      // updateTax = this.props.taxonomies.filter(p => {
-      //   return p.id == taxonomy.id
-      // });
       updateTaxIndex = this.props.taxonomies.findIndex(q => {
         return q.id == taxonomy.id
       });
-      // updateTax = taxonomy;
       this.props.taxonomies.splice(updateTaxIndex, 1, taxonomy);
-      console.log("taxonomy", updateTaxIndex);
     }
     this.props.onClose(true);
   }

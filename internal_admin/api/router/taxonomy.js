@@ -32,23 +32,6 @@ router.get(
   }
 );
 
-// router.delete(
-//   '/taxonomies/:taxonomyId',
-//   function*() {
-//     var taxonomyId = this.params.taxonomyId;
-//     if (permissions.has(this.req.user, null)) {
-//       try {
-//         this.body = yield QowTaxonomies.destroy({ where: { id: taxonomyId } });
-//       } catch (e) {
-//         console.error(e);
-//         this.throw(500);
-//       }
-//     } else {
-//       this.throw(403);
-//     }
-//   }
-// )
-
 //create or edit a taxonomy
 router.post(
   '/taxonomies',
@@ -69,9 +52,6 @@ router.post(
           taxonomy = yield (QowTaxonomies.create(body[i]));
           taxonomies.push(taxonomy);
         };
-        // yield updateFieldValues(taxonomy, fieldValues)
-        // TODO update expected tax fieldName when tax fieldName changes
-        // TODO delete field values at and below order level when one is deleted
       } catch (e) {
         console.error(e);
       }
