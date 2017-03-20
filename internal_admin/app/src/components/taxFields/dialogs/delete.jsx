@@ -32,6 +32,7 @@ export default class DeleteTaxValueDialog extends React.Component {
         <RaisedButton
           label="Confirm"
           onClick={ (event) => this.handleDelete(event) }
+          primary={ true }
         />
       ]
     )

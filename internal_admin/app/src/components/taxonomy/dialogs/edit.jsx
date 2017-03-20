@@ -23,9 +23,6 @@ export default class EditTaxonomyDialog extends React.Component {
     this.handleTaxonomySubmit = this.handleTaxonomySubmit.bind(this);
   }
 
-  // TODO bring in selectedTax props for edit sequence and check, then reset to empty to clear
-  // form after submition/cancel
-
   loadProps(props) {
     this.setState({
       taxFieldName: props.fieldName ? props.fieldName : '',
@@ -87,14 +84,14 @@ export default class EditTaxonomyDialog extends React.Component {
       this.props.taxonomies.push(taxonomy);
       console.log("event", taxonomy);
     } else {
-      updateTax = this.props.taxonomies.filter(p => {
-        return p.id == taxonomy.id
-      });
+      // updateTax = this.props.taxonomies.filter(p => {
+      //   return p.id == taxonomy.id
+      // });
       updateTaxIndex = this.props.taxonomies.findIndex(q => {
         return q.id == taxonomy.id
       });
-      updateTax = taxonomy;
-      this.props.taxonomies.splice(updateTaxIndex, 1, updateTax);
+      // updateTax = taxonomy;
+      this.props.taxonomies.splice(updateTaxIndex, 1, taxonomy);
       console.log("taxonomy", updateTaxIndex);
     }
     this.props.onClose(true);
