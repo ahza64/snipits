@@ -71,7 +71,6 @@ export default class EditTaxonomyDialog extends React.Component {
   }
 
   handleTaxonomySubmit(event) {
-this.props.onClose(true);
     var taxonomy = {
       id: this.state.taxId,
       fieldName: this.state.taxFieldName,
@@ -82,9 +81,24 @@ this.props.onClose(true);
       companyId: this.props.companyId,
       workProjectId: this.props.projectId
     }
+    var updateTax;
+    var updateTaxIndex;
 
-    this.props.taxonomies.push(taxonomy);
-    console.log("event", this.props.taxonomies);
+    if (!taxonomy.id) {
+      this.props.taxonomies.push(taxonomy);
+      console.log("event", taxonomy);
+    } else {
+      updateTax = this.props.taxonomies.filter(p => {
+        return p.id == taxonomy.id
+      });
+      updateTaxIndex = this.props.taxonomies.findIndex(q => {
+        return q.id == taxonomy.id
+      });
+      updateTax = taxonomy;
+      this.props.taxonomies.splice(updateTaxIndex, 1, updateTax);
+      console.log("taxonomy", updateTaxIndex);
+    }
+    this.props.onClose(true);
     // request
     // .post(taxonomiesUrl)
     // .send(taxonomy)
