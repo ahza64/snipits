@@ -10,6 +10,7 @@
   "dependencies": {
     "co": "^4.6.0",
     "faker": "^4.1.0",
+    "kcors": "^1.3.2",
     "koa": "^1.2.5",
     "koa-body-parser": "^1.1.0",
     "koa-logger": "1.3.0",
