@@ -1,6 +1,7 @@
 const koa = require('koa');
 const logger = require('koa-logger');
 const mount = require('koa-mount');
+const cors = require('kcors');
 const co = require('co');
 const config = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.schema);
@@ -12,6 +13,11 @@ const http = require('http');
 co(function *build_app() {
   const app = koa();
   app.use(logger());
+  app.use(cors({
+    allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true
+  }));
+  app.use(mount('/api/v4', require('./schema_router')));
   const schemas = yield Schema.find({ _api: "v4" });  
   for (let i = 0; i < schemas.length; i++) {
     console.log("SCHEMAS", schemas[i]);
