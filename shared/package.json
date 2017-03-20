@@ -13,6 +13,7 @@
     "co-emitter": "^0.2.3",
     "co-fs": "^1.2.0",
     "co-timer": "0.0.1",
+    "crypto": "0.0.3",
     "csv-parse": "^1.1.1",
     "deep-diff": "^0.3.4",
     "fast-json-patch": "^1.0.0",

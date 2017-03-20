@@ -3,7 +3,8 @@ const koa = require('koa');
 const router = require('koa-router')();
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('dsp_shared/database/model/cufs');
+const Cuf = require('dsp_shared/database/model/cufs');
+const User = require('dsp_shared/database/model/users');
 const _ = require('underscore');
 const app = koa();
 const config = require('../routes_config').auth.exclude;
@@ -19,9 +20,17 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-	done(null, User.findOne({ _id: id }).select(select).exec(function(error, user){
+	done(null, Cuf.findOne({ _id: id }).select(select).exec(function(error, user){
 		if(error){
       done(error, false);
+    } else if(!user && !error) {
+      User.findOne({ _id: id }).exec(function(error, user) {
+        if(error) {
+          done(error, false);
+        } else {
+          done(null, user);
+        }
+      });
     } else {
       done(null, user);
     }
@@ -29,13 +38,15 @@ passport.deserializeUser(function(id, done) {
 });
 
 passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
-
-  User.findOne({ uniq_id: email, status: 'active' }).select(select).exec(function(error, user){
+  console.log('1 ------>');
+  Cuf.findOne({ uniq_id: email, status: 'active' }).select(select).exec(function(error, user){
+    console.log('Checking Cuf', user);
     if(error) {
       done(null, false);
     }
     if(user) {
-      user.comparePassword(password, function(error, isMatch){
+      console.log('Cuf Found', user);
+      user.comparePassword(password, function(error, isMatch) {
         if(error) {
           log.error('Error:', error);
         }
@@ -43,6 +54,26 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
           return done(null, user);
         }
         return done(null, false);
+      });
+    } else if(!error && !user) {
+      console.log('Checking User');
+      User.findOne({ 'emails.address' : email}).select(select).exec(function(err, user) {
+        if(err) {
+          done(null, false);
+        }
+        if(user) {
+          console.log('User Found', user);
+          user.comparePassword(password, function(error, isMatch){
+            console.log('Is MATCH ------>', isMatch);
+            if(error) {
+              log.error('Error:', error);
+            }
+            if(isMatch) {
+              return done(null, user);
+            }
+            return done(null, false);
+          });
+        }
       });
     } else {
       return done(null, false);
