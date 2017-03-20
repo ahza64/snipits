@@ -8,19 +8,14 @@ import { taxonomiesUrl } from '../../../config';
 
 
 export default class DeleteTaxonomyDialog extends React.Component {
-
+  
   handleDelete(event) {
-    let url = taxonomiesUrl + '/' + this.props.taxId;
-    request
-    .delete(url)
-    .withCredentials()
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        this.props.onClose(true);
-      }
+    var deleteTaxIndex;
+    deleteTaxIndex = this.props.taxonomies.findIndex(q => {
+      return q.id == this.props.taxId
     });
+    this.props.taxonomies.splice(deleteTaxIndex, 1);
+    this.props.onClose(true);
   }
 
   render() {

@@ -54,6 +54,7 @@ export default class Taxonomy extends React.Component {
     this.handleEditChangeTax = this.handleEditChangeTax.bind(this);
     this.handleEditDeleteTax = this.handleEditDeleteTax.bind(this);
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
+    this.handleListSubmit = this.handleListSubmit.bind(this);
   }
 
   componentWillMount() {
@@ -121,7 +122,6 @@ export default class Taxonomy extends React.Component {
             schemaId: firstSchema ? firstSchema.id : null,
             schemaName: firstSchema ? firstSchema.name : null
           });
-          console.log("..............", this.state.schemas);
           if (firstSchema) {
             this.fetchTaxonomies(firstSchema.id);
           } else {
@@ -135,7 +135,6 @@ export default class Taxonomy extends React.Component {
   }
 
   fetchTaxonomies(schemaId) {
-    console.log("************ schemaId", schemaId);
     if (schemaId) {
       let url = taxonomiesUrl + '/' + schemaId;
       return request
@@ -151,10 +150,27 @@ export default class Taxonomy extends React.Component {
           this.setState({
             taxonomies: res.body,
           });
-          console.log("============ taxonomies", res.body);
         }
       });
     }
+  }
+
+  handleListSubmit() {
+    console.log("this.state.taxonomies", this.state.taxonomies);
+    request
+    .post(taxonomiesUrl)
+    .send(this.state.taxonomies)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        this.setState({
+          taxonomies: res.body
+        });
+        console.log("res.body", res.body);
+      }
+    });
   }
 
   handleCompanySelectChanged(event, companyId) {
@@ -200,11 +216,10 @@ export default class Taxonomy extends React.Component {
     });
   }
 
-  handleEditTaxonomyDialogClose() {
+  handleEditTaxonomyDialogClose(saved) {
     this.setState({
       showEditTaxonomyDialog: false
     });
-    this.fetchTaxonomies(this.state.schemaId);
   }
 
   handleActionMenu(event, taxonomy) {
@@ -213,7 +228,6 @@ export default class Taxonomy extends React.Component {
       actionMenuTarget: event.currentTarget,
       taxonomySelected: taxonomy
     });
-    console.log("action menu selected tax", this.state.taxonomySelected);
   }
 
   handleCloseEditMenu() {
@@ -227,11 +241,9 @@ export default class Taxonomy extends React.Component {
       actionMenuOpen: false,
       showEditTaxonomyDialog: true
     });
-    console.log("handleEditChangeTax", this.taxonomySelected);
   }
 
   handleEditDeleteTax() {
-    console.log("handleEditDeleteTax");
     this.setState({
       actionMenuOpen: false,
       showDeleteTaxonomyDialog: true
@@ -242,7 +254,6 @@ export default class Taxonomy extends React.Component {
     this.setState({
       showDeleteTaxonomyDialog: false
     });
-    this.fetchTaxonomies(this.state.schemaId)
   }
 
   renderCompanySelectField() {
@@ -321,8 +332,6 @@ export default class Taxonomy extends React.Component {
     )
   }
 
-//TODO pass selectedTax as props to dialog
-//TODO finish taxonomy delete
   renderDialogs() {
     return (
       <div>
@@ -342,13 +351,16 @@ export default class Taxonomy extends React.Component {
           taxId={ this.state.taxonomySelected.id }
           companyId={ this.state.companyId }
           projectId={ this.state.projectId }
-          onClose={ (saved) => this.handleEditTaxonomyDialogClose(saved) } />
+          taxonomies={ this.state.taxonomies }
+          onClose={ (saved) => this.handleEditTaxonomyDialogClose(saved) }
+        />
         <DeleteTaxonomyDialog
           open={ this.state.showDeleteTaxonomyDialog }
           onClose={ (deleted) => this.handleDeleteTaxDialogClose(deleted) }
           taxId={ this.state.taxonomySelected.id }
           taxName={ this.state.taxonomySelected ? this.state.taxonomySelected.fieldName : "this" }
-          />
+          taxonomies={ this.state.taxonomies }
+        />
       </div>
     );
   }
@@ -416,6 +428,12 @@ export default class Taxonomy extends React.Component {
                     }
                 </TableBody>
               </Table>
+              <RaisedButton
+                label="Save Taxonomy List to Database"
+                primary={ true }
+                fullWidth={ true }
+                onClick={ this.handleListSubmit }
+              />
             </Row>
           </Col>
         </Row>

@@ -71,51 +71,57 @@ export default class EditTaxonomyDialog extends React.Component {
   }
 
   handleTaxonomySubmit(event) {
-    console.log("::::::::: taxonomy state values", this.props);
-
     var taxonomy = {
       id: this.state.taxId,
       fieldName: this.state.taxFieldName,
-      order: this.state.taxOrder,
       nodeType: this.state.taxNodeType,
       keys: this.state.taxKeys,
-      schemaId: this.props.schemaId,
+      qowSchemaId: this.props.schemaId,
       companyId: this.props.companyId,
-      projectId: this.props.projectId
+      workProjectId: this.props.projectId
     }
+    var updateTax;
+    var updateTaxIndex;
 
-    request
-    .post(taxonomiesUrl)
-    .send(taxonomy)
-    .withCredentials()
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        this.props.onClose(true)
-      }
-    });
+    if (!taxonomy.id) {
+      this.props.taxonomies.push(taxonomy);
+      console.log("event", taxonomy);
+    } else {
+      updateTax = this.props.taxonomies.filter(p => {
+        return p.id == taxonomy.id
+      });
+      updateTaxIndex = this.props.taxonomies.findIndex(q => {
+        return q.id == taxonomy.id
+      });
+      updateTax = taxonomy;
+      this.props.taxonomies.splice(updateTaxIndex, 1, updateTax);
+      console.log("taxonomy", updateTaxIndex);
+    }
+    this.props.onClose(true);
+  }
+
+  actions() {
+    return(
+      [
+        <RaisedButton
+          label="Cancel"
+          onTouchTap={ (event) => this.props.onClose(false) }
+        />,
+        <RaisedButton
+          label="Confirm"
+          primary={ true }
+          keyboardFocused={ false }
+          onTouchTap={ (event) => this.handleTaxonomySubmit(event) }
+        />
+      ]
+    )
   }
 
   render() {
-
-    const actions = [
-      <RaisedButton
-        label="Cancel"
-        onTouchTap={ (event) => this.props.onClose(false) }
-      />,
-      <RaisedButton
-        label="Confirm"
-        primary={ true }
-        keyboardFocused={ false }
-        onTouchTap={ (event) => this.handleTaxonomySubmit(event) }
-      />
-    ];
-
     return (
       <Dialog
         title={ this.props.title }
-        actions={ actions }
+        actions={ this.actions() }
         open={ this.props.open }
         modal={ true }
         autoScrollBodyContent={ true }
@@ -165,18 +171,6 @@ export default class EditTaxonomyDialog extends React.Component {
                   fullWidth={ true }
                   onChange={ (event) => this.handleFieldNameChange(event) }
                   />
-              </td>
-            </tr>
-            <tr>
-              <td>Order</td>
-              <td>
-                <TextField
-                  name="order"
-                  hintText="i.e. state:1, county:2, city:3"
-                  value={ this.state.taxOrder }
-                  fullWidth={ true }
-                  onChange={ (event) => this.handleOrderChange(event) }
-                />
               </td>
             </tr>
             <tr>

@@ -53,54 +53,34 @@ router.delete(
 router.post(
   '/taxonomies',
   function*() {
-  var companyUserId = this.req.user.companyId;
-  var body = this.request.body;
-  var field_name = body.fieldName;
-  var schemaId = body.schemaId;
-  var order = body.order;
-  var node_type = body.nodeType;
-  var keys = body.keys;
-  var taxId = body.id;
-  var projectId = body.projectId;
-  var companyId = body.companyId;
-  var taxonomy;
+    var companyUserId = this.req.user.companyId;
+    var body = this.request.body;
+    var taxonomies = [];
+    var taxonomy;
 
-  if (permissions.has(this.req.user, companyUserId)) {
-    try {
-      if (taxId) {
-        taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
-        taxonomy = yield taxonomy.updateAttributes({
-          fieldName: field_name,
-          qowSchemaId: schemaId,
-          order: order,
-          nodeType: node_type,
-          keys: keys
+    if (permissions.has(this.req.user, companyUserId)) {
+      try {
+        yield QowTaxonomies.destroy({
+          where: {},
+          truncate: true
         });
-      } else {
-        taxonomy = yield QowTaxonomies.create({
-          fieldName: field_name,
-          qowSchemaId: schemaId,
-          order: order,
-          nodeType: node_type,
-          keys: keys,
-          companyId: companyId,
-          workProjectId: projectId,
-          createdAt: Date.now(),
-          updatedAt: Date.now()
-        });
+        for( i = 0; i < body.length; i++) {
+          body[i].order = i + 1;
+          taxonomy = yield (QowTaxonomies.create(body[i]));
+          taxonomies.push(taxonomy);
+        };
+        // yield updateFieldValues(taxonomy, fieldValues) TODO update expected tax fieldName when tax fieldName changes
+      } catch (e) {
+        console.error(e);
       }
-      yield updateFieldValues(taxonomy, fieldValues)
-    } catch (e) {
-      console.error(e);
+      this.body = taxonomies;
     }
-    this.body = taxonomy;
   }
-});
+);
 
 router.get(
   '/taxfields/:taxName',
   function*() {
-    console.log("-----------------", this.params.taxName);
     var companyId = this.req.user.companyId;
     var fieldName = this.params.taxName;
     if (permissions.has(this.req.user, companyId) && fieldName) {
@@ -114,6 +94,29 @@ router.get(
     }
   }
 )
+
+router.post(
+  '/taxfields',
+  function*() {
+    var body = this.request.body;
+    var taxValId = body.id;
+    var companyUserId = this.req.user.companyId;
+    var taxValue;
+    if (permissions.has(this.req.user, companyUserId)) {
+      try {
+        if (taxValId) {
+          taxValue = yield QowExpectedTaxonomies.find({ where: { id: taxValId } });
+          taxValue = yield taxValue.updateAttributes(body);
+        } else {
+          taxValue = yield QowExpectedTaxonomies.create(body);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      this.body = taxValue;
+    }
+  }
+);
 
 app.use(router.routes());
 
