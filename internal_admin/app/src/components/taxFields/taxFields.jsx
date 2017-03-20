@@ -53,6 +53,7 @@ export default class TaxFields extends React.Component {
     this.handleCreateTaxField = this.handleCreateTaxField.bind(this);
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
     this.handleDeleteTaxVal = this.handleDeleteTaxVal.bind(this);
+    this.handleEditTaxField = this.handleEditTaxField.bind(this);
   }
 
   componentWillMount() {
@@ -286,6 +287,14 @@ export default class TaxFields extends React.Component {
   handleCreateTaxField() {
     this.findParentOrder();
     this.setState({
+      showEditTaxonomyDialog: true,
+      taxValueSelected: {}
+    });
+  }
+
+  handleEditTaxField() {
+    this.findParentOrder();
+    this.setState({
       showEditTaxonomyDialog: true
     });
   }
@@ -430,6 +439,7 @@ export default class TaxFields extends React.Component {
           <MenuItem
             value="1"
             primaryText="Edit Taxonomy Value"
+            onClick={ this.handleEditTaxField }
           />
           <MenuItem
             value="2"
