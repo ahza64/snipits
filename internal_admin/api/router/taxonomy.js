@@ -57,7 +57,6 @@ router.post(
     var body = this.request.body;
     var taxonomies = [];
     var taxonomy;
-    console.log("taxFields taxValue(s) body>>>>>>>>>>>>>>>>>", body);
 
     if (permissions.has(this.req.user, companyUserId)) {
       try {
@@ -66,7 +65,6 @@ router.post(
           truncate: true
         });
         for( i = 0; i < body.length; i++) {
-          console.log("mmmmmmmmmmm", body);
           body[i].order = i + 1;
           taxonomy = yield (QowTaxonomies.create(body[i]));
           taxonomies.push(taxonomy);
@@ -77,29 +75,6 @@ router.post(
       }
       this.body = taxonomies;
     }
-
-    // var companyUserId = this.req.user.companyId;
-    // var body = this.request.body;
-    // var taxId = body.id;
-    // var taxonomy;
-    // console.log("taxFields taxValue(s) body>>>>>>>>>>>>>>>>>", body);
-    //
-    // if (permissions.has(this.req.user, companyUserId)) {
-    //   try {
-    //     if (taxId) {
-    //       taxonomy = yield QowTaxonomies.find({ where: { id: taxId } });
-    //       taxonomy = yield taxonomy.updateAttributes(body);
-    //     } else {
-    //       body.createdAt = Date.now();
-    //       body.updatedAt = Date.now();
-    //       taxonomy = yield QowTaxonomies.create(body);
-    //     }
-    //     // yield updateFieldValues(taxonomy, fieldValues) TODO update expected tax fieldName when tax fieldName changes
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-    //   this.body = taxonomy;
-    // }
   }
 );
 

@@ -217,12 +217,9 @@ export default class Taxonomy extends React.Component {
   }
 
   handleEditTaxonomyDialogClose(saved) {
-    console.log("saved", saved);
     this.setState({
       showEditTaxonomyDialog: false
     });
-    // this.fetchTaxonomies(this.state.schemaId);
-    // this.state.taxonomies = this.state.taxonomies.push(saved);
   }
 
   handleActionMenu(event, taxonomy) {
@@ -257,7 +254,6 @@ export default class Taxonomy extends React.Component {
     this.setState({
       showDeleteTaxonomyDialog: false
     });
-    // this.fetchTaxonomies(this.state.schemaId)
   }
 
   renderCompanySelectField() {

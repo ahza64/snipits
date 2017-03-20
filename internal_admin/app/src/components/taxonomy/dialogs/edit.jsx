@@ -74,7 +74,6 @@ export default class EditTaxonomyDialog extends React.Component {
     var taxonomy = {
       id: this.state.taxId,
       fieldName: this.state.taxFieldName,
-      // order: this.state.taxOrder,
       nodeType: this.state.taxNodeType,
       keys: this.state.taxKeys,
       qowSchemaId: this.props.schemaId,
@@ -99,17 +98,6 @@ export default class EditTaxonomyDialog extends React.Component {
       console.log("taxonomy", updateTaxIndex);
     }
     this.props.onClose(true);
-    // request
-    // .post(taxonomiesUrl)
-    // .send(taxonomy)
-    // .withCredentials()
-    // .end(err => {
-    //   if (err) {
-    //     console.error(err);
-    //   } else {
-    //     this.props.onClose(true)
-    //   }
-    // });
   }
 
   actions() {
@@ -215,17 +203,3 @@ export default class EditTaxonomyDialog extends React.Component {
     );
   }
 }
-
-
-// <tr>
-//   <td>Order</td>
-//   <td>
-//     <TextField
-//       name="order"
-//       hintText="i.e. state:1, county:2, city:3"
-//       value={ this.state.taxOrder }
-//       fullWidth={ true }
-//       onChange={ (event) => this.handleOrderChange(event) }
-//       />
-//   </td>
-// </tr>
