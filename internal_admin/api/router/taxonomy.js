@@ -96,7 +96,7 @@ router.get(
 )
 
 router.post(
-  '/taxfields/',
+  '/taxfields',
   function*() {
     var body = this.request.body;
     var taxValId = body.id;
