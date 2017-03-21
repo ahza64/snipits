@@ -59,5 +59,13 @@
       "read_only": true,
       "accepted_filters": ["tree_id", "deleted", "esri_graphics"]
     }
+  },
+  "mp-user": {
+    "name": "mp-user",
+    "options": {
+      "model": "users",
+      "read_only": true,
+      "excluded_fields": ["__v"]
+    }
   }
 }
