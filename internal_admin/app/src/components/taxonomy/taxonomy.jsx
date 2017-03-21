@@ -372,6 +372,11 @@ export default class Taxonomy extends React.Component {
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
           <Col xs={0} sm={0} md={2} lg={2} >
+            <RaisedButton
+              label='Add Field Name'
+              primary={ true }
+              fullWidth={ true }
+              onClick={ this.handleCreateTaxonomy } />
             { this.renderCompanySelectField() }
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
@@ -381,11 +386,6 @@ export default class Taxonomy extends React.Component {
             <Badge
               badgeContent={ this.state.taxonomies.length }
               secondary={ true }/>
-            <RaisedButton
-              label='Add Field Name'
-              primary={ true }
-              fullWidth={ true }
-              onClick={ this.handleCreateTaxonomy } />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>

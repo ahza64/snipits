@@ -44,8 +44,9 @@ router.post(
     if (permissions.has(this.req.user, companyUserId)) {
       try {
         yield QowTaxonomies.destroy({
-          where: {},
-          truncate: true
+          where: {
+            qowSchemaId: body.qowSchemaId
+          }
         });
         for( i = 0; i < body.length; i++) {
           body[i].order = i + 1;
@@ -107,6 +108,23 @@ router.delete(
     if (permissions.has(this.req.user, null)) {
       try {
         this.body = yield QowExpectedTaxonomies.destroy({ where: { id: taxValId } });
+      } catch (e) {
+        console.error(e);
+        this.throw(500);
+      }
+    } else {
+      this.throw(403);
+    }
+  }
+)
+
+router.delete(
+  '/taxfields/schema/:schemaId',
+  function*() {
+    var schemaId = this.params.schemaId;
+    if (permissions.has(this.req.user, null)) {
+      try {
+        this.body = yield QowExpectedTaxonomies.destroy({ where: { qowSchemaId: schemaId } });
       } catch (e) {
         console.error(e);
         this.throw(500);
