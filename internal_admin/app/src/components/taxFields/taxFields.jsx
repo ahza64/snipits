@@ -520,7 +520,6 @@ export default class TaxFields extends React.Component {
                   {
                     this.state.taxonomyValues.map((taxValue, index) => {
                       var pId;
-                      // var pValue;
                       var pName;
                       if (this.state.taxonomyOrder === 1) {
                         pId = "Root";
