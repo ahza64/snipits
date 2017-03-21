@@ -42,7 +42,6 @@ export default class EditTaxValueDialog extends React.Component {
       companyId: this.props.companyId
     }
 
-    // TODO add post to API
     request
     .post(taxFieldsUrl)
     .send(taxValue)
@@ -54,6 +53,7 @@ export default class EditTaxValueDialog extends React.Component {
         this.props.onClose(true)
       }
     })
+    this.state.fieldValue = '';
   }
 
   handleParentNameChange(event, value) {
@@ -103,7 +103,12 @@ export default class EditTaxValueDialog extends React.Component {
       [
         <RaisedButton
           label="Cancel"
-          onClick={ (event) => this.props.onClose(false) }
+          onClick={
+            (event) => {
+              this.state.fieldValue = '';
+              this.props.onClose(false);
+            }
+          }
         />,
         <RaisedButton
           label="Confirm"

@@ -156,7 +156,6 @@ export default class Taxonomy extends React.Component {
   }
 
   handleListSubmit() {
-    console.log("this.state.taxonomies", this.state.taxonomies);
     request
     .post(taxonomiesUrl)
     .send(this.state.taxonomies)
@@ -168,7 +167,6 @@ export default class Taxonomy extends React.Component {
         this.setState({
           taxonomies: res.body
         });
-        console.log("res.body", res.body);
       }
     });
   }

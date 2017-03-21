@@ -6,6 +6,7 @@ import request from '../../services/request';
 import DefaultNavbar from '../navbar/defaultNavbar';
 import Taxonomy from '../taxonomy/taxonomy'
 import EditTaxValueDialog from './dialogs/edit'
+import DeleteTaxValueDialog from './dialogs/delete'
 import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl, taxFieldsUrl } from '../../config';
 
 // Styles
@@ -46,11 +47,13 @@ export default class TaxFields extends React.Component {
       taxonomySelected: {},
       showEditTaxonomyDialog: false,
       actionMenuOpen: false,
-      showDeleteTaxonomyDialog: false
+      showDeleteTaxValDialog: false
     };
 
     this.handleCreateTaxField = this.handleCreateTaxField.bind(this);
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
+    this.handleDeleteTaxVal = this.handleDeleteTaxVal.bind(this);
+    this.handleEditTaxField = this.handleEditTaxField.bind(this);
   }
 
   componentWillMount() {
@@ -284,6 +287,14 @@ export default class TaxFields extends React.Component {
   handleCreateTaxField() {
     this.findParentOrder();
     this.setState({
+      showEditTaxonomyDialog: true,
+      taxValueSelected: {}
+    });
+  }
+
+  handleEditTaxField() {
+    this.findParentOrder();
+    this.setState({
       showEditTaxonomyDialog: true
     });
   }
@@ -307,6 +318,20 @@ export default class TaxFields extends React.Component {
       actionMenuTarget: event.currentTarget,
       taxValueSelected: taxValue
     })
+  }
+
+  handleDeleteTaxVal() {
+    this.setState({
+      actionMenuOpen: false,
+      showDeleteTaxValDialog: true
+    });
+  }
+
+  handleDeleteTaxValDialogClose() {
+    this.setState({
+      showDeleteTaxValDialog: false
+    });
+    this.fetchTaxValues(this.state.taxonomySelected.fieldName);
   }
 
   renderCompanySelectField() {
@@ -413,10 +438,12 @@ export default class TaxFields extends React.Component {
           <MenuItem
             value="1"
             primaryText="Edit Taxonomy Value"
+            onClick={ this.handleEditTaxField }
           />
           <MenuItem
             value="2"
             primaryText="Delete Taxonomy Value"
+            onClick={ this.handleDeleteTaxVal }
           />
         </Menu>
       </Popover>
@@ -438,6 +465,11 @@ export default class TaxFields extends React.Component {
           workProjectId={ this.state.projectId }
           companyId={ this.state.companyId }
         />
+      <DeleteTaxValueDialog
+        open={ this.state.showDeleteTaxValDialog }
+        onClose={ (deleted) => this.handleDeleteTaxValDialogClose(deleted) }
+        taxValId={  this.state.taxValueSelected.id }
+      />
       </div>
     )
   }
