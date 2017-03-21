@@ -154,6 +154,7 @@ class Resource extends Emitter {
   * @param {String} id target object's ID
   * @param {Object} data the data to be updated data will be overwritten
   * @param {Object} options
+  * @param {Object} options.set - If only update part of the data, then $set it
   * @param {Object} options.upsert - If the object does not exist, then create it
   * @param {Object} options.silent - Does not emit events
   * @return {Object} result the newly updated object
@@ -163,7 +164,11 @@ class Resource extends Emitter {
     const options = _options || {};
     return co(function *update_gen() {
       self.counter++;
-      Object.assign(options, { overwrite: true });
+      if (options.set) {
+        Object.assign(options, { overwrite: false });
+      } else {
+        Object.assign(options, { overwrite: true });
+      }
 
       const original = yield self.read(id);
       sanitizeHelper(data, original, false);

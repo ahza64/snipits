@@ -187,7 +187,7 @@ function createRouter(resource, _options) {
     // PUT update request for specific resoruce
     route.put(`${res_url}/:id`, function *put_route() {
       try {
-        this.body = yield resource.update(this.params.id, this.request.body);
+        this.body = yield resource.update(this.params.id, this.request.body, { set: true });
       } catch (e) {
         handleCRUDError(e, this, this.body);
       }
