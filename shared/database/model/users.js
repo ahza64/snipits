@@ -12,14 +12,20 @@ var usersSchema = new mongoose.Schema({
 
 });
 
+
+/**
+ * comparePassword - schema method to compare bcrypt password for auth
+ *
+ * @param  {type} candidatePassword
+ * @param  {type} cb
+ * @return {type}                  
+ */
 usersSchema.methods.comparePassword = function(candidatePassword, cb) {
-  console.log('In Compare Password', candidatePassword);
   var pass256 = crypto.createHash('sha256').update(candidatePassword).digest('hex');
   Users.findOne({ _id: this._id }).select({ services: 1}).exec(function(err, passwordUser) {
     if(err) {
       console.log('Error:', err);
     }
-    console.log('passwordUser', passwordUser.services.password.bcrypt);
     bcrypt.compare(pass256 , passwordUser.services.password.bcrypt, function(err, isMatch) {
       if(err) { return cb(err); }
       cb(null, isMatch);

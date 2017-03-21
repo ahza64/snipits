@@ -38,14 +38,11 @@ passport.deserializeUser(function(id, done) {
 });
 
 passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
-  console.log('1 ------>');
   Cuf.findOne({ uniq_id: email, status: 'active' }).select(select).exec(function(error, user){
-    console.log('Checking Cuf', user);
     if(error) {
       done(null, false);
     }
     if(user) {
-      console.log('Cuf Found', user);
       user.comparePassword(password, function(error, isMatch) {
         if(error) {
           log.error('Error:', error);
@@ -56,15 +53,12 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
         return done(null, false);
       });
     } else if(!error && !user) {
-      console.log('Checking User');
       User.findOne({ 'emails.address' : email}).select(select).exec(function(err, user) {
         if(err) {
           done(null, false);
         }
         if(user) {
-          console.log('User Found', user);
           user.comparePassword(password, function(error, isMatch){
-            console.log('Is MATCH ------>', isMatch);
             if(error) {
               log.error('Error:', error);
             }
