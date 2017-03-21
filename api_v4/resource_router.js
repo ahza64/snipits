@@ -69,6 +69,7 @@ function createRouter(resource, _options) {
         filter[key] = value;
       }
     }
+
     return filter;
   }
 
@@ -130,13 +131,17 @@ function createRouter(resource, _options) {
         if (offset) {
           offset = parseInt(offset, 10);
         }
-        const filter = processFilters(context.query);
-        data = yield resource.list({ offset: offset,
+        
+        // const filter = processFilters(context.query);
+        filter = context.query;
+        data = yield resource.list({
+          offset: offset,
           length: len,
           filter: filter,
           select: select,
           order: order,
-          lean: true });
+          lean: true
+        });
         if (context.dsp_env) {
           offset = offset || 0;
           context.dsp_env.total = yield resource.count(filter);
@@ -201,6 +206,15 @@ function createRouter(resource, _options) {
     route.post(`${res_url}`, function *post_route() {
       try {
         this.body = yield resource.create(this.request.body);
+      } catch (e) {
+        handleCRUDError(e, this, this.body);
+      }
+    });
+
+    // DELETE request to delete resoruce
+    route.delete(`${res_url}/:id`, function *delete_route() {
+      try {
+        this.body = yield resource.delete(this.params.id);
       } catch (e) {
         handleCRUDError(e, this, this.body);
       }

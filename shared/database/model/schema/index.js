@@ -62,7 +62,8 @@ const types = {
 const baseSchema = {
   id: { type: Number, index: { unique: true } },
   created: { type: Date, default: Date.now, index: true },
-  updated: { type: Date, default: Date.now, index: true }
+  updated: { type: Date, default: Date.now, index: true },
+  _deleted: { type: Boolean, default: false },
 };
 
 schemaSchema.plugin(autoIncrement.plugin, { model: 'Schema', field: 'id', startAt: 1 });

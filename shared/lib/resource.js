@@ -137,7 +137,6 @@ class Resource extends Emitter {
     const self = this;
     return co(function *read_gen() {
       const q = Resource.idQuery(id);
-      console.log("ID QUERY", q);
       let result = self.Model.findOne(q);
       if (select) {
         result = result.select(select);
@@ -263,7 +262,7 @@ class Resource extends Emitter {
     const options = _options || {};
     const offset = options.offset || 0;
     const len = options.length || options.limit || 1000;
-    const filters = options.filters;
+    const filters = options.filter;
     const select = options.select;
     const order = options.order || "created";
     const lean = options.lean;
