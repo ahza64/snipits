@@ -511,6 +511,7 @@ export default class TaxFields extends React.Component {
                     <TableHeaderColumn>Field Value</TableHeaderColumn>
                     <TableHeaderColumn>Field Name</TableHeaderColumn>
                     <TableHeaderColumn>Parent Id</TableHeaderColumn>
+                    <TableHeaderColumn>Parent Name</TableHeaderColumn>
                     <TableHeaderColumn>Created On</TableHeaderColumn>
                     <TableHeaderColumn>Action</TableHeaderColumn>
                   </TableRow>
@@ -519,17 +520,28 @@ export default class TaxFields extends React.Component {
                   {
                     this.state.taxonomyValues.map((taxValue, index) => {
                       var pId;
+                      var pName;
                       if (this.state.taxonomyOrder === 1) {
                         pId = "Root";
+                        pName = "Root"
                       } else {
-                        pId = taxValue.parentId;
+                          pId = taxValue.parentId;
+                          if(pId){
+                            let pValue = this.state.taxParentValues.filter(p => {
+                                return p.id == pId;
+                            });
+                            if(pValue.length > 0){
+                              pName = pValue[0].fieldValue;
+                            }
+                          }
                       }
-                      return (
+                    return (
                         <TableRow key={ index }>
                           <TableRowColumn>{ index + 1 }</TableRowColumn>
                           <TableRowColumn>{ taxValue.fieldValue }</TableRowColumn>
                           <TableRowColumn>{ taxValue.fieldName }</TableRowColumn>
                           <TableRowColumn>{ pId }</TableRowColumn>
+                          <TableRowColumn>{ pName }</TableRowColumn>
                           <TableRowColumn>{ taxValue.createdAt }</TableRowColumn>
                           <TableRowColumn>
                             <FlatButton
