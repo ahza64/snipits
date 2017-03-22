@@ -42,7 +42,6 @@ router.post(
     var taxonomy;
 
     if (permissions.has(this.req.user, companyUserId)) {
-      console.log("body qowschemaid?????????????????", body[0].qowSchemaId);
       try {
         yield QowTaxonomies.destroy({
           where: {
