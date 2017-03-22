@@ -35,19 +35,22 @@ function sanitizeHelper(doc, original, _sanitize_deleted) {
   }
 
   // makes sure we don't lose dates
-  if (!result.created) {
+  if (!result.created && original) {
     result.created = original.created;
   }
-  if (!result.updated) {
+  if (!result.updated && original) {
     result.updated = original.updated;
   }
 
   // ensure _id is set
-  if (result._id) {
-    result._id = result._id.toString();
-  } else {
-    result._id = original._id.toString();
+  if (original) {
+    if (result._id) {
+      result._id = result._id.toString();
+    } else {
+      result._id = original._id.toString();
+    }
   }
+
   // ensure id is set
   if (!result.id && original) {
     result.id = original.id;
