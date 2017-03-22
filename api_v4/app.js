@@ -3,7 +3,7 @@ const logger = require('koa-logger');
 const mount = require('koa-mount');
 const cors = require('kcors');
 const co = require('co');
-const config = require('dsp_shared/config/config').get({ log4js: false });
+const config = require('dsp_shared/config/config').get();
 require('dsp_shared/database/database')(config.schema);
 const Schema = require('dsp_shared/database/model/schema');
 const Resource = require('dsp_shared/lib/resource');
