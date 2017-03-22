@@ -9,7 +9,6 @@ var logger = require('koa-logger');
 var compress = require('koa-compress');
 var mount = require('koa-mount');
 var koa = require('koa');
-var cors = require('kcors');
 var resources = require('./resources.json');
 var requestId = require('koa-request-id');
 var session = require('koa-session');
@@ -18,6 +17,8 @@ require('dsp_shared/database/sequelize')(config.postgres);
 var login = require('./auth/auth');
 var bodyParser = require('koa-body-parser');
 var app = koa();
+const cors = require('kcors');
+
 
 // middleware
 app.use(cors({
@@ -25,6 +26,10 @@ app.use(cors({
   credentials: true
 }));
 app.use(bodyParser());
+app.use(cors({
+  allowMethods: ['GET', 'POST', 'PUT', 'PATCH'],
+  credentials: true
+}));
 app.use(logger());
 app.use(compress());
 app.use(requestId());
@@ -47,9 +52,9 @@ app.use(session({ key: 'dispatchr:sess' }, app));
 
 //Mount the login endpoint first
 app.use(mount('/api/v3', login));
-
+app.use(mount('/api/v3', require('./route/assign/assign')));
 // Don't require login but include it
-app.use(require('./middleware').auth);
+//app.use(require('./middleware').auth);
 
 app.use(require('./middleware').requestLog);
 
@@ -62,7 +67,6 @@ app.use(mount('/api/v3', require('./route/package')));
 app.use(mount('/api/v3', require('./route/asset')));
 app.use(mount('/api/v3', require('./route/update_tree')));
 app.use(mount('/api/v3', require('./route/layer')));
-
 
 //This is runnable as a stand alone server
 if (require.main === module) {
