@@ -510,7 +510,7 @@ export default class TaxFields extends React.Component {
             { this.renderTaxonomySelectField() }
             { this.renderTaxFieldSelectField() }
             <div>
-              Total Taxonomy Field Values Found
+              Total Schema Expected Taxonomy Values Found
             </div>
             <div>
               <Badge
@@ -523,7 +523,7 @@ export default class TaxFields extends React.Component {
                 ---------------------------------------------------------
               </div>
               <div>
-                Remove all Taxonomy Expected Values for Selected Project Schema
+                Remove all of "{ this.state.schemaName }'s" Schema Taxonomy Expected Values
               </div>
               <RaisedButton
                 label="Remove Values"

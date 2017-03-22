@@ -42,10 +42,11 @@ router.post(
     var taxonomy;
 
     if (permissions.has(this.req.user, companyUserId)) {
+      console.log("body qowschemaid?????????????????", body[0].qowSchemaId);
       try {
         yield QowTaxonomies.destroy({
           where: {
-            qowSchemaId: body.qowSchemaId
+            qowSchemaId: body[0].qowSchemaId
           }
         });
         for( i = 0; i < body.length; i++) {
