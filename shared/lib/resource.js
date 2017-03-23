@@ -35,19 +35,22 @@ function sanitizeHelper(doc, original, _sanitize_deleted) {
   }
 
   // makes sure we don't lose dates
-  if (!result.created) {
+  if (!result.created && original) {
     result.created = original.created;
   }
-  if (!result.updated) {
+  if (!result.updated && original) {
     result.updated = original.updated;
   }
 
   // ensure _id is set
-  if (result._id) {
-    result._id = result._id.toString();
-  } else {
-    result._id = original._id.toString();
+  if (original) {
+    if (result._id) {
+      result._id = result._id.toString();
+    } else {
+      result._id = original._id.toString();
+    }
   }
+
   // ensure id is set
   if (!result.id && original) {
     result.id = original.id;
@@ -137,7 +140,6 @@ class Resource extends Emitter {
     const self = this;
     return co(function *read_gen() {
       const q = Resource.idQuery(id);
-      console.log("ID QUERY", q);
       let result = self.Model.findOne(q);
       if (select) {
         result = result.select(select);
@@ -155,6 +157,7 @@ class Resource extends Emitter {
   * @param {String} id target object's ID
   * @param {Object} data the data to be updated data will be overwritten
   * @param {Object} options
+  * @param {Object} options.set - If only update part of the data, then $set it
   * @param {Object} options.upsert - If the object does not exist, then create it
   * @param {Object} options.silent - Does not emit events
   * @return {Object} result the newly updated object
@@ -164,7 +167,11 @@ class Resource extends Emitter {
     const options = _options || {};
     return co(function *update_gen() {
       self.counter++;
-      Object.assign(options, { overwrite: true });
+      if (options.set) {
+        Object.assign(options, { overwrite: false });
+      } else {
+        Object.assign(options, { overwrite: true });
+      }
 
       const original = yield self.read(id);
       sanitizeHelper(data, original, false);
@@ -263,7 +270,7 @@ class Resource extends Emitter {
     const options = _options || {};
     const offset = options.offset || 0;
     const len = options.length || options.limit || 1000;
-    const filters = options.filters;
+    const filters = options.filter;
     const select = options.select;
     const order = options.order || "created";
     const lean = options.lean;
