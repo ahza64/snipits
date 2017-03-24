@@ -8,6 +8,7 @@ const moment = require('moment');
 import DefaultNavbar from '../navbar/defaultNavbar';
 import EditTaxonomyDialog from './dialogs/edit';
 import DeleteTaxonomyDialog from './dialogs/delete';
+import NotificationDialog from './dialogs/notification'
 import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl } from '../../config';
 
 // Styles
@@ -46,7 +47,8 @@ export default class Taxonomy extends React.Component {
       taxonomySelected: {},
       showEditTaxonomyDialog: false,
       actionMenuOpen: false,
-      showDeleteTaxonomyDialog: false
+      showDeleteTaxonomyDialog: false,
+      showNotificationDialog: false
     };
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
@@ -55,6 +57,7 @@ export default class Taxonomy extends React.Component {
     this.handleEditDeleteTax = this.handleEditDeleteTax.bind(this);
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
     this.handleListSubmit = this.handleListSubmit.bind(this);
+    this.fetchTaxValues = this.fetchTaxValues.bind(this);
   }
 
   componentWillMount() {
@@ -155,7 +158,7 @@ export default class Taxonomy extends React.Component {
     }
   }
 
-  handleListSubmit() {
+  fetchTaxValues() {
     request
     .post(taxonomiesUrl)
     .send(this.state.taxonomies)
@@ -169,6 +172,12 @@ export default class Taxonomy extends React.Component {
         });
       }
     });
+  }
+
+  handleListSubmit() {
+    this.setState({
+      showNotificationDialog: true
+    })
   }
 
   handleCompanySelectChanged(event, companyId) {
@@ -251,6 +260,12 @@ export default class Taxonomy extends React.Component {
   handleDeleteTaxDialogClose() {
     this.setState({
       showDeleteTaxonomyDialog: false
+    });
+  }
+
+  handleNotificationClose() {
+    this.setState({
+      showNotificationDialog: false
     });
   }
 
@@ -358,6 +373,11 @@ export default class Taxonomy extends React.Component {
           taxId={ this.state.taxonomySelected.id }
           taxName={ this.state.taxonomySelected ? this.state.taxonomySelected.fieldName : "this" }
           taxonomies={ this.state.taxonomies }
+        />
+        <NotificationDialog
+          open={ this.state.showNotificationDialog }
+          onClose={ (change) => this.handleNotificationClose(change) }
+          fetchTaxValues={ this.fetchTaxValues }
         />
       </div>
     );
