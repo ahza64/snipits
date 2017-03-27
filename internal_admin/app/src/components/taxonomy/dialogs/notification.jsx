@@ -35,7 +35,7 @@ export default class NotificationDialog extends React.Component {
         >
         Are you sure you'd like to make changes to the taxonomy database?
         <h4>any of the exsisting expected taxonomy values will become invaild
-          and will need to be reomved using the expected taxonomy page</h4>
+          and will need to be removed using the expected taxonomy page</h4>
       </Dialog>
     )
   }

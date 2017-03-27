@@ -48,7 +48,8 @@ export default class Taxonomy extends React.Component {
       showEditTaxonomyDialog: false,
       actionMenuOpen: false,
       showDeleteTaxonomyDialog: false,
-      showNotificationDialog: false
+      showNotificationDialog: false,
+      dataSaved: true
     };
 
     this.fetchCompanies = this.fetchCompanies.bind(this);
@@ -168,7 +169,8 @@ export default class Taxonomy extends React.Component {
         console.error(err);
       } else {
         this.setState({
-          taxonomies: res.body
+          taxonomies: res.body,
+          dataSaved: true
         });
       }
     });
@@ -227,6 +229,11 @@ export default class Taxonomy extends React.Component {
     this.setState({
       showEditTaxonomyDialog: false
     });
+    if (saved) {
+      this.setState({
+        dataSaved: false
+      })
+    }
   }
 
   handleActionMenu(event, taxonomy) {
@@ -257,16 +264,29 @@ export default class Taxonomy extends React.Component {
     });
   }
 
-  handleDeleteTaxDialogClose() {
+  handleDeleteTaxDialogClose(deleted) {
     this.setState({
       showDeleteTaxonomyDialog: false
     });
+    if (deleted) {
+      this.setState({
+        dataSaved: false
+      })
+    }
   }
 
   handleNotificationClose() {
     this.setState({
       showNotificationDialog: false
     });
+  }
+
+  dataStatus(taxonomy) {
+    if (taxonomy.createdAt) {
+      return "Yes"
+    } else {
+      return "No"
+    }
   }
 
   renderCompanySelectField() {
@@ -416,6 +436,7 @@ export default class Taxonomy extends React.Component {
                 <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
                   <TableRow>
                     <TableHeaderColumn>#</TableHeaderColumn>
+                    <TableHeaderColumn>Saved to Database</TableHeaderColumn>
                     <TableHeaderColumn>Field Name</TableHeaderColumn>
                     <TableHeaderColumn>Created On</TableHeaderColumn>
                     <TableHeaderColumn className='header-pos'>Order</TableHeaderColumn>
@@ -430,6 +451,7 @@ export default class Taxonomy extends React.Component {
                         return (
                           <TableRow key={ index }>
                               <TableRowColumn>{ index + 1 }</TableRowColumn>
+                              <TableRowColumn>{ this.dataStatus(taxonomy) }</TableRowColumn>
                               <TableRowColumn>{ taxonomy.fieldName }</TableRowColumn>
                               <TableRowColumn>{ taxonomy.createdAt }</TableRowColumn>
                               <TableRowColumn>{ taxonomy.order }</TableRowColumn>
@@ -454,6 +476,7 @@ export default class Taxonomy extends React.Component {
                 primary={ true }
                 fullWidth={ true }
                 onClick={ this.handleListSubmit }
+                disabled={ this.state.dataSaved }
               />
             </Row>
           </Col>
