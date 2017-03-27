@@ -107,7 +107,8 @@ export default class Taxonomy extends React.Component {
           } else {
             this.setState({
               schemas: [],
-              schemaId: null
+              schemaId: null,
+              taxonomies: []
             })
           }
         }
@@ -135,7 +136,8 @@ export default class Taxonomy extends React.Component {
             this.fetchTaxonomies(firstSchema.id);
           } else {
             this.setState({
-              schemas: []
+              schemas: [],
+              taxonomies: []
             });
           }
         }

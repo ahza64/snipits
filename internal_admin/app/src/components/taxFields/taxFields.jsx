@@ -107,7 +107,8 @@ export default class TaxFields extends React.Component {
               schemas: [],
               schemaId: null,
               taxonomies: [],
-              taxonomyId: null
+              taxonomyId: null,
+              taxonomyValues: []
             })
           }
         }
@@ -137,7 +138,8 @@ export default class TaxFields extends React.Component {
             this.setState({
               schemas: [],
               taxonomies: [],
-              taxonomyId: null
+              taxonomyId: null,
+              taxonomyValues: []
             });
           }
         }
