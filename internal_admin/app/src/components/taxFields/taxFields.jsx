@@ -503,6 +503,7 @@ export default class TaxFields extends React.Component {
               primary={ true }
               fullWidth={ true }
               onClick={ this.handleCreateTaxField }
+              disabled={ !this.state.taxonomyId }
             />
             { this.renderCompanySelectField() }
             { this.renderProjectSelectField() }
