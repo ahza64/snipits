@@ -419,7 +419,9 @@ export default class Taxonomy extends React.Component {
               label='Add Taxonomy'
               primary={ true }
               fullWidth={ true }
-              onClick={ this.handleCreateTaxonomy } />
+              onClick={ this.handleCreateTaxonomy }
+              disabled={ !this.state.schemaId }
+            />
             { this.renderCompanySelectField() }
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
