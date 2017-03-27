@@ -104,6 +104,11 @@ export default class Taxonomy extends React.Component {
           });
           if (firstProject) {
             this.fetchSchemas(firstProject.id);
+          } else {
+            this.setState({
+              schemas: [],
+              schemaId: null
+            })
           }
         }
       });

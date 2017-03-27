@@ -102,6 +102,13 @@ export default class TaxFields extends React.Component {
           });
           if (firstProject) {
             this.fetchSchemas(firstProject.id);
+          } else {
+            this.setState({
+              schemas: [],
+              schemaId: null,
+              taxonomies: [],
+              taxonomyId: null
+            })
           }
         }
       });
@@ -128,7 +135,9 @@ export default class TaxFields extends React.Component {
             this.fetchTaxonomies(firstSchema.id);
           } else {
             this.setState({
-              schemas: []
+              schemas: [],
+              taxonomies: [],
+              taxonomyId: null
             });
           }
         }
