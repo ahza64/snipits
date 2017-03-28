@@ -33,6 +33,7 @@ export default class TaxFields extends React.Component {
       schemas: [],
       taxonomies: [],
       taxonomyValues: [],
+      schemaValues: [],
       taxParentValues: [],
       companyId: null,
       companyName: null,
@@ -134,6 +135,7 @@ export default class TaxFields extends React.Component {
           });
           if (firstSchema) {
             this.fetchTaxonomies(firstSchema.id);
+            // this.fetchSchemaValues(firstSchema.id);
           } else {
             this.setState({
               schemas: [],
@@ -157,15 +159,16 @@ export default class TaxFields extends React.Component {
         if (err) {
           console.error(err);
         } else {
-          res.body.sort(function (a, b) {
+          res.body.taxonomies.sort(function (a, b) {
             return a.order - b.order
           })
-          var firstTax = (res.body.length > 0) ? res.body[0] : null;
+          var firstTax = (res.body.taxonomies.length > 0) ? res.body.taxonomies[0] : null;
           this.setState({
-            taxonomies: res.body,
+            taxonomies: res.body.taxonomies,
             taxonomyId: firstTax ? firstTax.id : null,
             taxonomyName: firstTax ? firstTax.fieldName : null,
-            taxonomyOrder: firstTax ? firstTax.order : null
+            taxonomyOrder: firstTax ? firstTax.order : null,
+            schemaValues: res.body.values
           });
           if(firstTax) {
             this.fetchTaxValues(firstTax.fieldName);
@@ -177,6 +180,38 @@ export default class TaxFields extends React.Component {
       });
     }
   }
+
+  // fetchSchemaValues(schemaId) {
+  //   console.log("schema values");
+  //   if (schemaId) {
+  //     let url = taxonomiesUrl + '/' + schemaId;
+  //     return request
+  //     .get(url)
+  //     .withCredentials()
+  //     .end((err, res) => {
+  //       if (err) {
+  //         console.error(err);
+  //       } else {
+  //         res.body.sort(function (a, b) {
+  //           return a.order - b.order
+  //         })
+  //         var firstTax = (res.body.length > 0) ? res.body[0] : null;
+  //         this.setState({
+  //           taxonomies: res.body,
+  //           taxonomyId: firstTax ? firstTax.id : null,
+  //           taxonomyName: firstTax ? firstTax.fieldName : null,
+  //           taxonomyOrder: firstTax ? firstTax.order : null
+  //         });
+  //         if(firstTax) {
+  //           this.fetchTaxValues(firstTax.fieldName);
+  //           this.setState({
+  //             taxonomySelected: firstTax
+  //           });
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
 
   fetchTaxValues(taxFieldName) {
     if (taxFieldName) {
@@ -522,11 +557,11 @@ export default class TaxFields extends React.Component {
             { this.renderTaxonomySelectField() }
             { this.renderTaxFieldSelectField() }
             <div>
-              Total Schema Expected Taxonomy Values Found
+              Total of all values for the selected schema: "{ this.state.schemaName }"
             </div>
             <div>
               <Badge
-                badgeContent={ this.state.taxonomyValues.length }
+                badgeContent={ this.state.schemaValues.length }
                 secondary={ true }
                 />
             </div>
@@ -535,7 +570,7 @@ export default class TaxFields extends React.Component {
                 ---------------------------------------------------------
               </div>
               <div>
-                Remove all of "{ this.state.schemaName }'s" Schema Taxonomy Expected Values
+                Remove all of "{ this.state.schemaName }" Schema Taxonomy Expected Values
               </div>
               <RaisedButton
                 label="Remove Values"
