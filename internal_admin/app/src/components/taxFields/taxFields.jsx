@@ -181,38 +181,6 @@ export default class TaxFields extends React.Component {
     }
   }
 
-  // fetchSchemaValues(schemaId) {
-  //   console.log("schema values");
-  //   if (schemaId) {
-  //     let url = taxonomiesUrl + '/' + schemaId;
-  //     return request
-  //     .get(url)
-  //     .withCredentials()
-  //     .end((err, res) => {
-  //       if (err) {
-  //         console.error(err);
-  //       } else {
-  //         res.body.sort(function (a, b) {
-  //           return a.order - b.order
-  //         })
-  //         var firstTax = (res.body.length > 0) ? res.body[0] : null;
-  //         this.setState({
-  //           taxonomies: res.body,
-  //           taxonomyId: firstTax ? firstTax.id : null,
-  //           taxonomyName: firstTax ? firstTax.fieldName : null,
-  //           taxonomyOrder: firstTax ? firstTax.order : null
-  //         });
-  //         if(firstTax) {
-  //           this.fetchTaxValues(firstTax.fieldName);
-  //           this.setState({
-  //             taxonomySelected: firstTax
-  //           });
-  //         }
-  //       }
-  //     });
-  //   }
-  // }
-
   fetchTaxValues(taxFieldName) {
     if (taxFieldName) {
       let url = taxFieldsUrl + '/' + taxFieldName;
@@ -344,7 +312,8 @@ export default class TaxFields extends React.Component {
   handleEditTaxField() {
     this.findParentOrder();
     this.setState({
-      showEditTaxonomyDialog: true
+      showEditTaxonomyDialog: true,
+      actionMenuOpen: false
     });
   }
 
@@ -514,7 +483,8 @@ export default class TaxFields extends React.Component {
           title={ (this.state.taxValueSelected.id ? "Edit" : "Create") + " Taxonomy Value" }
           onClose={ (saved) => this.handleEditTaxValueDialogClose(saved)}
           taxFieldName={ this.state.taxonomyName }
-          taxFieldValueId={ this.state.taxonomyOrder }
+          taxFieldValueOrder={ this.state.taxonomyOrder }
+          taxValueSelected={ this.state.taxValueSelected }
           taxParentList={ this.state.taxParentValues }
           parentSelected={ this.state.parentSelected }
           qowSchemaId={ this.state.schemaId }

@@ -18,20 +18,24 @@ export default class EditTaxValueDialog extends React.Component {
     this.state = {
       parentId: '',
       taxParentList: [],
-      fieldValue: ''
+      fieldValue: '',
+      fieldId: null
     }
   }
 
   componentWillReceiveProps() {
     this.setState({
       taxParentList: this.props.taxParentList,
-      parentId: this.props.taxParentList[0] ? this.props.taxParentList[0].id : ""
+      parentId: this.props.taxParentList[0] ? this.props.taxParentList[0].id : "",
+      fieldValue: this.props.taxValueSelected.fieldValue ? this.props.taxValueSelected.fieldValue : "",
+      fieldId: this.props.taxValueSelected.id ? this.props.taxValueSelected.id : null
     })
   }
 
   handleTaxValueSubmit(event) {
 
     var taxValue = {
+      id: this.state.fieldId,
       fieldName: this.props.taxFieldName,
       fieldValue: this.state.fieldValue,
       parentId: this.state.parentId ? this.state.parentId : null,
@@ -71,7 +75,7 @@ export default class EditTaxValueDialog extends React.Component {
   }
 
   renderParentIdSelectField() {
-    if(this.props.taxFieldValueId !== 1) {
+    if(this.props.taxFieldValueOrder !== 1) {
       return(
         <tr>
           <td>Select Parent Value from "{ this.props.parentSelected.fieldName }"</td>
