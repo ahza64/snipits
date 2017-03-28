@@ -7,6 +7,7 @@ import DefaultNavbar from '../navbar/defaultNavbar';
 import Taxonomy from '../taxonomy/taxonomy'
 import EditTaxValueDialog from './dialogs/edit'
 import DeleteTaxValueDialog from './dialogs/delete'
+import DeleteTaxValuesDialog from './dialogs/deleteValues'
 import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl, taxFieldsUrl } from '../../config';
 
 // Styles
@@ -47,13 +48,15 @@ export default class TaxFields extends React.Component {
       taxonomySelected: {},
       showEditTaxonomyDialog: false,
       actionMenuOpen: false,
-      showDeleteTaxValDialog: false
+      showDeleteTaxValDialog: false,
+      showDeleteTaxValuesDialog: false
     };
 
     this.handleCreateTaxField = this.handleCreateTaxField.bind(this);
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
     this.handleDeleteTaxVal = this.handleDeleteTaxVal.bind(this);
     this.handleEditTaxField = this.handleEditTaxField.bind(this);
+    this.handleRemoveValues = this.handleRemoveValues.bind(this)
   }
 
   componentWillMount() {
@@ -329,9 +332,16 @@ export default class TaxFields extends React.Component {
 
   handleDeleteTaxValDialogClose() {
     this.setState({
-      showDeleteTaxValDialog: false
+      showDeleteTaxValDialog: false,
+      showDeleteTaxValuesDialog: false
     });
     this.fetchTaxValues(this.state.taxonomySelected.fieldName);
+  }
+
+  handleRemoveValues() {
+    this.setState({
+      showDeleteTaxValuesDialog: true
+    })
   }
 
   renderCompanySelectField() {
@@ -465,11 +475,16 @@ export default class TaxFields extends React.Component {
           workProjectId={ this.state.projectId }
           companyId={ this.state.companyId }
         />
-      <DeleteTaxValueDialog
-        open={ this.state.showDeleteTaxValDialog }
-        onClose={ (deleted) => this.handleDeleteTaxValDialogClose(deleted) }
-        taxValId={  this.state.taxValueSelected.id }
-      />
+        <DeleteTaxValueDialog
+          open={ this.state.showDeleteTaxValDialog }
+          onClose={ (deleted) => this.handleDeleteTaxValDialogClose(deleted) }
+          taxValId={  this.state.taxValueSelected.id }
+        />
+        <DeleteTaxValuesDialog
+          open={ this.state.showDeleteTaxValuesDialog }
+          schemaId={ this.state.schemaId }
+          onClose={ (deleted) => this.handleDeleteTaxValDialogClose(deleted) }
+        />
       </div>
     )
   }
@@ -483,24 +498,40 @@ export default class TaxFields extends React.Component {
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
           <Col xs={0} sm={0} md={2} lg={2} >
-            { this.renderCompanySelectField() }
-            { this.renderProjectSelectField() }
-            { this.renderSchemaSelectField() }
-            { this.renderTaxonomySelectField() }
-            { this.renderTaxFieldSelectField() }
             <RaisedButton
               label={ ((this.state.taxonomyOrder === 1) ? "Add Root" : "Add Child") + " Value" }
               primary={ true }
               fullWidth={ true }
               onClick={ this.handleCreateTaxField }
             />
+            { this.renderCompanySelectField() }
+            { this.renderProjectSelectField() }
+            { this.renderSchemaSelectField() }
+            { this.renderTaxonomySelectField() }
+            { this.renderTaxFieldSelectField() }
             <div>
-              Total Taxonomy Field Values Found
+              Total Schema Expected Taxonomy Values Found
             </div>
-            <Badge
-              badgeContent={ this.state.taxonomyValues.length }
-              secondary={ true }
-            />
+            <div>
+              <Badge
+                badgeContent={ this.state.taxonomyValues.length }
+                secondary={ true }
+                />
+            </div>
+            <Row>
+              <div>
+                ---------------------------------------------------------
+              </div>
+              <div>
+                Remove all of "{ this.state.schemaName }'s" Schema Taxonomy Expected Values
+              </div>
+              <RaisedButton
+                label="Remove Values"
+                secondary={ true }
+                fullWidth={ true }
+                onClick={ this.handleRemoveValues }
+                />
+            </Row>
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>

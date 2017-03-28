@@ -372,20 +372,23 @@ export default class Taxonomy extends React.Component {
         <Row>
           <Col xs={0} sm={0} md={1} lg={1} ></Col>
           <Col xs={0} sm={0} md={2} lg={2} >
+            <div>
+              Add Taxonomy to List
+            </div>
+            <RaisedButton
+              label='Add Taxonomy'
+              primary={ true }
+              fullWidth={ true }
+              onClick={ this.handleCreateTaxonomy } />
             { this.renderCompanySelectField() }
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
             <div>
-              Total Taxonomy Field Names Found
+              Total Taxonomy Definitions Found
             </div>
             <Badge
               badgeContent={ this.state.taxonomies.length }
               secondary={ true }/>
-            <RaisedButton
-              label='Add Field Name'
-              primary={ true }
-              fullWidth={ true }
-              onClick={ this.handleCreateTaxonomy } />
           </Col>
           <Col xs={8} sm={8} md={8} lg={8} >
             <Row>
@@ -427,7 +430,7 @@ export default class Taxonomy extends React.Component {
                 </TableBody>
               </Table>
               <RaisedButton
-                label="Save Taxonomy List to Database"
+                label="Save Changes"
                 primary={ true }
                 fullWidth={ true }
                 onClick={ this.handleListSubmit }
