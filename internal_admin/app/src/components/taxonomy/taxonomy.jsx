@@ -8,7 +8,7 @@ const moment = require('moment');
 import DefaultNavbar from '../navbar/defaultNavbar';
 import EditTaxonomyDialog from './dialogs/edit';
 import DeleteTaxonomyDialog from './dialogs/delete';
-import NotificationDialog from './dialogs/notification'
+import NotificationDialog from './dialogs/notification';
 import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl } from '../../config';
 
 // Styles
@@ -59,6 +59,7 @@ export default class Taxonomy extends React.Component {
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
     this.handleListSubmit = this.handleListSubmit.bind(this);
     this.fetchTaxValues = this.fetchTaxValues.bind(this);
+
   }
 
   componentWillMount() {
@@ -104,6 +105,12 @@ export default class Taxonomy extends React.Component {
           });
           if (firstProject) {
             this.fetchSchemas(firstProject.id);
+          } else {
+            this.setState({
+              schemas: [],
+              schemaId: null,
+              taxonomies: []
+            })
           }
         }
       });
@@ -130,7 +137,8 @@ export default class Taxonomy extends React.Component {
             this.fetchTaxonomies(firstSchema.id);
           } else {
             this.setState({
-              schemas: []
+              schemas: [],
+              taxonomies: []
             });
           }
         }
@@ -419,7 +427,9 @@ export default class Taxonomy extends React.Component {
               label='Add Taxonomy'
               primary={ true }
               fullWidth={ true }
-              onClick={ this.handleCreateTaxonomy } />
+              onClick={ this.handleCreateTaxonomy }
+              disabled={ !this.state.schemaId }
+            />
             { this.renderCompanySelectField() }
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
