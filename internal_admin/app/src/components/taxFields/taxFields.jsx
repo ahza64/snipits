@@ -486,6 +486,7 @@ export default class TaxFields extends React.Component {
           taxFieldValueOrder={ this.state.taxonomyOrder }
           taxValueSelected={ this.state.taxValueSelected }
           taxParentList={ this.state.taxParentValues }
+          taxonomyValues={ this.state.taxonomyValues }
           parentSelected={ this.state.parentSelected }
           qowSchemaId={ this.state.schemaId }
           workProjectId={ this.state.projectId }

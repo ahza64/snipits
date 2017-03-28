@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
+import ValidationDialog from '../../taxonomy/dialogs/validation'
 
 import { taxFieldsUrl } from '../../../config';
 
@@ -19,7 +20,8 @@ export default class EditTaxValueDialog extends React.Component {
       parentId: '',
       taxParentList: [],
       fieldValue: '',
-      fieldId: null
+      fieldId: null,
+      showValidationDialog: false
     }
   }
 
@@ -28,36 +30,51 @@ export default class EditTaxValueDialog extends React.Component {
       taxParentList: this.props.taxParentList,
       parentId: this.props.taxParentList[0] ? this.props.taxParentList[0].id : "",
       fieldValue: this.props.taxValueSelected.fieldValue ? this.props.taxValueSelected.fieldValue : "",
-      fieldId: this.props.taxValueSelected.id ? this.props.taxValueSelected.id : null
+      fieldId: this.props.taxValueSelected.id ? this.props.taxValueSelected.id : null,
+      taxonomyValues: this.props.taxonomyValues ? this.props.taxonomyValues : []
     })
   }
 
   handleTaxValueSubmit(event) {
 
-    var taxValue = {
-      id: this.state.fieldId,
-      fieldName: this.props.taxFieldName,
-      fieldValue: this.state.fieldValue,
-      parentId: this.state.parentId ? this.state.parentId : null,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      qowSchemaId: this.props.qowSchemaId,
-      workProjectId: this.props.workProjectId,
-      companyId: this.props.companyId
-    }
+// find duplicate
+// give notification or submit
 
-    request
-    .post(taxFieldsUrl)
-    .send(taxValue)
-    .withCredentials()
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        this.props.onClose(true)
+    let duplicate = this.props.taxonomyValues.filter( p => {
+      return p.fieldValue == this.state.fieldValue
+    });
+
+    if (!duplicate[0]) {
+
+      var taxValue = {
+        id: this.state.fieldId,
+        fieldName: this.props.taxFieldName,
+        fieldValue: this.state.fieldValue,
+        parentId: this.state.parentId ? this.state.parentId : null,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        qowSchemaId: this.props.qowSchemaId,
+        workProjectId: this.props.workProjectId,
+        companyId: this.props.companyId
       }
-    })
-    this.state.fieldValue = '';
+
+      request
+      .post(taxFieldsUrl)
+      .send(taxValue)
+      .withCredentials()
+      .end(err => {
+        if (err) {
+          console.error(err);
+        } else {
+          this.props.onClose(true)
+        }
+      })
+      this.state.fieldValue = '';
+    } else {
+      this.setState({
+        showValidationDialog: true
+      })
+    }
   }
 
   handleParentNameChange(event, value) {
@@ -72,6 +89,22 @@ export default class EditTaxValueDialog extends React.Component {
     this.setState({
       fieldValue: tValue
     });
+  }
+
+  handleValidationClose() {
+    this.setState({
+      showValidationDialog: false,
+      fieldValue: ""
+    })
+  }
+
+  renderDialogs() {
+    return(
+      <ValidationDialog
+        open={ this.state.showValidationDialog }
+        onClose={ () => this.handleValidationClose() }
+      />
+    )
   }
 
   renderParentIdSelectField() {
@@ -132,7 +165,8 @@ export default class EditTaxValueDialog extends React.Component {
         contentStyle={ { maxWidth: '600px' } }
         autoScrollBodyContent={ true }
         actions={ this.actions() }
-        >
+      >
+      { this.renderDialogs() }
         <table style={ { width: '100%' } }>
           <tbody>
             <tr>
