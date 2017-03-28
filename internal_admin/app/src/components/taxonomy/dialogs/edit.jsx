@@ -5,6 +5,7 @@ import request from '../../../services/request';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import ValidationDialog from '../dialogs/validation';
 
 import { taxonomiesUrl } from '../../../config';
 
@@ -17,7 +18,8 @@ export default class EditTaxonomyDialog extends React.Component {
       taxFieldName: '',
       taxOrder: '',
       taxNodeType: '',
-      taxKeys: ''
+      taxKeys: '',
+      showValidationDialog: false
     }
 
     this.handleTaxonomySubmit = this.handleTaxonomySubmit.bind(this);
@@ -68,27 +70,58 @@ export default class EditTaxonomyDialog extends React.Component {
   }
 
   handleTaxonomySubmit(event) {
-    var taxonomy = {
-      id: this.state.taxId,
-      fieldName: this.state.taxFieldName,
-      nodeType: this.state.taxNodeType,
-      keys: this.state.taxKeys,
-      qowSchemaId: this.props.schemaId,
-      companyId: this.props.companyId,
-      workProjectId: this.props.projectId
-    }
-    var updateTax;
-    var updateTaxIndex;
 
-    if (!taxonomy.id) {
-      this.props.taxonomies.push(taxonomy);
+    let duplicate = this.props.taxonomies.filter(p => {
+      return p.fieldName == this.state.taxFieldName
+    })
+
+    if (!duplicate[0]) {
+      var taxonomy = {
+        id: this.state.taxId,
+        fieldName: this.state.taxFieldName,
+        nodeType: this.state.taxNodeType,
+        keys: this.state.taxKeys,
+        qowSchemaId: this.props.schemaId,
+        companyId: this.props.companyId,
+        workProjectId: this.props.projectId
+      }
+      var updateTax;
+      var updateTaxIndex;
+
+      if (!taxonomy.id) {
+        this.props.taxonomies.push(taxonomy);
+      } else {
+        updateTaxIndex = this.props.taxonomies.findIndex(q => {
+          return q.id == taxonomy.id
+        });
+        this.props.taxonomies.splice(updateTaxIndex, 1, taxonomy);
+      }
+      this.props.onClose(true);
     } else {
-      updateTaxIndex = this.props.taxonomies.findIndex(q => {
-        return q.id == taxonomy.id
+      this.setState({
+        showValidationDialog: true
       });
-      this.props.taxonomies.splice(updateTaxIndex, 1, taxonomy);
     }
-    this.props.onClose(true);
+  }
+
+  handleValidationClose() {
+    this.setState({
+      taxId: null,
+      taxFieldName: '',
+      taxOrder: '',
+      taxNodeType: '',
+      taxKeys: '',
+      showValidationDialog: false
+    })
+  }
+
+  renderValidation() {
+    return(
+      <ValidationDialog
+        open={ this.state.showValidationDialog }
+        onClose={ () => this.handleValidationClose() }
+      />
+    )
   }
 
   actions() {
@@ -117,6 +150,7 @@ export default class EditTaxonomyDialog extends React.Component {
         modal={ true }
         autoScrollBodyContent={ true }
         contentStyle={ { maxWidth: '600px' } }>
+        { this.renderValidation() }
         <table style={ { width: '100%'} }>
           <tbody>
             <tr>
