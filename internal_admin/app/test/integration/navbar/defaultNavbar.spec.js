@@ -52,7 +52,10 @@ describe('<DefaultNavbar />', () => {
       'Work Projects',
       'Ingestion Configurations',
       'Users',
-      'Logout'
+      'Logout',
+      'Schemas',
+      'Taxonomy',
+      'Taxonomy Field Values'
     ];
     checkMenuItems(role, menuItems);
   });

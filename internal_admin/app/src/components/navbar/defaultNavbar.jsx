@@ -108,7 +108,9 @@ export default class DefaultNavbar extends React.Component {
   }
 
   showSchemas(){
-    return (<MenuItem eventKey={1.9} onClick={ this.goToSchemas }>Schemas</MenuItem>);
+    if (authRedux.getState().role === 'DA') {
+      return (<MenuItem eventKey={1.9} onClick={ this.goToSchemas }>Schemas</MenuItem>);
+    }
   }
 
   goToTaxonomy(){
@@ -116,7 +118,9 @@ export default class DefaultNavbar extends React.Component {
   }
 
   showTaxonomy(){
-    return <MenuItem eventKey={2.1} onClick={ this.goToTaxonomy }>Taxonomy</MenuItem>
+    if (authRedux.getState().role === 'DA') {
+      return <MenuItem eventKey={2.1} onClick={ this.goToTaxonomy }>Taxonomy</MenuItem>
+    }
   }
 
   goToTaxonomyFieldValues(){
@@ -124,7 +128,9 @@ export default class DefaultNavbar extends React.Component {
   }
 
   showTaxonomyFieldValues(){
-    return <MenuItem eventKey={2.2} onClick={ this.goToTaxonomyFieldValues }>Taxonomy Field Values</MenuItem>
+    if (authRedux.getState().role === 'DA') {
+      return <MenuItem eventKey={2.2} onClick={ this.goToTaxonomyFieldValues }>Taxonomy Field Values</MenuItem>
+    }
   }
 
   render() {
