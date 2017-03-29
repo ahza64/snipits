@@ -12,22 +12,26 @@ const project = require('../projects/project');
 const schema = require('../schema/schema');
 
 before(function(done) {
-    Company.create(company).then(() => {
-      Admin.create(admin).then(() => {
-        Project.create(project).then(() =>  {
-          Ingestion_Configurations.create(test_configuration).then(() => {
+  Company.create(company).then(() => {
+    Admin.create(admin).then(() => {
+      Project.create(project).then(() =>  {
+        Ingestion_Configurations.create(test_configuration).then(() => {
+          Schemas.create(schema).then(() => {
             done();
-          });
+          })
         });
       });
     });
+  });
 });
 after(function (done) {
   Admin.destroy({where: { email: admin.email }}).then(function() {
     Company.destroy({where: { id: company.id }}).then(function() {
       Project.destroy({where:{id : project.id}}).then(function () {
         Ingestion_Configurations.destroy({where : {createdAt : test_configuration.createdAt}}).then(() => {
-          done();
+          Schemas.destroy({where: { id: schema.id }}).then(() => {
+            done();
+          });
         });
       });
     });
