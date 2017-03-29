@@ -5,7 +5,7 @@ import request from '../../../services/request';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import ValidationDialog from '../dialogs/validation';
+import ValidationDialog from './validation';
 
 import { taxonomiesUrl } from '../../../config';
 

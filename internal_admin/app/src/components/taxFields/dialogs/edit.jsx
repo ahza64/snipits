@@ -25,20 +25,23 @@ export default class EditTaxValueDialog extends React.Component {
     }
   }
 
-  componentWillReceiveProps() {
+  loadProps(props) {
     this.setState({
       taxParentList: this.props.taxParentList,
       parentId: this.props.taxParentList[0] ? this.props.taxParentList[0].id : "",
       fieldValue: this.props.taxValueSelected.fieldValue ? this.props.taxValueSelected.fieldValue : "",
       fieldId: this.props.taxValueSelected.id ? this.props.taxValueSelected.id : null,
       taxonomyValues: this.props.taxonomyValues ? this.props.taxonomyValues : []
-    })
+    });
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if ((nextProps.open === true) && (this.props.open === false)) {
+      this.loadProps(nextProps);
+    }
   }
 
   handleTaxValueSubmit(event) {
-
-// find duplicate
-// give notification or submit
 
     let duplicate = this.props.taxonomyValues.filter( p => {
       return p.fieldValue == this.state.fieldValue
@@ -74,6 +77,7 @@ export default class EditTaxValueDialog extends React.Component {
       this.setState({
         showValidationDialog: true
       })
+      this.state.fieldValue = '';
     }
   }
 
