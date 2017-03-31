@@ -89,8 +89,8 @@ describe('Taxonomy tests', function () {
       if(err){
         done(err);
       }
-      // TODO test body.values too when we build the value tests. will need to move the order
       expect(res.body.taxonomies[0].id === test_definition.id).to.be.true;
+      expect(res.body.values[0].id === expTaxId).to.be.true;
       done();
     });
   });
