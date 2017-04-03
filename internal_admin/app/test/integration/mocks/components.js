@@ -231,13 +231,9 @@ var init = function() {
     }
   };
 
-  //TODO this thing. finish bringing in the data
   // Replace fetchCompanies method from Taxonomies
-  Taxonomies.prototype.fetchCompanies = function() {
+  Taxonomies.prototype.fetchCompanies = function () {
     var companies = database.data.companies;
-    // var projects = database.data.projects;
-    // var schemas = database.data.schemas;
-    // var taxonomies = database.data.taxonomies;
     this.setState({
       companies: companies,
       companyId: companies[0].id,
@@ -266,9 +262,8 @@ var init = function() {
     }
   };
 
-  //TODO build mock schema API
   // Replace fetchSchemas method from Taxonomies
-  Taxonomies.prototype.fetchSchemas = function(projectId) {
+  Taxonomies.prototype.fetchSchemas = function (projectId) {
     var schemas = database.data.schemas;
     this.setState({
       schemas: schemas,
@@ -279,7 +274,7 @@ var init = function() {
   };
 
   // Replace fetchTaxonomies method from Taxonomies
-  Taxonomies.prototype.fetchTaxonomies = function(schemaId) {
+  Taxonomies.prototype.fetchTaxonomies = function (schemaId) {
     var taxonomies = taxonomiesAPI.getTaxonomies(schemaId);
     this.setState({
       taxonomies: taxonomies
