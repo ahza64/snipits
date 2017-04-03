@@ -8,7 +8,7 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import ValidationDialog from '../../taxonomy/dialogs/validation'
+import ValidationDialog from '../../taxonomy/dialogs/validation';
 
 import { taxFieldsUrl } from '../../../config';
 
@@ -22,7 +22,7 @@ export default class EditTaxValueDialog extends React.Component {
       fieldValue: '',
       fieldId: null,
       showValidationDialog: false
-    }
+    };
   }
 
   loadProps(props) {
@@ -38,7 +38,7 @@ export default class EditTaxValueDialog extends React.Component {
   componentWillUpdate(nextProps, nextState) {
     if ((nextProps.open === true) && (this.props.open === false)) {
       this.loadProps(nextProps);
-    }
+    };
   }
 
   handleTaxValueSubmit(event) {
@@ -59,7 +59,7 @@ export default class EditTaxValueDialog extends React.Component {
         qowSchemaId: this.props.qowSchemaId,
         workProjectId: this.props.workProjectId,
         companyId: this.props.companyId
-      }
+      };
 
       request
       .post(taxFieldsUrl)
@@ -70,15 +70,15 @@ export default class EditTaxValueDialog extends React.Component {
           console.error(err);
         } else {
           this.props.onClose(true)
-        }
-      })
+        };
+      });
       this.state.fieldValue = '';
     } else {
       this.setState({
         showValidationDialog: true
-      })
+      });
       this.state.fieldValue = '';
-    }
+    };
   }
 
   handleParentNameChange(event, value) {
@@ -99,7 +99,7 @@ export default class EditTaxValueDialog extends React.Component {
     this.setState({
       showValidationDialog: false,
       fieldValue: ""
-    })
+    });
   }
 
   renderDialogs() {
@@ -108,7 +108,7 @@ export default class EditTaxValueDialog extends React.Component {
         open={ this.state.showValidationDialog }
         onClose={ () => this.handleValidationClose() }
       />
-    )
+    );
   }
 
   renderParentIdSelectField() {
@@ -130,13 +130,13 @@ export default class EditTaxValueDialog extends React.Component {
                       primaryText={ parent.fieldValue }
                     />
                   );
-                })
+                });
               }
             </SelectField>
           </td>
         </tr>
       );
-    }
+    };
   }
 
   actions() {
@@ -157,7 +157,7 @@ export default class EditTaxValueDialog extends React.Component {
           onClick={ (event) => this.handleTaxValueSubmit(event) }
         />
       ]
-    )
+    );
   }
 
   render() {
