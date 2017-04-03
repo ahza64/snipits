@@ -73,7 +73,10 @@ describe('<Taxonomy />', () => {
     createButton.find('button').simulate('click');
     var dialog = component.find(EditTaxonomyDialog);
     expect(dialog).to.exist;
-    assert.isTrue(dialog.node.props.open, `dialog should be opened`)
+    assert.isTrue(dialog.node.props.open, `dialog should be opened`);
+
+    // fill create form
+    
 
   });
 
