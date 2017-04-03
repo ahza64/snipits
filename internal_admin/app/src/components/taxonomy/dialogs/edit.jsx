@@ -45,7 +45,7 @@ export default class EditTaxonomyDialog extends React.Component {
     var fieldName = event.target.value;
     this.setState({
       taxFieldName: fieldName
-    })
+    });
   }
 
   handleOrderChange(event, value) {
