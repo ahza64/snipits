@@ -463,7 +463,7 @@ export default class Taxonomy extends React.Component {
                               <TableRowColumn>{ index + 1 }</TableRowColumn>
                               <TableRowColumn>{ this.dataStatus(taxonomy) }</TableRowColumn>
                               <TableRowColumn>{ taxonomy.fieldName }</TableRowColumn>
-                              <TableRowColumn>{ taxonomy.createdAt }</TableRowColumn>
+                              <TableRowColumn>{ moment(taxonomy.createdAt).format('YYYY/MM/DD') }</TableRowColumn>
                               <TableRowColumn>{ taxonomy.order }</TableRowColumn>
                               <TableRowColumn>{ taxonomy.nodeType }</TableRowColumn>
                               <TableRowColumn>{ taxonomy.keys }</TableRowColumn>

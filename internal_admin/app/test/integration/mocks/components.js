@@ -231,57 +231,60 @@ var init = function() {
     }
   };
 
-//TODO this thing. finish bringing in the data
-// Replace fetchCompanies method from Taxonomies
-Taxonomies.prototype.fetchCompanies = function() {
-  var companies = database.data.companies;
-  var projects = database.data.projects;
-  var schemas = database.data.schemas;
-  var taxonomies = database.data.taxonomies;
-  this.setState({
-    companies: companies,
-    companyId: companies[0].id,
-    companyName: companies[0].name
-  });
-  // this.fetchProjects(companies[0].id);
-};
+  //TODO this thing. finish bringing in the data
+  // Replace fetchCompanies method from Taxonomies
+  Taxonomies.prototype.fetchCompanies = function() {
+    var companies = database.data.companies;
+    // var projects = database.data.projects;
+    // var schemas = database.data.schemas;
+    // var taxonomies = database.data.taxonomies;
+    this.setState({
+      companies: companies,
+      companyId: companies[0].id,
+      companyName: companies[0].name
+    });
+    this.fetchProjects(companies[0].id);
+  };
 
-// Replace fetchProjects method from Taxonomies
-// Taxonomies.prototype.fetchProjects = function(companyId) {
-//   var projects = taxonomiesAPI.getTaxonomies();
-//   var firstProject = (projects.length > 0) ? projects[0] : null;
-//   this.setState({
-//     projects: projects,
-//     projectId: firstProject ? firstProject.id : null,
-//     projectName: firstProject ? firstProject.name : null
-//   });
-//   if (firstProject) {
-//     this.fetchSchemas(firstProject.id);
-//   } else {
-//     this.setState({
-//       schemas: [],
-//       schemaId: null,
-//       taxonomies: []
-//     });
-//   }
-// };
+  // Replace fetchProjects method from Taxonomies
+  Taxonomies.prototype.fetchProjects = function(companyId) {
+    var projects = projectsAPI.getProjects(companyId);
+    var firstProject = (projects.length > 0) ? projects[0] : null;
+    this.setState({
+      projects: projects,
+      projectId: firstProject ? firstProject.id : null,
+      projectName: firstProject ? firstProject.name : null
+    });
+    if (firstProject) {
+      this.fetchSchemas(firstProject.id);
+    } else {
+      this.setState({
+        schemas: [],
+        schemaId: null,
+        taxonomies: []
+      });
+    }
+  };
 
-//TODO build mock schema API
-// Replace fetchSchemas method from Taxonomies
-// Taxonomies.prototype.fetchSchemas = function(projectId) {
-//   var schemas = schemaAPI.getSchemas(projectId);
-//   this.setState({
-//     configs: configs
-//   });
-// };
+  //TODO build mock schema API
+  // Replace fetchSchemas method from Taxonomies
+  Taxonomies.prototype.fetchSchemas = function(projectId) {
+    var schemas = database.data.schemas;
+    this.setState({
+      schemas: schemas,
+      schemaId: schemas[0].id,
+      schemaName: schemas[0].name
+    });
+    this.fetchTaxonomies(schemas[0].id);
+  };
 
-// Replace fetchTaxonomies method from Taxonomies
-// Taxonomies.prototype.fetchTaxonomies = function(schemaId) {
-//   var taxonomies = taxonomiesAPI.getTaxonomies(schemaId);
-//   this.setState({
-//     taxonomies: taxonomies
-//   });
-// };
+  // Replace fetchTaxonomies method from Taxonomies
+  Taxonomies.prototype.fetchTaxonomies = function(schemaId) {
+    var taxonomies = taxonomiesAPI.getTaxonomies(schemaId);
+    this.setState({
+      taxonomies: taxonomies
+    });
+  };
 };
 
 module.exports = { 'init': init };

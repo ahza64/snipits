@@ -130,13 +130,13 @@ export default class EditTaxValueDialog extends React.Component {
                       primaryText={ parent.fieldValue }
                     />
                   );
-                });
+                })
               }
             </SelectField>
           </td>
         </tr>
       );
-    };
+    }
   }
 
   actions() {

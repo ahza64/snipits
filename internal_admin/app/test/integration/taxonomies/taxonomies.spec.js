@@ -5,6 +5,7 @@ import Taxonomy from '../../../src/components/taxonomy/taxonomy';
 import { mount } from 'enzyme';
 import { assert } from 'chai';
 import { expect } from 'chai';
+import Badge from 'material-ui/Badge';
 
 // Mocks
 const components = require('../mocks/components');
@@ -34,19 +35,18 @@ describe('<Taxonomy />', () => {
     let company = database.data.companies[companyIndex];
     let project = database.data.projects[projectIndex];
     let schema = database.data.schemas[schemaIndex];
-    // component.node.handleCompanySelectChanged({}, company.id);
-    // component.node.handleProjectSelectChanged({}, project.id);
-    // component.node.handleSchemaSelectChanged({}, schema.id);
-    //
-    // let text = component.text();
-    //
-    // let taxonomies = taxonomiesAPI.getTaxonomies(schema.id);
-    // taxonomies.forEach(function(c) {
-    //   assert.isTrue(text.includes(c.fieldName), `${c.fieldName} should be displayed in the table`);
-    // });
-    //
-    // let badge = component.find(Badge);
-    // assert.equal(badge.text(), taxonomies.length, `total configs found should be ${taxonomies.length}`);
+    component.node.handleCompanySelectChanged({}, company.id);
+    component.node.handleProjectSelectChanged({}, project.id);
+    component.node.handleSchemaSelectChanged({}, schema.id);
+
+    let text = component.text();
+    let taxonomies = taxonomiesAPI.getTaxonomies(schema.id);
+    taxonomies.forEach(function(c) {
+      assert.isTrue(text.includes(c.fieldName), `${c.fieldName} should be displayed in the table`);
+    })
+
+    let badge = component.find(Badge);
+    assert.equal(badge.text(), taxonomies.length, `total configs found should be ${taxonomies.length}`);
   }
 
   it('checks taxonomy table', () => {
