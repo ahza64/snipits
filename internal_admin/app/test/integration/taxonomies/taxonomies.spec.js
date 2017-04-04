@@ -3,6 +3,7 @@ import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Taxonomy from '../../../src/components/taxonomy/taxonomy';
 import EditTaxonomyDialog from '../../../src/components/taxonomy/dialogs/edit';
+import DeleteTaxonomyDialog from '../../../src/components/taxonomy/dialogs/delete';
 import NotificationDialog from '../../../src/components/taxonomy/dialogs/notification';
 import { mount } from 'enzyme';
 import { assert } from 'chai';
@@ -113,16 +114,31 @@ describe('<Taxonomy />', () => {
   });
 
   it('checks taxonomy deletion', () => {
-    console.log("taxonomy list");
     var component = mountComponent();
+    var deleteDialog = component.find(DeleteTaxonomyDialog);
     // select company, project and schema
     let company = database.data.companies[0];
     let project = database.data.projects[0];
     let schema = database.data.schemas[0];
     let taxonomies = taxonomiesAPI.getTaxonomies(schema.id);
+    var taxonomy = taxonomies[0];
     component.node.handleCompanySelectChanged({}, company.id);
     component.node.handleProjectSelectChanged({}, project.id);
     component.node.handleSchemaSelectChanged({}, schema.id);
+
+    // open delete dialog
+    component.node.setState({
+      taxonomies: taxonomies,
+      taxonomySelected: taxonomy
+    });
+    component.node.handleEditDeleteTax();
+    expect(deleteDialog).to.exist;
+    assert.isTrue(deleteDialog.node.props.open, `delete dialog should be open`);
+
+    // delete taxonomy on client
+    deleteDialog.node.handleDelete();
+    assert.isFalse(deleteDialog.node.props.open, `delete dialog should be closed after delete on client`);
+    assert.isFalse(component.text().includes(taxonomy.fieldName), `${taxonomy.fieldName} shouldn't be displayed`);
 
   });
 

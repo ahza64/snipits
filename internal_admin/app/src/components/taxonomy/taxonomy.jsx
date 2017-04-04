@@ -449,7 +449,7 @@ export default class Taxonomy extends React.Component {
                     <TableHeaderColumn>Saved to Database</TableHeaderColumn>
                     <TableHeaderColumn>Field Name</TableHeaderColumn>
                     <TableHeaderColumn>Created On</TableHeaderColumn>
-                    <TableHeaderColumn className='header-pos'>Order</TableHeaderColumn>
+                    <TableHeaderColumn className='header-pos'>Hierarchy</TableHeaderColumn>
                     <TableHeaderColumn>Node Type</TableHeaderColumn>
                     <TableHeaderColumn>Keys</TableHeaderColumn>
                     <TableHeaderColumn>Action</TableHeaderColumn>
