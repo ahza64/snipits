@@ -280,6 +280,16 @@ var init = function() {
       taxonomies: taxonomies
     });
   };
+
+  // Replace fetchTaxValues from Taxonomies
+  Taxonomies.prototype.fetchTaxValues = function () {
+    var taxonomies = this.state.taxonomies;
+    taxonomies[taxonomies.length-1].createdAt = new Date();
+    this.setState({
+      dataSaved: true
+    })
+  };
+
 };
 
 module.exports = { 'init': init };

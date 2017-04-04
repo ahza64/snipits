@@ -160,7 +160,7 @@ export default class Taxonomy extends React.Component {
             return a.order - b.order
           })
           this.setState({
-            taxonomies: res.body.taxonomies,
+            taxonomies: res.body.taxonomies
           });
         }
       });
@@ -293,7 +293,7 @@ export default class Taxonomy extends React.Component {
     if (taxonomy.createdAt) {
       return "Yes"
     } else {
-      return "No"
+      return "No!!"
     }
   }
 
