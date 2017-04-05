@@ -70,7 +70,6 @@ export default class EditTaxonomyDialog extends React.Component {
   }
 
   handleTaxonomySubmit(event) {
-
     let duplicate = this.props.taxonomies.filter(p => {
       return p.fieldName == this.state.taxFieldName
     })
