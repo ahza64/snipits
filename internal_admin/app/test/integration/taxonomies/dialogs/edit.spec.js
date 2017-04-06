@@ -1,25 +1,11 @@
 /* eslint-env mocha */
-import React from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import Taxonomy from '../../../src/components/taxonomy/taxonomy';
-import EditTaxonomyDialog from '../../../../src/components/taxonomy/dialogs/edit';
-// import DeleteTaxonomyDialog from '../../../src/components/taxonomy/dialogs/delete';
-// import NotificationDialog from '../../../src/components/taxonomy/dialogs/notification';
 import { mount } from 'enzyme';
 import { assert } from 'chai';
-import { expect } from 'chai';
-
-// styles
-import Badge from 'material-ui/Badge';
-import RaisedButton from 'material-ui/RaisedButton';
-
-// Mocks
-const components = require('../../mocks/components');
-const database = require('../../mocks/database');
-const taxonomiesAPI = require('../../mocks/api/taxonomies');
+import React from 'react';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import EditTaxonomyDialog from '../../../../src/components/taxonomy/dialogs/edit';
 
 describe("<EditTaxonomyDialog />", () => {
-
   function mountComponent(props) {
     const wrapper = mount(
       <MuiThemeProvider>
@@ -37,20 +23,12 @@ describe("<EditTaxonomyDialog />", () => {
           nodeType={ props.nodeType }
           keys={ props.keys }
           taxId={ props.taxId }
-          companyId={ props.companyId }
-          projectId={ props.projectId }
           taxonomies={ props.taxonomies }
         />
       </MuiThemeProvider>
     );
-      return wrapper.find(EditTaxonomyDialog);
+    return wrapper.find(EditTaxonomyDialog);
   }
-
-  // it('check validation', () => {
-    // var component = mountComponent({ open: true });
-
-
-  // });
 
   it('check form data filled', () => {
     let props = {
@@ -67,7 +45,6 @@ describe("<EditTaxonomyDialog />", () => {
       nodeType: "e",
       keys: "1",
       taxId: 1,
-      companyId: 1,
       taxonomies: []
     };
 
@@ -81,6 +58,5 @@ describe("<EditTaxonomyDialog />", () => {
     assert.isTrue(html.includes(props.fieldName), `fieldName should be displayed in the dialog content`);
     assert.isTrue(html.includes(props.nodeType), `nodeType should be displayed in the dialog content`);
     assert.isTrue(html.includes(props.keys), `keys should be displayed in the dialog content`);
-
   });
 });

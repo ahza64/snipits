@@ -1,17 +1,18 @@
 /* eslint-env mocha */
+// styles
+import Badge from 'material-ui/Badge';
+import RaisedButton from 'material-ui/RaisedButton';
+
+// modules
 import React from 'react';
+import { mount } from 'enzyme';
+import { assert, expect } from 'chai';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Taxonomy from '../../../src/components/taxonomy/taxonomy';
 import EditTaxonomyDialog from '../../../src/components/taxonomy/dialogs/edit';
 import DeleteTaxonomyDialog from '../../../src/components/taxonomy/dialogs/delete';
 import NotificationDialog from '../../../src/components/taxonomy/dialogs/notification';
-import { mount } from 'enzyme';
-import { assert } from 'chai';
-import { expect } from 'chai';
-
-// styles
-import Badge from 'material-ui/Badge';
-import RaisedButton from 'material-ui/RaisedButton';
+import ValidationDialog from '../../../src/components/taxonomy/dialogs/validation';
 
 // Mocks
 const components = require('../mocks/components');
@@ -19,8 +20,7 @@ const database = require('../mocks/database');
 const taxonomiesAPI = require('../mocks/api/taxonomies');
 
 describe('<Taxonomy />', () => {
-
-  before(function() {
+  before(() => {
     components.init();
     database.init();
   });
@@ -31,13 +31,13 @@ describe('<Taxonomy />', () => {
         <Taxonomy />
       </MuiThemeProvider>
     );
-    var taxonomy = wrapper.find(Taxonomy);
+    const taxonomy = wrapper.find(Taxonomy);
     expect(taxonomy).to.exist;
     return taxonomy;
   }
 
-  function checkTable (companyIndex, projectIndex, schemaIndex) {
-    var component = mountComponent();
+  function checkTable(companyIndex, projectIndex, schemaIndex) {
+    let component = mountComponent();
     let company = database.data.companies[companyIndex];
     let project = database.data.projects[projectIndex];
     let schema = database.data.schemas[schemaIndex];
@@ -47,20 +47,20 @@ describe('<Taxonomy />', () => {
 
     let text = component.text();
     let taxonomies = taxonomiesAPI.getTaxonomies(schema.id);
-    taxonomies.forEach(function(c) {
+    taxonomies.forEach((c) => {
       assert.isTrue(text.includes(c.fieldName), `${c.fieldName} should be displayed in the table`);
-    })
+    });
 
     let badge = component.find(Badge);
     assert.equal(badge.text(), taxonomies.length, `total configs found should be ${taxonomies.length}`);
   }
 
   it('checks taxonomy table', () => {
-    checkTable(0,0,0);
+    checkTable(0, 0, 0);
   });
 
   it('checks create new taxonomy', () => {
-    var component = mountComponent();
+    let component = mountComponent();
     // select company, project and schema
     let company = database.data.companies[0];
     let project = database.data.projects[0];
@@ -72,14 +72,14 @@ describe('<Taxonomy />', () => {
     assert.isTrue(component.node.state.dataSaved, `save button should be disabled`);
 
     // open edit dialog
-    var createButton = component.find(RaisedButton).first();
+    let createButton = component.find(RaisedButton).first();
     createButton.find('button').simulate('click');
-    var dialog = component.find(EditTaxonomyDialog);
+    let dialog = component.find(EditTaxonomyDialog);
     expect(dialog).to.exist;
     assert.isTrue(dialog.node.props.open, `edit dialog should be opened`);
 
     // fill create form and save to client
-    var newTaxonomy = {
+    let newTaxonomy = {
       fieldName: "new_tax_name",
       nodeType: "new_tax_nodeType",
       keys: "new_tax_keys"
@@ -96,9 +96,9 @@ describe('<Taxonomy />', () => {
     assert.include(component.text(), "No!!", `new taxonomy should not be saved to database`);
 
     // click save and open notification dialog
-    var saveButton = component.find(RaisedButton).at(1);
+    let saveButton = component.find(RaisedButton).at(1);
     saveButton.find('button').simulate('click');
-    var notificationDialog = component.find(NotificationDialog);
+    let notificationDialog = component.find(NotificationDialog);
     expect(notificationDialog).to.exist;
     assert.isTrue(notificationDialog.node.props.open, 'notification dialog should be opened');
 
@@ -110,18 +110,65 @@ describe('<Taxonomy />', () => {
     // check saved data is displayed
     assert.notInclude(component.text(), "No!!", `new taxonomy should be saved`);
     assert.isTrue(component.node.state.dataSaved, `save button should be disabled`);
+  });
 
+  it('checks entry data validation', () => {
+    let component = mountComponent();
+    // const wrapper = mount(
+    //   <MuiThemeProvider>
+    //     <ValidationDialog />
+    //   </MuiThemeProvider>
+    // );
+    // const taxonomyEdit = wrapper.find(ValidationDialog);
+
+    // select company, project, schema
+    let company = database.data.companies[0];
+    let project = database.data.projects[0];
+    let schema = database.data.schemas[0];
+    let taxonomies = taxonomiesAPI.getTaxonomies(schema.id);
+    component.node.handleCompanySelectChanged({}, company.id);
+    component.node.handleProjectSelectChanged({}, project.id);
+    component.node.handleSchemaSelectChanged({}, schema.id);
+    assert.isTrue(component.node.state.dataSaved, `save button should be disabled`);
+
+    // open edit dialog
+    let createButton = component.find(RaisedButton).first();
+    createButton.find('button').simulate('click');
+    let dialog = component.find(EditTaxonomyDialog);
+    expect(dialog).to.exist;
+    assert.isTrue(dialog.node.props.open, `edit dialog should be opened`);
+
+    // fill create form and save to client
+    let newTaxonomy = {
+      fieldName: "first taxonomy",
+      nodeType: "new_tax_nodeType",
+      keys: "new_tax_keys"
+    };
+    dialog.node.handleFieldNameChange({ target: { value: newTaxonomy.fieldName } });
+    dialog.node.handleNodeTypeChange({ target: { value: newTaxonomy.nodeType } });
+    dialog.node.handleKeysChange({ target: { value: newTaxonomy.keys } });
+
+    let saveButton = dialog.find(RaisedButton).at(0);
+    // console.log(saveButton);
+    // dialog.node.handleTaxonomySubmit({});
+    // assert.isFalse(dialog.node.props.open, `dialog should be closed after new taxonomy saved to client`);
+    // assert.isFalse(component.node.state.dataSaved, `save button should be enabled`);
+    // TODO can't get wrapper to find validation module in parent components
+    // let validation = taxonomyEdit.find(ValidationDialog);
+    // expect(validation).to.exist;
+    // console.log(taxonomyEdit.node.props);
+    // assert.isTrue(taxonomyEdit.node.props.open, `edit validation should be opened`);
   });
 
   it('checks taxonomy deletion', () => {
-    var component = mountComponent();
-    var deleteDialog = component.find(DeleteTaxonomyDialog);
+    let component = mountComponent();
+    let deleteDialog = component.find(DeleteTaxonomyDialog);
     // select company, project and schema
     let company = database.data.companies[0];
     let project = database.data.projects[0];
     let schema = database.data.schemas[0];
     let taxonomies = taxonomiesAPI.getTaxonomies(schema.id);
-    var taxonomy = taxonomies[0];
+    let taxonomy = taxonomies[0];
     component.node.handleCompanySelectChanged({}, company.id);
     component.node.handleProjectSelectChanged({}, project.id);
     component.node.handleSchemaSelectChanged({}, schema.id);
@@ -139,7 +186,6 @@ describe('<Taxonomy />', () => {
     deleteDialog.node.handleDelete();
     assert.isFalse(deleteDialog.node.props.open, `delete dialog should be closed after delete on client`);
     assert.isFalse(component.text().includes(taxonomy.fieldName), `${taxonomy.fieldName} shouldn't be displayed`);
-
   });
 
 });
