@@ -317,11 +317,13 @@ export default class TaxFields extends React.Component {
     });
   }
 
-  handleEditTaxValueDialogClose() {
+  handleEditTaxValueDialogClose(saved) {
     this.setState({
       showEditTaxonomyDialog: false
     });
-    this.fetchTaxValues(this.state.taxonomySelected.fieldName);
+    if (saved) {
+      this.fetchTaxValues(this.state.taxonomySelected.fieldName);
+    }
   }
 
   handleCloseEditMenu() {
@@ -491,6 +493,7 @@ export default class TaxFields extends React.Component {
           qowSchemaId={ this.state.schemaId }
           workProjectId={ this.state.projectId }
           companyId={ this.state.companyId }
+          fieldValue={ this.state.taxValueSelected.fieldValue }
         />
         <DeleteTaxValueDialog
           open={ this.state.showDeleteTaxValDialog }

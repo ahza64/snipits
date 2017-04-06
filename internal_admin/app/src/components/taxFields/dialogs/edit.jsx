@@ -27,11 +27,11 @@ export default class EditTaxValueDialog extends React.Component {
 
   loadProps(props) {
     this.setState({
-      taxParentList: this.props.taxParentList,
-      parentId: this.props.taxParentList[0] ? this.props.taxParentList[0].id : "",
-      fieldValue: this.props.taxValueSelected.fieldValue ? this.props.taxValueSelected.fieldValue : "",
-      fieldId: this.props.taxValueSelected.id ? this.props.taxValueSelected.id : null,
-      taxonomyValues: this.props.taxonomyValues ? this.props.taxonomyValues : []
+      taxParentList: props.taxParentList,
+      parentId: props.taxParentList[0] ? props.taxParentList[0].id : "",
+      fieldValue: props.fieldValue ? props.fieldValue : "",
+      fieldId: props.taxValueSelected.id ? props.taxValueSelected.id : null,
+      taxonomyValues: props.taxonomyValues ? props.taxonomyValues : []
     });
   }
 
@@ -98,7 +98,7 @@ export default class EditTaxValueDialog extends React.Component {
   handleValidationClose() {
     this.setState({
       showValidationDialog: false,
-      fieldValue: ""
+      fieldValue: ''
     });
   }
 
@@ -144,9 +144,9 @@ export default class EditTaxValueDialog extends React.Component {
       [
         <RaisedButton
           label="Cancel"
-          onClick={
+          onTouchTap={
             (event) => {
-              this.state.fieldValue = '';
+
               this.props.onClose(false);
             }
           }
