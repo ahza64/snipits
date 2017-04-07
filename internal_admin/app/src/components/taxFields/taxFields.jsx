@@ -599,7 +599,7 @@ export default class TaxFields extends React.Component {
                       } else {
                         pId = taxValue.parentId;
                         if (pId) {
-                          let pValue = this.state.taxParentValues.filter(p => {
+                          let pValue = this.state.schemaValues.filter(p => {
                             return p.id == pId;
                           });
                           if (pValue.length > 0) {
