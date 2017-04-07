@@ -367,7 +367,10 @@ export default class TaxFields extends React.Component {
   handleViewValuesBySchema() {
     if (this.state.viewValues === this.state.taxonomyValues) {
       this.setState({
-        viewValues: this.state.schemaValues
+        viewValues: this.state.schemaValues,
+        taxonomySelected: this.state.taxonomies[0],
+        taxonomyId: this.state.taxonomies[0].id,
+        taxonomyName: this.state.taxonomies[0].fieldName
       });
     } else {
       this.setState({
@@ -428,34 +431,17 @@ export default class TaxFields extends React.Component {
   }
 
   renderTaxonomySelectField() {
-    return (
-      <SelectField
-        floatingLabelText="Taxonomy Field Name"
-        fullWidth={ true }
-        value={ this.state.taxonomyId }
-        onChange={ (event, index, value) => this.handleTaxonomySelectChanged(event, value) }
-      >
-        { this.state.taxonomies.map((taxonomy, idx) => {
-          return (
-            <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldName } />
-          );
-        })}
-      </SelectField>
-    );
-  }
-
-  renderTaxFieldSelectField() {
-    if (this.state.taxonomyOrder !== 1 && this.state.taxonomyValues.length > 0) {
+    if (this.state.viewValues === this.state.taxonomyValues) {
       return (
         <SelectField
-          floatingLabelText="Taxonomy Field Value"
+          floatingLabelText="Taxonomy Field Name"
           fullWidth={ true }
-          value={ this.state.taxonomyValueId }
-          onChange={ (event, index, value) => this.handleTaxonomyValueSelectChanged(event, value) }
+          value={ this.state.taxonomyId }
+          onChange={ (event, index, value) => this.handleTaxonomySelectChanged(event, value) }
         >
-          { this.state.taxonomyValues.map((taxonomy, idx) => {
+          { this.state.taxonomies.map((taxonomy, idx) => {
             return (
-              <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldValue } />
+              <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldName } />
             );
           })}
         </SelectField>
@@ -530,7 +516,7 @@ export default class TaxFields extends React.Component {
           <Col xs={ 0 } sm={ 0 } md={ 1 } lg={ 1 } />
           <Col xs={ 0 } sm={ 0 } md={ 2 } lg={ 2 } >
             <RaisedButton
-              label={ ((this.state.taxonomyOrder === 1) ? "Add Root" : "Add Child") + " Value" }
+              label={ ((this.state.taxonomySelected.order === 1) ? "Add Root" : "Add Child") + " Value" }
               primary={ true }
               fullWidth={ true }
               onClick={ this.handleCreateTaxField }
@@ -540,7 +526,6 @@ export default class TaxFields extends React.Component {
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
             { this.renderTaxonomySelectField() }
-            { this.renderTaxFieldSelectField() }
             <div>
               Total of all values for the selected schema: "{ this.state.schemaName }"
             </div>
@@ -564,10 +549,10 @@ export default class TaxFields extends React.Component {
                 onClick={ this.handleViewValuesBySchema }
               />
               <div>
-                Remove all of "{ this.state.schemaName }" Schema Taxonomy Expected Values
+                Remove expected taxonomy values by Schema: "{ this.state.schemaName }"
               </div>
               <RaisedButton
-                label="Remove Values"
+                label="Remove all Values"
                 secondary={ true }
                 fullWidth={ true }
                 onClick={ this.handleRemoveValues }
