@@ -555,7 +555,7 @@ export default class TaxFields extends React.Component {
                 ---------------------------------------------------------
               </div>
               <div>
-                View all expected taxonomy values by selected schema
+                View all expected taxonomy values by selected { (this.state.viewValues === this.state.taxonomyValues) ? 'schema' : 'taxonomy' }
               </div>
               <RaisedButton
                 label={ (this.state.viewValues === this.state.taxonomyValues) ? "View values by Schema" : "View values by Taxonomy" }
