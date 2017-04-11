@@ -12,6 +12,7 @@ import EditUserDialog from '../../../src/components/users/dialogs/edit';
 import DeleteUserDialog from '../../../src/components/users/dialogs/delete';
 import Login from '../../../src/components/login/login';
 import Taxonomies from '../../../src/components/taxonomy/taxonomy';
+import ExpTaxonomies from '../../../src/components/taxFields/taxFields';
 
 import authRedux from '../../../src/reduxes/auth';
 
@@ -284,12 +285,90 @@ var init = function() {
   // Replace fetchTaxValues from Taxonomies
   Taxonomies.prototype.fetchTaxValues = function () {
     var taxonomies = this.state.taxonomies;
-    taxonomies[taxonomies.length-1].createdAt = new Date();
+    taxonomies[taxonomies.length - 1].createdAt = new Date();
     this.setState({
       dataSaved: true
     })
   };
 
+  // Replace fetchCompanies method from Taxonomies
+  ExpTaxonomies.prototype.fetchCompanies = function () {
+    var companies = database.data.companies;
+    this.setState({
+      companies: companies,
+      companyId: companies[0].id,
+      companyName: companies[0].name
+    });
+    this.fetchProjects(companies[0].id);
+  };
+
+  // Replace fetchProjects method from ExpTaxonomies
+  ExpTaxonomies.prototype.fetchProjects = function(companyId) {
+    var projects = projectsAPI.getProjects(companyId);
+    var firstProject = (projects.length > 0) ? projects[0] : null;
+    this.setState({
+      projects: projects,
+      projectId: firstProject ? firstProject.id : null,
+      projectName: firstProject ? firstProject.name : null
+    });
+    if (firstProject) {
+      this.fetchSchemas(firstProject.id);
+    }
+  };
+
+  // Replace fetchSchemas method from ExpTaxonomies
+  ExpTaxonomies.prototype.fetchSchemas = function (projectId) {
+    var schemas = database.data.schemas;
+    this.setState({
+      schemas: schemas,
+      schemaId: schemas[0].id,
+      schemaName: schemas[0].name
+    });
+    this.fetchTaxonomies(schemas[0].id);
+  };
+
+  // Replace fetchTaxonomies method from ExpTaxonomies
+  ExpTaxonomies.prototype.fetchTaxonomies = function (schemaId) {
+    var taxonomies = taxonomiesAPI.getTaxonomies(schemaId);
+    var schemaValues = database.data.taxFields;
+    taxonomies.sort((a, b) => {
+      return a.order - b.order;
+    });
+    this.setState({
+      taxonomies: taxonomies,
+      taxonomyId: taxonomies[0].id,
+      taxonomyName: taxonomies[0].fieldName,
+      taxonomyOrder: taxonomies[0].order,
+      schemaValues: schemaValues,
+      viewValues: taxonomies,
+      taxonomySelected: taxonomies[0]
+    });
+    this.fetchTaxValues(taxonomies[0].fieldName);
+  };
+
+  // Replace fetchTaxValues from ExpTaxonomies
+  ExpTaxonomies.prototype.fetchTaxValues = function (fieldName) {
+    var expTaxonomies = database.data.taxFields.filter(function (c) {
+      return c.fieldName === fieldName;
+    });
+    this.setState({
+      taxonomyValues: expTaxonomies,
+      taxonomyValueId: expTaxonomies[0].id,
+      taxonomyValue: expTaxonomies[0].fieldValue,
+      taxonomyValueName: expTaxonomies[0].fieldName
+    });
+    this.findParentOrder();
+  };
+
+  // Replace fetchParentValues from ExpTaxonomies
+  ExpTaxonomies.prototype.fetchParentValues = function (parentName) {
+    var expTaxonomyParents = database.data.taxFields.filter(function (c) {
+      return c.fieldName === parentName;
+    });
+    this.setState({
+      taxParentValues: expTaxonomyParents
+    });
+  };
 };
 
 module.exports = { 'init': init };

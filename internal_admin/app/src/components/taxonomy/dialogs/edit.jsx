@@ -113,7 +113,7 @@ export default class EditTaxonomyDialog extends React.Component {
   renderValidation() {
     return (
       <ValidationDialog
-        open={ this.state.showValidationDialog }
+        open={ this.state.showValidationDialog ? this.state.showValidationDialog : false }
         onClose={ () => this.handleValidationClose() }
       />
     );
@@ -141,7 +141,7 @@ export default class EditTaxonomyDialog extends React.Component {
       <Dialog
         title={ this.props.title }
         actions={ this.actions() }
-        open={ this.props.open }
+        open={ this.props.open ? this.props.open : false }
         modal={ true }
         autoScrollBodyContent={ true }
         contentStyle={ { maxWidth: '600px' } }>
