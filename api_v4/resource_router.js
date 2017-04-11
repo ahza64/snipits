@@ -133,7 +133,14 @@ function createRouter(resource, _options) {
         }
         
         // const filter = processFilters(context.query);
-        filter = context.query;
+        filter = Object.assign({}, context.query);
+        // remove the reserved query params from the filter
+        ['offset', 'length', 'limit', 'select', 'order'].forEach((field) => {
+          if (filter[field]) {
+            delete filter[field];
+          }
+        });
+
         data = yield resource.list({
           offset: offset,
           length: len,
