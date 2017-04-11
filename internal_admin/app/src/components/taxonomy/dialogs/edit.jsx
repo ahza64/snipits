@@ -5,7 +5,7 @@ import request from '../../../services/request';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import ValidationDialog from '../dialogs/validation';
+import ValidationDialog from './validation';
 
 import { taxonomiesUrl } from '../../../config';
 
@@ -45,35 +45,35 @@ export default class EditTaxonomyDialog extends React.Component {
     var fieldName = event.target.value;
     this.setState({
       taxFieldName: fieldName
-    })
+    });
   }
 
   handleOrderChange(event, value) {
     var order = event.target.value;
     this.setState({
       taxOrder: order
-    })
+    });
   }
 
   handleNodeTypeChange(event, value) {
     var nodeType = event.target.value;
     this.setState({
       taxNodeType: nodeType
-    })
+    });
   }
 
   handleKeysChange(event, value) {
     var keys = event.target.value;
     this.setState({
       taxKeys: keys
-    })
+    });
   }
 
   handleTaxonomySubmit(event) {
 
     let duplicate = this.props.taxonomies.filter(p => {
       return p.fieldName == this.state.taxFieldName
-    })
+    });
 
     if (!duplicate[0]) {
       var taxonomy = {
@@ -84,7 +84,7 @@ export default class EditTaxonomyDialog extends React.Component {
         qowSchemaId: this.props.schemaId,
         companyId: this.props.companyId,
         workProjectId: this.props.projectId
-      }
+      };
       var updateTax;
       var updateTaxIndex;
 

@@ -27,7 +27,15 @@ router.get(
          },
         raw: true
       })
-      this.body = schemaTaxonomies;
+      var schemaValues = yield QowExpectedTaxonomies.findAll({
+        where: {
+          qowSchemaId: schemaId
+        },
+        raw: true
+      })
+      this.body = {};
+      this.body.taxonomies = schemaTaxonomies;
+      this.body.values = schemaValues;
     }
   }
 );
