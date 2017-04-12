@@ -21,11 +21,19 @@ co(function *build_app() {
   const schemas = yield Schema.find({ _api: "v4" });  
   for (let i = 0; i < schemas.length; i++) {
     console.log("SCHEMAS", schemas[i]);
-    const Model = schemas[i].getModel();
-    const resource = new Resource(Model);
-    const routes = router(resource);
-    console.log("ROUTES", Model.modelName);
-    app.use(mount('/api/v4', routes));
+    let resource = null;
+
+    if (schemas[i].getModel) {
+      const Model = schemas[i].getModel();
+      resource = new Resource(Model);
+    } else if (schemas[i].getResource) {
+      resource = schemas[i].getResource();
+    }
+    if (resource) {
+      const routes = router(resource);
+      console.log("ROUTES", resource.getName());
+      app.use(mount('/api/v4', routes));
+    }
   }
 
   // This is runnable as a stand alone server
@@ -56,4 +64,3 @@ co(function *build_app() {
 }).catch((e) => {
   console.error("application error", e.message, e.stack);
 });
-
