@@ -53,6 +53,7 @@ app.use(session({ key: 'dispatchr:sess' }, app));
 //Mount the login endpoint first
 app.use(mount('/api/v3', login));
 app.use(mount('/api/v3', require('./route/assign/assign')));
+app.use(mount('/api/v3/details', require('./route/details/tree')));
 // Don't require login but include it
 app.use(require('./middleware').auth);
 
