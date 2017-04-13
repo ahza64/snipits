@@ -52,7 +52,7 @@ describe('<Taxonomy />', () => {
     });
 
     let badge = component.find(Badge);
-    assert.equal(badge.text(), taxonomies.length, `total configs found should be ${taxonomies.length}`);
+    assert.equal(badge.text(), taxonomies.length, `total taxonomies found should be ${taxonomies.length}`);
   }
 
   it('checks taxonomy table', () => {
