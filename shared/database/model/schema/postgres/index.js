@@ -4,7 +4,6 @@
 
 const path = require('path');
 const co = require('co');
-const createConnection = require('dsp_database/sequelize')
 const Sequelize = require('sequelize');
 const _ = require('underscore');
 const PostgresResource = require('./resource');

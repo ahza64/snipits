@@ -28,6 +28,8 @@
  *  ```
  */
 
+const config = require('dsp_config/config').get();
+require('dsp_database/database')(config.schema);
 const mongoose = require('mongoose');
 const connection = require('dsp_database/connections')('schema');
 const autoIncrement = require('mongoose-auto-increment');

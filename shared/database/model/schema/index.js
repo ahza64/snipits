@@ -1,17 +1,19 @@
 /**
- * The meta schema model for mongodb and postgresql
+ * The meta schema model for mongodb, postgresql and elasticsearch
  */
 
 const config = require('dsp_config/config').get().schema;
 
-const mongoSchema = require('./mongo');
 const PostgresSchema = require('./postgres');
+const EsSchema = require('./elasticsearch');
 
 let schema = null;
 if (config.storage === 'postgres') {
   schema = new PostgresSchema(config);
+} else if (config.storage === 'elasticsearch') {
+  schema = new EsSchema(config);
 } else {
-  schema = mongoSchema;
+  schema = require('./mongo');
 }
 
 module.exports = schema;
