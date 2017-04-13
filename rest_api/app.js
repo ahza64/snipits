@@ -54,7 +54,7 @@ app.use(session({ key: 'dispatchr:sess' }, app));
 app.use(mount('/api/v3', login));
 app.use(mount('/api/v3', require('./route/assign/assign')));
 // Don't require login but include it
-//app.use(require('./middleware').auth);
+app.use(require('./middleware').auth);
 
 app.use(require('./middleware').requestLog);
 
