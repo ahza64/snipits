@@ -12,8 +12,8 @@ class EsSchema {
       host: config.db_host,
       port: config.db_port,              
       index: config.db_name,
-      user: config.db_username,
-      password: config.db_password
+      user: config.db_user,
+      password: config.db_pass
     };
   }
 
@@ -24,9 +24,58 @@ class EsSchema {
   create(name, version, api, fields) {
     const self = this;
     return co(function *create_new_schema() {
-      // TODO implement schema creation
-      return {};
+      let created = null;
+      const timestamp = Date.now();
+      const body = {
+        name: name,
+        version: version,
+        api: api,
+        v: 0,
+        fields: fields,
+        created: timestamp,
+        updated: timestamp
+      };
+      const url = `http://${self.config.host}:${self.config.port}/${self.config.index}`;
+      const response = yield rp({
+        method: 'POST',
+        uri: `${url}/schemas?refresh=true`,
+        body: body,
+        json: true
+      });
+      if (response) {
+        created = Object.assign({}, body, { _id: response._id });
+        const mapping = self.createSchemaMapping(name, fields);
+        console.log(mapping);
+        yield rp({
+          method: 'PUT',
+          uri: `${url}/${name}/_mapping?refresh=true`,
+          body: mapping,
+          json: true
+        });
+      }
+      return created;
     });
+  }
+
+  createSchemaMapping(name, fields) {
+    const properties = {};
+    const fieldTypes = {
+      'string': { type: 'string' },
+      'number': { type: 'double' },
+      'date': { type: 'date', format: 'strict_date_optional_time||epoch_millis' },
+      'geojson': { type: 'object' }
+    };
+    Object.keys(fields).forEach((field) => {
+      const fieldType = fields[field].toLowerCase();
+      if (fieldType in fieldTypes) {
+        properties[`${name}_${field}`] = fieldTypes[fieldType];
+      } else {
+        console.error(`Init create resource ${name} error: field type ${fieldType} is not allowed.`);
+      }
+    });
+    const mapping = {};
+    mapping[name] = { properties: properties};
+    return mapping;
   }
 
   prepareSchemas(schemas) {
@@ -63,9 +112,11 @@ class EsSchema {
   find() {
     const self = this;
     return co(function *find_schemas() {
+      const body = { sort: { created: { order: 'asc' } } };
       const options = {
-        method: 'GET',
+        method: 'POST',
         uri: `http://${self.config.host}:${self.config.port}/${self.config.index}/schemas/_search`,
+        body: body,
         json: true
       };
 

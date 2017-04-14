@@ -44,6 +44,14 @@
         "db_user": "postgres",
         "db_pass": "password"
     },
+    "schema_elastic":{ // use this config instead of 'schema' to connect to elasticsearch (it should be renamed to 'schema')
+        "storage": "elasticsearch",
+        "db_host": "localhost",
+        "db_port": 9200,
+        "db_name": "dev",
+        "db_user": "elastic",
+        "db_pass": "elastic"
+    },
     "meteor":{
         "mongo_db_host": "localhost",
         "mongo_db_name": "dev_meteor",

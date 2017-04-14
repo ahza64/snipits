@@ -13,6 +13,12 @@ class EsResource {
     this.config = config;
     this.name = name;
     this.fields = fields;
+    this.fieldsWithoutPrefix = {};
+    this.fieldsWithPrefix = {};
+    Object.keys(fields).forEach((field) => {
+      this.fieldsWithoutPrefix[field] = `${name}_${field}`;
+      this.fieldsWithPrefix[`${name}_${field}`] = field;
+    });
   }
 
   getName() {
@@ -41,16 +47,15 @@ class EsResource {
     } else if (data && data._source) {
       prepared = this.prepareItem(data);
     }
-    return prepared;
+    return this.excludePrefixes(prepared);
   }
 
-  doRequest(method, page, body) {
+  doRequest(method, url, body) {
     const options = {
       method: method,
-      uri: `http://${this.config.host}:${this.config.port}/${this.config.index}/${this.name}/${page}`,
+      uri: `http://${this.config.host}:${this.config.port}/${this.config.index}/${this.name}/${url}`,
       json: true
     };
-    console.log(options);
     if (body) {
       options.body = body;
     }
@@ -79,13 +84,46 @@ class EsResource {
     const self = this;
     return co(function *create_gen() {
       let created = null;
-      const body = Object.assign({ _deleted: false }, data );
+      const timestamp = Date.now();
+      const body = Object.assign({
+        _deleted: false,
+        created: timestamp,
+        updated: timestamp
+      }, self.includePrefixes(data) );
       const response = yield self.doRequest('POST', '?refresh=true', body);
       if (response) {
         created = Object.assign({}, data, { _id: response._id });
       }
       return created;
     });
+  }
+
+  includePrefixes(data) {
+    const result = {};
+    Object.keys(data).forEach((field) => {
+      if (field in this.fieldsWithoutPrefix) {
+        result[this.fieldsWithoutPrefix[field]] = data[field];
+      } else {
+        result[field] = data[field];
+      }
+    });
+    return result;
+  }
+
+  excludePrefixes(data) {
+    if (Array.isArray(data)) {
+      return data.map(item => this.excludePrefixes(item));
+    } else {
+      const result = {};
+      Object.keys(data).forEach((field) => {
+        if (field in this.fieldsWithPrefix) {
+          result[this.fieldsWithPrefix[field]] = data[field];
+        } else {
+          result[field] = data[field];
+        }
+      });
+      return result;
+    }
   }
 
   /**
@@ -122,7 +160,8 @@ class EsResource {
     const self = this;
     const options = _options || {};
     return co(function *update_gen() {
-      const body = { doc: data };
+      const body = { doc: self.includePrefixes(data) };
+      body.doc.updated = Date.now();
       const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
       let item = null;
       if (response) {
@@ -147,14 +186,14 @@ class EsResource {
       const original = self.prepareData(yield self.doRequest('GET', id));
       let updated = null;
       if (original) {
-        const patch = {};
+        let patch = { updated: Date.now() };
         if (Array.isArray(data)) {
           jsonpatch.apply(patch, data);
         } else {
           patch = data;
         }
 
-        const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, patch);
+        const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, self.includePrefixes(patch));
         let item = null;
         if (response) {
           updated = Object.assign({}, original, patch);
@@ -223,14 +262,26 @@ class EsResource {
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
     const select = options.select;
-    let order = options.order || "createdAt";
+    let sort = options.order || "created";
     const lean = options.lean;
 
+    let params = [];
+    if (offset) {
+      params.push(`from=${offset}`);
+    }
+    if (limit) {
+      params.push(`size=${limit}`);
+    }
+
+    let queryParams = '';
+    if (params.length > 0) {
+      queryParams = `?${params.join('&')}`;
+    }
+
     return co(function *list_gen() {
-      // TODO offset, limit, sort
-      const query = self.prepareQuery(filters);
+      const query = self.prepareQuery(filters, sort);
       let list = [];
-      const response = yield self.doRequest('POST', '_search', query);
+      const response = yield self.doRequest('POST', `_search${queryParams}`, query);
       if (response) {
         list = self.prepareData(response);
       }
@@ -238,7 +289,7 @@ class EsResource {
     });
   }
 
-  prepareQuery(filters) {
+  prepareQuery(filters, sort) {
     const query = {
       query: {
         bool: {
@@ -254,11 +305,30 @@ class EsResource {
         }
       }
       const match = {};
-      match[field] = value;
+      if (field in this.fieldsWithoutPrefix) {
+        match[this.fieldsWithoutPrefix[field]] = value;
+      } else {
+        match[field] = value;
+      }
       query.query.bool.must.push({
         match: match
       });
     });
+    if (sort) {
+      let order = 'asc';
+      let field = sort;
+      if (sort.startsWith('-')) {
+        field = sort.substring(1);
+        order = 'desc';
+      }
+      if (field in this.fieldsWithoutPrefix) {
+        field = this.fieldsWithoutPrefix[field];
+      }
+      query.sort = {};
+      query.sort[field] = {
+        order: order
+      };
+    }
     return query;
   }
 
@@ -267,9 +337,14 @@ class EsResource {
    */
   count(filters) {
     const self = this;
+    const query = self.prepareQuery({ _deleted: false });
     return co(function *get_count() {
-      // TODO implement
-      return null;
+      let result = null;
+      const response = yield self.doRequest('POST', '_search?size=0', query);
+      if (response && response.hits) {
+        result = response.hits.total;
+      }
+      return result;
     });
   }
 }
