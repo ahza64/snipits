@@ -137,6 +137,7 @@ export default class TaxFields extends React.Component {
           });
           if (firstSchema) {
             this.fetchTaxonomies(firstSchema.id);
+            // this.fetchSchemaValues(firstSchema.id);
           } else {
             this.setState({
               schemas: [],

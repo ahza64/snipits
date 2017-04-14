@@ -63,7 +63,7 @@ export default class EditTaxValueDialog extends React.Component {
         workProjectId: this.props.workProjectId,
         companyId: this.props.companyId
       };
-
+        
       request
       .post(taxFieldsUrl)
       .send(taxValue)

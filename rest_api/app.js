@@ -54,15 +54,16 @@ app.use(session({ key: 'dispatchr:sess' }, app));
 app.use(mount('/api/v3', login));
 app.use(mount('/api/v3', require('./route/assign/assign')));
 app.use(mount('/api/v3/details', require('./route/details/tree')));
-// Don't require login but include it
-//app.use(require('./middleware').auth);
-
-app.use(require('./middleware').requestLog);
-
 //mount each resource
 _.each(resources, function(resource){
   app.use(mount('/api/v3',require('./crud_route')(resource.name, resource.options)));
 });
+// Don't require login but include it
+app.use(require('./middleware').auth);
+
+app.use(require('./middleware').requestLog);
+
+
 //mount other resources
 app.use(mount('/api/v3', require('./route/package')));
 app.use(mount('/api/v3', require('./route/asset')));
