@@ -43,4 +43,11 @@ app.use(mount(testConfig.BASE_URL, require(testConfig.route_dir + '/taxonomy')))
 //   app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, f))));
 // });
 
+
+// alternate test mounting
+// var routesFile = fs.readdirSync(testConfig.route_dir);
+// routesFile.forEach(f => {
+//     app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, f))));
+// });
+
 module.exports = app.listen(3000);
