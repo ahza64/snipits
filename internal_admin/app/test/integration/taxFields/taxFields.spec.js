@@ -12,12 +12,10 @@ import TaxFields from '../../../src/components/taxFields/taxFields';
 import EditTaxValueDialog from '../../../src/components/taxFields/dialogs/edit';
 import DeleteExpTaxonomyDialog from '../../../src/components/taxFields/dialogs/delete';
 import DeleteBySchemaExpTaxDialog from '../../../src/components/taxFields/dialogs/deleteValues';
-// import ValidationDialog from '../../../src/components/taxonomy/dialogs/validation';
 
 // Mocks
 const components = require('../mocks/components');
 const database = require('../mocks/database');
-const taxonomiesAPI = require('../mocks/api/taxonomies');
 
 describe('<TaxFields />', () => {
   before(() => {
@@ -194,7 +192,6 @@ describe('<TaxFields />', () => {
     component.node.handleProjectSelectChanged({}, project.id);
     component.node.handleSchemaSelectChanged({}, schema.id);
     component.node.handleTaxonomySelectChanged({}, taxonomy.id);
-    checkTable(0, 0, 0, 0);
     let text = component.text();
     assert
       .isTrue(
