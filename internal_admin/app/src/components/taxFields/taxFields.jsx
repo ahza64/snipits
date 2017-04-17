@@ -34,6 +34,7 @@ export default class TaxFields extends React.Component {
       taxonomies: [],
       taxonomyValues: [],
       schemaValues: [],
+      viewValues: [],
       taxParentValues: [],
       companyId: null,
       companyName: null,
@@ -57,7 +58,8 @@ export default class TaxFields extends React.Component {
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
     this.handleDeleteTaxVal = this.handleDeleteTaxVal.bind(this);
     this.handleEditTaxField = this.handleEditTaxField.bind(this);
-    this.handleRemoveValues = this.handleRemoveValues.bind(this)
+    this.handleRemoveValues = this.handleRemoveValues.bind(this);
+    this.handleViewValuesBySchema = this.handleViewValuesBySchema.bind(this);
   }
 
   componentWillMount() {
@@ -159,18 +161,19 @@ export default class TaxFields extends React.Component {
         if (err) {
           console.error(err);
         } else {
-          res.body.taxonomies.sort(function (a, b) {
-            return a.order - b.order
-          })
+          res.body.taxonomies.sort((a, b) => {
+            return a.order - b.order;
+          });
           var firstTax = (res.body.taxonomies.length > 0) ? res.body.taxonomies[0] : null;
           this.setState({
             taxonomies: res.body.taxonomies,
             taxonomyId: firstTax ? firstTax.id : null,
             taxonomyName: firstTax ? firstTax.fieldName : null,
             taxonomyOrder: firstTax ? firstTax.order : null,
-            schemaValues: res.body.values
+            schemaValues: res.body.values,
+            viewValues: res.body.taxonomies
           });
-          if(firstTax) {
+          if (firstTax) {
             this.fetchTaxValues(firstTax.fieldName);
             this.setState({
               taxonomySelected: firstTax
@@ -196,7 +199,8 @@ export default class TaxFields extends React.Component {
             taxonomyValues: res.body,
             taxonomyValueId: firstTaxValue ? firstTaxValue.id : null,
             taxonomyValue: firstTaxValue ? firstTaxValue.fieldValue : null,
-            taxonomyValueName: firstTaxValue ? firstTaxValue.fieldName : null
+            taxonomyValueName: firstTaxValue ? firstTaxValue.fieldName : null,
+            viewValues: res.body
           });
           this.findParentOrder();
         }
@@ -205,13 +209,13 @@ export default class TaxFields extends React.Component {
   }
 
 // find parent taxonomy values
-  fetchParentValues(parentName){
+  fetchParentValues(parentName) {
     let url = taxFieldsUrl + '/' + parentName;
     return request
     .get(url)
     .withCredentials()
     .end((err, res) => {
-      if(err) {
+      if (err) {
         console.error(err);
       } else {
         this.setState({
@@ -222,22 +226,22 @@ export default class TaxFields extends React.Component {
   }
 
 // find the available parent taxonomy value order's value
-  findParentOrder(){
+  findParentOrder() {
     let parentOrder = this.state.taxonomySelected.order - 1;
     if (parentOrder > 0) {
-      let parentSelected = this.state.taxonomies.filter(p => {
+      let parentSelected = this.state.taxonomies.filter((p) => {
         return p.order == parentOrder
       });
       this.setState({
         parentSelected: parentSelected[0]
-      })
+      });
       let parentName = parentSelected[0].fieldName;
       this.fetchParentValues(parentName);
     }
   }
 
   handleCompanySelectChanged(event, companyId) {
-    let companies = this.state.companies.filter(c => {
+    let companies = this.state.companies.filter((c) => {
       return c.id == companyId;
     });
     let companyName = (companies.length > 0) ? companies[0].name : null;
@@ -317,17 +321,19 @@ export default class TaxFields extends React.Component {
     });
   }
 
-  handleEditTaxValueDialogClose() {
+  handleEditTaxValueDialogClose(saved) {
     this.setState({
       showEditTaxonomyDialog: false
     });
-    this.fetchTaxValues(this.state.taxonomySelected.fieldName);
+    if (saved) {
+      this.fetchTaxValues(this.state.taxonomySelected.fieldName);
+    }
   }
 
   handleCloseEditMenu() {
     this.setState({
       actionMenuOpen: false
-    })
+    });
   }
 
   handleActionMenu(event, taxValue) {
@@ -335,7 +341,7 @@ export default class TaxFields extends React.Component {
       actionMenuOpen: true,
       actionMenuTarget: event.currentTarget,
       taxValueSelected: taxValue
-    })
+    });
   }
 
   handleDeleteTaxVal() {
@@ -356,93 +362,87 @@ export default class TaxFields extends React.Component {
   handleRemoveValues() {
     this.setState({
       showDeleteTaxValuesDialog: true
-    })
+    });
+  }
+
+  handleViewValuesBySchema() {
+    if (this.state.viewValues === this.state.taxonomyValues) {
+      this.setState({
+        viewValues: this.state.schemaValues,
+        taxonomySelected: this.state.taxonomies[0],
+        taxonomyId: this.state.taxonomies[0].id,
+        taxonomyName: this.state.taxonomies[0].fieldName
+      });
+    } else {
+      this.setState({
+        viewValues: this.state.taxonomyValues
+      });
+    }
   }
 
   renderCompanySelectField() {
-    return(
+    return (
       <SelectField
         floatingLabelText="Company"
-        fullWidth={true}
+        fullWidth={ true }
         value={ this.state.companyId }
         onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) }
-        >
+      >
         { this.state.companies.map((company, idx) => {
-            return(
-              <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
-            );
-          })
-        }
+          return (
+            <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
+          );
+        })}
       </SelectField>
     );
   }
 
   renderProjectSelectField() {
-    return(
+    return (
       <SelectField
         floatingLabelText="Work Project"
-        fullWidth={true}
+        fullWidth={ true }
         value={ this.state.projectId }
         onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) }
-        >
+      >
         { this.state.projects.map((project, idx) => {
-            return(
-              <MenuItem key={ idx } value={ project.id } primaryText={ project.name } />
-            );
-          })
-        }
+          return (
+            <MenuItem key={ idx } value={ project.id } primaryText={ project.name } />
+          );
+        })}
       </SelectField>
     );
   }
 
   renderSchemaSelectField() {
-    return(
+    return (
       <SelectField
         floatingLabelText="Project Schemas"
-        fullWidth={true}
+        fullWidth={ true }
         value={ this.state.schemaId }
         onChange={ (event, index, value) => this.handleSchemaSelectChanged(event, value) }
-        >
+      >
         { this.state.schemas.map((schema, idx) => {
-            return(
-              <MenuItem key={ idx } value={ schema.id } primaryText={ schema.name } />
-            );
-          })
-        }
+          return (
+            <MenuItem key={ idx } value={ schema.id } primaryText={ schema.name } />
+          );
+        })}
       </SelectField>
     );
   }
 
   renderTaxonomySelectField() {
-    return(
-      <SelectField
-        floatingLabelText="Taxonomy Field Name"
-        fullWidth={true}
-        value={ this.state.taxonomyId }
-        onChange={ (event, index, value) => this.handleTaxonomySelectChanged(event, value) }
-        >
-        { this.state.taxonomies.map((taxonomy, idx) => {
-            return(
-              <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldName } />
-            );
-          })
-        }
-      </SelectField>
-    );
-  }
-
-  renderTaxFieldSelectField() {
-    if (this.state.taxonomyOrder !== 1 && this.state.taxonomyValues.length > 0){
-      return(
+    if (this.state.viewValues === this.state.taxonomyValues) {
+      return (
         <SelectField
-          floatingLabelText="Taxonomy Field Value"
-          fullWidth={true}
-          value={ this.state.taxonomyValueId }
-          onChange={ (event, index, value) => this.handleTaxonomyValueSelectChanged(event, value) }
-          >
-          { this.state.taxonomyValues.map((taxonomy, idx) => {
-            return(
-              <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldValue } />
+          floatingLabelText="Taxonomy Field Name"
+          fullWidth={ true }
+          value={ this.state.taxonomyId }
+          onChange={ (event, index, value) => this.handleTaxonomySelectChanged(event, value) }
+        >
+          { this.state.taxonomies.map((taxonomy, idx) => {
+            return (
+              <MenuItem key={ idx } value={ taxonomy.id } primaryText={ taxonomy.fieldName } />
             );
           })}
         </SelectField>
@@ -451,14 +451,14 @@ export default class TaxFields extends React.Component {
   }
 
   renderEditMenu() {
-    return(
+    return (
       <Popover
         open={ this.state.actionMenuOpen }
         anchorEl={ this.state.actionMenuTarget }
         anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
         targetOrigin={ { horizontal: 'right', vertical: 'top' } }
         onRequestClose={ this.handleCloseEditMenu }
-        >
+      >
         <Menu>
           <MenuItem
             value="1"
@@ -472,16 +472,16 @@ export default class TaxFields extends React.Component {
           />
         </Menu>
       </Popover>
-    )
+    );
   }
 
   renderDialogs() {
-    return(
+    return (
       <div>
         <EditTaxValueDialog
           open={ this.state.showEditTaxonomyDialog }
           title={ (this.state.taxValueSelected.id ? "Edit" : "Create") + " Taxonomy Value" }
-          onClose={ (saved) => this.handleEditTaxValueDialogClose(saved)}
+          onClose={ saved => this.handleEditTaxValueDialogClose(saved) }
           taxFieldName={ this.state.taxonomyName }
           taxFieldValueOrder={ this.state.taxonomyOrder }
           taxValueSelected={ this.state.taxValueSelected }
@@ -491,32 +491,33 @@ export default class TaxFields extends React.Component {
           qowSchemaId={ this.state.schemaId }
           workProjectId={ this.state.projectId }
           companyId={ this.state.companyId }
+          fieldValue={ this.state.taxValueSelected.fieldValue }
         />
         <DeleteTaxValueDialog
           open={ this.state.showDeleteTaxValDialog }
-          onClose={ (deleted) => this.handleDeleteTaxValDialogClose(deleted) }
-          taxValId={  this.state.taxValueSelected.id }
+          onClose={ deleted => this.handleDeleteTaxValDialogClose(deleted) }
+          taxValId={ this.state.taxValueSelected.id }
         />
         <DeleteTaxValuesDialog
           open={ this.state.showDeleteTaxValuesDialog }
           schemaId={ this.state.schemaId }
-          onClose={ (deleted) => this.handleDeleteTaxValDialogClose(deleted) }
+          onClose={ deleted => this.handleDeleteTaxValDialogClose(deleted) }
         />
       </div>
-    )
+    );
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div>
         { this.renderDialogs() }
         { this.renderEditMenu() }
-        <Row><DefaultNavbar/></Row>
+        <Row><DefaultNavbar /></Row>
         <Row>
-          <Col xs={0} sm={0} md={1} lg={1} ></Col>
-          <Col xs={0} sm={0} md={2} lg={2} >
+          <Col xs={ 0 } sm={ 0 } md={ 1 } lg={ 1 } />
+          <Col xs={ 0 } sm={ 0 } md={ 2 } lg={ 2 } >
             <RaisedButton
-              label={ ((this.state.taxonomyOrder === 1) ? "Add Root" : "Add Child") + " Value" }
+              label={ ((this.state.taxonomySelected.order === 1) ? "Add Root" : "Add Child") + " Value" }
               primary={ true }
               fullWidth={ true }
               onClick={ this.handleCreateTaxField }
@@ -526,7 +527,6 @@ export default class TaxFields extends React.Component {
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField() }
             { this.renderTaxonomySelectField() }
-            { this.renderTaxFieldSelectField() }
             <div>
               Total of all values for the selected schema: "{ this.state.schemaName }"
             </div>
@@ -534,24 +534,33 @@ export default class TaxFields extends React.Component {
               <Badge
                 badgeContent={ this.state.schemaValues.length }
                 secondary={ true }
-                />
+              />
             </div>
             <Row>
               <div>
                 ---------------------------------------------------------
               </div>
               <div>
-                Remove all of "{ this.state.schemaName }" Schema Taxonomy Expected Values
+                View all expected taxonomy values by selected { (this.state.viewValues === this.state.taxonomyValues) ? 'schema' : 'taxonomy' }
               </div>
               <RaisedButton
-                label="Remove Values"
+                label={ (this.state.viewValues === this.state.taxonomyValues) ? "View values by Schema" : "View values by Taxonomy" }
+                primary={ true }
+                fullWidth={ true }
+                onClick={ this.handleViewValuesBySchema }
+              />
+              <div>
+                Remove expected taxonomy values by Schema: "{ this.state.schemaName }"
+              </div>
+              <RaisedButton
+                label="Remove all Values"
                 secondary={ true }
                 fullWidth={ true }
                 onClick={ this.handleRemoveValues }
-                />
+              />
             </Row>
           </Col>
-          <Col xs={8} sm={8} md={8} lg={8} >
+          <Col xs={ 8 } sm={ 8 } md={ 8 } lg={ 8 } >
             <Row>
               <Table selectable={ false }>
                 <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
@@ -567,24 +576,24 @@ export default class TaxFields extends React.Component {
                 </TableHeader>
                 <TableBody selectable={ false } displayRowCheckbox={ false }>
                   {
-                    this.state.taxonomyValues.map((taxValue, index) => {
+                    this.state.viewValues.map((taxValue, index) => {
                       var pId;
                       var pName;
-                      if (this.state.taxonomyOrder === 1) {
+                      if (taxValue.parentId === null) {
                         pId = "Root";
-                        pName = "Root"
+                        pName = "Root";
                       } else {
-                          pId = taxValue.parentId;
-                          if(pId){
-                            let pValue = this.state.taxParentValues.filter(p => {
-                                return p.id == pId;
-                            });
-                            if(pValue.length > 0){
-                              pName = pValue[0].fieldValue;
-                            }
+                        pId = taxValue.parentId;
+                        if (pId) {
+                          let pValue = this.state.schemaValues.filter(p => {
+                            return p.id == pId;
+                          });
+                          if (pValue.length > 0) {
+                            pName = pValue[0].fieldValue;
                           }
+                        }
                       }
-                    return (
+                      return (
                         <TableRow key={ index }>
                           <TableRowColumn>{ index + 1 }</TableRowColumn>
                           <TableRowColumn>{ taxValue.fieldValue }</TableRowColumn>
@@ -597,10 +606,10 @@ export default class TaxFields extends React.Component {
                               label="Edit/Delete"
                               secondary={ true }
                               onClick={ event => this.handleActionMenu(event, taxValue) }
-                              />
+                            />
                           </TableRowColumn>
                         </TableRow>
-                      )
+                      );
                     })
                   }
                 </TableBody>
@@ -609,6 +618,6 @@ export default class TaxFields extends React.Component {
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 }

@@ -1,13 +1,10 @@
 
 import React from 'react';
-import request from '../../../services/request';
 
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ValidationDialog from './validation';
-
-import { taxonomiesUrl } from '../../../config';
 
 export default class EditTaxonomyDialog extends React.Component {
   constructor() {
@@ -20,9 +17,15 @@ export default class EditTaxonomyDialog extends React.Component {
       taxNodeType: '',
       taxKeys: '',
       showValidationDialog: false
-    }
+    };
 
     this.handleTaxonomySubmit = this.handleTaxonomySubmit.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if ((nextProps.open === true) && (this.props.open === false)) {
+      this.loadProps(nextProps);
+    }
   }
 
   loadProps(props) {
@@ -33,12 +36,6 @@ export default class EditTaxonomyDialog extends React.Component {
       taxKeys: props.keys ? props.keys : '',
       taxId: props.taxId
     });
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    if ((nextProps.open === true) && (this.props.open === false)) {
-      this.loadProps(nextProps);
-    }
   }
 
   handleFieldNameChange(event, value) {
@@ -70,12 +67,14 @@ export default class EditTaxonomyDialog extends React.Component {
   }
 
   handleTaxonomySubmit(event) {
-
     let duplicate = this.props.taxonomies.filter(p => {
       return p.fieldName == this.state.taxFieldName
     });
-
-    if (!duplicate[0]) {
+    if (duplicate[0] && (this.props.taxId === undefined)) {
+      this.setState({
+        showValidationDialog: true
+      });
+    } else {
       var taxonomy = {
         id: this.state.taxId,
         fieldName: this.state.taxFieldName,
@@ -97,10 +96,6 @@ export default class EditTaxonomyDialog extends React.Component {
         this.props.taxonomies.splice(updateTaxIndex, 1, taxonomy);
       }
       this.props.onClose(true);
-    } else {
-      this.setState({
-        showValidationDialog: true
-      });
     }
   }
 
@@ -112,20 +107,20 @@ export default class EditTaxonomyDialog extends React.Component {
       taxNodeType: '',
       taxKeys: '',
       showValidationDialog: false
-    })
+    });
   }
 
   renderValidation() {
-    return(
+    return (
       <ValidationDialog
         open={ this.state.showValidationDialog }
         onClose={ () => this.handleValidationClose() }
       />
-    )
+    );
   }
 
   actions() {
-    return(
+    return (
       [
         <RaisedButton
           label="Cancel"
@@ -135,10 +130,10 @@ export default class EditTaxonomyDialog extends React.Component {
           label="Confirm"
           primary={ true }
           keyboardFocused={ false }
-          onTouchTap={ (event) => this.handleTaxonomySubmit(event) }
+          onTouchTap={ event => this.handleTaxonomySubmit(event) }
         />
       ]
-    )
+    );
   }
 
   render() {
@@ -151,7 +146,7 @@ export default class EditTaxonomyDialog extends React.Component {
         autoScrollBodyContent={ true }
         contentStyle={ { maxWidth: '600px' } }>
         { this.renderValidation() }
-        <table style={ { width: '100%'} }>
+        <table style={ { width: '100%' } }>
           <tbody>
             <tr>
               <td>Company</td>
@@ -194,8 +189,8 @@ export default class EditTaxonomyDialog extends React.Component {
                   hintText="i.e. state, county or city"
                   value={ this.state.taxFieldName }
                   fullWidth={ true }
-                  onChange={ (event) => this.handleFieldNameChange(event) }
-                  />
+                  onChange={ event => this.handleFieldNameChange(event) }
+                />
               </td>
             </tr>
             <tr>
@@ -206,7 +201,7 @@ export default class EditTaxonomyDialog extends React.Component {
                   hintText="Enter Taxonomy Node Type"
                   value={ this.state.taxNodeType }
                   fullWidth={ true }
-                  onChange={ (event) => this.handleNodeTypeChange(event) }
+                  onChange={ event => this.handleNodeTypeChange(event) }
                 />
               </td>
             </tr>
@@ -218,7 +213,7 @@ export default class EditTaxonomyDialog extends React.Component {
                   hintText="Enter Taxonomy Keys"
                   value={ this.state.taxKeys }
                   fullWidth={ true }
-                  onChange={ (event) => this.handleKeysChange(event) }
+                  onChange={ event => this.handleKeysChange(event) }
                 />
               </td>
             </tr>

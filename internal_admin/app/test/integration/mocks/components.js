@@ -11,6 +11,7 @@ import Users from '../../../src/components/users/users';
 import EditUserDialog from '../../../src/components/users/dialogs/edit';
 import DeleteUserDialog from '../../../src/components/users/dialogs/delete';
 import Login from '../../../src/components/login/login';
+import Taxonomies from '../../../src/components/taxonomy/taxonomy';
 
 import authRedux from '../../../src/reduxes/auth';
 
@@ -23,6 +24,7 @@ const watchersAPI = require('./api/watchers');
 const ingestionsAPI = require('./api/ingestions');
 const historiesAPI = require('./api/histories');
 const usersAPI = require('./api/users');
+const taxonomiesAPI = require('./api/taxonomies');
 
 var init = function() {
   // Replace fetchCompanies method from Companies
@@ -228,6 +230,66 @@ var init = function() {
       }
     }
   };
+
+  // Replace fetchCompanies method from Taxonomies
+  Taxonomies.prototype.fetchCompanies = function () {
+    var companies = database.data.companies;
+    this.setState({
+      companies: companies,
+      companyId: companies[0].id,
+      companyName: companies[0].name
+    });
+    this.fetchProjects(companies[0].id);
+  };
+
+  // Replace fetchProjects method from Taxonomies
+  Taxonomies.prototype.fetchProjects = function(companyId) {
+    var projects = projectsAPI.getProjects(companyId);
+    var firstProject = (projects.length > 0) ? projects[0] : null;
+    this.setState({
+      projects: projects,
+      projectId: firstProject ? firstProject.id : null,
+      projectName: firstProject ? firstProject.name : null
+    });
+    if (firstProject) {
+      this.fetchSchemas(firstProject.id);
+    } else {
+      this.setState({
+        schemas: [],
+        schemaId: null,
+        taxonomies: []
+      });
+    }
+  };
+
+  // Replace fetchSchemas method from Taxonomies
+  Taxonomies.prototype.fetchSchemas = function (projectId) {
+    var schemas = database.data.schemas;
+    this.setState({
+      schemas: schemas,
+      schemaId: schemas[0].id,
+      schemaName: schemas[0].name
+    });
+    this.fetchTaxonomies(schemas[0].id);
+  };
+
+  // Replace fetchTaxonomies method from Taxonomies
+  Taxonomies.prototype.fetchTaxonomies = function (schemaId) {
+    var taxonomies = taxonomiesAPI.getTaxonomies(schemaId);
+    this.setState({
+      taxonomies: taxonomies
+    });
+  };
+
+  // Replace fetchTaxValues from Taxonomies
+  Taxonomies.prototype.fetchTaxValues = function () {
+    var taxonomies = this.state.taxonomies;
+    taxonomies[taxonomies.length-1].createdAt = new Date();
+    this.setState({
+      dataSaved: true
+    })
+  };
+
 };
 
 module.exports = { 'init': init };
