@@ -8,9 +8,12 @@ const models = require('dsp_shared/database/model/ingestion/tables');
 const authMiddleware = require('./middleware/auth');
 const config = require('dsp_shared/conf.d/config').mooncake;
 const port = config.api_port;
+const serve = require('koa-static');
 
 // App
 const app = koa();
+
+app.use(serve('/home/ubuntu/services/ingestion_interface/app/build/'));
 
 // Database
 models.sequelize.sync().then(function() {
