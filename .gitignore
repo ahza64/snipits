@@ -53,3 +53,6 @@ pdf_generation_service/public/pdf/*
 #outfile
 *qsi_ids
 onetime
+
+#DS_Store
+*.DS_Store
