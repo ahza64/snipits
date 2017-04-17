@@ -66,7 +66,13 @@ class EsSchema {
       'geojson': { type: 'object' }
     };
     Object.keys(fields).forEach((field) => {
-      const fieldType = fields[field].toLowerCase();
+      let fieldType = fields[field];
+      if (typeof fieldType !== 'string') {
+        fieldType = fieldType.type;
+      }
+      if (typeof fieldType === 'string') {
+        fieldType = fieldType.toLowerCase();
+      }
       if (fieldType in fieldTypes) {
         properties[`${name}_${field}`] = fieldTypes[fieldType];
       } else {

@@ -75,7 +75,13 @@ class PostgresSchema {
         _deleted: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
       };
       Object.keys(fields).forEach((field) => {
-        const fieldType = fields[field].toLowerCase();
+        let fieldType = fields[field];
+        if (typeof fieldType === 'object') {
+          fieldType = fieldType.type;
+        }
+        if (typeof fieldType === 'string') {
+          fieldType = fieldType.toLowerCase();
+        }
         const allowedTypes = {
           "string": DataTypes.STRING,
           "number": DataTypes.DOUBLE,
