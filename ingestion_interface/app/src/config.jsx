@@ -4,7 +4,7 @@
 
 // Base Url
 const port = require('dsp_shared/conf.d/config.json').mooncake.api_port;
-const base = 'https://ingest.dispatchr.co';
+const base = require('dsp_shared/conf.d/config.json').mooncake.external_host;
 
 // API
 const loginUrl = base + '/login';

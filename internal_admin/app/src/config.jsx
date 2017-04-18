@@ -4,7 +4,7 @@
 
 // Base Url
 const port = require('dsp_shared/conf.d/config.json').admin.api_port;
-const base = 'http://localhost:' + port;
+const base = require('dsp_shared/conf.d/config.json').admin.external_host;
 
 // API
 const loginUrl = base + '/login';
