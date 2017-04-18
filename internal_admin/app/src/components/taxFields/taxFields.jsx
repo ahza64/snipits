@@ -1,13 +1,14 @@
 // Modules
 import React from 'react';
+import moment from 'moment';
 import request from '../../services/request';
 
 // Components
 import DefaultNavbar from '../navbar/defaultNavbar';
-import Taxonomy from '../taxonomy/taxonomy'
-import EditTaxValueDialog from './dialogs/edit'
-import DeleteTaxValueDialog from './dialogs/delete'
-import DeleteTaxValuesDialog from './dialogs/deleteValues'
+import Taxonomy from '../taxonomy/taxonomy';
+import EditTaxValueDialog from './dialogs/edit';
+import DeleteTaxValueDialog from './dialogs/delete';
+import DeleteTaxValuesDialog from './dialogs/deleteValues';
 import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl, taxFieldsUrl } from '../../config';
 
 // Styles
@@ -54,6 +55,7 @@ export default class TaxFields extends React.Component {
       showDeleteTaxValuesDialog: false
     };
 
+    this.fetchCompanies = this.fetchCompanies.bind(this);
     this.handleCreateTaxField = this.handleCreateTaxField.bind(this);
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
     this.handleDeleteTaxVal = this.handleDeleteTaxVal.bind(this);
@@ -521,7 +523,7 @@ export default class TaxFields extends React.Component {
               primary={ true }
               fullWidth={ true }
               onClick={ this.handleCreateTaxField }
-              disabled={ !this.state.taxonomyId }
+              disabled={ !this.state.taxonomyId || (this.state.viewValues !== this.state.taxonomyValues)}
             />
             { this.renderCompanySelectField() }
             { this.renderProjectSelectField() }
@@ -600,7 +602,7 @@ export default class TaxFields extends React.Component {
                           <TableRowColumn>{ taxValue.fieldName }</TableRowColumn>
                           <TableRowColumn>{ pId }</TableRowColumn>
                           <TableRowColumn>{ pName }</TableRowColumn>
-                          <TableRowColumn>{ taxValue.createdAt }</TableRowColumn>
+                          <TableRowColumn>{ moment(taxValue.createdAt).format('YYYY/MM/DD') }</TableRowColumn>
                           <TableRowColumn>
                             <FlatButton
                               label="Edit/Delete"

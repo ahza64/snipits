@@ -52,7 +52,7 @@ describe('<Taxonomy />', () => {
     });
 
     let badge = component.find(Badge);
-    assert.equal(badge.text(), taxonomies.length, `total configs found should be ${taxonomies.length}`);
+    assert.equal(badge.text(), taxonomies.length, `total taxonomies found should be ${taxonomies.length}`);
   }
 
   it('checks taxonomy table', () => {
@@ -113,14 +113,18 @@ describe('<Taxonomy />', () => {
   });
 
   it('checks entry data validation', () => {
+    function mountDialog() {
+      const wrapper = mount(
+        <MuiThemeProvider>
+          <EditTaxonomyDialog />
+        </MuiThemeProvider>
+      );
+      const validation = wrapper.find(EditTaxonomyDialog);
+      expect(validation).to.exist;
+      return validation;
+    }
+    let componentDialog = mountDialog();
     let component = mountComponent();
-    // const wrapper = mount(
-    //   <MuiThemeProvider>
-    //     <ValidationDialog />
-    //   </MuiThemeProvider>
-    // );
-    // const taxonomyEdit = wrapper.find(ValidationDialog);
-
     // select company, project, schema
     let company = database.data.companies[0];
     let project = database.data.projects[0];
@@ -148,16 +152,10 @@ describe('<Taxonomy />', () => {
     dialog.node.handleNodeTypeChange({ target: { value: newTaxonomy.nodeType } });
     dialog.node.handleKeysChange({ target: { value: newTaxonomy.keys } });
 
-    let saveButton = dialog.find(RaisedButton).at(0);
-    // console.log(saveButton);
-    // dialog.node.handleTaxonomySubmit({});
-    // assert.isFalse(dialog.node.props.open, `dialog should be closed after new taxonomy saved to client`);
-    // assert.isFalse(component.node.state.dataSaved, `save button should be enabled`);
-    // TODO can't get wrapper to find validation module in parent components
-    // let validation = taxonomyEdit.find(ValidationDialog);
-    // expect(validation).to.exist;
-    // console.log(taxonomyEdit.node.props);
-    // assert.isTrue(taxonomyEdit.node.props.open, `edit validation should be opened`);
+    // submit invalid data and check state
+    dialog.node.handleTaxonomySubmit({});
+    assert.isTrue(dialog.node.props.open, `dialog should be open after invalid taxonomy save`);
+    assert.isTrue(dialog.node.state.showValidationDialog, `validation should be open with invalid data entry`);
   });
 
   it('checks taxonomy deletion', () => {
