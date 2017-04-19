@@ -1,15 +1,7 @@
 // Modules
 import React from 'react';
+import moment from 'moment';
 import { browserHistory } from 'react-router';
-import request from '../../services/request';
-const moment = require('moment');
-
-// Components
-import DefaultNavbar from '../navbar/defaultNavbar';
-import EditTaxonomyDialog from './dialogs/edit';
-import DeleteTaxonomyDialog from './dialogs/delete';
-import NotificationDialog from './dialogs/notification';
-import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl } from '../../config';
 
 // Styles
 import Row from 'react-bootstrap/lib/Row';
@@ -28,7 +20,13 @@ import Badge from 'material-ui/Badge';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import '../../../styles/header.scss';
 
-
+// Components
+import request from '../../services/request';
+import DefaultNavbar from '../navbar/defaultNavbar';
+import EditTaxonomyDialog from './dialogs/edit';
+import DeleteTaxonomyDialog from './dialogs/delete';
+import NotificationDialog from './dialogs/notification';
+import { companyUrl, projectsUrl, schemaListUrl, taxonomiesUrl } from '../../config';
 
 export default class Taxonomy extends React.Component {
   constructor() {
@@ -59,7 +57,6 @@ export default class Taxonomy extends React.Component {
     this.handleCloseEditMenu = this.handleCloseEditMenu.bind(this);
     this.handleListSubmit = this.handleListSubmit.bind(this);
     this.fetchTaxValues = this.fetchTaxValues.bind(this);
-
   }
 
   componentWillMount() {
@@ -110,7 +107,7 @@ export default class Taxonomy extends React.Component {
               schemas: [],
               schemaId: null,
               taxonomies: []
-            })
+            });
           }
         }
       });
@@ -156,11 +153,11 @@ export default class Taxonomy extends React.Component {
         if (err) {
           console.error(err);
         } else {
-          res.body.sort(function (a, b) {
-            return a.order - b.order
-          })
+          res.body.taxonomies.sort((a, b) => {
+            return a.order - b.order;
+          });
           this.setState({
-            taxonomies: res.body,
+            taxonomies: res.body.taxonomies
           });
         }
       });
@@ -187,7 +184,7 @@ export default class Taxonomy extends React.Component {
   handleListSubmit() {
     this.setState({
       showNotificationDialog: true
-    })
+    });
   }
 
   handleCompanySelectChanged(event, companyId) {
@@ -240,7 +237,7 @@ export default class Taxonomy extends React.Component {
     if (saved) {
       this.setState({
         dataSaved: false
-      })
+      });
     }
   }
 
@@ -279,7 +276,7 @@ export default class Taxonomy extends React.Component {
     if (deleted) {
       this.setState({
         dataSaved: false
-      })
+      });
     }
   }
 
@@ -291,86 +288,85 @@ export default class Taxonomy extends React.Component {
 
   dataStatus(taxonomy) {
     if (taxonomy.createdAt) {
-      return "Yes"
-    } else {
-      return "No"
+      return "Yes";
     }
+    return "No!!";
   }
 
   renderCompanySelectField() {
-    return(
+    return (
       <SelectField
         floatingLabelText="Company"
         fullWidth={true}
         value={ this.state.companyId }
-        onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) } >
+        onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) }
+      >
         { this.state.companies.map((company, idx) => {
-            return(
-              <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
-            );
-          })
-        }
+          return (
+            <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
+          );
+        })}
       </SelectField>
     );
   }
 
   renderProjectSelectField() {
-    return(
+    return (
       <SelectField
         floatingLabelText="Work Project"
-        fullWidth={true}
+        fullWidth={ true }
         value={ this.state.projectId }
-        onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) } >
+        onChange={ (event, index, value) => this.handleProjectSelectChanged(event, value) }
+      >
         { this.state.projects.map((project, idx) => {
-            return(
-              <MenuItem key={ idx } value={ project.id } primaryText={ project.name } />
-            );
-          })
-        }
+          return (
+            <MenuItem key={ idx } value={ project.id } primaryText={ project.name } />
+          );
+        })}
       </SelectField>
     );
   }
 
   renderSchemaSelectField() {
-    return(
+    return (
       <SelectField
         floatingLabelText="Project Schemas"
-        fullWidth={true}
+        fullWidth={ true }
         value={ this.state.schemaId }
-        onChange={ (event, index, value) => this.handleSchemaSelectChanged(event, value) } >
+        onChange={ (event, index, value) => this.handleSchemaSelectChanged(event, value) }
+      >
         { this.state.schemas.map((schema, idx) => {
-            return(
-              <MenuItem key={ idx } value={ schema.id } primaryText={ schema.name } />
-            );
-          })
-        }
+          return (
+            <MenuItem key={ idx } value={ schema.id } primaryText={ schema.name } />
+          );
+        })}
       </SelectField>
     );
   }
 
   renderEditMenu() {
-    return(
+    return (
       <Popover
         open={ this.state.actionMenuOpen }
         anchorEl={ this.state.actionMenuTarget }
         anchorOrigin={ { horizontal: 'right', vertical: 'bottom' } }
         targetOrigin={ { horizontal: 'right', vertical: 'top' } }
         onRequestClose={ this.handleCloseEditMenu }
-        >
+      >
         <Menu>
           <MenuItem
             value="1"
             primaryText="Edit Taxonomy"
             onClick={ this.handleEditChangeTax }
-            />
+          />
           <MenuItem
             value="2"
             primaryText="Delete Taxonomy"
-            onClick={ this.handleEditDeleteTax}
-            />
+            onClick={ this.handleEditDeleteTax }
+          />
         </Menu>
       </Popover>
-    )
+    );
   }
 
   renderDialogs() {
@@ -390,21 +386,19 @@ export default class Taxonomy extends React.Component {
           nodeType={ this.state.taxonomySelected.nodeType }
           keys={ this.state.taxonomySelected.keys }
           taxId={ this.state.taxonomySelected.id }
-          companyId={ this.state.companyId }
-          projectId={ this.state.projectId }
           taxonomies={ this.state.taxonomies }
-          onClose={ (saved) => this.handleEditTaxonomyDialogClose(saved) }
+          onClose={ saved => this.handleEditTaxonomyDialogClose(saved) }
         />
         <DeleteTaxonomyDialog
           open={ this.state.showDeleteTaxonomyDialog }
-          onClose={ (deleted) => this.handleDeleteTaxDialogClose(deleted) }
+          onClose={ deleted => this.handleDeleteTaxDialogClose(deleted) }
           taxId={ this.state.taxonomySelected.id }
           taxName={ this.state.taxonomySelected ? this.state.taxonomySelected.fieldName : "this" }
           taxonomies={ this.state.taxonomies }
         />
         <NotificationDialog
           open={ this.state.showNotificationDialog }
-          onClose={ (change) => this.handleNotificationClose(change) }
+          onClose={ change => this.handleNotificationClose(change) }
           fetchTaxValues={ this.fetchTaxValues }
         />
       </div>
@@ -418,13 +412,13 @@ export default class Taxonomy extends React.Component {
         { this.renderEditMenu() }
         <Row> <DefaultNavbar /> </Row>
         <Row>
-          <Col xs={0} sm={0} md={1} lg={1} ></Col>
-          <Col xs={0} sm={0} md={2} lg={2} >
+          <Col xs={ 0 } sm={ 0 } md={ 1 } lg={ 1 } />
+          <Col xs={ 0 } sm={ 0 } md={ 2 } lg={ 2 } >
             <div>
               Add Taxonomy to List
             </div>
             <RaisedButton
-              label='Add Taxonomy'
+              label="Add Taxonomy"
               primary={ true }
               fullWidth={ true }
               onClick={ this.handleCreateTaxonomy }
@@ -438,9 +432,10 @@ export default class Taxonomy extends React.Component {
             </div>
             <Badge
               badgeContent={ this.state.taxonomies.length }
-              secondary={ true }/>
+              secondary={ true }
+            />
           </Col>
-          <Col xs={8} sm={8} md={8} lg={8} >
+          <Col xs={ 8 } sm={ 8 } md={ 8 } lg={ 8 } >
             <Row>
               <Table selectable={ false }>
                 <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
@@ -449,36 +444,35 @@ export default class Taxonomy extends React.Component {
                     <TableHeaderColumn>Saved to Database</TableHeaderColumn>
                     <TableHeaderColumn>Field Name</TableHeaderColumn>
                     <TableHeaderColumn>Created On</TableHeaderColumn>
-                    <TableHeaderColumn className='header-pos'>Order</TableHeaderColumn>
+                    <TableHeaderColumn className="header-pos">Hierarchy</TableHeaderColumn>
                     <TableHeaderColumn>Node Type</TableHeaderColumn>
                     <TableHeaderColumn>Keys</TableHeaderColumn>
                     <TableHeaderColumn>Action</TableHeaderColumn>
                   </TableRow>
                 </TableHeader>
                 <TableBody selectable={ false } displayRowCheckbox={ false }>
-                    {
-                      this.state.taxonomies.map((taxonomy, index) => {
-                        return (
-                          <TableRow key={ index }>
-                              <TableRowColumn>{ index + 1 }</TableRowColumn>
-                              <TableRowColumn>{ this.dataStatus(taxonomy) }</TableRowColumn>
-                              <TableRowColumn>{ taxonomy.fieldName }</TableRowColumn>
-                              <TableRowColumn>{ taxonomy.createdAt }</TableRowColumn>
-                              <TableRowColumn>{ taxonomy.order }</TableRowColumn>
-                              <TableRowColumn>{ taxonomy.nodeType }</TableRowColumn>
-                              <TableRowColumn>{ taxonomy.keys }</TableRowColumn>
-                              <TableRowColumn>
-                                <FlatButton
-                                  label="Edit/Delete"
-                                  labelPosition="before"
-                                  secondary={ true }
-                                  onTouchTap={ event => this.handleActionMenu(event, taxonomy)}
-                                />
-                              </TableRowColumn>
-                          </TableRow>
-                        );
-                      })
-                    }
+                  {
+                    this.state.taxonomies.map((taxonomy, index) => {
+                      return (
+                        <TableRow key={ index }>
+                          <TableRowColumn>{ index + 1 }</TableRowColumn>
+                          <TableRowColumn>{ this.dataStatus(taxonomy) }</TableRowColumn>
+                          <TableRowColumn>{ taxonomy.fieldName }</TableRowColumn>
+                          <TableRowColumn>{ moment(taxonomy.createdAt).format('YYYY/MM/DD') }</TableRowColumn>
+                          <TableRowColumn>{ taxonomy.order }</TableRowColumn>
+                          <TableRowColumn>{ taxonomy.nodeType }</TableRowColumn>
+                          <TableRowColumn>{ taxonomy.keys }</TableRowColumn>
+                          <TableRowColumn>
+                            <FlatButton
+                              label="Edit/Delete"
+                              labelPosition="before"
+                              secondary={ true }
+                              onTouchTap={ event => this.handleActionMenu(event, taxonomy) }
+                            />
+                          </TableRowColumn>
+                        </TableRow>
+                      );
+                    })}
                 </TableBody>
               </Table>
               <RaisedButton

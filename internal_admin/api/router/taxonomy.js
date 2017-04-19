@@ -17,25 +17,33 @@ const QowExpectedTaxonomies = require('dsp_shared/database/model/ingestion/table
 // Get all schema taxonomies
 router.get(
   '/taxonomies/:schemaId',
-  function*() {
+  function *() {
     var companyId = this.req.user.companyId;
     var schemaId = this.params.schemaId;
     if (permissions.has(this.req.user, companyId) && schemaId) {
       var schemaTaxonomies = yield QowTaxonomies.findAll({
         where: {
           qowSchemaId: schemaId
-         },
+        },
         raw: true
-      })
-      this.body = schemaTaxonomies;
+      });
+      var schemaValues = yield QowExpectedTaxonomies.findAll({
+        where: {
+          qowSchemaId: schemaId
+        },
+        raw: true
+      });
+      this.body = {};
+      this.body.taxonomies = schemaTaxonomies;
+      this.body.values = schemaValues;
     }
   }
 );
 
-//create or edit a taxonomy
+// create or edit a taxonomy
 router.post(
   '/taxonomies',
-  function*() {
+  function *() {
     var companyUserId = this.req.user.companyId;
     var body = this.request.body;
     var taxonomies = [];
@@ -48,11 +56,11 @@ router.post(
             qowSchemaId: body[0].qowSchemaId
           }
         });
-        for( i = 0; i < body.length; i++) {
+        for ( var i = 0; i < body.length; i++) {
           body[i].order = i + 1;
           taxonomy = yield (QowTaxonomies.create(body[i]));
           taxonomies.push(taxonomy);
-        };
+        }
       } catch (e) {
         console.error(e);
       }
@@ -63,7 +71,7 @@ router.post(
 
 router.get(
   '/taxfields/:taxName',
-  function*() {
+  function *() {
     var companyId = this.req.user.companyId;
     var fieldName = this.params.taxName;
     if (permissions.has(this.req.user, companyId) && fieldName) {
@@ -72,15 +80,15 @@ router.get(
           fieldName: fieldName
         },
         raw: true
-      })
+      });
       this.body = expectedTaxonomies;
     }
   }
-)
+);
 
 router.post(
   '/taxfields',
-  function*() {
+  function *() {
     var body = this.request.body;
     var taxValId = body.id;
     var companyUserId = this.req.user.companyId;
@@ -103,7 +111,7 @@ router.post(
 
 router.delete(
   '/taxfields/:taxValId',
-  function*() {
+  function *() {
     var taxValId = this.params.taxValId;
     if (permissions.has(this.req.user, null)) {
       try {
@@ -116,11 +124,11 @@ router.delete(
       this.throw(403);
     }
   }
-)
+);
 
 router.delete(
   '/taxfields/schema/:schemaId',
-  function*() {
+  function *() {
     var schemaId = this.params.schemaId;
     if (permissions.has(this.req.user, null)) {
       try {
@@ -133,7 +141,7 @@ router.delete(
       this.throw(403);
     }
   }
-)
+);
 
 app.use(router.routes());
 

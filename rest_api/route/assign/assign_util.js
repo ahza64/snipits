@@ -152,14 +152,14 @@ module.exports = {
   build(id, tree) {
     var workorder = {};
 
-    workorder._id = mongoose.Types.ObjectId()._str;
+    workorder._id = mongoose.Types.ObjectId();
     workorder.uniq_id = id;
     workorder.span_name = tree.span_name;
     workorder.location = {
       type:'Point',
       coordinates: [
-        tree.x,
-        tree.y
+        tree.location.coordinates[0],
+        tree.location.coordinates[1]
       ]
     };
 

@@ -22,7 +22,7 @@ export default class ValidationDialog extends React.Component {
     return(
       <Dialog
         title={ "This data conflicts with already exsisting data. Please enter different values" }
-        open={ this.props.open }
+        open={ this.props.open !== undefined ? this.props.open : false }
         actions={ this.actions() }
       >
 

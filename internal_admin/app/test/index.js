@@ -25,7 +25,7 @@ const argv = Minimist(process.argv.slice(2), {
 
 const mocha = new Mocha({
   grep: argv.grep ? argv.grep : undefined,
-  reporter: 'dot',
+  reporter: 'dot'
 });
 
 var component = process.argv.length > 2 ? process.argv[2] : null;

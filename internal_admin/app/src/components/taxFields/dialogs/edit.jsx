@@ -1,6 +1,5 @@
 
 import React from 'react';
-import request from '../../../services/request';
 
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -8,7 +7,9 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
+import ValidationDialog from '../../taxonomy/dialogs/validation';
 
+import request from '../../../services/request';
 import { taxFieldsUrl } from '../../../config';
 
 export default class EditTaxValueDialog extends React.Component {
@@ -18,42 +19,64 @@ export default class EditTaxValueDialog extends React.Component {
     this.state = {
       parentId: '',
       taxParentList: [],
-      fieldValue: ''
+      fieldValue: '',
+      fieldId: null,
+      showValidationDialog: false
+    };
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if ((nextProps.open === true) && (this.props.open === false)) {
+      this.loadProps(nextProps);
     }
   }
 
-  componentWillReceiveProps() {
+  loadProps(props) {
     this.setState({
-      taxParentList: this.props.taxParentList,
-      parentId: this.props.taxParentList[0] ? this.props.taxParentList[0].id : ""
-    })
+      taxParentList: props.taxParentList,
+      parentId: props.taxParentList[0] ? props.taxParentList[0].id : "",
+      fieldValue: props.fieldValue ? props.fieldValue : "",
+      fieldId: props.taxValueSelected.id ? props.taxValueSelected.id : null,
+      taxonomyValues: props.taxonomyValues ? props.taxonomyValues : []
+    });
   }
 
   handleTaxValueSubmit(event) {
+    let duplicate = this.props.taxonomyValues.filter( p => {
+      return p.fieldValue == this.state.fieldValue
+    });
 
-    var taxValue = {
-      fieldName: this.props.taxFieldName,
-      fieldValue: this.state.fieldValue,
-      parentId: this.state.parentId ? this.state.parentId : null,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      qowSchemaId: this.props.qowSchemaId,
-      workProjectId: this.props.workProjectId,
-      companyId: this.props.companyId
+    if (duplicate[0] && (this.state.fieldId === null)) {
+      this.setState({
+        showValidationDialog: true
+      });
+      this.state.fieldValue = '';
+    } else {
+      let taxValue = {
+        id: this.state.fieldId,
+        fieldName: this.props.taxFieldName,
+        fieldValue: this.state.fieldValue,
+        parentId: this.state.parentId ? this.state.parentId : null,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        qowSchemaId: this.props.qowSchemaId,
+        workProjectId: this.props.workProjectId,
+        companyId: this.props.companyId
+      };
+        
+      request
+      .post(taxFieldsUrl)
+      .send(taxValue)
+      .withCredentials()
+      .end((err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          this.props.onClose(true)
+        }
+      });
+      this.state.fieldValue = '';
     }
-
-    request
-    .post(taxFieldsUrl)
-    .send(taxValue)
-    .withCredentials()
-    .end(err => {
-      if (err) {
-        console.error(err);
-      } else {
-        this.props.onClose(true)
-      }
-    })
-    this.state.fieldValue = '';
   }
 
   handleParentNameChange(event, value) {
@@ -70,9 +93,25 @@ export default class EditTaxValueDialog extends React.Component {
     });
   }
 
+  handleValidationClose() {
+    this.setState({
+      showValidationDialog: false,
+      fieldValue: ''
+    });
+  }
+
+  renderDialogs() {
+    return (
+      <ValidationDialog
+        open={ this.state.showValidationDialog }
+        onClose={ () => this.handleValidationClose() }
+      />
+    );
+  }
+
   renderParentIdSelectField() {
-    if(this.props.taxFieldValueId !== 1) {
-      return(
+    if (this.props.taxFieldValueOrder !== 1) {
+      return (
         <tr>
           <td>Select Parent Value from "{ this.props.parentSelected.fieldName }"</td>
           <td>
@@ -80,17 +119,16 @@ export default class EditTaxValueDialog extends React.Component {
               fullWidth={ true }
               value={ this.state.parentId }
               onChange={ (event, index, value) => this.handleParentNameChange(event, value) }
-              >
+            >
               { this.props.taxParentList.map((parent, index) => {
-                  return(
-                    <MenuItem
-                      key={ index }
-                      value={ parent.id }
-                      primaryText={ parent.fieldValue }
-                    />
-                  );
-                })
-              }
+                return (
+                  <MenuItem
+                    key={ index }
+                    value={ parent.id }
+                    primaryText={ parent.fieldValue }
+                  />
+                );
+              })}
             </SelectField>
           </td>
         </tr>
@@ -99,13 +137,12 @@ export default class EditTaxValueDialog extends React.Component {
   }
 
   actions() {
-    return(
+    return (
       [
         <RaisedButton
           label="Cancel"
-          onClick={
+          onTouchTap={
             (event) => {
-              this.state.fieldValue = '';
               this.props.onClose(false);
             }
           }
@@ -113,14 +150,14 @@ export default class EditTaxValueDialog extends React.Component {
         <RaisedButton
           label="Confirm"
           primary={ true }
-          onClick={ (event) => this.handleTaxValueSubmit(event) }
+          onClick={ event => this.handleTaxValueSubmit(event) }
         />
       ]
-    )
+    );
   }
 
   render() {
-    return(
+    return (
       <Dialog
         title={ this.props.title }
         modal={ true }
@@ -128,7 +165,8 @@ export default class EditTaxValueDialog extends React.Component {
         contentStyle={ { maxWidth: '600px' } }
         autoScrollBodyContent={ true }
         actions={ this.actions() }
-        >
+      >
+        { this.renderDialogs() }
         <table style={ { width: '100%' } }>
           <tbody>
             <tr>
@@ -139,7 +177,7 @@ export default class EditTaxValueDialog extends React.Component {
                   fullWidth={ true }
                   disabled={ true }
                   value={ this.props.taxFieldName }
-                  />
+                />
               </td>
             </tr>
             { this.renderParentIdSelectField() }
@@ -151,7 +189,7 @@ export default class EditTaxValueDialog extends React.Component {
                   hintText="Taxonomy Value Name"
                   value={ this.state.fieldValue }
                   fullWidth={ true }
-                  onChange={ (event) => this.handleTaxValueChange(event) }
+                  onChange={ event => this.handleTaxValueChange(event) }
                 />
               </td>
             </tr>

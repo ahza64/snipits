@@ -7,11 +7,17 @@ const ingestions = require('./data/ingestions');
 const histories = require('./data/histories');
 const admins = require('./data/admins');
 const users = require('./data/users');
+const schemas = require('./data/schemas');
+const taxonomies = require('./data/taxonomies');
+const taxFields = require('./data/taxFields');
 
 var data = {};
 
 var init = function(){
   data = {
+    taxFields: taxFields,
+    taxonomies: taxonomies,
+    schemas: schemas,
     companies: companies,
     projects: projects,
     configs: configs,
@@ -25,6 +31,9 @@ var init = function(){
 
 var clear = function(){
   data = {
+    taxFields: [],
+    taxonomies: [],
+    schemas: [],
     companies: [],
     projects: [],
     configs: [],
