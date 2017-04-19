@@ -56,10 +56,7 @@ module.exports = function(Model) {
     */
     crud_opts.read = function *read(id, query) {
         // log.info("READ", Model.modelName, id, query);
-        const fieldName = query.searchField || '_id';
-        let filter = {};
-        filter[fieldName] = id;
-        let result = Model.find(filter);
+        let result = Model.find({_id: id});
         if(query && query.select) {
           result = result.select(query.select);
         }
