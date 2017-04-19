@@ -9,7 +9,6 @@ import MenuItem from 'material-ui/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
-
 import schemaRedux from '../../../reduxes/schema';
 import request from '../../../services/request';
 import { schemaFieldUrl } from '../../../config';
@@ -21,6 +20,7 @@ export default class CreateFieldDialog extends React.Component {
     this.state = {
       name: '',
       schemaId: null,
+      schemaFields: [],
       snackBarOpen: 0,
       createDisabled: true,
       required: false,
@@ -32,7 +32,12 @@ export default class CreateFieldDialog extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNameChanged = this.handleNameChanged.bind(this);
   }
-
+  componentWillMount(){
+    this.setState({
+      schemaId: this.props.schemaId,
+      schemaFields: this.props.schemaFields,
+    });
+  }
   validate() {
     if (this.validName() && this.state.type) {
       return true;
@@ -45,7 +50,9 @@ export default class CreateFieldDialog extends React.Component {
   }
 
   handleNameChanged(event) {
-    this.setState({ name: event.target.value });
+    this.setState({
+      name: event.target.value
+    });
   }
 
   handleSubmit() {
@@ -53,19 +60,12 @@ export default class CreateFieldDialog extends React.Component {
       name: this.state.name,
       required: this.state.required,
       type: this.state.type,
+      status: true,
+      createdAt: Date.now()
     };
-    const url = schemaFieldUrl.replace(':schemaFieldId', schemaRedux.getState());
-    request
-    .post(url)
-    .send(newField)
-    .withCredentials()
-    .end((err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        this.props.onClose(true);
-      }
-    });
+    this.props.onClose(newField);
+
+    // });
   }
 
   handleTypeChanged(event, index, type) {
@@ -89,7 +89,14 @@ export default class CreateFieldDialog extends React.Component {
       />,
     ];
     const dataTypes = [
-      'Integer', 'Float', 'Boolean', 'String', 'Date', 'JSON', 'GeoCoordinates', 'JPEG',
+      'Integer',
+      'Float',
+      'Boolean',
+      'String',
+      'Date',
+      'JSON',
+      'GeoCoordinates',
+      'JPEG',
     ];
     return (
       <Dialog
@@ -111,13 +118,13 @@ export default class CreateFieldDialog extends React.Component {
           onChange={ (event, index, value) => this.handleTypeChanged(event, index, value) }
         >
           {
-                dataTypes.map((type, idx) => (
-                  <MenuItem
-                    key={ idx }
-                    value={ type }
-                    primaryText={ type }
-                  />
-                  ))
+            dataTypes.map((type, idx) => (
+              <MenuItem
+                key={ idx }
+                value={ type }
+                primaryText={ type }
+              />
+              ))
             }
         </SelectField>
         <Checkbox

@@ -13,6 +13,7 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import _ from 'underscore';
 
 import schemaRedux from '../../reduxes/schema';
 import request from '../../services/request';
@@ -28,7 +29,7 @@ export default class QowSchema extends React.Component {
       name: '',
       fields: [],
       schemaList: [],
-      schemaId: null,
+      schemaId: schemaRedux.getState(),
       projectId: null,
       createFieldDialogOpen: false,
     };
@@ -45,14 +46,9 @@ export default class QowSchema extends React.Component {
 
     this.renderCreateFieldDialog = this.renderCreateFieldDialog.bind(this);
     this.renderSchemaSelectField = this.renderSchemaSelectField.bind(this);
+
     this.refreshSchemaList();
     this.updateSchemaFields();
-  }
-
-  componentWillMount() {
-    this.setState({
-      schemaId: schemaRedux.getState()
-    });
   }
 
   setSchemaFields(fields) {
@@ -68,7 +64,7 @@ export default class QowSchema extends React.Component {
   }
 
   getSchemaFields(callback) {
-    var schemaId = schemaRedux.getState();
+    var schemaId = this.state.schemaId;
     if (!schemaId) { return; }
     let url = schemaFieldUrl.replace(':schemaFieldId', schemaId);
     request
@@ -76,15 +72,19 @@ export default class QowSchema extends React.Component {
     .withCredentials()
     .end((err, res) => {
       if (err) {
-        console.error('errrr', err);
+        console.error('err', err);
       } else {
-        callback(res.body);
+        if (callback) {
+          callback(res.body);
+        }
       }
     });
   }
 
   refreshSchemaList() {
-    this.fetchSchema((body) => { this.fetchSchemaList(body.workProjectId); });
+    this.fetchSchema((body) => {
+       this.fetchSchemaList(body.workProjectId);
+     });
   }
 
   fetchSchemaList(projectId) {
@@ -105,7 +105,7 @@ export default class QowSchema extends React.Component {
   }
 
   fetchSchema(cb) {
-    let url = schemaUrl.replace(':schemaId', schemaRedux.getState());
+    let url = schemaUrl.replace(':schemaId', this.state.schemaId);
     request
     .get(url)
     .withCredentials()
@@ -117,7 +117,9 @@ export default class QowSchema extends React.Component {
         schema: res.body,
         projectId: res.body.workProjectId
       });
-      cb(res.body);
+      if(cb) {
+        cb(res.body);
+      }
     });
   }
 
@@ -127,10 +129,11 @@ export default class QowSchema extends React.Component {
     });
   }
 
-  handleCreateFieldDialogClose() {
+  handleCreateFieldDialogClose(saved, id) {
     this.setState({
       createFieldDialogOpen: false
-    }, () => this.updateSchemaFields());
+    });
+    this.handleSchemaChange(event, id);
   }
 
   deleteField(event, field) {
@@ -142,7 +145,9 @@ export default class QowSchema extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        var newFields = this.state.fields.filter((x) => { return x.id !== field.id; });
+        var newFields = this.state.fields.filter((x) => {
+           return x.id !== field.id;
+         });
         this.setState({
           fields: newFields
         });
@@ -153,19 +158,16 @@ export default class QowSchema extends React.Component {
   handleSchemaChange(event, value) {
     this.setState({
       schemaId: value
-    });
-    schemaRedux.dispatch({
-      type: 'CHANGE_SCHEMA',
-      schema: value
-    });
-    this.updateSchemaFields();
+    }, () => this.updateSchemaFields);
   }
 
   renderCreateFieldDialog() {
     return (
       <CreateFieldDialog
         open={ this.state.createFieldDialogOpen }
-        onClose={ () => { this.handleCreateFieldDialogClose(); } }
+        onClose={ (saved, id) => { this.handleCreateFieldDialogClose(saved, id); } }
+        currentFields={ this.state.fields }
+        schemaId={ this.state.schemaId }
       />
     );
   }
@@ -175,7 +177,7 @@ export default class QowSchema extends React.Component {
       <SelectField
         floatingLabelText="Select a Schema"
         fullWidth={ true }
-        value={ this.state.schemaId }
+        value={ this.state.name }
         onChange={ (event, index, value) => this.handleSchemaChange(event, value) }
       >
         {
@@ -188,6 +190,55 @@ export default class QowSchema extends React.Component {
       </SelectField>
     );
   }
+
+  renderSchemaList(){
+    return(
+      <Table>
+      <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
+        <TableRow>
+          <TableHeaderColumn>#</TableHeaderColumn>
+          <TableHeaderColumn>Name</TableHeaderColumn>
+          <TableHeaderColumn>Active</TableHeaderColumn>
+          <TableHeaderColumn className='header-pos'>Version</TableHeaderColumn>
+          <TableHeaderColumn>Created On</TableHeaderColumn>
+          <TableHeaderColumn className='header-pos'>Updated On</TableHeaderColumn>
+          <TableHeaderColumn> Btn </TableHeaderColumn>
+        </TableRow>
+      </TableHeader>
+      <TableBody displayRowCheckbox={ false } selectable={ false }>
+        {
+          this.state.schemaList
+          .sort((a, b) => { return a.name > b.name; })
+          .map((scheme, idx) => {
+            if (!this.state.showInactiveSchemas && !scheme.status) {
+              return;
+            }
+            return (
+              <TableRow key={ idx }>
+                <TableRowColumn>{ idx + 1 }</TableRowColumn>
+                <TableRowColumn>{ scheme.name }</TableRowColumn>
+                <TableRowColumn>{ this.renderToggle(scheme) }</TableRowColumn>
+                <TableRowColumn>{ scheme.version }</TableRowColumn>
+                <TableRowColumn>{ scheme.createdAt }</TableRowColumn>
+                <TableRowColumn>{ scheme.updatedAt }</TableRowColumn>
+                <TableRowColumn>
+                  <FlatButton
+                    label="Edit/View"
+                    labelPosition="before"
+                    secondary={ true }
+                    onTouchTap={ (event) => this.handleEditViewSchema(event, scheme) }
+                    icon={ <EditIcon /> }
+                  />
+                </TableRowColumn>
+              </TableRow>
+            );
+          })
+        }
+      </TableBody>
+    </Table>
+    );
+  }
+
 
   render() {
     return (

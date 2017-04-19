@@ -7,7 +7,7 @@ rest_api/test/logs/log.txt
 # build
 ingestion_interface/app/build/bundle.js
 internal_admin/app/build/bundle.js
-
+*.DS_Store
 # Runtime data
 pids
 *.pid
