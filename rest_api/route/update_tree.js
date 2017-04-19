@@ -1,7 +1,7 @@
 /**
  * @fileOverview Route to add,edit update tree and workorder
  */
-
+var mongoose = require('mongoose');
 var Cuf = require('dsp_shared/database/model/cufs');
 var router = require('koa-router')();
 var koa = require('koa');
@@ -41,7 +41,7 @@ String.prototype.replaceAt = function(index, character) {
  */
 function *addMissingFields(treeObj, woId, user) {
   var workOrder = _.find(user.workorder, wo => {
-    if(wo._id === woId){
+    if (wo._id.toString() === woId.toString()) {
       return wo;
     }
   });
@@ -132,11 +132,12 @@ function *updateTree(treeId, treeUpdates, instance){
  */
 function *addTreeToWorkorder(userId, woId, treeId){
   try {
-
+    woId = mongoose.Types.ObjectId(woId);
+    
     //check if tree already exists
     var user = yield Cuf.findOne({_id: userId});
     var workOrder = _.find(user.workorder, wo => {
-      if(wo._id === woId){
+      if (wo._id.toString() === woId.toString()) {
         return wo;
       }
     });
