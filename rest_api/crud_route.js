@@ -134,12 +134,9 @@ module.exports = function crud(resource, options) {
           offset = parseInt(offset);
         }
         var all_queries = ["offset", "length", "select", "order"].concat(accepted_filters);
-        for(var q in query) {
-          if(query.hasOwnProperty(q)) {
-            log.debug('querie', q, all_queries, accepted_filters);
-            if(!_.contains(all_queries, q)) {
-              response.throw("Bad Query Parameter: "+q, 400);
-            }
+        for(const q in query) {
+          if(!_.contains(all_queries, q)) {
+            response.throw("Bad Query Parameter: "+q, 400);
           }
         }
 

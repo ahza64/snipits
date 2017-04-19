@@ -4,7 +4,7 @@
     "options": {
       "model": "tree",
       "read_only": false,
-      "accepted_filters": ["pge_pmd_num", "division", "circuit_name", "region", "project"],
+      "accepted_filters": ["pge_pmd_num", "division", "circuit_name", "region", "project", "inc_id"],
       "excluded_fields": ["__v"]
     }
   },
