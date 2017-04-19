@@ -1,30 +1,21 @@
 // Modules
 import React from 'react';
-import { browserHistory } from 'react-router';
-
 // Components
 import Badge from 'material-ui/Badge';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import Toggle from 'material-ui/Toggle';
 import RaisedButton from 'material-ui/RaisedButton';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import FlatButton from 'material-ui/FlatButton';
 import EditIcon from 'material-ui/svg-icons/image/edit';
 import AddBoxIcon from 'material-ui/svg-icons/content/add-box';
 
-import Checkbox from 'material-ui/Checkbox';
 import { companyUrl, projectsUrl, schemaListUrl, schemaUrl, schemaFieldUrl } from '../../config';
 import request from '../../services/request';
-import schemaRedux from '../../reduxes/schema';
 import DefaultNavbar from '../navbar/defaultNavbar';
-import DeleteIcon from 'material-ui/svg-icons/action/delete';
-import _ from 'underscore';
-
 import CreateSchemaDialog from './dialogs/createSchemaDialog';
-import SchemaEditDialog from './dialogs/SchemaEditDialog';
+import SchemaEditDialog from './dialogs/schemaEditDialog';
 
 export default class SchemasLayout extends React.Component {
   constructor() {
@@ -37,7 +28,7 @@ export default class SchemasLayout extends React.Component {
 
       schemaList: [],
       schema: [],
-      schemaId : null,
+      schemaId: null,
       schemaEditOpen: false,
 
       projects: [],
@@ -64,7 +55,6 @@ export default class SchemasLayout extends React.Component {
     this.handleAddSchemaDialogClose = this.handleAddSchemaDialogClose.bind(this);
 
     this.renderSchema = this.renderSchema.bind(this);
-    this.renderToggle = this.renderToggle.bind(this);
     this.renderProjectSelectField = this.renderProjectSelectField.bind(this);
     this.renderCompanySelectField = this.renderCompanySelectField.bind(this);
     this.renderSchemaSelectField = this.renderSchemaSelectField.bind(this);
@@ -74,7 +64,6 @@ export default class SchemasLayout extends React.Component {
 
     this.getCompanies();
     this.updateSchemas();
-
   }
 
   getCompanies() {
@@ -115,15 +104,14 @@ export default class SchemasLayout extends React.Component {
             });
           });
           console.log(this.state);
-        } catch(e) {
+        } catch (e) {
           console.error("error", e);
         }
       }
     });
   }
 
-  //when project changes
-  getSchemas(callback){
+  getSchemas(callback) {
     let url = schemaListUrl.replace(':projectId', this.state.currentProject);
     request
     .get(url)
@@ -131,18 +119,14 @@ export default class SchemasLayout extends React.Component {
     .end((err, res) => {
       if (err) {
         console.error(err);
-      } else {
-        if (callback) {
-          callback(res);
-        }
+      } else if (callback) {
+        callback(res);
       }
-      return res;
     });
   }
 
-  //when a schema is selected
   getSchema(callback) {
-    if ( !this.state.schemaId ) { return; }
+    if (!this.state.schemaId) { return; }
     let url = schemaFieldUrl.replace(':schemaFieldId', this.state.schemaId);
     console.log(url);
     request
@@ -151,10 +135,8 @@ export default class SchemasLayout extends React.Component {
     .end((err, res) => {
       if (err) {
         console.error('err', err);
-      } else {
-        if (callback) {
-          callback(res.body);
-        }
+      } else if (callback) {
+        callback(res.body);
       }
     });
   }
@@ -233,7 +215,7 @@ export default class SchemasLayout extends React.Component {
     this.setState({
       companyId: companyId,
       companyName: companyName,
-      schema:[],
+      schema: [],
       schemaId: null
     }, () => this.getProjects(this.state.companyId));
   }
@@ -266,14 +248,13 @@ export default class SchemasLayout extends React.Component {
     console.log(scheme);
     this.setState({
       schema: scheme
-    })
+    });
   }
 
   handleAddSchemaDialogClose(saved, res) {
     this.setState({
       createSchemaDialogOpen: false
     }, () => this.updateSchemas());
-
   }
 
   handleAddSchemaDialogOpen(event) {
@@ -288,28 +269,18 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
-  renderToggle(schema) {
-    return (
-      <Toggle
-        style={ {marginRight: '50px'} }
-        defaultToggled={ schema.status }
-        onToggle={ (event) => this.toggleSchemaStatus(event, schema.id) }
-      />
-    );
-  }
-
 
   renderSchemaSelectField() {
     return (
       <SelectField
         floatingLabelText="Select a Schema"
-        fullWidth={ true }
+        fullWidth
         value={ this.state.schemaId }
         onChange={ (event, index, value) => this.handleSchemaChange(event, value) }
       >
         {
           this.state.schemaList.map((s, idx) => {
-            return(
+            return (
               <MenuItem key={ idx } value={ s.id } primaryText={ s.name } />
             );
           })
@@ -319,31 +290,29 @@ export default class SchemasLayout extends React.Component {
   }
 
   renderCompanySelectField() {
-    try {
-      return (
-        <SelectField
-          floatingLabelText="Company"
-          fullWidth={ true }
-          value={ this.state.companyId }
-          onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) } >
-          {
-            this.state.companies.map((company, idx) => {
-              return (
-                <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
-              );
-            })
-          }
-        </SelectField>
-      );
-    }   catch(e){}
-    }
+    return (
+      <SelectField
+        floatingLabelText="Company"
+        fullWidth
+        value={ this.state.companyId }
+        onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) }
+      >
+        {
+          this.state.companies.map((company, idx) => {
+            return (
+              <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
+            );
+          })
+        }
+      </SelectField>
+    );
+  }
 
   renderProjectSelectField() {
-
     return (
       <SelectField
         floatingLabelText="Project"
-        fullWidth={ true }
+        fullWidth
         hintText="Select Work Project"
         value={ this.state.currentProject }
         onChange={ (event, index, value) =>
@@ -354,7 +323,7 @@ export default class SchemasLayout extends React.Component {
               key={ idx }
               value={ project.id }
               primaryText={ project.name }
-             />
+            />
           );
         })}
       </SelectField>
@@ -374,7 +343,7 @@ export default class SchemasLayout extends React.Component {
             <TableHeaderColumn>Created On</TableHeaderColumn>
           </TableRow>
         </TableHeader>
-        <TableBody displayRowCheckbox={ false } selectable={ true }>
+        <TableBody displayRowCheckbox={ false } selectable>
           {
             this.state.schema
             .sort((a, b) => { return a.id - b.id; })
@@ -397,16 +366,16 @@ export default class SchemasLayout extends React.Component {
     );
   }
 
-  openSchemaEdit(event){
-    this.updateSchema((res) =>{
+  openSchemaEdit(event) {
+    this.updateSchema((res) => {
       this.setState({
         schemaEditOpen: true
       });
-    })
+    });
   }
 
-  closeSchemaEdit(saved, res){
-    if (saved){
+  closeSchemaEdit(saved, res) {
+    if (saved) {
       this.setState({
         schemaId: res.id,
       }, () => {
@@ -421,15 +390,15 @@ export default class SchemasLayout extends React.Component {
   }
 
 
-  renderSchemaEditDialog(){
+  renderSchemaEditDialog() {
     if (this.state.schemaEditOpen) {
       return(
         <SchemaEditDialog
-          schema={this.state.schema}
-          schemaId={this.state.schemaId}
-          onClose={ ( saved, res) => this.closeSchemaEdit(saved, res) }
+          schema={ this.state.schema }
+          schemaId={ this.state.schemaId }
+          onClose={ (saved, res) => this.closeSchemaEdit(saved, res) }
           open={ this.state.schemaEditOpen }
-          ></SchemaEditDialog>
+        />
       );
     } else {
       return null;
@@ -452,28 +421,28 @@ export default class SchemasLayout extends React.Component {
           Total Project Schemas Found
           <Badge
             badgeContent={ this.state.schemaList.length }
-            secondary={ true }
-            />
-            <br></br>
-            <br></br>
+            secondary
+          />
+            <br />
+            <br />
             <RaisedButton
               label="Add Schema"
               labelPosition="after"
               disabled={ !this.state.currentProject }
               onTouchTap={ (event) => { this.handleAddSchemaDialogOpen(event); } }
-              icon={ <AddBoxIcon/> }
+              icon={ <AddBoxIcon /> }
             />
-            <br></br>
-            <br></br>
+            <br />
+            <br />
             <RaisedButton
               onClick={ (event) => this.openSchemaEdit(event) }
               name="SchemaEditor"
               label="Edit Schema"
               labelPosition="after"
-              disabled={!this.state.schemaId}
+              disabled={ !this.state.schemaId }
               secondary
               icon={ <EditIcon /> }
-              />
+            />
 
             <CreateSchemaDialog
               open={ this.state.createSchemaDialogOpen }

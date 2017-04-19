@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import request from '../../../services/request'
-import { configUrl, schemaListUrl } from '../../../config';
+import { schemaListUrl } from '../../../config';
 import _ from 'underscore'
 
 export default class CreateSchema extends React.Component {

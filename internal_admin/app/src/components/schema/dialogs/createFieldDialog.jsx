@@ -9,9 +9,6 @@ import MenuItem from 'material-ui/MenuItem';
 import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
-import schemaRedux from '../../../reduxes/schema';
-import request from '../../../services/request';
-import { schemaFieldUrl } from '../../../config';
 
 export default class CreateFieldDialog extends React.Component {
   constructor() {
@@ -32,7 +29,7 @@ export default class CreateFieldDialog extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNameChanged = this.handleNameChanged.bind(this);
   }
-  componentWillMount(){
+  componentWillMount() {
     this.setState({
       schemaId: this.props.schemaId,
       schemaFields: this.props.schemaFields,
@@ -64,8 +61,6 @@ export default class CreateFieldDialog extends React.Component {
       createdAt: Date.now()
     };
     this.props.onClose(newField);
-
-    // });
   }
 
   handleTypeChanged(event, index, type) {

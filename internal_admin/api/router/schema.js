@@ -106,8 +106,6 @@ router.put('/schema', function* () {
     var name = olderOne.name;
     var version = olderOne.version;
 
-    console.log("olderOne================================", olderOne);
-
     var newSchema = {
       name:name,
       version: version + 1,
@@ -120,7 +118,6 @@ router.put('/schema', function* () {
 
     newSchema = yield QowSchemas.create(newSchema);
     newSchema = newSchema.dataValues;
-    console.log("newSchema================================", newSchema);
 
     _.each(fields, (field) => {
       field.id = null;
@@ -131,7 +128,6 @@ router.put('/schema', function* () {
     })
 
     var result = yield QowFields.bulkCreate(fields);
-    console.log("RESULT OF MAKE!!!=======================================", result);
     this.body = newSchema;
   }
 })
@@ -165,9 +161,6 @@ router.get('/schemaField/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
   if (permissions.has(this.req.user, companyId) && schemaId) {
-    var targetSchema = yield QowSchemas.findOne({
-        id:schemaId
-    });
     var targetFields = yield QowFields.findAll({
       where : {
         qowSchemaId : schemaId,

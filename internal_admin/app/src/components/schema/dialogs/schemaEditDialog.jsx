@@ -2,25 +2,19 @@
 // react-bootstrap-table babel-preset-stage-0 (in .babelrc) babelify react-hot-loader toastr
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import _ from 'underscore';
 import FlatButton from 'material-ui/FlatButton';
 import request from '../../../services/request';
-import { schemaListUrl, schemaUrl, schemaFieldUrl } from '../../../config';
-import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
-import CreateFieldDialog from './createFieldDialog.jsx';
+import { schemaUrl } from '../../../config';
+import CreateFieldDialog from './createFieldDialog';
 
 
 export default class SchemaEditDialog extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       schema: [],
       schemaId: null,
@@ -28,113 +22,115 @@ export default class SchemaEditDialog extends React.Component {
     };
     this.openAddFieldDialog = this.openAddFieldDialog.bind(this);
     this.closeAddFieldDialog = this.closeAddFieldDialog.bind(this);
-
   }
 
-    componentWillMount(){
-      this.setState({
-        schema: this.props.schema,
-        schemaId: this.props.schemaId
-      });
-    }
+  componentWillMount() {
+    this.setState({
+      schema: this.props.schema,
+      schemaId: this.props.schemaId
+    });
+  }
 
-    handleDeleteField(field){
-      var news = _.filter(this.state.schema, (thing) => {
-        return field.id !== thing.id;
-      })
-      console.log("remaining Fields",news);
-      this.setState({
-        schema: news
-      });
-    }
+  handleDeleteField(field) {
+    var news = _.filter(this.state.schema, (thing) => {
+      return field.id !== thing.id;
+    })
+    console.log("remaining Fields", news);
+    this.setState({
+      schema: news
+    });
+  }
 
-    handleSave(){
-      request
-      .put('http://localhost:3335/schema/')
-      .withCredentials()
-      .send({
-        id: this.state.schemaId,
-        fields: this.state.schema
-      })
-      .end((err,res) => {
-        if (err) {
-          console.error(err);
-        } else {
-          this.props.onClose(true, res.body);
-        }
-      })
-    }
-
-    closeAddFieldDialog(field){
-      if (field) {
-        this.state.schema.push(field);
+  handleSave(){
+    request
+    .put('http://localhost:3335/schema/')
+    .withCredentials()
+    .send({
+      id: this.state.schemaId,
+      fields: this.state.schema
+    })
+    .end((err,res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        this.props.onClose(true, res.body);
       }
-      this.setState({
-        createFieldDialogOpen: false,
-      });
-    }
+    })
+  }
 
-    openAddFieldDialog(){
-      console.log(event);
-      this.setState({
-        createFieldDialogOpen: true
-      });
+  closeAddFieldDialog(field){
+    if (field) {
+      this.state.schema.push(field);
     }
+    this.setState({
+      createFieldDialogOpen: false,
+    });
+  }
 
-    renderCreateFieldDialog(){
-      return(
-        <CreateFieldDialog
-          onClose={ (field) => this.closeAddFieldDialog(field)}
-          open={this.state.createFieldDialogOpen}
-        />
-      );
-    }
-    deleteSchema(){
-      let url = schemaUrl.replace(":schemaId", this.state.schemaId);
-      request
-      .delete(url)
-      .withCredentials()
-      .end((err, res) => {
-        if (err) {
-          console.error(err);
-        } else {
-          console.log("deleted");
-        }
-        this.props.onClose(true, {id:null});
-      })
-    }
-    render() {
-      const actions = [
-        <RaisedButton
-          label="Save"
-          primary
-          onClick={ (event)=>{ this.handleSave()} }
-        />,
-        <FlatButton
-          label="Cancel"
-          secondary
-          onClick={ (event) => { this.props.onClose(false); } }
-        />,
-        <FlatButton
-          label="Add Field"
-          default
-          onClick={ (event) => this.openAddFieldDialog(event) }
-        />,
-       <FlatButton
+  openAddFieldDialog(){
+    console.log(event);
+    this.setState({
+      createFieldDialogOpen: true
+    });
+  }
+
+
+  deleteSchema() {
+    let url = schemaUrl.replace(":schemaId", this.state.schemaId);
+    request
+    .delete(url)
+    .withCredentials()
+    .end((err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("deleted");
+      }
+      this.props.onClose(true, { id: null });
+    });
+  }
+
+  renderCreateFieldDialog() {
+    return (
+      <CreateFieldDialog
+        onClose={ (field) => this.closeAddFieldDialog(field) }
+        open={ this.state.createFieldDialogOpen }
+      />
+    );
+  }
+
+  render() {
+    const actions = [
+      <RaisedButton
+        label="Save"
+        primary
+        onTouchTap={ (event)=>{ this.handleSave()} }
+      />,
+      <FlatButton
+        label="Cancel"
+        secondary
+        onTouchTap={ (event) => { this.props.onClose(false); } }
+      />,
+      <FlatButton
+        label="Add Field"
+        default
+        onTouchTap={ (event) => this.openAddFieldDialog(event) }
+      />,
+      <FlatButton
         label="Delete Schema"
         icon={ <DeleteIcon /> }
         onTouchTap={ (event)=> this.deleteSchema() }
-        />,
-      ];
+      />,
+    ];
 
-      return (
-        <Dialog
-          open={this.props.open}
-          fullWidth
-          modal
-          actions={actions}
-          title="Schema Editor"
-          >
+    return (
+      <Dialog
+        open={this.props.open}
+        fullWidth
+        modal
+        actions={actions}
+        title="Schema Editor"
+        >
         <Table selectable={ false }>
           <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
             <TableRow>
@@ -160,19 +156,20 @@ export default class SchemaEditDialog extends React.Component {
                     <TableRowColumn> { field.createdAt } </TableRowColumn>
                     <TableRowColumn>
                       <RaisedButton
-                        onClick={ (event) => {  this.handleDeleteField(field) } }
+                        onTouchTap={ (event) => { this.handleDeleteField(field) } }
                         label="delete"
                         labelPosition="after"
                         icon={ <DeleteIcon /> }
                       />
                     </TableRowColumn>
                   </TableRow>
-              )})
-            }
+                );
+              })
+              }
           </TableBody>
         </Table>
         {this.renderCreateFieldDialog()}
       </Dialog>
-      );
-    }
+    );
+  }
   }
