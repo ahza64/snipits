@@ -1,3 +1,19 @@
+// logging
+const log4js = require('log4js');
+const jsonLayout = require('log4js-json-layout');
+log4js.layouts.addLayout('json', jsonLayout);
+appenders = [{
+    type: 'console',
+    layout: {
+        type: 'json',
+    }
+  }
+];
+log4js.configure({
+  appenders: appenders,
+  replaceConsole: true
+});
+
 // Module
 const koa = require('koa');
 const mount = require('koa-mount');

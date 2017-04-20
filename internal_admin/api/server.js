@@ -1,3 +1,20 @@
+// logging
+const log4js = require('log4js');
+const jsonLayout = require('log4js-json-layout');
+log4js.layouts.addLayout('json', jsonLayout);
+appenders = [{
+    type: 'console',
+    layout: {
+        type: 'json',
+    }
+  }
+];
+log4js.configure({
+  appenders: appenders,
+  replaceConsole: true
+});
+
+
 // Module
 const koa = require('koa');
 const mount = require('koa-mount');
@@ -9,6 +26,7 @@ const models = require('dsp_shared/database/model/ingestion/tables');
 const authMiddleware = require('./middleware/auth');
 const config = require('dsp_shared/conf.d/config').admin;
 const port = config.api_port;
+
 
 // App
 const app = koa();
