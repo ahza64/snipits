@@ -7,7 +7,7 @@ rest_api/test/logs/log.txt
 # build
 ingestion_interface/app/build/bundle.js
 internal_admin/app/build/bundle.js
-
+*.DS_Store
 # Runtime data
 pids
 *.pid
@@ -53,3 +53,6 @@ pdf_generation_service/public/pdf/*
 #outfile
 *qsi_ids
 onetime
+
+#DS_Store
+*.DS_Store

@@ -67,18 +67,20 @@ router.get(
   function*() {
 
     var companyId = this.params.companyId;
-
     if (permissions.has(this.req.user, companyId)) {
       var projects = [];
       try {
-        projects = yield Projects.findAll({
-          where: { companyId: companyId },
-          raw: true
-        });
+        if (!companyId){
+          projects = yield Projects.findAll({});
+        }else{
+          projects = yield Projects.findAll({
+            where: { companyId: companyId },
+            raw: true
+          });
+        }
       } catch (err) {
         console.error(err);
       }
-
       this.body = projects;
     } else {
       this.throw(403);
