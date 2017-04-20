@@ -3,8 +3,9 @@
  */
 
 // Base Url
-const port = require('dsp_shared/conf.d/config.json').admin.api_port;
-const base = require('dsp_shared/conf.d/config.json').admin.external_host;
+const config = require('dsp_shared/conf.d/config.json');
+const port = config.admin.api_port;
+const base = config.admin.external_host + config.admin.url_prefix.substring(0, config.admin.url_prefix.length-1);
 
 // API
 const loginUrl = base + '/login';

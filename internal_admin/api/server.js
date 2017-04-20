@@ -2,6 +2,7 @@
 const koa = require('koa');
 const mount = require('koa-mount');
 const bodyParser = require('koa-body-parser');
+const logger = require('koa-logger')
 const session = require('koa-session');
 const cors = require('kcors');
 const models = require('dsp_shared/database/model/ingestion/tables');
@@ -11,6 +12,8 @@ const port = config.api_port;
 
 // App
 const app = koa();
+
+app.use(logger());
 
 // Database
 models.sequelize.sync().then(function() {
@@ -27,6 +30,8 @@ app.use(cors({
 app.use(bodyParser());
 
 // Router
+config.url_prefix = config.url_prefix.substring(0, config.url_prefix.length-1) ;
+console.log("mounting to ", config.url_prefix);
 app.use(mount(config.url_prefix, require('./router/auth')));
 app.use(authMiddleware);
 app.use(mount(config.url_prefix, require('./router/company')));

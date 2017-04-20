@@ -36,13 +36,13 @@ module.exports = {
   },
   output: {
     path: path.resolve(ROOT_PATH, 'app/build'),
-    publicPath: '/',
+    publicPath: require('dsp_shared/conf.d/config').admin.url_prefix,
     filename: 'bundle.js'
   },
   devServer: {
     contentBase: path.resolve(ROOT_PATH, 'app/build'),
     historyApiFallback: true,
-    hot: true,
+//    hot: true,
     inline: true,
     progress: true,
     host: require('dsp_shared/conf.d/config').admin.host,

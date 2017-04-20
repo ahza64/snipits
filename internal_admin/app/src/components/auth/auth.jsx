@@ -12,14 +12,17 @@ const roleLib = {
 var isRouteAuthorized = (nextState, replace) => {
   var user = authRedux.getState();
   var role = user ? user.role : null;
+  console.log("checking......", user);
 
   if (!(user && user.id)) {
     // check if user login
     replace(urlPrefix);
+    console.log("not logged in");
   } else if (!_.contains(roleLib[role], nextState.location.pathname)) {
     // check if role has the rights
+    console.log("logged in");
     var initRoute = roleLib[role][0].slice(1);
-    replace(urlPrefix + initRoute);
+//    replace(urlPrefix + initRoute);
   }
 };
 
