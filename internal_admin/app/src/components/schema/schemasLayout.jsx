@@ -63,7 +63,6 @@ export default class SchemasLayout extends React.Component {
     this.openSchemaEdit = this.openSchemaEdit.bind(this);
 
     this.getCompanies();
-    this.updateSchemas();
   }
 
   getCompanies() {
@@ -97,13 +96,16 @@ export default class SchemasLayout extends React.Component {
         try {
           this.setState({
             projects: res.body,
-          }, () => {
-            this.setState({
-              currentProject: res.body[0],
-              schemaId: null
-            });
-          });
+            currentProject: res.body[0].id
+          },
+          // () => {
+          //   this.setState({
+          //     schemaId: null
+          //   });
+          // }
+        );
           console.log(this.state);
+          this.updateSchemas();
         } catch (e) {
           console.error("error", e);
         }
@@ -172,6 +174,7 @@ export default class SchemasLayout extends React.Component {
   setSchemaList(list) {
     this.setState({
       schemaList: list,
+      schemaId: list[0].id
     });
   }
 
