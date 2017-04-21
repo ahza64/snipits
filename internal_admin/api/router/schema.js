@@ -34,25 +34,6 @@ router.get(
   }
 );
 
-router.get(
-  '/schemas/all',
-  function*() {
-    var companyId = this.req.user.companyId;
-    var projectId = this.params.projectId;
-    var self = this;
-    if (permissions.has(this.req.user, companyId) && projectId) {
-      var userSchemas = yield QowSchemas.findAll({
-        where: {
-          workProjectId: projectId,
-          newest: true
-         },
-        raw: true
-      })
-      this.body = userSchemas;
-    }
-  }
-);
-
 //create a new schema
 router.post(
   '/schemas/:projectId',
@@ -90,48 +71,6 @@ router.post(
     this.body = result;
   }
 });
-
-router.put('/schema', function* () {
-  if (permissions.has(this.req.user, this.req.user.companyId)) {
-
-    var body = this.request.body;
-    var fields = body.fields;
-    var oldId = body.id;
-
-    var olderOne = yield QowSchemas.findOne({where:{id:oldId}});
-    yield QowSchemas.update({newest: false},{where:{id:oldId}});
-    olderOne = olderOne.dataValues;
-
-    var workProjectId = olderOne.workProjectId;
-    var name = olderOne.name;
-    var version = olderOne.version;
-
-    var newSchema = {
-      name:name,
-      version: version + 1,
-      status: true,
-      newest: true,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      workProjectId: workProjectId,
-    };
-
-    newSchema = yield QowSchemas.create(newSchema);
-    newSchema = newSchema.dataValues;
-
-    _.each(fields, (field) => {
-      field.id = null;
-      field.createdAt = Date.now();
-      field.updatedAt = Date.now();
-      field.version = newSchema.version;
-      field.qowSchemaId= newSchema.id;
-    })
-
-    var result = yield QowFields.bulkCreate(fields);
-    this.body = newSchema;
-  }
-})
-
 //Get a user schema
 router.get('/schema/:schemaId', function* () {
     var schemaId = this.params.schemaId;
@@ -146,13 +85,10 @@ router.delete('/schema/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
   if (permissions.has(this.req.user, companyId) && schemaId) {
-    var update = yield QowSchemas.update({
-      newest:false
-    },{
-      where: { id: schemaId }
-    });
-    console.log(update);
-    this.body = update;
+    var targetSchema = yield QowSchemas.find({where: {id: schemaId}})
+    yield targetSchema.update({status : !targetSchema.status})
+    this.body = targetSchema;
+    yield incrementSchema(targetSchema.dataValues);
   }
 })
 
@@ -161,6 +97,9 @@ router.get('/schemaField/:schemaId', function* () {
   var companyId = this.req.user.companyId;
   var schemaId = this.params.schemaId;
   if (permissions.has(this.req.user, companyId) && schemaId) {
+    var targetSchema = yield QowSchemas.findOne({
+        id:schemaId
+    });
     var targetFields = yield QowFields.findAll({
       where : {
         qowSchemaId : schemaId,
@@ -172,7 +111,86 @@ router.get('/schemaField/:schemaId', function* () {
     }
   });
 
+  //Create a new schemaField
+  router.post('/schemaField/:schemaId', function* () {
+    var body = this.request.body;
+    var schemaId = this.params.schemaId;
+    if (permissions.has(this.req.user, this.req.user.companyId)) {
+      var schema = yield QowSchemas.findOne({
+        where:{
+         id: schemaId
+       }
+     });
 
+     updatedSchema = yield incrementSchema(schema.dataValues);
+      if (schema){
+        var field = {
+          name: body.name,
+          required: body.required,
+          qowSchemaId: updatedSchema.id,
+          version: 1,
+          type: body.type,
+          status: true
+        };
+        this.body = yield QowFields.create(field);
+      }
+    }
+  });
+
+  //should delete a specific field
+  router.delete('/schemaField/:schemaFieldId', function* () {
+    if (permissions.has(this.req.user, this.req.user.companyId)) {
+      var body     = this.request.body;
+      var schemaFieldId = this.params.schemaFieldId;
+
+      var targetFieldInstance = yield QowFields.findOne({
+        where : {
+          id : schemaFieldId
+          }
+        });
+      var schemaId = targetFieldInstance.dataValues.qowSchemaId;
+      var targetSchemaInstance = yield QowSchemas.findOne({
+        where : {
+          id : schemaId
+          }
+        });
+
+      if (!targetSchemaInstance.dataValues){
+        throw(403);
+      }
+
+      yield targetFieldInstance.update({
+        status: !targetFieldInstance.dataValues.status
+      });
+
+      this.body = yield incrementSchema( targetSchemaInstance.dataValues);
+    }
+  });
+
+function* incrementSchema(schema) {
+  var originalSchemaId = schema.id;
+  schema = _.omit(schema,['id','createdAt']);
+  var SchemaUpdate = yield QowSchemas.update({
+    newest:false
+  },{
+    where:{
+      name: schema.name
+    }
+  });
+  schema.version = schema.version + 1;
+  var updatedSchema = yield QowSchemas.create(schema);
+  updatedSchema = updatedSchema.dataValues;
+
+  yield QowFields.update({
+    qowSchemaId: updatedSchema.id
+  },{
+     where: {
+      qowSchemaId: originalSchemaId
+     }
+  });
+
+  return updatedSchema;
+}
 
 app.use(router.routes());
 
