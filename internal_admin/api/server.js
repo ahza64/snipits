@@ -48,7 +48,7 @@ app.use(cors({
 app.use(bodyParser());
 
 // Router
-config.url_prefix = config.url_prefix.substring(0, config.url_prefix.length-1) ;
+config.url_prefix = config.url_prefix.substring(0, config.url_prefix.length-1) + '/api' ;
 console.log("mounting to ", config.url_prefix);
 app.use(mount(config.url_prefix, require('./router/auth')));
 app.use(authMiddleware);
