@@ -4,9 +4,9 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
-import request from '../../../services/request'
-import { schemaListUrl } from '../../../config';
-import _ from 'underscore'
+import request from '../../../services/request';
+
+import { configUrl, schemaListUrl } from '../../../config';
 
 export default class CreateSchema extends React.Component {
   constructor() {
@@ -37,17 +37,18 @@ export default class CreateSchema extends React.Component {
 
   handleSubmit() {
     let error = false;
-    let schemaNames = _.pluck(this.props.schemas, 'name');
-
-    if (_.contains(schemaNames, this.state.token)) {
-      error = true;
-      this.setState({ snackbarOpen: true });
+    for (let i = 0; i < this.props.schemas.length; i++) {
+      if (this.state.token == this.props.schemas[i].name) {
+        error = true;
+        this.setState({ snackbarOpen: true });
+        break;
+      }
     }
 
     if (!error) {
       this.addSchema(this.state.token);
       this.setState({ snackbarOpen: false });
-      this.props.onClose(false);
+      this.props.onClose();
     }
   }
 
@@ -80,7 +81,7 @@ export default class CreateSchema extends React.Component {
       <FlatButton
         label="Cancel"
         secondary
-        onClick={ ()=> this.props.onClose(false) }
+        onClick={ this.props.onClose }
       />,
     ];
 
