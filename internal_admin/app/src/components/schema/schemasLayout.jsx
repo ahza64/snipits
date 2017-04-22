@@ -97,12 +97,7 @@ export default class SchemasLayout extends React.Component {
           this.setState({
             projects: res.body,
             currentProject: res.body[0].id
-          },
-          // () => {
-          //   this.setState({
-          //     schemaId: null
-          //   });
-          // }
+          }
         );
           console.log(this.state);
           this.updateSchemas();
