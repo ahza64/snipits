@@ -30,27 +30,33 @@
         "mongo_db_name": "prod_trans",
         "name":"dispatchr"
     },
-    "schema":{
-        "name":"schema",
-        "mongo_db_host": "localhost",
-        "mongo_db_name": "minishiva",
-        "mongo_db_port": 27017
-    },
-    "schema_postgres":{ // use this config instead of 'schema' to connect to postgresql (it should be renamed to 'schema')
-        "storage": "postgres",
-        "db_host": "localhost",
-        "db_port": 5432,
-        "db_name": "schema",
-        "db_user": "postgres",
-        "db_pass": "password"
-    },
-    "schema_elastic":{ // use this config instead of 'schema' to connect to elasticsearch (it should be renamed to 'schema')
-        "storage": "elasticsearch",
-        "db_host": "localhost",
-        "db_port": 9200,
-        "db_name": "dev",
-        "db_user": "elastic",
-        "db_pass": "elastic"
+    "schema": {
+        "defaultStorage": "mongo",
+        "storages": {
+            "mongo": {
+                "type": "mongo",
+                "name":"schema",
+                "mongo_db_host": "localhost",
+                "mongo_db_name": "minishiva",
+                "mongo_db_port": 27017
+            },
+            "postgres": {
+                "type": "postgres",
+                "db_host": "localhost",
+                "db_port": 5432,
+                "db_name": "schema",
+                "db_user": "postgres",
+                "db_pass": "password"
+            },
+            "elastic": {
+                "type": "elasticsearch",
+                "db_host": "localhost",
+                "db_port": 9200,
+                "db_name": "dev",
+                "db_user": "elastic",
+                "db_pass": "elastic"
+            }
+        }
     },
     "meteor":{
         "mongo_db_host": "localhost",

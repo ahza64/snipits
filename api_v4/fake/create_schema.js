@@ -3,8 +3,8 @@
  * Create a schema
  */
 
-const apiV4util = require('dsp_shared/database/model/schema/mongo/util');
 const util = require('dsp_shared/lib/cmd_utils');
+util.connect([]);
 const Schema = require('dsp_shared/database/model/schema');
 
 const schema_model = {
@@ -59,21 +59,13 @@ function prepareAttributes(attrs) {
 
 function *create_schema(schema_name) {
   console.log(`Calling create_schema for ${schema_name}`);
-  let type = Schema.getType ? Schema.getType() : null;
-  if (type) {
+  if (Schema.create) {
     const model = {};
     Object.keys(schema_model).forEach((field) => {
       const type = prepareAttributes(schema_model[field]);
       model[field] = type;
     });
     yield Schema.create(schema_name, '0.0.1', 'v4', model);
-  } else {
-    // Create mongodb schema
-    yield apiV4util.create(schema_name, '0.0.1', 'v4');
-    for (let i = 0; i < Object.keys(schema_model).length; i++) {
-      let key = Object.keys(schema_model)[i];
-      yield apiV4util.add_field(schema_name, key, prepareAttributes(schema_model[key]));
-    }
   }
 }
 

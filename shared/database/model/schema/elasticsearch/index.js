@@ -93,7 +93,7 @@ class EsSchema {
           const source = item._source;
           if (source) {
             const getResource = () => {
-              return this.getResource(source.name, source.fields);
+              return this.getResource(item, source.fields);
             };
             return Object.assign({
               id: item._id,
@@ -111,8 +111,8 @@ class EsSchema {
     return prepared;
   }
 
-  getResource(name, fields) {
-    return new EsResource(this.config, name, fields);
+  getResource(schema, fields) {
+    return new EsResource(this.config, schema._name, fields);
   }
 
   find() {

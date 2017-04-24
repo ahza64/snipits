@@ -9,7 +9,8 @@ const _ = require('underscore');
 const PostgresResource = require('./resource');
 
 class PostgresSchema {
-  constructor(config) {
+  constructor(name, config) {
+    this.name = name;
     const db = {};
     db.sequelize = new Sequelize(
       `postgres://${config.db_user}:${config.db_pass}@${config.db_host}:${config.db_port}/${config.db_name}`,
@@ -26,6 +27,7 @@ class PostgresSchema {
         _name: { type: DataTypes.STRING },
         _version: { type: DataTypes.STRING },
         _api: { type: DataTypes.STRING },
+        _storage: { type: DataTypes.STRING },
         __v: { type: DataTypes.INTEGER },
         fields: { type: DataTypes.JSON }
       });
@@ -69,37 +71,40 @@ class PostgresSchema {
   }
 
   getResource(schema, fields) {
-    this.db[schema._name] = this.db.sequelize.import(schema._name, function(sequelize, DataTypes) {
-      const tableSchema = {
-        _id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-        _deleted: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
-      };
-      Object.keys(fields).forEach((field) => {
-        let fieldType = fields[field];
-        if (typeof fieldType === 'object') {
-          fieldType = fieldType.type;
-        }
-        if (typeof fieldType === 'string') {
-          fieldType = fieldType.toLowerCase();
-        }
-        const allowedTypes = {
-          "string": DataTypes.STRING,
-          "number": DataTypes.DOUBLE,
-          "date": DataTypes.DATE,
-          "geojson": DataTypes.JSON
+    let resource = null;
+    if ((!schema._storage) || (schema._storage === this.name)) {
+      this.db[schema._name] = this.db.sequelize.import(schema._name, function(sequelize, DataTypes) {
+        const tableSchema = {
+          _id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+          _deleted: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
         };
-        if (fieldType in allowedTypes) {
-          tableSchema[field] = { type: allowedTypes[fieldType] }
-        } else {
-          console.error(`Init table ${schema._name} error: field type ${fieldType} is not allowed.`);
-        }
+        Object.keys(fields).forEach((field) => {
+          let fieldType = fields[field];
+          if (typeof fieldType === 'object') {
+            fieldType = fieldType.type;
+          }
+          if (typeof fieldType === 'string') {
+            fieldType = fieldType.toLowerCase();
+          }
+          const allowedTypes = {
+            "string": DataTypes.STRING,
+            "number": DataTypes.DOUBLE,
+            "date": DataTypes.DATE,
+            "geojson": DataTypes.JSON
+          };
+          if (fieldType in allowedTypes) {
+            tableSchema[field] = { type: allowedTypes[fieldType] }
+          } else {
+            console.error(`Init table ${schema._name} error: field type ${fieldType} is not allowed.`);
+          }
+        });
+        return sequelize.define(schema._name, tableSchema);
       });
-      return sequelize.define(schema._name, tableSchema);
-    });
 
-    this.db[schema._name].sync();
-
-    return new PostgresResource(schema._name, this.db[schema._name]);
+      this.db[schema._name].sync();
+      resource = new PostgresResource(schema._name, this.db[schema._name]);
+    }
+    return resource;
   }
 
   find() {

@@ -28,103 +28,161 @@
  *  ```
  */
 
-const config = require('dsp_config/config').get();
-require('dsp_database/database')(config.schema);
 const mongoose = require('mongoose');
-const connection = require('dsp_database/connections')('schema');
 const autoIncrement = require('mongoose-auto-increment');
 const _ = require('lodash');
 const assert = require('assert');
+const Resource = require('./resource');
+const co = require('co');
 
-let SchemaModel;
+class MongoSchema {
+  constructor(name, config) {
+    console.log('# MongoSchema', name, config);
+    const self = this;
+    this.name = name;
+    // create the connection
+    require('dsp_database/database')(config);
+    this.connection = require('dsp_database/connections')('schema');
 
-autoIncrement.initialize(connection);
-const s = {
-  _name: { type: String, required: true, index: true }, // name of the model/collection
-  _version: { type: String, required: true, index: true },
-  id: { type: Number, index: true },
-  created: Date,
-  updated: Date,
-  _api: String,
-  //other_field: {enum: ["String", "Number", "Date", "Boolean", "ForeignKey"]}
-};
-const reserved_keys = Object.keys(s).concat(["_id", "__v", "_api"]);
+    autoIncrement.initialize(this.connection);
+    const s = {
+      _name: { type: String, required: true, index: true }, // name of the model/collection
+      _version: { type: String, required: true, index: true },
+      id: { type: Number, index: true },
+      created: Date,
+      updated: Date,
+      _api: String,
+      _storage: String,
+      //other_field: {enum: ["String", "Number", "Date", "Boolean", "ForeignKey"]}
+    };
+    const reserved_keys = Object.keys(s).concat(["_id", "__v", "_api"]);
 
-// Damn so meta
-const schemaSchema = new mongoose.Schema(s, { strict: false });
-const types = {
-  String: String,
-  Number: Number,
-  Date: Date,
-  Boolean: Boolean,
-  GeoJSON: { type: {} },
-  ForeignKey: mongoose.Schema.Types.ObjectId
-};
+    const schemaSchema = new mongoose.Schema(s, { strict: false });
+    schemaSchema.plugin(autoIncrement.plugin, { model: 'Schema', field: 'id', startAt: 1 });
+    schemaSchema.statics.getTypes = function getTypes() {
+      return types;
+    };
 
-const baseSchema = {
-  id: { type: Number, index: { unique: true } },
-  created: { type: Date, default: Date.now, index: true },
-  updated: { type: Date, default: Date.now, index: true },
-  _deleted: { type: Boolean, default: false },
-};
-
-schemaSchema.plugin(autoIncrement.plugin, { model: 'Schema', field: 'id', startAt: 1 });
-schemaSchema.methods.getMongoSchema = function getMongoSchema() {
-  const schema = _.omit(this.toJSON(), reserved_keys);
-  const fields = Object.keys(schema);
-  const self = this;
-
-  const monogoSchema = {};
-  fields.forEach((field) => {
-    // parse schema document
-    console.log("field", field, self[field]);
-    const type = self.get(field).type || self.get(field);
-    const indexed = self.get(field).index || false;
-    const unique = self.get(field).unique || false;
-    assert(types[type], `Unknown Type: ${type} for ${field} in schema: ${self._name}`);
-
-    // build mongoose schema for field
-    const field_schema = { type: types[type] };
-    if (unique) {
-      field_schema.index = { unique: true };
-    } else if (indexed) {
-      field_schema.index = true;
-      if (type === "GeoJSON") {
-        field_schema.index = '2dsphere';
+    // treeSchema.index({ location: '2dsphere' });
+    schemaSchema.methods.getModel = function getModel() {
+      try {
+        return self.connection.model(this._name);
+      } catch (e) {
+        const schema = _.omit(this.toJSON(), reserved_keys);
+        console.log('# schema', schema);
+        const fields = Object.keys(schema);
+        const mongoSchema = self.getMongoSchema.bind(this)(fields);
+        const builtSchema = new mongoose.Schema(mongoSchema);
+        builtSchema.plugin(autoIncrement.plugin, { model: this._name, field: 'id', startAt: 1 });
+        self.addGetSchema(builtSchema, this._name);
+        return self.connection.model(this._name, builtSchema);
       }
-    }
-    monogoSchema[field] = field_schema;
-  });
-  // add standaridzed fields
-  Object.assign(monogoSchema, baseSchema);
-  console.log("FINAL SCHEMA", monogoSchema);
-  return monogoSchema;
-};
+    };
 
-function addGetSchema(schema, schema_name) {
-  schema.methods.getSchema = function getSchema() {
-    return SchemaModel.findOne({ _name: schema_name });
-  };
+    schemaSchema.methods.getResource = function getResource() {
+      return new Resource(this.getModel());
+    };
+
+    this.schemaModel = self.connection.model('Schema', schemaSchema);
+  }
+
+  getMongoSchema(fields) {
+    const types = {
+      String: String,
+      Number: Number,
+      Date: Date,
+      Boolean: Boolean,
+      GeoJSON: { type: {} },
+      ForeignKey: mongoose.Schema.Types.ObjectId
+    };
+
+    const baseSchema = {
+      id: { type: Number, index: { unique: true } },
+      created: { type: Date, default: Date.now, index: true },
+      updated: { type: Date, default: Date.now, index: true },
+      _deleted: { type: Boolean, default: false },
+    };
+
+    const self = this;
+
+    const mongoSchema = {};
+    fields.forEach((field) => {
+      // parse schema document
+      console.log("field", field, self[field]);
+      const type = self.get(field).type || self.get(field);
+      const indexed = self.get(field).index || false;
+      const unique = self.get(field).unique || false;
+      assert(types[type], `Unknown Type: ${type} for ${field} in schema: ${self._name}`);
+
+      // build mongoose schema for field
+      const field_schema = { type: types[type] };
+      if (unique) {
+        field_schema.index = { unique: true };
+      } else if (indexed) {
+        field_schema.index = true;
+        if (type === "GeoJSON") {
+          field_schema.index = '2dsphere';
+        }
+      }
+      mongoSchema[field] = field_schema;
+    });
+    // add standaridzed fields
+    Object.assign(mongoSchema, baseSchema);
+    console.log("FINAL SCHEMA", mongoSchema);
+    return mongoSchema;
+  }
+
+  addGetSchema(schema, schema_name) {
+    schema.methods.getSchema = function getSchema() {
+      return SchemaModel.findOne({ _name: schema_name });
+    };
+  }
+
+  getModel(schema, fields) {
+    const name = schema._name;
+    let model = null;
+    try {
+      model = this.connection.model(name);
+    } catch (e) {
+      const fieldsNames = Object.keys(fields);
+      const schemaConf = {
+        _name: schema,
+        get: (field) => {
+          return schema[field] || fields[field];
+        }
+      };
+      const builtSchema = new mongoose.Schema(this.getMongoSchema.bind(schemaConf)(fieldsNames));
+      builtSchema.plugin(autoIncrement.plugin, { model: name, field: 'id', startAt: 1 });
+      this.addGetSchema(builtSchema, name);
+      model = this.connection.model(name, builtSchema);
+    }
+    return model;
+  }
+
+  getType() {
+    return 'mongodb';
+  }
+
+  find(params) {
+    return this.schemaModel.find(params);
+  }
+
+  getResource(schema, fields) {
+    let resource = null;
+    if ((!schema._storage) || (schema._storage === this.name)) {
+      const model = this.getModel(schema, fields);
+      resource = new Resource(model);
+    }
+    return resource;
+  }
+
+  create(name, version, api, model) {
+    const self = this;
+    return co(function *create_new_schema() {
+      const doc = Object.assign({ _name: name, _version: version, _api: api, _storage: null }, model);
+      return yield self.schemaModel.create(doc);
+    });
+  }
 }
 
-schemaSchema.statics.getTypes = function getTypes() {
-  return types;
-};
-
-// treeSchema.index({ location: '2dsphere' });
-schemaSchema.methods.getModel = function getModel() {
-  try {
-    return connection.model(this._name);
-  } catch (e) {
-    const builtSchema = new mongoose.Schema(this.getMongoSchema());
-    builtSchema.plugin(autoIncrement.plugin, { model: this._name, field: 'id', startAt: 1 });
-    addGetSchema(builtSchema, this._name);
-    return connection.model(this._name, builtSchema);
-  }
-};
-
-
-SchemaModel = connection.model('Schema', schemaSchema);
-
-
-module.exports = SchemaModel;
+module.exports = MongoSchema;

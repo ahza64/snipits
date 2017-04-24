@@ -5,7 +5,6 @@ const cors = require('kcors');
 const co = require('co');
 const config = require('dsp_shared/config/config').get();
 const Schema = require('dsp_shared/database/model/schema');
-const Resource = require('dsp_shared/lib/resource');
 const router = require('./resource_router');
 const http = require('http');
 
@@ -22,10 +21,7 @@ co(function *build_app() {
     console.log("SCHEMAS", schemas[i]);
     let resource = null;
 
-    if (schemas[i].getModel) {
-      const Model = schemas[i].getModel();
-      resource = new Resource(Model);
-    } else if (schemas[i].getResource) {
+    if (schemas[i].getResource) {
       resource = schemas[i].getResource();
     }
     if (resource) {
