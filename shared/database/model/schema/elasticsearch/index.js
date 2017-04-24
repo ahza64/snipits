@@ -7,7 +7,8 @@ const rp = require('request-promise');
 const EsResource = require('./resource');
 
 class EsSchema {
-  constructor(config) {
+  constructor(name, config) {
+    this.name = name;
     this.config = {
       host: config.db_host,
       port: config.db_port,              
@@ -21,7 +22,7 @@ class EsSchema {
     return 'elasticsearch';
   }
 
-  create(name, version, api, fields) {
+  create(name, version, api, fields, storage) {
     const self = this;
     return co(function *create_new_schema() {
       let created = null;
@@ -32,6 +33,7 @@ class EsSchema {
         api: api,
         v: 0,
         fields: fields,
+        storage: storage,
         created: timestamp,
         updated: timestamp
       };
@@ -44,14 +46,15 @@ class EsSchema {
       });
       if (response) {
         created = Object.assign({}, body, { _id: response._id });
-        const mapping = self.createSchemaMapping(name, fields);
-        console.log(mapping);
-        yield rp({
-          method: 'PUT',
-          uri: `${url}/${name}/_mapping?refresh=true`,
-          body: mapping,
-          json: true
-        });
+        if ((!storage) || (storage === self.name)) {
+          const mapping = self.createSchemaMapping(name, fields);
+          yield rp({
+            method: 'PUT',
+            uri: `${url}/${name}/_mapping?refresh=true`,
+            body: mapping,
+            json: true
+          });
+        }
       }
       return created;
     });
@@ -92,9 +95,6 @@ class EsSchema {
         prepared = list.map((item) => {
           const source = item._source;
           if (source) {
-            const getResource = () => {
-              return this.getResource(item, source.fields);
-            };
             return Object.assign({
               id: item._id,
               _id: item._id,
@@ -102,7 +102,7 @@ class EsSchema {
               _version: source.version,
               _api: source.api,
               __v: source.v,
-              getResource: getResource
+              _storage: source.storage
             }, source.fields);
           }
         });
@@ -111,8 +111,12 @@ class EsSchema {
     return prepared;
   }
 
-  getResource(schema, fields) {
-    return new EsResource(this.config, schema._name, fields);
+  getResource(name, fields, storage) {
+    let resource = null;
+    if ((!storage) || (storage === this.name)) {
+      resource = new EsResource(this.config, name, fields);
+    }
+    return resource;
   }
 
   find() {
@@ -139,6 +143,8 @@ class EsSchema {
       return schemas;
     });
   }
+
+  close() {}
 }
 
 module.exports = EsSchema;

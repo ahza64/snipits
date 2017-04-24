@@ -7,7 +7,7 @@ const faker = require('faker');
 const rp = require('request-promise');
 const config = require('dsp_shared/config/config').get();
 const util = require('dsp_shared/lib/cmd_utils');
-util.connect(['schema']);
+util.connect([]);
 
 function *create_records(schema_name, count) {
   console.log(`Calling create_records for ${schema_name} generating ${count} ${typeof count} records`);

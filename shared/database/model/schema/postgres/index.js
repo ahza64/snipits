@@ -46,12 +46,13 @@ class PostgresSchema {
     return 'postgres';
   }
 
-  create(name, version, api, fields) {
+  create(name, version, api, fields, storage) {
     const self = this;
     const newSchema = {
       _name: name,
       _version: version,
       _api: api,
+      _storage: storage,
       __v: 0,
       fields: fields
     };
@@ -64,16 +65,13 @@ class PostgresSchema {
   prepareSchema(schema) {
     let prepared =_.omit(schema, ['createdAt', 'updatedAt', 'fields']);
     prepared = Object.assign(prepared, { id: schema._id, _id: `${schema._id}` }, schema.fields);
-    prepared.getResource = () => {
-      return this.getResource(schema, schema.fields);
-    };
     return prepared;
   }
 
-  getResource(schema, fields) {
+  getResource(name, fields, storage) {
     let resource = null;
-    if ((!schema._storage) || (schema._storage === this.name)) {
-      this.db[schema._name] = this.db.sequelize.import(schema._name, function(sequelize, DataTypes) {
+    if ((!storage) || (storage === this.name)) {
+      this.db[name] = this.db.sequelize.import(name, function(sequelize, DataTypes) {
         const tableSchema = {
           _id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
           _deleted: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
@@ -95,14 +93,14 @@ class PostgresSchema {
           if (fieldType in allowedTypes) {
             tableSchema[field] = { type: allowedTypes[fieldType] }
           } else {
-            console.error(`Init table ${schema._name} error: field type ${fieldType} is not allowed.`);
+            console.error(`Init table ${name} error: field type ${fieldType} is not allowed.`);
           }
         });
-        return sequelize.define(schema._name, tableSchema);
+        return sequelize.define(name, tableSchema);
       });
 
-      this.db[schema._name].sync();
-      resource = new PostgresResource(schema._name, this.db[schema._name]);
+      this.db[name].sync();
+      resource = new PostgresResource(name, this.db[name]);
     }
     return resource;
   }
@@ -113,6 +111,10 @@ class PostgresSchema {
       yield self.db.schemas.sync();
       return yield self.db.schemas.findAll({ raw: true }).map(schema => self.prepareSchema(schema));
     });
+  }
+
+  close() {
+    this.db.sequelize.close();
   }
 }
 

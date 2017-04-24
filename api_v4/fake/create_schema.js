@@ -57,7 +57,7 @@ function prepareAttributes(attrs) {
   return prepared;
 }
 
-function *create_schema(schema_name) {
+function *create_schema(schema_name, storage_name) {
   console.log(`Calling create_schema for ${schema_name}`);
   if (Schema.create) {
     const model = {};
@@ -65,7 +65,8 @@ function *create_schema(schema_name) {
       const type = prepareAttributes(schema_model[field]);
       model[field] = type;
     });
-    yield Schema.create(schema_name, '0.0.1', 'v4', model);
+    yield Schema.create(schema_name, '0.0.1', 'v4', model, storage_name);
+    Schema.closeConnections();
   }
 }
 

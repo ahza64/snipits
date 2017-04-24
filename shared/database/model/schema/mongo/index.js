@@ -37,7 +37,6 @@ const co = require('co');
 
 class MongoSchema {
   constructor(name, config) {
-    console.log('# MongoSchema', name, config);
     const self = this;
     this.name = name;
     // create the connection
@@ -69,7 +68,6 @@ class MongoSchema {
         return self.connection.model(this._name);
       } catch (e) {
         const schema = _.omit(this.toJSON(), reserved_keys);
-        console.log('# schema', schema);
         const fields = Object.keys(schema);
         const mongoSchema = self.getMongoSchema.bind(this)(fields);
         const builtSchema = new mongoose.Schema(mongoSchema);
@@ -77,10 +75,6 @@ class MongoSchema {
         self.addGetSchema(builtSchema, this._name);
         return self.connection.model(this._name, builtSchema);
       }
-    };
-
-    schemaSchema.methods.getResource = function getResource() {
-      return new Resource(this.getModel());
     };
 
     this.schemaModel = self.connection.model('Schema', schemaSchema);
@@ -108,7 +102,6 @@ class MongoSchema {
     const mongoSchema = {};
     fields.forEach((field) => {
       // parse schema document
-      console.log("field", field, self[field]);
       const type = self.get(field).type || self.get(field);
       const indexed = self.get(field).index || false;
       const unique = self.get(field).unique || false;
@@ -128,7 +121,6 @@ class MongoSchema {
     });
     // add standaridzed fields
     Object.assign(mongoSchema, baseSchema);
-    console.log("FINAL SCHEMA", mongoSchema);
     return mongoSchema;
   }
 
@@ -138,20 +130,20 @@ class MongoSchema {
     };
   }
 
-  getModel(schema, fields) {
-    const name = schema._name;
+  getModel(name, fields) {
     let model = null;
     try {
       model = this.connection.model(name);
     } catch (e) {
       const fieldsNames = Object.keys(fields);
       const schemaConf = {
-        _name: schema,
+        _name: name,
         get: (field) => {
-          return schema[field] || fields[field];
+          return fields[field];
         }
       };
-      const builtSchema = new mongoose.Schema(this.getMongoSchema.bind(schemaConf)(fieldsNames));
+      const mongoSchema = this.getMongoSchema.bind(schemaConf)(fieldsNames);
+      const builtSchema = new mongoose.Schema(mongoSchema);
       builtSchema.plugin(autoIncrement.plugin, { model: name, field: 'id', startAt: 1 });
       this.addGetSchema(builtSchema, name);
       model = this.connection.model(name, builtSchema);
@@ -164,24 +156,32 @@ class MongoSchema {
   }
 
   find(params) {
-    return this.schemaModel.find(params);
+    const self = this;
+    return co(function *create_new_schema() {
+      const schemas = yield self.schemaModel.find(params);
+      return schemas.map(schema => schema.toJSON());
+    });
   }
 
-  getResource(schema, fields) {
+  getResource(name, fields, storage) {
     let resource = null;
-    if ((!schema._storage) || (schema._storage === this.name)) {
-      const model = this.getModel(schema, fields);
+    if ((!storage) || (storage === this.name)) {
+      const model = this.getModel(name, fields);
       resource = new Resource(model);
     }
     return resource;
   }
 
-  create(name, version, api, model) {
+  create(name, version, api, model, storage) {
     const self = this;
     return co(function *create_new_schema() {
-      const doc = Object.assign({ _name: name, _version: version, _api: api, _storage: null }, model);
+      const doc = Object.assign({ _name: name, _version: version, _api: api, _storage: storage }, model);
       return yield self.schemaModel.create(doc);
     });
+  }
+
+  close() {
+    this.connection.close();
   }
 }
 
