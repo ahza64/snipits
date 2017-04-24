@@ -19,7 +19,7 @@ var isRouteAuthorized = (nextState, replace) => {
   } else if (!_.contains(roleLib[role], nextState.location.pathname)) {
     // check if role has the rights
     var initRoute = roleLib[role][0].slice(1);
-    replace(urlPrefix + initRoute);
+//    replace(urlPrefix + initRoute);
   }
 };
 

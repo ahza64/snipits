@@ -3,8 +3,9 @@
  */
 
 // Base Url
-const port = require('dsp_shared/conf.d/config.json').admin.api_port;
-const base = 'http://localhost:' + port;
+const config = require('dsp_shared/conf.d/config.json');
+const port = config.admin.api_port;
+const base = config.admin.external_host + config.admin.url_prefix.substring(0, config.admin.url_prefix.length-1) + '/api';
 
 // API
 const loginUrl = base + '/login';
@@ -34,7 +35,6 @@ const deleteUserUrl = base + '/users/:id';
 const ingestionUrl = base + '/ingestions';
 const taxonomiesUrl = base + '/taxonomies';
 const taxFieldsUrl = base + '/taxfields';
-
 export {
   loginUrl,
   logoutUrl,

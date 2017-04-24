@@ -1,7 +1,25 @@
+// logging
+const log4js = require('log4js');
+const jsonLayout = require('log4js-json-layout');
+log4js.layouts.addLayout('json', jsonLayout);
+appenders = [{
+    type: 'console',
+    layout: {
+        type: 'json',
+    }
+  }
+];
+log4js.configure({
+  appenders: appenders,
+  replaceConsole: true
+});
+
+
 // Module
 const koa = require('koa');
 const mount = require('koa-mount');
 const bodyParser = require('koa-body-parser');
+const logger = require('koa-logger')
 const session = require('koa-session');
 const cors = require('kcors');
 const models = require('dsp_shared/database/model/ingestion/tables');
@@ -9,8 +27,11 @@ const authMiddleware = require('./middleware/auth');
 const config = require('dsp_shared/conf.d/config').admin;
 const port = config.api_port;
 
+
 // App
 const app = koa();
+
+app.use(logger());
 
 // Database
 models.sequelize.sync().then(function() {
@@ -27,6 +48,8 @@ app.use(cors({
 app.use(bodyParser());
 
 // Router
+config.url_prefix = config.url_prefix.substring(0, config.url_prefix.length-1) + '/api' ;
+console.log("mounting to ", config.url_prefix);
 app.use(mount(config.url_prefix, require('./router/auth')));
 app.use(authMiddleware);
 app.use(mount(config.url_prefix, require('./router/company')));
