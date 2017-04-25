@@ -29,7 +29,7 @@ passport.deserializeUser(function(user, done) {
   }).then(user => {
     done(null, user);
   }).catch(err => {
-    done(err, false);
+    done({error: err}, false);
   });
 });
 
@@ -42,14 +42,17 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
     raw: true,
     include: [Companies]
   }).then(user => {
-    var isAuthenticated = Users.build(user).validPassword(password);
-    if (user && isAuthenticated) {
-      done(null, user);
-    } else {
-      done(null, false);
+    if(user) {
+      var isAuthenticated = Users.build(user).validPassword(password);
+      if (isAuthenticated) {
+        done(null, user);
+      } else {
+        done(null, false);
+      }
     }
   }).catch(err => {
-    done(err, false);
+  console.log("errerererere", err);
+    done(new Error(err), false);
   });
 }));
 
