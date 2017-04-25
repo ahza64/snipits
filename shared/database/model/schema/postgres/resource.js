@@ -181,11 +181,11 @@ class PostgresResource {
         }
         orderParams.push([order, orderDirection]);
       }
-      console.log(filters);
+
       const list = yield self.model.findAll({
         offset: offset,
         limit: limit,
-        where: self.prepareFilters(filters),
+        where: PostgresResource.prepareFilters(filters),
         order: orderParams,
         raw: true
       });
@@ -193,19 +193,21 @@ class PostgresResource {
     });
   }
 
-  prepareFilters(filters) {
+  static prepareFilters(filters) {
     const prepared = {};
-    Object.keys(filters).forEach((field) => {
-      if (typeof filters[field] === 'string') {
-        if (field === '_deleted') {
-          prepared[field] = filters[field].toLowerCase() === 'true' ? true : false;
+    if (filters) {
+      Object.keys(filters).forEach((field) => {
+        if (typeof filters[field] === 'string') {
+          if (field === '_deleted') {
+            prepared[field] = filters[field].toLowerCase() === 'true' ? true : false;
+          } else {
+            prepared[field] = filters[field];
+          }
         } else {
           prepared[field] = filters[field];
         }
-      } else {
-        prepared[field] = filters[field];
-      }
-    });
+      });
+    }
     return prepared;
   }
 
@@ -215,7 +217,7 @@ class PostgresResource {
   count(filters) {
     const self = this;
     return co(function *get_count() {
-      return yield self.model.count({ where: self.prepareFilters(filters) });
+      return yield self.model.count({ where: PostgresResource.prepareFilters(filters) });
     });
   }
 }

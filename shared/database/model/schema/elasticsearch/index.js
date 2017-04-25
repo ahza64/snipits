@@ -119,10 +119,61 @@ class EsSchema {
     return resource;
   }
 
-  find() {
+  prepareQuery(filters, sort) {
+    const query = {
+      query: {
+        bool: {
+          must: []
+        }
+      }
+    };
+    const renamed = {
+      id: '_id',
+      _name: 'name',
+      _version: 'version',
+      _api: 'api',
+      __v: 'v',
+      _storage: 'storage'
+    };
+    Object.keys(filters).forEach((field) => {
+      let value = filters[field];
+      if (typeof value === 'string') {
+        if (field === '_deleted') {
+          value = value.toLowerCase() === 'true' ? true : false;
+        }
+      }
+      const match = {};
+      if (field in renamed) {
+        match[renamed[field]] = value;
+      } else {
+        match[field] = value;
+      }
+      query.query.bool.must.push({
+        match: match
+      });
+    });
+    if (sort) {
+      let order = 'asc';
+      let field = sort;
+      if (sort.startsWith('-')) {
+        field = sort.substring(1);
+        order = 'desc';
+      }
+      if (field in renamed) {
+        field = renamed[field];
+      }
+      query.sort = {};
+      query.sort[field] = {
+        order: order
+      };
+    }
+    return query;
+  }
+
+  find(params) {
     const self = this;
     return co(function *find_schemas() {
-      const body = { sort: { created: { order: 'asc' } } };
+      const body = self.prepareQuery(params || {}, 'created');
       const options = {
         method: 'POST',
         uri: `http://${self.config.host}:${self.config.port}/${self.config.index}/schemas/_search`,

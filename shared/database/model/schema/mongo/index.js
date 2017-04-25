@@ -41,7 +41,7 @@ class MongoSchema {
     this.name = name;
     // create the connection
     require('dsp_database/database')(config);
-    this.connection = require('dsp_database/connections')('schema');
+    this.connection = require('dsp_database/connections')(config.name);
 
     autoIncrement.initialize(this.connection);
     const s = {
@@ -76,8 +76,11 @@ class MongoSchema {
         return self.connection.model(this._name, builtSchema);
       }
     };
-
-    this.schemaModel = self.connection.model('Schema', schemaSchema);
+    try {
+      this.schemaModel = this.connection.model('Schema', schemaSchema);
+    } catch (e) {
+      this.schemaModel = this.connection.model('Schema');
+    }
   }
 
   getMongoSchema(fields) {

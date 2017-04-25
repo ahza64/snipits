@@ -17,7 +17,12 @@ class PostgresSchema {
       {
         define: {
           freezeTableName: true
-        }
+        },
+        pool: {
+          max: 5,
+          min: 0,
+          idle: 1000
+        },
       }
     );
     db.Sequelize = Sequelize;
@@ -38,7 +43,7 @@ class PostgresSchema {
         db[modelName].associate(db);
       }
     });
-
+    db.schemas.sync().then(() => {});
     this.db = db;
   }
 
@@ -105,16 +110,17 @@ class PostgresSchema {
     return resource;
   }
 
-  find() {
+  find(params) {
     const self = this;
     return co(function *find_schemas() {
-      yield self.db.schemas.sync();
-      return yield self.db.schemas.findAll({ raw: true }).map(schema => self.prepareSchema(schema));
+      const filters = PostgresResource.prepareFilters(params);
+      return yield self.db.schemas.findAll({ where: filters, raw: true }).map(schema => self.prepareSchema(schema));
     });
   }
 
   close() {
-    this.db.sequelize.close();
+    // TODO implement connection close
+    //this.db.sequelize.close();
   }
 }
 
