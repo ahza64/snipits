@@ -4,8 +4,12 @@
 
 // Base Url
 const port = require('dsp_shared/conf.d/config.json').mooncake.api_port;
-const base = require('dsp_shared/conf.d/config.json').mooncake.external_host + '/api';
-
+var base;
+if (process.env.NODE_ENV == 'production'){
+  base = require('dsp_shared/conf.d/config.json').mooncake.external_host + '/api';
+} else {
+  base = 'http://localhost:' + port + '/api';
+}
 // API
 const loginUrl = base + '/login';
 const logoutUrl = base + '/logout';
