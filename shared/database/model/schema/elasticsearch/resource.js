@@ -33,6 +33,14 @@ class EsResource {
         _id: item._id,
         id: item._id
       });
+      for(const field in this.fields) {
+        const preparedField = this.fieldsWithoutPrefix[field];
+        if (preparedField && (this.fields[field].type.toLowerCase() === 'date')) {
+          if (typeof prepared[preparedField] === 'string') {
+            prepared[preparedField] = new Date(prepared[preparedField]);
+          }
+        }
+      }
     }
     return prepared;
   }
@@ -192,8 +200,9 @@ class EsResource {
         } else {
           patch = data;
         }
-
-        const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, self.includePrefixes(patch));
+        const body = { doc: self.includePrefixes(patch) };
+        body.doc.updated = Date.now();
+        const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
         let item = null;
         if (response) {
           updated = Object.assign({}, original, patch);

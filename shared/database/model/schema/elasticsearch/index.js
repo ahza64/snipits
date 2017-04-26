@@ -65,7 +65,7 @@ class EsSchema {
     const fieldTypes = {
       'string': { type: 'string' },
       'number': { type: 'double' },
-      'date': { type: 'date', format: 'strict_date_optional_time||epoch_millis' },
+      'date': { type: 'date' },
       'geojson': { type: 'object' }
     };
     Object.keys(fields).forEach((field) => {
@@ -112,11 +112,14 @@ class EsSchema {
   }
 
   getResource(name, fields, storage) {
-    let resource = null;
-    if ((!storage) || (storage === this.name)) {
-      resource = new EsResource(this.config, name, fields);
-    }
-    return resource;
+    const self = this;
+    return co(function *get_resource() {
+      let resource = null;
+      if ((!storage) || (storage === self.name)) {
+        resource = new EsResource(self.config, name, fields);
+      }
+      return resource;
+    });
   }
 
   prepareQuery(filters, sort) {

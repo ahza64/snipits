@@ -89,7 +89,7 @@ class MongoSchema {
       Number: Number,
       Date: Date,
       Boolean: Boolean,
-      GeoJSON: { type: {} },
+      GeoJSON: Object,
       ForeignKey: mongoose.Schema.Types.ObjectId
     };
 
@@ -167,12 +167,15 @@ class MongoSchema {
   }
 
   getResource(name, fields, storage) {
-    let resource = null;
-    if ((!storage) || (storage === this.name)) {
-      const model = this.getModel(name, fields);
-      resource = new Resource(model);
-    }
-    return resource;
+    const self = this;
+    return co(function *get_resource() {
+      let resource = null;
+      if ((!storage) || (storage === self.name)) {
+        const model = self.getModel(name, fields);
+        resource = new Resource(model);
+      }
+      return resource;
+    });
   }
 
   create(name, version, api, model, storage) {

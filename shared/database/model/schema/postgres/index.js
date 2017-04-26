@@ -23,6 +23,7 @@ class PostgresSchema {
           min: 0,
           idle: 1000
         },
+        logging: config.logging
       }
     );
     db.Sequelize = Sequelize;
@@ -45,10 +46,21 @@ class PostgresSchema {
     });
     db.schemas.sync().then(() => {});
     this.db = db;
+    this.synchronized = false;
   }
 
   getType() {
     return 'postgres';
+  }
+
+  sync() {
+    const self = this;
+    return co(function *create_new_schema() {
+      if (!self.synchronized) {
+        yield self.db.schemas.sync();
+        self.synchronized = true;
+      }
+    });
   }
 
   create(name, version, api, fields, storage) {
@@ -63,7 +75,9 @@ class PostgresSchema {
     };
 
     return co(function *create_new_schema() {
-      return yield self.db.schemas.create(newSchema);
+      yield self.sync();
+      const createdItem = yield self.db.schemas.create(newSchema);
+      return createdItem.dataValues;
     });
   }
 
@@ -74,7 +88,6 @@ class PostgresSchema {
   }
 
   getResource(name, fields, storage) {
-    let resource = null;
     if ((!storage) || (storage === this.name)) {
       this.db[name] = this.db.sequelize.import(name, function(sequelize, DataTypes) {
         const tableSchema = {
@@ -103,24 +116,30 @@ class PostgresSchema {
         });
         return sequelize.define(name, tableSchema);
       });
-
-      this.db[name].sync();
-      resource = new PostgresResource(name, this.db[name]);
     }
-    return resource;
+
+    const self = this;
+    return co(function *get_resource() {
+      let res = null;
+      if (self.db[name]) {
+        yield self.db[name].sync();
+        res = new PostgresResource(name, self.db[name]);
+      }
+      return res;
+    });
   }
 
   find(params) {
     const self = this;
     return co(function *find_schemas() {
+      yield self.sync();
       const filters = PostgresResource.prepareFilters(params);
       return yield self.db.schemas.findAll({ where: filters, raw: true }).map(schema => self.prepareSchema(schema));
     });
   }
 
   close() {
-    // TODO implement connection close
-    //this.db.sequelize.close();
+    this.db.sequelize.close();
   }
 }
 

@@ -43,7 +43,7 @@ class PostgresResource {
     const self = this;
     return co(function *create_gen() {
       const result = yield self.model.create(data);
-      return self.prepareData(result);
+      return self.prepareData(result.dataValues);
     });
   }
 
@@ -95,7 +95,7 @@ class PostgresResource {
     return co(function *patch_gen() {
       const original = yield self.model.findOne({ where: { _id: id }, raw: true });
       if (original) {
-        const patch = {};
+        let patch = {};
         if (Array.isArray(data)) {
           jsonpatch.apply(patch, data);
         } else {
@@ -113,7 +113,6 @@ class PostgresResource {
       }
     });
   }
-
 
   /**
   * @param {String} id of target objectsject

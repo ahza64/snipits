@@ -25,13 +25,15 @@ require('sugar');
 
 function sanitizeHelper(doc, original, _sanitize_deleted) {
   // clean up doc (hiding mongo implementation details a bit);
-  let result = doc;
+  let result = null;
   let sanitize_deleted = _sanitize_deleted;
   if (sanitize_deleted === undefined) {
     sanitize_deleted = true;
   }
   if (doc.toJSON) {
-    result = doc.toJSON();
+    result = Object.assign({}, doc.toJSON());
+  } else {
+    result = Object.assign({}, doc);
   }
 
   // makes sure we don't lose dates
