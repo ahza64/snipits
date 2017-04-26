@@ -58,6 +58,33 @@
             }
         }
     },
+    "schemaTest": {
+        "storages": {
+            "mongo": {
+                "type": "mongo",
+                "name":"schema",
+                "mongo_db_host": "localhost",
+                "mongo_db_name": "minishiva_test",
+                "mongo_db_port": 27017
+            },
+            "postgres": {
+                "type": "postgres",
+                "db_host": "localhost",
+                "db_port": 5432,
+                "db_name": "schema_test",
+                "db_user": "postgres",
+                "db_pass": "password"
+            },
+            "elastic": {
+                "type": "elasticsearch",
+                "db_host": "localhost",
+                "db_port": 9200,
+                "db_name": "dev_test",
+                "db_user": "elastic",
+                "db_pass": "elastic"
+            }
+        }
+    },
     "meteor":{
         "mongo_db_host": "localhost",
         "mongo_db_name": "dev_meteor",
