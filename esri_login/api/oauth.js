@@ -1,6 +1,7 @@
 const koa = require('koa');
 const router = require('koa-router')();
 const request = require('request-promise');
+const credentials = require('./credentials.json');
 
 const app = koa();
 
@@ -8,8 +9,8 @@ const authUrlPrefix = 'https://www.arcgis.com/sharing/rest/oauth2/';
 let userName;
 
 // ESRI regestered Application authorization credintials
-let clientId = '49rbdJiYdiMd2mDu';
-let clientSecret = 'edc61206023547709cf932b146830718';
+let clientId = credentials.clientId;
+let clientSecret = credentials.clientSecret;
 
 // internal redirect
 let internalRedirectUri = 'http://localhost:3337/code/';

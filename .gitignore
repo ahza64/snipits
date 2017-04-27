@@ -4,6 +4,9 @@ logs
 npm-debug.log*
 rest_api/test/logs/log.txt
 
+# ESRI_login credentials
+esri_login/api/credentials.json
+
 # build
 ingestion_interface/app/build/bundle.js
 internal_admin/app/build/bundle.js
