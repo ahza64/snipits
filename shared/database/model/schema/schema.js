@@ -17,7 +17,7 @@ const SchmeaModels = {
 
 function getFields(schema) {
   const excludedFields = ['_name', '_version', 'id', 'created', 'updated',
-  '_api', '_storage', '_id', '__v'];
+  '_api', '_storage', '_id', '__v', '_config'];
   return _.omit(schema, excludedFields);
 }
 
@@ -46,10 +46,11 @@ function getSchema(config) {
             const result = Object.assign({}, schema);
             const storageName = result._storage || defaultStorage;
             const schemaName = result._name;
+            const config = result._config;
             const fields = getFields(schema);
             result.getResource = () => {
               return co(function *get_resource() {
-                return yield schemas[storageName].getResource(schemaName, fields, storageName);
+                return yield schemas[storageName].getResource(schemaName, fields, storageName, config);
               });
             };
             return result;

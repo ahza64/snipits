@@ -53,6 +53,7 @@ class MongoSchema {
       updated: Date,
       _api: String,
       _storage: String,
+      _config: Object,
       //other_field: {enum: ["String", "Number", "Date", "Boolean", "ForeignKey"]}
     };
     const reserved_keys = Object.keys(s).concat(["_id", "__v", "_api"]);
@@ -167,13 +168,13 @@ class MongoSchema {
     });
   }
 
-  getResource(name, fields, storage) {
+  getResource(name, fields, storage, config) {
     const self = this;
     return co(function *get_resource() {
       let resource = null;
       if ((!storage) || (storage === self.name)) {
         const model = self.getModel(name, fields);
-        resource = new Resource(model);
+        resource = new Resource(model, name, config);
       } else {
         log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
       }
@@ -181,10 +182,16 @@ class MongoSchema {
     });
   }
 
-  create(name, version, api, model, storage) {
+  create(name, version, api, model, storage, config) {
     const self = this;
     return co(function *create_new_schema() {
-      const doc = Object.assign({ _name: name, _version: version, _api: api, _storage: storage }, model);
+      const doc = Object.assign({
+        _name: name,
+        _version: version,
+        _api: api,
+        _storage: storage,
+        _config: config
+      }, model);
       return yield self.schemaModel.create(doc);
     });
   }

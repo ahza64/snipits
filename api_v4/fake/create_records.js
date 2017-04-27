@@ -5,7 +5,7 @@
 
 const faker = require('faker');
 const rp = require('request-promise');
-const config = require('dsp_shared/config/config').get();
+const config = require('dsp_shared/config/config').get({log4js:false});
 const util = require('dsp_shared/lib/cmd_utils');
 util.connect([]);
 
@@ -21,6 +21,7 @@ function *create_records(schema_name, count) {
 
   for (let i = 0; i < count; i++) {
     let body = {
+      companyId: faker.random.number({ min: 1, max: 2 }),
       company: faker.company.companyName(),
       name: faker.commerce.product(),
       type: faker.commerce.productMaterial(),

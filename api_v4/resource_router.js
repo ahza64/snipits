@@ -26,6 +26,7 @@ const _ = require('underscore');
  * @return {Object} app router
  */
 
+const fakeUser = { companyId: 1 }; // fake user for check ML-353 (Internal data router)
 
 function createRouter(resource, _options) {
   console.log("RESOURCE", resource, _options);
@@ -147,7 +148,8 @@ function createRouter(resource, _options) {
           filter: filter,
           select: select,
           order: order,
-          lean: true
+          lean: true,
+          user: fakeUser
         });
         if (context.dsp_env) {
           offset = offset || 0;
@@ -156,7 +158,7 @@ function createRouter(resource, _options) {
           context.dsp_env.length = data.length;
         }
       } else {
-        data = yield resource.read(id, context.query);
+        data = yield resource.read(id, context.query, fakeUser);
       }
       if (data) {
         context.body = data;
@@ -194,7 +196,7 @@ function createRouter(resource, _options) {
     // PUT update request for specific resoruce
     route.put(`${res_url}/:id`, function *put_route() {
       try {
-        this.body = yield resource.update(this.params.id, this.request.body, { set: true });
+        this.body = yield resource.update(this.params.id, this.request.body, { set: true, user: fakeUser });
       } catch (e) {
         handleCRUDError(e, this, this.body);
       }
@@ -203,7 +205,7 @@ function createRouter(resource, _options) {
     // PATCH request updates fields in a particular Object
     route.patch(`${res_url}/:id`, function *patch_route() {
       try {
-        this.body = yield resource.patch(this.params.id, this.request.body);
+        this.body = yield resource.patch(this.params.id, this.request.body, fakeUser);
       } catch (e) {
         handleCRUDError(e, this, this.body);
       }
@@ -212,7 +214,7 @@ function createRouter(resource, _options) {
     // POST request to create resoruce
     route.post(`${res_url}`, function *post_route() {
       try {
-        this.body = yield resource.create(this.request.body);
+        this.body = yield resource.create(this.request.body, fakeUser);
       } catch (e) {
         handleCRUDError(e, this, this.body);
       }
@@ -221,7 +223,7 @@ function createRouter(resource, _options) {
     // DELETE request to delete resoruce
     route.delete(`${res_url}/:id`, function *delete_route() {
       try {
-        this.body = yield resource.delete(this.params.id);
+        this.body = yield resource.delete(this.params.id, fakeUser);
       } catch (e) {
         handleCRUDError(e, this, this.body);
       }

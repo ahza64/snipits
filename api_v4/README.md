@@ -80,9 +80,10 @@ CRUD endpoint of resource
 ### Generate fake schemas
 ```
 $ cd services/api_v4
-$ node fake/create_schema.js create_schema {fake_schema_name} {storage_name}
+$ node fake/create_schema.js create_schema {fake_schema_name} {storage_name} {config_name}
 ```
-`storage_name` is not a necessary parameter, but it can be used for creating a resource in the selected storage
+* `storage_name` is not a necessary parameter, but it can be used for creating a resource in the selected storage
+* `config_name` is not a necessary parameter, but it can be used for filtering data based on user data. For example, if set 'test' the resource data will be filtered by companyId. Authontification is not implemented yet, but you can edit `fakeUser` in `resource_router.js` to check how filtering works.
 
 ### Generate fake data for one fake schema
 ```

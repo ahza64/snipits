@@ -35,6 +35,7 @@ class PostgresSchema {
         _version: { type: DataTypes.STRING },
         _api: { type: DataTypes.STRING },
         _storage: { type: DataTypes.STRING },
+        _config: { type: DataTypes.JSON },
         __v: { type: DataTypes.INTEGER },
         fields: { type: DataTypes.JSON }
       });
@@ -64,15 +65,16 @@ class PostgresSchema {
     });
   }
 
-  create(name, version, api, fields, storage) {
+  create(name, version, api, fields, storage, config) {
     const self = this;
     const newSchema = {
       _name: name,
       _version: version,
       _api: api,
       _storage: storage,
+      _config: config,
       __v: 0,
-      fields: fields
+      fields: fields,
     };
 
     return co(function *create_new_schema() {
@@ -88,7 +90,7 @@ class PostgresSchema {
     return prepared;
   }
 
-  getResource(name, fields, storage) {
+  getResource(name, fields, storage, config) {
     if ((!storage) || (storage === this.name)) {
       this.db[name] = this.db.sequelize.import(name, function(sequelize, DataTypes) {
         const tableSchema = {
@@ -112,7 +114,7 @@ class PostgresSchema {
           if (fieldType in allowedTypes) {
             tableSchema[field] = { type: allowedTypes[fieldType] }
           } else {
-            log.error(`Init table ${name} error: field type ${fieldType} is not allowed.`);
+            log.error(`Init table ${name} error: field ${field} type ${fieldType} is not allowed.`);
           }
         });
         return sequelize.define(name, tableSchema);
@@ -126,7 +128,7 @@ class PostgresSchema {
       let res = null;
       if (self.db[name]) {
         yield self.db[name].sync();
-        res = new PostgresResource(name, self.db[name]);
+        res = new PostgresResource(name, self.db[name], config);
       }
       return res;
     });

@@ -67,7 +67,7 @@ function sanitizeHelper(doc, original, _sanitize_deleted) {
   return result;
 }
 
-function process_filters(filters) {
+function process_filters(filters, config, user) {
   let f = {};
   if (filters) {
     // log.debug("FILTERS", filters);
@@ -82,13 +82,19 @@ function process_filters(filters) {
       return val;
     });
   }
+  if (config && config.filters) {
+    for (const field in config.filters) {
+      const value = user ? user[config.filters[field]] : null;
+      f[field] = value;
+    }
+  }
   return f;
 }
 
 
 class Resource extends Emitter {
 
-  constructor(Model, name) {
+  constructor(Model, name, config) {
     super();
     this.name = name || Model.modelName.toLowerCase();
     this.counter = 0;
@@ -97,13 +103,14 @@ class Resource extends Emitter {
     }
     this.emitter = Model.emitter;
     this.Model = Model;
+    this.config = config;
   }
 
   getName() {
     return this.name;
   }
 
-  static idQuery(id, deleted) {
+  idQuery(id, deleted, user) {
     let query = { _deleted: true };
     if (!deleted) {
       query = { _deleted: { $ne: true } };
@@ -114,20 +121,34 @@ class Resource extends Emitter {
       field = "id";
     }
     query[field] = id;
+    if (this.config && this.config.filters) {
+      for (const field in this.config.filters) {
+        const value = user ? user[this.config.filters[field]] : null;
+        query[field] = value;
+      }
+    }
     return query;
   }
 
   /**
   * @param {Object} data sets the properties of the
+  * @param {Object} user user's data
   *   new object
   *   inserts a new object into database
   * @return {Object} data
   */
-  create(data) {
+  create(data, user) {
+    const record = Object.assign({}, data);
+    if (this.config && this.config.filters) {
+      for (const field in this.config.filters) {
+        const value = user ? user[this.config.filters[field]] : null;
+        record[field] = value;
+      }
+    }
     const self = this;
     return co(function *create_gen() {
-      let result = yield self.Model.create(data);
-      result = yield self.read(result._id); // apply
+      let result = yield self.Model.create(record);
+      result = yield self.read(result._id, null, user); // apply
       self.emit('created', result);
       return result;
     });
@@ -136,12 +157,13 @@ class Resource extends Emitter {
   /**
   * @param {String} id target object's ID
   * @param {String} select filter the fields in result (space delimited?)
+  * @param {Object} user user's data
   * @return {Object} result the object(s) which match the query
   */
-  read(id, select) {
+  read(id, select, user) {
     const self = this;
     return co(function *read_gen() {
-      const q = Resource.idQuery(id);
+      const q = self.idQuery(id, false, user);
       let result = self.Model.findOne(q);
       if (select) {
         result = result.select(select);
@@ -162,6 +184,7 @@ class Resource extends Emitter {
   * @param {Object} options.set - If only update part of the data, then $set it
   * @param {Object} options.upsert - If the object does not exist, then create it
   * @param {Object} options.silent - Does not emit events
+  * @param {Object} options.user user's data
   * @return {Object} result the newly updated object
   */
   update(id, data, _options) {
@@ -175,16 +198,16 @@ class Resource extends Emitter {
         Object.assign(options, { overwrite: true });
       }
 
-      const original = yield self.read(id);
+      const original = yield self.read(id, null, options.user);
       sanitizeHelper(data, original, false);
-      yield self.Model.update(Resource.idQuery(id), data, options);
-      const updated = yield self.read(id);
+      yield self.Model.update(self.idQuery(id, false, options.user), data, options);
+      const updated = yield self.read(id, null, options.user);
       if (updated) {
         // compare may need to ignore __v
         const diff = jsonpatch.diff(original, updated);
         if (diff.length > 0) {
           updated.updated = new Date();
-          yield self.Model.update(Resource.idQuery, { updated: updated.updated });
+          yield self.Model.update(self.idQuery(id, false, options.user), { updated: updated.updated });
           if (options.silent) {
             yield self.emit('updated', updated, original);
             yield self.emit(`updated:${updated._id}`, updated, original);
@@ -201,13 +224,14 @@ class Resource extends Emitter {
   * @description PATCH request updates an existing object.
   * @param {String} id of target object
   * @param {Object} data the fields to update
+  * @param {Object} user user's data
   * @return {Object} result the updated object
   */
-  patch(id, data) {
+  patch(id, data, user) {
     const self = this;
     return co(function *patch_gen() {
       // log.info("PATCH", self.Model.modelName, id, data);
-      const doc = yield self.read(id);
+      const doc = yield self.read(id, null, user);
       if (doc) {
         // apply patch
         if (Array.isArray(data)) {
@@ -215,7 +239,7 @@ class Resource extends Emitter {
         } else {
           Object.assign(doc, data);
         }
-        return yield self.update(id, doc);
+        return yield self.update(id, doc, user);
       }
       return null;
     });
@@ -224,15 +248,16 @@ class Resource extends Emitter {
 
   /**
   * @param {String} id of target objectsject
+  * @param {Object} user user's data
   * @return {Object} data the deleted object
   * DELETE request removes the object from the database
   */
-  delete(id) {
+  delete(id, user) {
     const self = this;
     return co(function *delete_gen() {
-      const original = yield self.read(id);
+      const original = yield self.read(id, null, user);
       if (original) {
-        yield self.Model.update(Resource.idQuery(id), { _deleted: true });
+        yield self.Model.update(self.idQuery(id, false, user), { _deleted: true });
         yield self.emit('deleted', original);
         return original;
       }
@@ -242,14 +267,15 @@ class Resource extends Emitter {
 
   /**
   * @param {String} id of target object
+  * @param {Object} user user's data
   * @return {Object} data the deleted object
   * DELETE request removes the object from the database
   */
-  undelete(id) {
+  undelete(id, user) {
     const self = this;
     return co(function *undelete_gen() {
-      yield self.Model.update(Resource.idQuery(id, true), { _deleted: false });
-      const data = yield self.read(id);
+      yield self.Model.update(self.idQuery(id, true, user), { _deleted: false });
+      const data = yield self.read(id, null, user);
       if (data) {
         yield self.emit('undeleted', data);
       }
@@ -265,6 +291,7 @@ class Resource extends Emitter {
     * @param {String} options.select return only (select)ed fields
     * @param {String} options.order field to sort by, ascending. If prepended with '-' then descending
     * @param {Boolean} options.lean retun a plain Javascript document rather than a MongooseDocument
+    * @param {Object} options.user user's data
     * @return {Array} result the objects that agree with arguments list lists the results of a query
     */
   list(_options) {
@@ -296,9 +323,8 @@ class Resource extends Emitter {
         result.limit(len);
       }
 
-      if (filters) {
-        const f = process_filters(filters);
-        // log.debug("FILTERS", filters);
+      const f = process_filters(filters, self.config, _options.user);
+      if (Object.keys(f).length > 0) {
         result = result.find(f);
       }
 
@@ -317,10 +343,11 @@ class Resource extends Emitter {
   }
 
   /**
-   * @param filters
-   */
-  count(filters) {
-    const f = process_filters(filters);
+  * @param {Object} filters
+  * @param {Object} user user's data
+  */
+  count(filters, user) {
+    const f = process_filters(filters, this.config, user);
     return this.Model.find(f).count();
   }
 }

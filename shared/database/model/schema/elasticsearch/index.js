@@ -23,7 +23,7 @@ class EsSchema {
     return 'elasticsearch';
   }
 
-  create(name, version, api, fields, storage) {
+  create(name, version, api, fields, storage, config) {
     const self = this;
     return co(function *create_new_schema() {
       let created = null;
@@ -35,6 +35,7 @@ class EsSchema {
         v: 0,
         fields: fields,
         storage: storage,
+        config: config,
         created: timestamp,
         updated: timestamp
       };
@@ -103,7 +104,8 @@ class EsSchema {
               _version: source.version,
               _api: source.api,
               __v: source.v,
-              _storage: source.storage
+              _storage: source.storage,
+              _config: source.config
             }, source.fields);
           }
         });
@@ -112,12 +114,12 @@ class EsSchema {
     return prepared;
   }
 
-  getResource(name, fields, storage) {
+  getResource(name, fields, storage, config) {
     const self = this;
     return co(function *get_resource() {
       let resource = null;
       if ((!storage) || (storage === self.name)) {
-        resource = new EsResource(self.config, name, fields);
+        resource = new EsResource(self.config, name, fields, config);
       } else {
         log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
       }
