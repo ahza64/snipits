@@ -19,7 +19,7 @@ co(function *build_app() {
   const schemas = yield Schema.find({ _api: "v4" });  
   for (let i = 0; i < schemas.length; i++) {
     console.log("SCHEMAS", schemas[i]);
-    const resource = yield Schema.getResource(schemas[i]);
+    const resource = yield schemas[i].getResource();
     if (resource) {
       const routes = router(resource);
       console.log("ROUTES", resource.getName());

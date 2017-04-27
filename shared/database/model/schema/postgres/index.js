@@ -6,6 +6,7 @@ const path = require('path');
 const co = require('co');
 const Sequelize = require('sequelize');
 const _ = require('underscore');
+const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const PostgresResource = require('./resource');
 
 class PostgresSchema {
@@ -111,11 +112,13 @@ class PostgresSchema {
           if (fieldType in allowedTypes) {
             tableSchema[field] = { type: allowedTypes[fieldType] }
           } else {
-            console.error(`Init table ${name} error: field type ${fieldType} is not allowed.`);
+            log.error(`Init table ${name} error: field type ${fieldType} is not allowed.`);
           }
         });
         return sequelize.define(name, tableSchema);
       });
+    } else {
+      log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
     }
 
     const self = this;

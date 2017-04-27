@@ -128,7 +128,7 @@ describe("Schema test", () => {
     it(`should create/update/delete records (for "${storageName}" schema)`, () => {
       return co(function *() {
         for (const rname in savedSchemas[storageName]) {
-          const resource = yield schema.getResource(savedSchemas[storageName][rname]);
+          const resource = yield savedSchemas[storageName][rname].getResource();
           const record = changeFakeRecord({});
           const saved = yield resource.create(record);
           const id = saved._id;

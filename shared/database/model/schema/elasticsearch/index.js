@@ -4,6 +4,7 @@
 
 const co = require('co');
 const rp = require('request-promise');
+const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const EsResource = require('./resource');
 
 class EsSchema {
@@ -117,6 +118,8 @@ class EsSchema {
       let resource = null;
       if ((!storage) || (storage === self.name)) {
         resource = new EsResource(self.config, name, fields);
+      } else {
+        log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
       }
       return resource;
     });

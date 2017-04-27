@@ -28,12 +28,13 @@
  *  ```
  */
 
+const co = require('co');
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
 const _ = require('lodash');
 const assert = require('assert');
+const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const Resource = require('./resource');
-const co = require('co');
 
 class MongoSchema {
   constructor(name, config) {
@@ -173,6 +174,8 @@ class MongoSchema {
       if ((!storage) || (storage === self.name)) {
         const model = self.getModel(name, fields);
         resource = new Resource(model);
+      } else {
+        log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
       }
       return resource;
     });

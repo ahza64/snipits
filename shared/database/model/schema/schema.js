@@ -2,11 +2,18 @@
  * The meta schema model for mongodb, postgresql and elasticsearch
  */
 
+const co = require('co');
 const _ = require('underscore');
-
+const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const PostgresSchema = require('./postgres');
 const EsSchema = require('./elasticsearch');
 const MongoSchema = require('./mongo');
+
+const SchmeaModels = {
+  'postgres': PostgresSchema,
+  'mongo': MongoSchema,
+  'elasticsearch': EsSchema
+};
 
 function getFields(schema) {
   const excludedFields = ['_name', '_version', 'id', 'created', 'updated',
@@ -15,42 +22,55 @@ function getFields(schema) {
 }
 
 function getSchema(config) {
+  let defaultSchema = null;
   const storages = config.storages || {};
   const defaultStorage = config.defaultStorage;
-  
   const schemas = {};
-  const getResource = {};
-  
-  Object.keys(storages).forEach((name) => {
-    const storage = storages[name];
 
-    if (storage.type === 'postgres') {
-      schemas[name] = new PostgresSchema(name, storage);
-    } else if (storage.type === 'elasticsearch') {
-      schemas[name] = new EsSchema(name, storage);
+  if (defaultStorage in storages) {
+    Object.keys(storages).forEach((name) => {
+      const storage = storages[name];
+      if (storage.type in SchmeaModels) {
+        schemas[name] = new SchmeaModels[storage.type](name, storage);
+      } else {
+        log.error(`Incorrect storage type: ${storage.type}.`);
+      }
+    });
+
+    if (schemas[defaultStorage]) {
+      const find = schemas[defaultStorage].find.bind(schemas[defaultStorage]);
+      schemas[defaultStorage].find = (params) => {
+        return co(function *find_schemas() {
+          const schemasList = yield find(params);
+          return schemasList.map((schema) => {
+            const result = Object.assign({}, schema);
+            const storageName = result._storage || defaultStorage;
+            const schemaName = result._name;
+            const fields = getFields(schema);
+            result.getResource = () => {
+              return co(function *get_resource() {
+                return yield schemas[storageName].getResource(schemaName, fields, storageName);
+              });
+            };
+            return result;
+          });
+        });
+      };
+
+      schemas[defaultStorage].closeConnections = () => {
+        Object.keys(schemas).forEach((name) => {
+          schemas[name].close();
+        });
+      };
+      defaultSchema = schemas[defaultStorage];
     } else {
-      schemas[name] = new MongoSchema(name, storage);
+      log.error(`Default schema (${defaultStorage}) was not created.`);
     }
-    if (schemas[name] && schemas[name].getResource) {
-      getResource[name] = schemas[name].getResource.bind(schemas[name])
-    }
-  });
-
-  if (schemas[defaultStorage]) {
-    schemas[defaultStorage].getResource = (schema) => {
-      const storageName = schema._storage || defaultStorage;
-      const schemaName = schema._name;
-      const fields = getFields(schema);
-      return getResource[storageName](schemaName, fields, storageName);
-    };
-    schemas[defaultStorage].closeConnections = () => {
-      Object.keys(schemas).forEach((name) => {
-        schemas[name].close();
-      });
-    };
+  } else {
+    log.error(`Incorrect defaultStorage: ${defaultStorage}.`);
   }
-  
-  return schemas[defaultStorage];
+
+  return defaultSchema;
 }
 
 module.exports = getSchema;
