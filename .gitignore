@@ -5,11 +5,12 @@ npm-debug.log*
 rest_api/test/logs/log.txt
 
 # build
-ingestion_interface/app/build**
-internal_admin/app/build**
 internal_admin/app/build
+ingestion_interface/app/build
+internal_admin/app/build/bundle.js
+ingestion_interface/app/build/bundle.js
 internal_admin/app/build_prod
-internal_admin/app/build_prod/*
+ingestion_interface/app/build_prod
 
 
 # Runtime data
