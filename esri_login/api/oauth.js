@@ -1,7 +1,6 @@
 const koa = require('koa');
 const router = require('koa-router')();
 const request = require('request-promise');
-const send = require('koa-send');
 
 const app = koa();
 
