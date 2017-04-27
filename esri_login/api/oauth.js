@@ -49,11 +49,11 @@ router.all('/code', function *(next) {
   let jsonRes = JSON.parse(response);
   userName = jsonRes.username;
   // username will be needed to login the unique user into the dispatchr app
-  console.log("unique identifer user name <<>>", jsonRes.username);
+  console.log("unique identifer user name <<>>", userName);
   // tokens will be needed to keep the ESRI user logged into ESRI
   console.log("unique access token <<>>", jsonRes.access_token);
   console.log("unique refresh token <<>>", jsonRes.refresh_token);
-  // dispatchr app token generation will happen here
+  // dispatchr app token generation should happen here
   // final redirect to send the user after successful ESRI login
   if(jsonRes.username){
     this.redirect(externalRedirectUri);
