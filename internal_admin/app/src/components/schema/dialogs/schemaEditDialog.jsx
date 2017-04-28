@@ -12,9 +12,9 @@ import AddCircleIcon from 'material-ui/svg-icons/content/add-circle';
 import CancelIcon from 'material-ui/svg-icons/content/block';
 import DeleteForeverIcon from 'material-ui/svg-icons/action/delete-forever';
 import request from '../../../services/request';
-import { schemaUrl } from '../../../config';
+import { schemaUrl, base } from '../../../config';
 import CreateFieldDialog from './createFieldDialog';
-import config from '../../../config';
+
 export default class SchemaEditDialog extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +46,7 @@ export default class SchemaEditDialog extends React.Component {
 
   handleSave() {
     request
-    .put(`${config.base}/schema/`)
+    .put(`${base}/schema/`)
     .withCredentials()
     .send({
       id: this.state.schemaId,
