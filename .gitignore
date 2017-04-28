@@ -8,12 +8,10 @@ rest_api/test/logs/log.txt
 esri_login/api/credentials.json
 
 # build
-internal_admin/app/build
-ingestion_interface/app/build
 internal_admin/app/build/bundle.js
 ingestion_interface/app/build/bundle.js
-internal_admin/app/build_prod
-ingestion_interface/app/build_prod
+internal_admin/app/build_prod/bundle.js
+ingestion_interface/app/build_prod/bundle.js
 
 
 # Runtime data
