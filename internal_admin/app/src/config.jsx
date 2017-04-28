@@ -66,5 +66,6 @@ export {
   schemaUrl,
   schemaFieldUrl,
   taxonomiesUrl,
-  taxFieldsUrl
+  taxFieldsUrl,
+  base
 };
