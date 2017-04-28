@@ -6,17 +6,25 @@ const path = require('path');
 const co = require('co');
 const Sequelize = require('sequelize');
 const _ = require('underscore');
+const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const PostgresResource = require('./resource');
 
 class PostgresSchema {
-  constructor(config) {
+  constructor(name, config) {
+    this.name = name;
     const db = {};
     db.sequelize = new Sequelize(
       `postgres://${config.db_user}:${config.db_pass}@${config.db_host}:${config.db_port}/${config.db_name}`,
       {
         define: {
           freezeTableName: true
-        }
+        },
+        pool: {
+          max: 5,
+          min: 0,
+          idle: 1000
+        },
+        logging: config.logging
       }
     );
     db.Sequelize = Sequelize;
@@ -26,6 +34,8 @@ class PostgresSchema {
         _name: { type: DataTypes.STRING },
         _version: { type: DataTypes.STRING },
         _api: { type: DataTypes.STRING },
+        _storage: { type: DataTypes.STRING },
+        _config: { type: DataTypes.JSON },
         __v: { type: DataTypes.INTEGER },
         fields: { type: DataTypes.JSON }
       });
@@ -36,78 +46,105 @@ class PostgresSchema {
         db[modelName].associate(db);
       }
     });
-
+    db.schemas.sync().then(() => {});
     this.db = db;
+    this.synchronized = false;
   }
 
   getType() {
     return 'postgres';
   }
 
-  create(name, version, api, fields) {
+  sync() {
+    const self = this;
+    return co(function *create_new_schema() {
+      if (!self.synchronized) {
+        yield self.db.schemas.sync();
+        self.synchronized = true;
+      }
+    });
+  }
+
+  create(name, version, api, fields, storage, config) {
     const self = this;
     const newSchema = {
       _name: name,
       _version: version,
       _api: api,
+      _storage: storage,
+      _config: config,
       __v: 0,
-      fields: fields
+      fields: fields,
     };
 
     return co(function *create_new_schema() {
-      return yield self.db.schemas.create(newSchema);
+      yield self.sync();
+      const createdItem = yield self.db.schemas.create(newSchema);
+      return createdItem.dataValues;
     });
   }
 
   prepareSchema(schema) {
     let prepared =_.omit(schema, ['createdAt', 'updatedAt', 'fields']);
     prepared = Object.assign(prepared, { id: schema._id, _id: `${schema._id}` }, schema.fields);
-    prepared.getResource = () => {
-      return this.getResource(schema, schema.fields);
-    };
     return prepared;
   }
 
-  getResource(schema, fields) {
-    this.db[schema._name] = this.db.sequelize.import(schema._name, function(sequelize, DataTypes) {
-      const tableSchema = {
-        _id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-        _deleted: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
-      };
-      Object.keys(fields).forEach((field) => {
-        let fieldType = fields[field];
-        if (typeof fieldType === 'object') {
-          fieldType = fieldType.type;
-        }
-        if (typeof fieldType === 'string') {
-          fieldType = fieldType.toLowerCase();
-        }
-        const allowedTypes = {
-          "string": DataTypes.STRING,
-          "number": DataTypes.DOUBLE,
-          "date": DataTypes.DATE,
-          "geojson": DataTypes.JSON
+  getResource(name, fields, storage, config) {
+    if ((!storage) || (storage === this.name)) {
+      this.db[name] = this.db.sequelize.import(name, function(sequelize, DataTypes) {
+        const tableSchema = {
+          _id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+          _deleted: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
         };
-        if (fieldType in allowedTypes) {
-          tableSchema[field] = { type: allowedTypes[fieldType] }
-        } else {
-          console.error(`Init table ${schema._name} error: field type ${fieldType} is not allowed.`);
-        }
+        Object.keys(fields).forEach((field) => {
+          let fieldType = fields[field];
+          if (typeof fieldType === 'object') {
+            fieldType = fieldType.type;
+          }
+          if (typeof fieldType === 'string') {
+            fieldType = fieldType.toLowerCase();
+          }
+          const allowedTypes = {
+            "string": DataTypes.STRING,
+            "number": DataTypes.DOUBLE,
+            "date": DataTypes.DATE,
+            "geojson": DataTypes.JSON
+          };
+          if (fieldType in allowedTypes) {
+            tableSchema[field] = { type: allowedTypes[fieldType] }
+          } else {
+            log.error(`Init table ${name} error: field ${field} type ${fieldType} is not allowed.`);
+          }
+        });
+        return sequelize.define(name, tableSchema);
       });
-      return sequelize.define(schema._name, tableSchema);
+    } else {
+      log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
+    }
+
+    const self = this;
+    return co(function *get_resource() {
+      let res = null;
+      if (self.db[name]) {
+        yield self.db[name].sync();
+        res = new PostgresResource(name, self.db[name], config);
+      }
+      return res;
     });
-
-    this.db[schema._name].sync();
-
-    return new PostgresResource(schema._name, this.db[schema._name]);
   }
 
-  find() {
+  find(params) {
     const self = this;
     return co(function *find_schemas() {
-      yield self.db.schemas.sync();
-      return yield self.db.schemas.findAll({ raw: true }).map(schema => self.prepareSchema(schema));
+      yield self.sync();
+      const filters = PostgresResource.prepareFilters(params);
+      return yield self.db.schemas.findAll({ where: filters, raw: true }).map(schema => self.prepareSchema(schema));
     });
+  }
+
+  close() {
+    this.db.sequelize.close();
   }
 }
 

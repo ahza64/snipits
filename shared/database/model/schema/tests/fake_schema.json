@@ -1,0 +1,26 @@
+{
+  "name": {
+    "type": "String",
+    "required": true,
+    "editable": true,
+    "visible": true
+  },
+  "time": {
+    "type": "Date",
+    "required": true,
+    "editable": true,
+    "visible": true
+  },
+  "price": {
+    "type": "Number",
+    "required": true,
+    "editable": true,
+    "visible": true
+  },
+  "location": {
+    "type": "GeoJSON",
+    "required": true,
+    "editable": false,
+    "visible": false
+  }
+}

@@ -9,7 +9,7 @@ const jsonpatch = require('fast-json-patch');
 
 class EsResource {
 
-  constructor(config, name, fields) {
+  constructor(config, name, fields, resourceConfig) {
     this.config = config;
     this.name = name;
     this.fields = fields;
@@ -19,6 +19,7 @@ class EsResource {
       this.fieldsWithoutPrefix[field] = `${name}_${field}`;
       this.fieldsWithPrefix[`${name}_${field}`] = field;
     });
+    this.resourceConfig = resourceConfig;
   }
 
   getName() {
@@ -33,6 +34,14 @@ class EsResource {
         _id: item._id,
         id: item._id
       });
+      for(const field in this.fields) {
+        const preparedField = this.fieldsWithoutPrefix[field];
+        if (preparedField && (this.fields[field].type.toLowerCase() === 'date')) {
+          if (typeof prepared[preparedField] === 'string') {
+            prepared[preparedField] = new Date(prepared[preparedField]);
+          }
+        }
+      }
     }
     return prepared;
   }
@@ -76,11 +85,12 @@ class EsResource {
 
   /**
   * @param {Object} data sets the properties of the
+  * @param {Object} user user's data
   *   new object
   *   inserts a new object into database
   * @return {Object} data
   */
-  create(data) {
+  create(data, user) {
     const self = this;
     return co(function *create_gen() {
       let created = null;
@@ -90,6 +100,16 @@ class EsResource {
         created: timestamp,
         updated: timestamp
       }, self.includePrefixes(data) );
+      if (self.resourceConfig && self.resourceConfig.filters) {
+        for (const field in self.resourceConfig.filters) {
+          let itemField = field;
+          if (field in self.fieldsWithoutPrefix) {
+            itemField = self.fieldsWithoutPrefix[field];
+          }
+          const value = user ? user[self.resourceConfig.filters[field]] : null;
+          body[itemField] = value;
+        }
+      }
       const response = yield self.doRequest('POST', '?refresh=true', body);
       if (response) {
         created = Object.assign({}, data, { _id: response._id });
@@ -126,19 +146,37 @@ class EsResource {
     }
   }
 
+  checkItem(item, user) {
+    let valid = true;
+    if (item && item._source && this.resourceConfig && this.resourceConfig.filters) {
+      for (const field in this.resourceConfig.filters) {
+        let itemField = field;
+        if (field in this.fieldsWithoutPrefix) {
+          itemField = this.fieldsWithoutPrefix[field];
+        }
+        const value = user ? user[this.resourceConfig.filters[field]] : null;
+        if (item._source[itemField] !== value) {
+          valid = false;
+        }
+      }
+    }
+    return valid;
+  }
+
   /**
   * @param {String} id target object's ID
   * @param {String} select filter the fields in result (space delimited?)
+  * @param {Object} user user's data
   * @return {Object} result the object(s) which match the query
   */
-  read(id, select) {
+  read(id, select, user) {
     const self = this;
     return co(function *read_gen() {
       let result = null;
       const item = yield self.doRequest('GET', id);
-      if (item) {
+      if (item && self.checkItem(item, user)) {
         const prepared = self.prepareData(item);
-        if (prepared && (prepared._deleted === false)) {
+        if (prepared && (prepared._deleted !== true)) {
           result = prepared;
         }
       }
@@ -154,21 +192,27 @@ class EsResource {
   * @param {Object} options.set - If only update part of the data, then $set it
   * @param {Object} options.upsert - If the object does not exist, then create it
   * @param {Object} options.silent - Does not emit events
+  * @param {Object} options.user user's data
   * @return {Object} result the newly updated object
   */
   update(id, data, _options) {
     const self = this;
     const options = _options || {};
     return co(function *update_gen() {
-      const body = { doc: self.includePrefixes(data) };
-      body.doc.updated = Date.now();
-      const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
-      let item = null;
-      if (response) {
-        item = yield self.doRequest('GET', id);
-        if (item) {
-          item = self.prepareData(item);
+      let item = yield self.doRequest('GET', id);
+      if (self.checkItem(item, options.user)) {
+        item = null;
+        const body = { doc: self.includePrefixes(data) };
+        body.doc.updated = Date.now();
+        const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
+        if (response) {
+          item = yield self.doRequest('GET', id);
+          if (item) {
+            item = self.prepareData(item);
+          }
         }
+      } else {
+        item = null;
       }
       return item;
     });
@@ -178,25 +222,30 @@ class EsResource {
   * @description PATCH request updates an existing object.
   * @param {String} id of target object
   * @param {Object} data the fields to update
+  * @param {Object} user user's data
   * @return {Object} result the updated object
   */
-  patch(id, data) {
+  patch(id, data, user) {
     const self = this;
     return co(function *patch_gen() {
-      const original = self.prepareData(yield self.doRequest('GET', id));
+      const item = yield self.doRequest('GET', id);
       let updated = null;
-      if (original) {
-        let patch = { updated: Date.now() };
-        if (Array.isArray(data)) {
-          jsonpatch.apply(patch, data);
-        } else {
-          patch = data;
-        }
-
-        const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, self.includePrefixes(patch));
-        let item = null;
-        if (response) {
-          updated = Object.assign({}, original, patch);
+      if (self.checkItem(item, user)) {
+        const original = self.prepareData(item);
+        if (original) {
+          let patch = { updated: Date.now() };
+          if (Array.isArray(data)) {
+            jsonpatch.apply(patch, data);
+          } else {
+            patch = data;
+          }
+          const body = { doc: self.includePrefixes(patch) };
+          body.doc.updated = Date.now();
+          const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
+          let item = null;
+          if (response) {
+            updated = Object.assign({}, original, patch);
+          }
         }
       }
       return updated;
@@ -205,42 +254,54 @@ class EsResource {
 
   /**
   * @param {String} id of target objectsject
+  * @param {Object} user user's data
   * @return {Object} data the deleted object
   * DELETE request removes the object from the database
   */
-  delete(id) {
+  delete(id, user) {
     const self = this;
     return co(function *delete_gen() {
-      const body = { doc: { _deleted: true } };
-      const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
-      let item = null;
-      if (response) {
-        item = yield self.doRequest('GET', id);
-        if (item) {
-          item = self.prepareData(item);
+      let item = yield self.doRequest('GET', id);
+      if (self.checkItem(item, user)) {
+        item = null;
+        const body = { doc: { _deleted: true } };
+        const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
+        if (response) {
+          item = yield self.doRequest('GET', id);
+          if (item) {
+            item = self.prepareData(item);
+          }
         }
-      } 
+      } else {
+        item = null;
+      }
       return item;
     });
   }
 
   /**
   * @param {String} id of target object
+  * @param {Object} user user's data
   * @return {Object} data the deleted object
   * DELETE request removes the object from the database
   */
-  undelete(id) {
+  undelete(id, user) {
     const self = this;
     return co(function *undelete_gen() {
-      const body = { doc: { _deleted: false } };
-      const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
-      let item = null;
-      if (response) {
-        item = yield self.doRequest('GET', id);
-        if (item) {
-          item = self.prepareData(item);
+      let item = yield self.doRequest('GET', id);
+      if (self.checkItem(item, user)) {
+        item = null;
+        const body = { doc: { _deleted: false } };
+        const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
+        if (response) {
+          item = yield self.doRequest('GET', id);
+          if (item) {
+            item = self.prepareData(item);
+          }
         }
-      } 
+      } else {
+        item = null;
+      }
       return item;
     });
   }
@@ -253,6 +314,7 @@ class EsResource {
     * @param {String} options.select return only (select)ed fields
     * @param {String} options.order field to sort by, ascending. If prepended with '-' then descending
     * @param {Boolean} options.lean retun a plain Javascript document rather than a MongooseDocument
+    * @param {Object} options.user user's data
     * @return {Array} result the objects that agree with arguments list lists the results of a query
     */
   list(_options) {
@@ -279,7 +341,7 @@ class EsResource {
     }
 
     return co(function *list_gen() {
-      const query = self.prepareQuery(filters, sort);
+      const query = self.prepareQuery(filters, sort, options.user);
       let list = [];
       const response = yield self.doRequest('POST', `_search${queryParams}`, query);
       if (response) {
@@ -289,16 +351,29 @@ class EsResource {
     });
   }
 
-  prepareQuery(filters, sort) {
+  getFiltersByUserData(user) {
+    const filters = {};
+    if (this.resourceConfig && this.resourceConfig.filters) {
+      for (const field in this.resourceConfig.filters) {
+        const value = user ? user[this.resourceConfig.filters[field]] : null;
+        filters[field] = value;
+      }
+    }
+    return filters;
+  }
+
+  prepareQuery(filters, sort, user) {
     const query = {
       query: {
         bool: {
-          must: []
+          must: [],
+          must_not: []
         }
       }
     };
-    Object.keys(filters).forEach((field) => {
-      let value = filters[field];
+    const allFilters = Object.assign({}, filters, this.getFiltersByUserData(user));
+    Object.keys(allFilters).forEach((field) => {
+      let value = allFilters[field];
       if (typeof value === 'string') {
         if (field === '_deleted') {
           value = value.toLowerCase() === 'true' ? true : false;
@@ -310,9 +385,16 @@ class EsResource {
       } else {
         match[field] = value;
       }
-      query.query.bool.must.push({
-        match: match
-      });
+      if ((field === '_deleted') && (value === false)) {
+        match[field] = true;
+        query.query.bool.must_not.push({
+          match: match
+        });
+      } else {
+        query.query.bool.must.push({
+          match: match
+        });
+      }
     });
     if (sort) {
       let order = 'asc';
@@ -333,11 +415,12 @@ class EsResource {
   }
 
   /**
-   * @param filters
+   * @param {Object} filters
+   * @param {Object} options.user user's data
    */
-  count(filters) {
+  count(filters, user) {
     const self = this;
-    const query = self.prepareQuery({ _deleted: false });
+    const query = self.prepareQuery({ _deleted: false }, null, user);
     return co(function *get_count() {
       let result = null;
       const response = yield self.doRequest('POST', '_search?size=0', query);

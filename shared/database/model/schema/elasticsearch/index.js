@@ -4,10 +4,12 @@
 
 const co = require('co');
 const rp = require('request-promise');
+const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const EsResource = require('./resource');
 
 class EsSchema {
-  constructor(config) {
+  constructor(name, config) {
+    this.name = name;
     this.config = {
       host: config.db_host,
       port: config.db_port,              
@@ -21,7 +23,7 @@ class EsSchema {
     return 'elasticsearch';
   }
 
-  create(name, version, api, fields) {
+  create(name, version, api, fields, storage, config) {
     const self = this;
     return co(function *create_new_schema() {
       let created = null;
@@ -32,6 +34,8 @@ class EsSchema {
         api: api,
         v: 0,
         fields: fields,
+        storage: storage,
+        config: config,
         created: timestamp,
         updated: timestamp
       };
@@ -44,14 +48,15 @@ class EsSchema {
       });
       if (response) {
         created = Object.assign({}, body, { _id: response._id });
-        const mapping = self.createSchemaMapping(name, fields);
-        console.log(mapping);
-        yield rp({
-          method: 'PUT',
-          uri: `${url}/${name}/_mapping?refresh=true`,
-          body: mapping,
-          json: true
-        });
+        if ((!storage) || (storage === self.name)) {
+          const mapping = self.createSchemaMapping(name, fields);
+          yield rp({
+            method: 'PUT',
+            uri: `${url}/${name}/_mapping?refresh=true`,
+            body: mapping,
+            json: true
+          });
+        }
       }
       return created;
     });
@@ -62,7 +67,7 @@ class EsSchema {
     const fieldTypes = {
       'string': { type: 'string' },
       'number': { type: 'double' },
-      'date': { type: 'date', format: 'strict_date_optional_time||epoch_millis' },
+      'date': { type: 'date' },
       'geojson': { type: 'object' }
     };
     Object.keys(fields).forEach((field) => {
@@ -92,9 +97,6 @@ class EsSchema {
         prepared = list.map((item) => {
           const source = item._source;
           if (source) {
-            const getResource = () => {
-              return this.getResource(source.name, source.fields);
-            };
             return Object.assign({
               id: item._id,
               _id: item._id,
@@ -102,7 +104,8 @@ class EsSchema {
               _version: source.version,
               _api: source.api,
               __v: source.v,
-              getResource: getResource
+              _storage: source.storage,
+              _config: source.config
             }, source.fields);
           }
         });
@@ -111,14 +114,74 @@ class EsSchema {
     return prepared;
   }
 
-  getResource(name, fields) {
-    return new EsResource(this.config, name, fields);
+  getResource(name, fields, storage, config) {
+    const self = this;
+    return co(function *get_resource() {
+      let resource = null;
+      if ((!storage) || (storage === self.name)) {
+        resource = new EsResource(self.config, name, fields, config);
+      } else {
+        log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
+      }
+      return resource;
+    });
   }
 
-  find() {
+  prepareQuery(filters, sort) {
+    const query = {
+      query: {
+        bool: {
+          must: []
+        }
+      }
+    };
+    const renamed = {
+      id: '_id',
+      _name: 'name',
+      _version: 'version',
+      _api: 'api',
+      __v: 'v',
+      _storage: 'storage'
+    };
+    Object.keys(filters).forEach((field) => {
+      let value = filters[field];
+      if (typeof value === 'string') {
+        if (field === '_deleted') {
+          value = value.toLowerCase() === 'true' ? true : false;
+        }
+      }
+      const match = {};
+      if (field in renamed) {
+        match[renamed[field]] = value;
+      } else {
+        match[field] = value;
+      }
+      query.query.bool.must.push({
+        match: match
+      });
+    });
+    if (sort) {
+      let order = 'asc';
+      let field = sort;
+      if (sort.startsWith('-')) {
+        field = sort.substring(1);
+        order = 'desc';
+      }
+      if (field in renamed) {
+        field = renamed[field];
+      }
+      query.sort = {};
+      query.sort[field] = {
+        order: order
+      };
+    }
+    return query;
+  }
+
+  find(params) {
     const self = this;
     return co(function *find_schemas() {
-      const body = { sort: { created: { order: 'asc' } } };
+      const body = self.prepareQuery(params || {}, 'created');
       const options = {
         method: 'POST',
         uri: `http://${self.config.host}:${self.config.port}/${self.config.index}/schemas/_search`,
@@ -139,6 +202,8 @@ class EsSchema {
       return schemas;
     });
   }
+
+  close() {}
 }
 
 module.exports = EsSchema;

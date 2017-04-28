@@ -5,7 +5,6 @@ const cors = require('kcors');
 const co = require('co');
 const config = require('dsp_shared/config/config').get();
 const Schema = require('dsp_shared/database/model/schema');
-const Resource = require('dsp_shared/lib/resource');
 const router = require('./resource_router');
 const http = require('http');
 
@@ -20,14 +19,7 @@ co(function *build_app() {
   const schemas = yield Schema.find({ _api: "v4" });  
   for (let i = 0; i < schemas.length; i++) {
     console.log("SCHEMAS", schemas[i]);
-    let resource = null;
-
-    if (schemas[i].getModel) {
-      const Model = schemas[i].getModel();
-      resource = new Resource(Model);
-    } else if (schemas[i].getResource) {
-      resource = schemas[i].getResource();
-    }
+    const resource = yield schemas[i].getResource();
     if (resource) {
       const routes = router(resource);
       console.log("ROUTES", resource.getName());
