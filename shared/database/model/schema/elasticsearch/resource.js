@@ -176,7 +176,7 @@ class EsResource {
       const item = yield self.doRequest('GET', id);
       if (item && self.checkItem(item, user)) {
         const prepared = self.prepareData(item);
-        if (prepared && (prepared._deleted === false)) {
+        if (prepared && (prepared._deleted !== true)) {
           result = prepared;
         }
       }
@@ -366,7 +366,8 @@ class EsResource {
     const query = {
       query: {
         bool: {
-          must: []
+          must: [],
+          must_not: []
         }
       }
     };
@@ -384,9 +385,16 @@ class EsResource {
       } else {
         match[field] = value;
       }
-      query.query.bool.must.push({
-        match: match
-      });
+      if ((field === '_deleted') && (value === false)) {
+        match[field] = true;
+        query.query.bool.must_not.push({
+          match: match
+        });
+      } else {
+        query.query.bool.must.push({
+          match: match
+        });
+      }
     });
     if (sort) {
       let order = 'asc';

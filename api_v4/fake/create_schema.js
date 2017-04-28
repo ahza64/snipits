@@ -8,7 +8,12 @@ const util = require('dsp_shared/lib/cmd_utils');
 util.connect([]);
 const Schema = require('dsp_shared/database/model/schema');
 
-const schema_model = {
+
+const schemas = {
+  trees: require('./schemas/trees.json')
+};
+
+const default_schema_model = {
   companyId: {
     type: 'Number',
     required: false,
@@ -75,9 +80,10 @@ function prepareAttributes(attrs) {
 function *create_schema(schema_name, storage_name, config_name) {
   console.log(`Calling create_schema for ${schema_name}`);
   if (Schema.create) {
+    const schemaModel = schemas[schema_name] || default_schema_model;
     const model = {};
-    Object.keys(schema_model).forEach((field) => {
-      const type = prepareAttributes(schema_model[field]);
+    Object.keys(schemaModel).forEach((field) => {
+      const type = prepareAttributes(schemaModel[field]);
       model[field] = type;
     });
     yield Schema.create(schema_name, '0.0.1', 'v4', model, storage_name, schemaConfig[config_name]);
