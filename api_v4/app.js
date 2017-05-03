@@ -31,7 +31,7 @@ co(function *build_app() {
   if (require.main === module) {
       // initalize database
     console.log("app config", { env: app.env, port: 3004 });
-    api.port = 3004
+    config.api_port = 3004;
     let server;
     if (config.api_port === 80) {
       server = http.createServer(app.callback()).listen(80);
