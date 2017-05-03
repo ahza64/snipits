@@ -62,6 +62,9 @@ export default class SchemasLayout extends React.Component {
     this.closeSchemaEdit = this.closeSchemaEdit.bind(this);
     this.openSchemaEdit = this.openSchemaEdit.bind(this);
 
+  }
+
+  componentWillMount() {
     this.getCompanies();
   }
 
