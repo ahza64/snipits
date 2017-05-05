@@ -1,3 +1,4 @@
+var ObjectId = require('mongoose').Types.ObjectId;
 module.exports = {
   user: {
     _id: '57eeadb7895ac9c5dcdfa1d7',
@@ -15,7 +16,7 @@ module.exports = {
     company: 'Dispatchr',
     workorder: [
       {
-        '_id' : '802d544b6b24407b34a11a6b',
+        '_id' : ObjectId('802d544b6b24407b34a11a6b'),
         'uniq_id' : '134035006/041-005/040',
         'span_name' : '006/041-005/040',
         'location' : {
@@ -37,7 +38,7 @@ module.exports = {
         ]
       },
       {
-        '_id' : '713a9bc7b8aa370d04448425',
+        '_id' : ObjectId('713a9bc7b8aa370d04448425'),
         'uniq_id' : '134035010/076-010/07520',
         'span_name' : '010/076-010/075',
         'location' : {

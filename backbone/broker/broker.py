@@ -73,16 +73,22 @@ class MDPBroker(object):
     WORKER_PROTO = b'MDPW01'  #: Worker protocol identifier
 
 
-    def __init__(self, context, main_ep, opt_ep=None, broadcast_ep=None, service_q=None):
+    def __init__(self, context, main_ep, opt_ep=None, broadcast_ep=None, service_q=None, silent=False, verbose=True):
         """Init MDPBroker instance.
         """
+        self.silent = silent and not verbose
+        self.verbose = verbose
+        
+        
         if service_q is None:
             self.service_q = ServiceQueue
         else:
             self.service_q = service_q
         socket = context.socket(zmq.ROUTER)
-        print main_ep
+        if not silent:
+            print main_ep
         socket.bind(main_ep)
+        
         self.main_stream = ZMQStream(socket)
         self.main_stream.on_recv(self.on_message)
         if opt_ep:
@@ -104,7 +110,8 @@ class MDPBroker(object):
                               }
         self.hb_check_timer = PeriodicCallback(self.on_timer, HB_INTERVAL)
         self.hb_check_timer.start()
-        print "Broker Started"
+        if not silent:
+            print "Broker Started"
         return
 
     def register_worker(self, wid, service):
@@ -131,7 +138,8 @@ class MDPBroker(object):
             wq = self.service_q()
             self._services[service] = (wq, [])
         wq.put(wid)
-        print "Worker Connected", service, socketid2hex(wid), len(wq)
+        if not self.silent:
+            print "Worker Connected", service, socketid2hex(wid), len(wq)
         
             
         return
@@ -159,7 +167,8 @@ class MDPBroker(object):
             wq, wr = self._services[service]
             wq.remove(wid)
         del self._workers[wid]
-        print "Worker Lost", service, socketid2hex(wid)
+        if not self.silent:
+            print "Worker Lost", service, socketid2hex(wid)
         return
 
     def disconnect(self, wid):
@@ -197,7 +206,8 @@ class MDPBroker(object):
         to_send = rp[:]
         to_send.extend([b'', self.CLIENT_PROTO, service])
         to_send.extend(msg)
-        print "Sending Response:", service, "To:", socketid2hex(rp[0]), msg
+        if not self.silent:
+            print "Sending Response:", service, "To:", socketid2hex(rp[0]), msg
         self.client_stream.send_multipart(to_send)
         return
 
@@ -404,12 +414,14 @@ class MDPBroker(object):
             to_send.extend(rp)
             to_send.append(b'')
             to_send.extend(msg)
-            print 'Sending Message: ', service, "To:", socketid2hex(wid), msg
+            if not self.silent:
+                print 'Sending Message: ', service, "To:", socketid2hex(wid), msg
             self.main_stream.send_multipart(to_send)
         except KeyError:
             # unknwon service
             # ignore request
-            print 'Can not forward message.  No service:', service, msg
+            if not self.silent:
+                print 'Can not forward message.  No service:', service, msg
         return
 
     def on_worker(self, proto, rp, msg):
@@ -463,7 +475,8 @@ class MDPBroker(object):
         elif t.startswith(b'MDPC'):
             self.on_client(t, rp, msg)
         else:
-            print 'Broker unknown Protocol: "%s"' % t
+            if not self.silent:
+                print 'Broker unknown Protocol: "%s"' % t
         return
         
 

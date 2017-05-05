@@ -38,8 +38,15 @@ var route_dir = path.dirname(__filename) + "/" + testConfig.route_dir;
 var routesFile = fs.readdirSync(route_dir);
 routesFile.forEach(f => {
   console.log('Filename---->', f);
-  app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, f))));
+  if(f.endsWith(".js")) {
+    app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, f))));
+  }
 });
 
+app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, 'assign/assign'))));
+app.use(mount(testConfig.BASE_URL, require(path.resolve(route_dir, 'details/tree'))));
+
+
+
 // Export
-module.exports = app.listen(3000);
+module.exports = app.listen();
