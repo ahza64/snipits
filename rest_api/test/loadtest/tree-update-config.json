@@ -1,0 +1,50 @@
+{
+  "config": {
+    "target": "http://localhost:3000/api/v3",
+    "phases": [
+      {"duration": 1, "arrivalRate": 1, "name": "Warm-up"},
+      {"pause": 10, "name": "1st Rest Phase"},
+      {"duration": 30, "arrivalCount": 5 },
+      {"duration": 60, "arrivalRate": 10, "name": "High load phase"}
+    ],
+    "payload": {
+      "path": "treeCrew.csv",
+      "fields": ["email", "password"]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "Login and Get Package",
+      "flow": [
+        {
+          "post": {
+            "url": "/login",
+            "json": { "email": "{{ email }}", "password": "{{ password }}"}
+          }
+        },
+        {
+          "get": {
+            "url": "/workr/package",
+            "capture": {
+              "json": "$.data.workorders[0]._id",
+              "as": "woId"
+            },
+            "capture": {
+              "json": "$.data.workorders[0].tasks[0]",
+              "as": "treeId"
+            }
+          }
+        },
+        {"think": 3},
+        {
+          "patch": {
+            "url": "/{{ woId }}/tree",
+            "json": {
+              "height": 20
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
