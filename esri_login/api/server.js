@@ -10,7 +10,7 @@ const app = koa();
 app.use(logger());
 
 //Router
-app.use(mount(config.url_prefix, require('./Oauth')));
+app.use(mount(config.url_prefix, require('./oauth')));
 
 //Port
 console.log('app listening on port: ' + port);
