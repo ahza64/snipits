@@ -161,6 +161,7 @@ function *addTreeToWorkorder(userId, woId, treeId){
  */
 function *removeTreeFromWorkorder(userId, woId, treeId){
   try {
+    woId = mongoose.Types.ObjectId(woId);
     var data = yield Cuf.update({_id: userId, 'workorder._id': woId}, {'$pull': {'workorder.$.tasks': treeId}});
     console.log('Tree' + treeId + 'removed and Workorder' + woId + 'updated', data);
   } catch (err){
@@ -303,7 +304,7 @@ router.patch('/workorder/:woId/tree/:treeId', function *(){
  * @return {type}  description
  */
 router.delete('/workorder/:woId/tree/:treeId', function *(){
-  var woId = this.params.woId;
+  var woId = mongoose.Types.ObjectId(this.params.woId);
   var treeId = this.params.treeId;
   var result = null;
   var userId = this.req.user._id;

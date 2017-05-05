@@ -3,3 +3,4 @@ all_tests:
 	mocha export_vmd/test
 	mocha --recursive shared/lib/gis/*
 	mocha shared/lib/test/co_iterator.js
+	mocha backbone/test/index.js 
