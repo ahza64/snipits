@@ -40,6 +40,12 @@
             "error",
             "unix"
         ],
+        "no-restricted-syntax": [
+          "error",
+          "ForInStatement",
+          "LabeledStatement",
+          "WithStatement"
+        ],        
         "no-restricted-properties": ["error", {
                 "object": "arguments",
                 "property": "callee",
