@@ -1,0 +1,26 @@
+{
+  "name": "services",
+  "version": "1.0.0",
+  "description": "Services is a repo of smaller packages.  This master file is just here to help with linting and management.",
+  "main": "index.js",
+  "scripts": {
+    "test": "make all_tests",
+    "lint": "node node_modules/eslint/bin/eslint.js . --ext .jsx,.js",
+    "lint-fix": "node node_modules/eslint/bin/eslint.js . --ext .jsx,.js --fix",
+    "lint-git": "./lint-git.sh"
+  },
+  "author": "gabe <fgabe@dispatchr.co>",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "3.19.0",
+    "eslint-config-airbnb": "14.1.0",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-jsx-a11y": "4.0.0",
+    "eslint-plugin-mocha": "4.9.0",
+    "eslint-plugin-react": "6.10.3",
+    "koa": "2.2.0",
+    "koa-router": "7.1.1",
+    "should": "11.2.1",
+    "supertest": "3.0.0"
+  }
+}
