@@ -21,6 +21,20 @@ function getFields(schema) {
   return _.omit(schema, excludedFields);
 }
 
+/**
+ * @description Create Schema object that provides unified access to different storages (mongodb, postgresql and elasticsearch)
+ * @example
+ * const Schema = getSchema(config); // see /shared/config/config_template.json
+ * const schemas = Schema.find({}); // get list of all schemas
+ * schemas.forEach((schema) => {
+ *   const resource = schema.getResource(); // see {storage_name}/resource.js docs
+ * });
+ * Schema.closeConnections(); // close all connections when Schema object is not needed anymore
+ * @param {Object} config schema configuration
+ * @param {Object} config.storages list of all storage (connections configurations)
+ * @param {String} config.defaultStorage name of default storage that contains links to all resources
+ * @return {Object}
+ */
 function getSchema(config) {
   let defaultSchema = null;
   const storages = config.storages || {};

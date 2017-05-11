@@ -10,6 +10,16 @@ const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const PostgresResource = require('./resource');
 
 class PostgresSchema {
+  /**
+   * @description Schema implementation for PostgreSQL
+   * @param {String} name name of storage connection
+   * @param {Object} config connection configuration
+   * @param {String} config.db_host host name ("localhost", "127.0.0.1" etc.)
+   * @param {Number} config.db_port host port
+   * @param {String} config.db_name database name
+   * @param {String} config.db_user user name
+   * @param {String} config.db_pass user password
+   */
   constructor(name, config) {
     this.name = name;
     const db = {};
@@ -51,10 +61,17 @@ class PostgresSchema {
     this.synchronized = false;
   }
 
+  /**
+   * @description Get storage type name
+   * @return {String}
+   */
   getType() {
     return 'postgres';
   }
 
+  /**
+   * @description Create "schemas" table if it does not exist
+   */
   sync() {
     const self = this;
     return co(function *create_new_schema() {
@@ -65,6 +82,20 @@ class PostgresSchema {
     });
   }
 
+  /**
+   * @description Create new schema
+   * @param {String} name schema's name
+   * @param {String} version schema's version
+   * @param {String} api api's version
+   * @param {Object} fields schema's fields configuration
+   * @param {String} fields[].type field type: "String", "Number", "Date", "GeoJSON"
+   * @param {Boolean} fields[].required field is required
+   * @param {Boolean} fields[].editable field value can be edited
+   * @param {Boolean} fields[].visible field value is visible by default
+   * @param {String} storage storage name
+   * @param {Object} config resource configuration
+   * @param {Object} config.filters filter resource data by user data: { <resource_field_name>: <user_field_name> }
+   */
   create(name, version, api, fields, storage, config) {
     const self = this;
     const newSchema = {
@@ -90,6 +121,14 @@ class PostgresSchema {
     return prepared;
   }
 
+  /**
+   * @description Get resource object
+   * @param {String} name resource name
+   * @param {Object} fields fields configuration
+   * @param {String} storage storage name
+   * @param {Object} config resource configuration
+   * @return {Object} see {@link PostgresResource}
+   */
   getResource(name, fields, storage, config) {
     if ((!storage) || (storage === this.name)) {
       this.db[name] = this.db.sequelize.import(name, function(sequelize, DataTypes) {
@@ -134,6 +173,11 @@ class PostgresSchema {
     });
   }
 
+  /**
+   * @description Get schemas list
+   * @param {Object} params filter parameters
+   * @return {Object[]}
+   */
   find(params) {
     const self = this;
     return co(function *find_schemas() {
@@ -143,6 +187,9 @@ class PostgresSchema {
     });
   }
 
+  /**
+   * @description close connection
+   */
   close() {
     this.db.sequelize.close();
   }

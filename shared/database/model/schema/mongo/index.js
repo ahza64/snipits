@@ -13,19 +13,6 @@
  *  * id  (Used for auto incremental db ids)
  *  * created - date entry was created in db
  *  * updated - date entry was last updated in db
- * ### Schema
- *  All other fields should be in the following format
- *  ```
-      {
-        stringField: "String",
-        numberField: {type: "Number"}
-        dateField: {type: "Date"},
-        indexedString: {type: "String", index: true},
-        uniqNumber: {type: "Number", unique: true},
-        geoJSON: {type: "GeoJSON"}
-        indexJSON: {type: "GeoJSON", index: true}
-      }
- *  ```
  */
 
 const co = require('co');
@@ -37,6 +24,15 @@ const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const Resource = require('./resource');
 
 class MongoSchema {
+  /**
+   * @description Schema implementation for MongoDB
+   * @param {String} name storage name
+   * @param {Object} config connection configuration
+   * @param {String} config.name connection name
+   * @param {String} config.mongo_db_host host name ("localhost", "127.0.0.1" etc.)
+   * @param {Number} config.mongo_db_port host port (27017)
+   * @param {String} config.mongo_db_name database name
+   */
   constructor(name, config) {
     const self = this;
     this.name = name;
@@ -156,10 +152,19 @@ class MongoSchema {
     return model;
   }
 
+  /**
+   * @description Get storage type name
+   * @return {String}
+   */
   getType() {
     return 'mongodb';
   }
 
+  /**
+   * @description Get schemas list
+   * @param {Object} params filter parameters
+   * @return {Object[]}
+   */
   find(params) {
     const self = this;
     return co(function *create_new_schema() {
@@ -168,6 +173,14 @@ class MongoSchema {
     });
   }
 
+  /**
+   * @description Get resource object
+   * @param {String} name resource name
+   * @param {Object} fields fields configuration
+   * @param {String} storage storage name
+   * @param {Object} config resource configuration
+   * @return {Object} see {@link Resource}
+   */
   getResource(name, fields, storage, config) {
     const self = this;
     return co(function *get_resource() {
@@ -182,7 +195,21 @@ class MongoSchema {
     });
   }
 
-  create(name, version, api, model, storage, config) {
+  /**
+   * @description Create new schema
+   * @param {String} name schema's name
+   * @param {String} version schema's version
+   * @param {String} api api's version
+   * @param {Object} fields schema's fields configuration
+   * @param {String} fields[].type field type: "String", "Number", "Date", "GeoJSON"
+   * @param {Boolean} fields[].required field is required
+   * @param {Boolean} fields[].editable field value can be edited
+   * @param {Boolean} fields[].visible field value is visible by default
+   * @param {String} storage storage name
+   * @param {Object} config resource configuration
+   * @param {Object} config.filters filter resource data by user data: { <resource_field_name>: <user_field_name> }
+   */
+  create(name, version, api, fields, storage, config) {
     const self = this;
     return co(function *create_new_schema() {
       const doc = Object.assign({
@@ -191,11 +218,14 @@ class MongoSchema {
         _api: api,
         _storage: storage,
         _config: config
-      }, model);
+      }, fields);
       return yield self.schemaModel.create(doc);
     });
   }
 
+  /**
+   * @description close connection
+   */
   close() {
     this.connection.close();
   }
