@@ -65,6 +65,7 @@
     "options": {
       "model": "users",
       "read_only": true,
+      "accepted_filters": ["esri_user"],
       "excluded_fields": ["__v"]
     }
   }
