@@ -7,6 +7,111 @@ const rp = require('request-promise');
 const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const EsResource = require('./resource');
 
+function createSchemaMapping(name, fields) {
+  const properties = {};
+  const fieldTypes = {
+    string: { type: 'string' },
+    number: { type: 'double' },
+    date: { type: 'date' },
+    geojson: { type: 'object' }
+  };
+  Object.keys(fields).forEach((field) => {
+    let fieldType = fields[field];
+    if (typeof fieldType !== 'string') {
+      fieldType = fieldType.type;
+    }
+    if (typeof fieldType === 'string') {
+      fieldType = fieldType.toLowerCase();
+    }
+    if (fieldType in fieldTypes) {
+      properties[`${name}_${field}`] = fieldTypes[fieldType];
+    } else {
+      console.error(`Init create resource ${name} error: field type ${fieldType} is not allowed.`);
+    }
+  });
+  const mapping = {};
+  mapping[name] = { properties: properties };
+  return mapping;
+}
+
+function prepareSchemas(schemas) {
+  let prepared = [];
+  if (schemas && schemas.hits && schemas.hits.hits) {
+    const list = schemas.hits.hits;
+    if (Array.isArray(list)) {
+      prepared = list.map((item) => {
+        const source = item._source;
+        let preparedItem = null;
+        if (source) {
+          preparedItem = Object.assign({
+            id: item._id,
+            _id: item._id,
+            _name: source.name,
+            _version: source.version,
+            _api: source.api,
+            __v: source.v,
+            _storage: source.storage,
+            _config: source.config
+          }, source.fields);
+        }
+        return preparedItem;
+      });
+    }
+  }
+  return prepared;
+}
+
+function prepareQuery(filters, sort) {
+  const query = {
+    query: {
+      bool: {
+        must: []
+      }
+    }
+  };
+  const renamed = {
+    id: '_id',
+    _name: 'name',
+    _version: 'version',
+    _api: 'api',
+    __v: 'v',
+    _storage: 'storage'
+  };
+  Object.keys(filters).forEach((field) => {
+    let value = filters[field];
+    if (typeof value === 'string') {
+      if (field === '_deleted') {
+        value = value.toLowerCase() === 'true';
+      }
+    }
+    const match = {};
+    if (field in renamed) {
+      match[renamed[field]] = value;
+    } else {
+      match[field] = value;
+    }
+    query.query.bool.must.push({
+      match: match
+    });
+  });
+  if (sort) {
+    let order = 'asc';
+    let field = sort;
+    if (sort.startsWith('-')) {
+      field = sort.substring(1);
+      order = 'desc';
+    }
+    if (field in renamed) {
+      field = renamed[field];
+    }
+    query.sort = {};
+    query.sort[field] = {
+      order: order
+    };
+  }
+  return query;
+}
+
 class EsSchema {
   /**
    * @description Schema implementation for Elasticsearch
@@ -22,7 +127,7 @@ class EsSchema {
     this.name = name;
     this.config = {
       host: config.db_host,
-      port: config.db_port,              
+      port: config.db_port,
       index: config.db_name,
       user: config.db_user,
       password: config.db_pass
@@ -33,9 +138,11 @@ class EsSchema {
    * @description Get storage type name
    * @return {String}
    */
+  /* eslint-disable class-methods-use-this */
   getType() {
     return 'elasticsearch';
   }
+  /* eslint-enable class-methods-use-this */
 
   /**
    * @description Create new schema
@@ -77,7 +184,7 @@ class EsSchema {
       if (response) {
         created = Object.assign({}, body, { _id: response._id });
         if ((!storage) || (storage === self.name)) {
-          const mapping = self.createSchemaMapping(name, fields);
+          const mapping = createSchemaMapping(name, fields);
           yield rp({
             method: 'PUT',
             uri: `${url}/${name}/_mapping?refresh=true`,
@@ -90,58 +197,6 @@ class EsSchema {
     });
   }
 
-  createSchemaMapping(name, fields) {
-    const properties = {};
-    const fieldTypes = {
-      'string': { type: 'string' },
-      'number': { type: 'double' },
-      'date': { type: 'date' },
-      'geojson': { type: 'object' }
-    };
-    Object.keys(fields).forEach((field) => {
-      let fieldType = fields[field];
-      if (typeof fieldType !== 'string') {
-        fieldType = fieldType.type;
-      }
-      if (typeof fieldType === 'string') {
-        fieldType = fieldType.toLowerCase();
-      }
-      if (fieldType in fieldTypes) {
-        properties[`${name}_${field}`] = fieldTypes[fieldType];
-      } else {
-        console.error(`Init create resource ${name} error: field type ${fieldType} is not allowed.`);
-      }
-    });
-    const mapping = {};
-    mapping[name] = { properties: properties};
-    return mapping;
-  }
-
-  prepareSchemas(schemas) {
-    let prepared = [];
-    if (schemas && schemas.hits && schemas.hits.hits) {
-      const list = schemas.hits.hits;
-      if (Array.isArray(list)) {
-        prepared = list.map((item) => {
-          const source = item._source;
-          if (source) {
-            return Object.assign({
-              id: item._id,
-              _id: item._id,
-              _name: source.name,
-              _version: source.version,
-              _api: source.api,
-              __v: source.v,
-              _storage: source.storage,
-              _config: source.config
-            }, source.fields);
-          }
-        });
-      }
-    }
-    return prepared;
-  }
-
   /**
    * @description Get resource object
    * @param {String} name resource name
@@ -152,6 +207,7 @@ class EsSchema {
    */
   getResource(name, fields, storage, config) {
     const self = this;
+    /* eslint-disable require-yield */
     return co(function *get_resource() {
       let resource = null;
       if ((!storage) || (storage === self.name)) {
@@ -161,57 +217,7 @@ class EsSchema {
       }
       return resource;
     });
-  }
-
-  prepareQuery(filters, sort) {
-    const query = {
-      query: {
-        bool: {
-          must: []
-        }
-      }
-    };
-    const renamed = {
-      id: '_id',
-      _name: 'name',
-      _version: 'version',
-      _api: 'api',
-      __v: 'v',
-      _storage: 'storage'
-    };
-    Object.keys(filters).forEach((field) => {
-      let value = filters[field];
-      if (typeof value === 'string') {
-        if (field === '_deleted') {
-          value = value.toLowerCase() === 'true' ? true : false;
-        }
-      }
-      const match = {};
-      if (field in renamed) {
-        match[renamed[field]] = value;
-      } else {
-        match[field] = value;
-      }
-      query.query.bool.must.push({
-        match: match
-      });
-    });
-    if (sort) {
-      let order = 'asc';
-      let field = sort;
-      if (sort.startsWith('-')) {
-        field = sort.substring(1);
-        order = 'desc';
-      }
-      if (field in renamed) {
-        field = renamed[field];
-      }
-      query.sort = {};
-      query.sort[field] = {
-        order: order
-      };
-    }
-    return query;
+    /* eslint-enable require-yield */
   }
 
   /**
@@ -222,7 +228,7 @@ class EsSchema {
   find(params) {
     const self = this;
     return co(function *find_schemas() {
-      const body = self.prepareQuery(params || {}, 'created');
+      const body = prepareQuery(params || {}, 'created');
       const options = {
         method: 'POST',
         uri: `http://${self.config.host}:${self.config.port}/${self.config.index}/schemas/_search`,
@@ -232,7 +238,7 @@ class EsSchema {
 
       let schemas = [];
       try {
-        schemas = self.prepareSchemas(yield rp(options)); 
+        schemas = prepareSchemas(yield rp(options));
       } catch (e) {
         const code = e.statusCode;
         if (![400, 404].includes(code)) {
@@ -247,7 +253,9 @@ class EsSchema {
   /**
    * @description close connection
    */
+  /* eslint-disable class-methods-use-this */
   close() {}
+  /* eslint-enable class-methods-use-this */
 }
 
 module.exports = EsSchema;

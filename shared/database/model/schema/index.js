@@ -2,8 +2,7 @@
  * The meta schema model for mongodb, postgresql and elasticsearch
  */
 
-const _ = require('underscore');
-const config = require('dsp_config/config').get().schema || {};
+const config = require('dsp_config/config');
 const Schema = require('./schema');
 
-module.exports = Schema(config);
+module.exports = Schema(config.get().schema || {});

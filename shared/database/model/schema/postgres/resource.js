@@ -19,19 +19,18 @@ class PostgresResource {
   }
 
   prepareData(data) {
+    let prepared = null;
     if (data) {
       if (Array.isArray(data)) {
-        return data.map(item => this.prepareData(item));
+        prepared = data.map(item => this.prepareData(item));
       } else {
-        const prepared = _.omit(data, ['createdAt', 'updatedAt']);
+        prepared = _.omit(data, ['createdAt', 'updatedAt']);
         prepared.id = prepared._id;
         prepared.created = data.createdAt;
         prepared.updated = data.updatedAt;
-        return prepared;
       }
-    } else {
-      return null;
     }
+    return prepared;
   }
 
   /**
@@ -43,10 +42,10 @@ class PostgresResource {
   create(data, user) {
     const record = Object.assign({}, data);
     if (this.config && this.config.filters) {
-      for (const field in this.config.filters) {
+      Object.keys(this.config.filters).forEach((field) => {
         const value = user ? user[this.config.filters[field]] : null;
         record[field] = value;
-      }
+      });
     }
     const self = this;
     return co(function *create_gen() {
@@ -89,9 +88,8 @@ class PostgresResource {
       if (affected[0] > 0) {
         const updated = yield self.model.findOne({ where: { _id: id } });
         return self.prepareData(updated);
-      } else {
-        return null;
       }
+      return null;
     });
   }
 
@@ -118,12 +116,10 @@ class PostgresResource {
         const affected = yield self.model.update(patch, { where: { _id: id } });
         if (affected[0] > 0) {
           return Object.assign({}, original, patch);
-        } else {
-          return original;
         }
-      } else {
-        return null;
+        return original;
       }
+      return null;
     });
   }
 
@@ -184,9 +180,7 @@ class PostgresResource {
     const offset = options.offset || 0;
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
-    const select = options.select;
     let order = options.order || "createdAt";
-    const lean = options.lean;
 
     return co(function *list_gen() {
       const orderParams = [];
@@ -201,7 +195,7 @@ class PostgresResource {
       const list = yield self.model.findAll({
         offset: offset,
         limit: limit,
-        where: PostgresResource.prepareFilters(filters, self.config , options.user),
+        where: PostgresResource.prepareFilters(filters, self.config, options.user),
         order: orderParams,
         raw: true
       });
@@ -215,7 +209,7 @@ class PostgresResource {
       Object.keys(filters).forEach((field) => {
         if (typeof filters[field] === 'string') {
           if (field === '_deleted') {
-            prepared[field] = filters[field].toLowerCase() === 'true' ? true : false;
+            prepared[field] = filters[field].toLowerCase() === 'true';
           } else {
             prepared[field] = filters[field];
           }
@@ -225,10 +219,10 @@ class PostgresResource {
       });
     }
     if (config && config.filters) {
-      for(const fieldName in config.filters) {
+      Object.keys(config.filters).forEach((fieldName) => {
         const userFieldName = config.filters[fieldName];
         prepared[fieldName] = user ? user[userFieldName] : null;
-      }
+      });
     }
     return prepared;
   }

@@ -21,7 +21,18 @@ const autoIncrement = require('mongoose-auto-increment');
 const _ = require('lodash');
 const assert = require('assert');
 const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
+const initDB = require('dsp_database/database');
+const getConnection = require('dsp_database/connections');
 const Resource = require('./resource');
+
+const types = {
+  String: String,
+  Number: Number,
+  Date: Date,
+  Boolean: Boolean,
+  GeoJSON: Object,
+  ForeignKey: mongoose.Schema.Types.ObjectId
+};
 
 class MongoSchema {
   /**
@@ -37,8 +48,8 @@ class MongoSchema {
     const self = this;
     this.name = name;
     // create the connection
-    require('dsp_database/database')(config);
-    this.connection = require('dsp_database/connections')(config.name);
+    initDB(config);
+    this.connection = getConnection(config.name);
 
     autoIncrement.initialize(this.connection);
     const s = {
@@ -70,7 +81,6 @@ class MongoSchema {
         const mongoSchema = self.getMongoSchema.bind(this)(fields);
         const builtSchema = new mongoose.Schema(mongoSchema);
         builtSchema.plugin(autoIncrement.plugin, { model: this._name, field: 'id', startAt: 1 });
-        self.addGetSchema(builtSchema, this._name);
         return self.connection.model(this._name, builtSchema);
       }
     };
@@ -82,15 +92,6 @@ class MongoSchema {
   }
 
   getMongoSchema(fields) {
-    const types = {
-      String: String,
-      Number: Number,
-      Date: Date,
-      Boolean: Boolean,
-      GeoJSON: Object,
-      ForeignKey: mongoose.Schema.Types.ObjectId
-    };
-
     const baseSchema = {
       id: { type: Number, index: { unique: true } },
       created: { type: Date, default: Date.now, index: true },
@@ -125,12 +126,6 @@ class MongoSchema {
     return mongoSchema;
   }
 
-  addGetSchema(schema, schema_name) {
-    schema.methods.getSchema = function getSchema() {
-      return SchemaModel.findOne({ _name: schema_name });
-    };
-  }
-
   getModel(name, fields) {
     let model = null;
     try {
@@ -146,7 +141,6 @@ class MongoSchema {
       const mongoSchema = this.getMongoSchema.bind(schemaConf)(fieldsNames);
       const builtSchema = new mongoose.Schema(mongoSchema);
       builtSchema.plugin(autoIncrement.plugin, { model: name, field: 'id', startAt: 1 });
-      this.addGetSchema(builtSchema, name);
       model = this.connection.model(name, builtSchema);
     }
     return model;
@@ -156,9 +150,11 @@ class MongoSchema {
    * @description Get storage type name
    * @return {String}
    */
+  /* eslint-disable class-methods-use-this */
   getType() {
     return 'mongodb';
   }
+  /* eslint-enable class-methods-use-this */
 
   /**
    * @description Get schemas list
@@ -183,6 +179,7 @@ class MongoSchema {
    */
   getResource(name, fields, storage, config) {
     const self = this;
+    /* eslint-disable require-yield */
     return co(function *get_resource() {
       let resource = null;
       if ((!storage) || (storage === self.name)) {
@@ -193,6 +190,7 @@ class MongoSchema {
       }
       return resource;
     });
+    /* eslint-enable require-yield */
   }
 
   /**

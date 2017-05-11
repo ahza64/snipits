@@ -83,10 +83,10 @@ function process_filters(filters, config, user) {
     });
   }
   if (config && config.filters) {
-    for (const field in config.filters) {
+    Object.keys(config.filters).forEach((field) => {
       const value = user ? user[config.filters[field]] : null;
       f[field] = value;
-    }
+    });
   }
   return f;
 }
@@ -122,10 +122,10 @@ class Resource extends Emitter {
     }
     query[field] = id;
     if (this.config && this.config.filters) {
-      for (const field in this.config.filters) {
-        const value = user ? user[this.config.filters[field]] : null;
-        query[field] = value;
-      }
+      Object.keys(this.config.filters).forEach((filterField) => {
+        const value = user ? user[this.config.filters[filterField]] : null;
+        query[filterField] = value;
+      });
     }
     return query;
   }
@@ -140,10 +140,10 @@ class Resource extends Emitter {
   create(data, user) {
     const record = Object.assign({}, data);
     if (this.config && this.config.filters) {
-      for (const field in this.config.filters) {
+      Object.keys(this.config.filters).forEach((field) => {
         const value = user ? user[this.config.filters[field]] : null;
         record[field] = value;
-      }
+      });
     }
     const self = this;
     return co(function *create_gen() {

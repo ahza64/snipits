@@ -2,12 +2,17 @@
  * The meta schema model of PostgreSQL
  */
 
-const path = require('path');
 const co = require('co');
 const Sequelize = require('sequelize');
 const _ = require('underscore');
 const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const PostgresResource = require('./resource');
+
+function prepareSchema(schema) {
+  let prepared = _.omit(schema, ['createdAt', 'updatedAt', 'fields']);
+  prepared = Object.assign(prepared, { id: schema._id, _id: `${schema._id}` }, schema.fields);
+  return prepared;
+}
 
 class PostgresSchema {
   /**
@@ -38,7 +43,7 @@ class PostgresSchema {
       }
     );
     db.Sequelize = Sequelize;
-    db.schemas = db.sequelize.import('schemas', function(sequelize, DataTypes) {
+    db.schemas = db.sequelize.import('schemas', (sequelize, DataTypes) => {
       return sequelize.define('schemas', {
         _id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
         _name: { type: DataTypes.STRING },
@@ -51,7 +56,7 @@ class PostgresSchema {
       });
     });
 
-    Object.keys(db).forEach(function(modelName) {
+    Object.keys(db).forEach((modelName) => {
       if ('associate' in db[modelName]) {
         db[modelName].associate(db);
       }
@@ -65,9 +70,11 @@ class PostgresSchema {
    * @description Get storage type name
    * @return {String}
    */
+  /* eslint-disable class-methods-use-this */
   getType() {
     return 'postgres';
   }
+  /* eslint-enable class-methods-use-this */
 
   /**
    * @description Create "schemas" table if it does not exist
@@ -115,12 +122,6 @@ class PostgresSchema {
     });
   }
 
-  prepareSchema(schema) {
-    let prepared =_.omit(schema, ['createdAt', 'updatedAt', 'fields']);
-    prepared = Object.assign(prepared, { id: schema._id, _id: `${schema._id}` }, schema.fields);
-    return prepared;
-  }
-
   /**
    * @description Get resource object
    * @param {String} name resource name
@@ -131,7 +132,7 @@ class PostgresSchema {
    */
   getResource(name, fields, storage, config) {
     if ((!storage) || (storage === this.name)) {
-      this.db[name] = this.db.sequelize.import(name, function(sequelize, DataTypes) {
+      this.db[name] = this.db.sequelize.import(name, (sequelize, DataTypes) => {
         const tableSchema = {
           _id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
           _deleted: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
@@ -145,13 +146,13 @@ class PostgresSchema {
             fieldType = fieldType.toLowerCase();
           }
           const allowedTypes = {
-            "string": DataTypes.STRING,
-            "number": DataTypes.DOUBLE,
-            "date": DataTypes.DATE,
-            "geojson": DataTypes.JSON
+            string: DataTypes.STRING,
+            number: DataTypes.DOUBLE,
+            date: DataTypes.DATE,
+            geojson: DataTypes.JSON
           };
           if (fieldType in allowedTypes) {
-            tableSchema[field] = { type: allowedTypes[fieldType] }
+            tableSchema[field] = { type: allowedTypes[fieldType] };
           } else {
             log.error(`Init table ${name} error: field ${field} type ${fieldType} is not allowed.`);
           }
@@ -183,7 +184,7 @@ class PostgresSchema {
     return co(function *find_schemas() {
       yield self.sync();
       const filters = PostgresResource.prepareFilters(params);
-      return yield self.db.schemas.findAll({ where: filters, raw: true }).map(schema => self.prepareSchema(schema));
+      return yield self.db.schemas.findAll({ where: filters, raw: true }).map(schema => prepareSchema(schema));
     });
   }
 

@@ -4,7 +4,6 @@
 
 const co = require('co');
 const rp = require('request-promise');
-const _ = require('underscore');
 const jsonpatch = require('fast-json-patch');
 
 class EsResource {
@@ -34,14 +33,14 @@ class EsResource {
         _id: item._id,
         id: item._id
       });
-      for(const field in this.fields) {
+      Object.keys(this.fields).forEach((field) => {
         const preparedField = this.fieldsWithoutPrefix[field];
         if (preparedField && (this.fields[field].type.toLowerCase() === 'date')) {
           if (typeof prepared[preparedField] === 'string') {
             prepared[preparedField] = new Date(prepared[preparedField]);
           }
         }
-      }
+      });
     }
     return prepared;
   }
@@ -72,7 +71,7 @@ class EsResource {
     return co(function *do_request() {
       let response = null;
       try {
-        response = yield rp(options); 
+        response = yield rp(options);
       } catch (e) {
         const code = e.statusCode;
         if (![400, 404].includes(code)) {
@@ -99,16 +98,16 @@ class EsResource {
         _deleted: false,
         created: timestamp,
         updated: timestamp
-      }, self.includePrefixes(data) );
+      }, self.includePrefixes(data));
       if (self.resourceConfig && self.resourceConfig.filters) {
-        for (const field in self.resourceConfig.filters) {
+        Object.keys(self.resourceConfig.filters).forEach((field) => {
           let itemField = field;
           if (field in self.fieldsWithoutPrefix) {
             itemField = self.fieldsWithoutPrefix[field];
           }
           const value = user ? user[self.resourceConfig.filters[field]] : null;
           body[itemField] = value;
-        }
+        });
       }
       const response = yield self.doRequest('POST', '?refresh=true', body);
       if (response) {
@@ -131,10 +130,11 @@ class EsResource {
   }
 
   excludePrefixes(data) {
+    let result = null;
     if (Array.isArray(data)) {
-      return data.map(item => this.excludePrefixes(item));
+      result = data.map(item => this.excludePrefixes(item));
     } else {
-      const result = {};
+      result = {};
       Object.keys(data).forEach((field) => {
         if (field in this.fieldsWithPrefix) {
           result[this.fieldsWithPrefix[field]] = data[field];
@@ -142,14 +142,14 @@ class EsResource {
           result[field] = data[field];
         }
       });
-      return result;
     }
+    return result;
   }
 
   checkItem(item, user) {
     let valid = true;
     if (item && item._source && this.resourceConfig && this.resourceConfig.filters) {
-      for (const field in this.resourceConfig.filters) {
+      Object.keys(this.resourceConfig.filters).forEach((field) => {
         let itemField = field;
         if (field in this.fieldsWithoutPrefix) {
           itemField = this.fieldsWithoutPrefix[field];
@@ -158,7 +158,7 @@ class EsResource {
         if (item._source[itemField] !== value) {
           valid = false;
         }
-      }
+      });
     }
     return valid;
   }
@@ -242,7 +242,6 @@ class EsResource {
           const body = { doc: self.includePrefixes(patch) };
           body.doc.updated = Date.now();
           const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
-          let item = null;
           if (response) {
             updated = Object.assign({}, original, patch);
           }
@@ -323,11 +322,9 @@ class EsResource {
     const offset = options.offset || 0;
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
-    const select = options.select;
-    let sort = options.order || "created";
-    const lean = options.lean;
+    const sort = options.order || "created";
 
-    let params = [];
+    const params = [];
     if (offset) {
       params.push(`from=${offset}`);
     }
@@ -354,10 +351,10 @@ class EsResource {
   getFiltersByUserData(user) {
     const filters = {};
     if (this.resourceConfig && this.resourceConfig.filters) {
-      for (const field in this.resourceConfig.filters) {
+      Object.keys(this.resourceConfig.filters).forEach((field) => {
         const value = user ? user[this.resourceConfig.filters[field]] : null;
         filters[field] = value;
-      }
+      });
     }
     return filters;
   }
@@ -376,7 +373,7 @@ class EsResource {
       let value = allFilters[field];
       if (typeof value === 'string') {
         if (field === '_deleted') {
-          value = value.toLowerCase() === 'true' ? true : false;
+          value = value.toLowerCase() === 'true';
         }
       }
       const match = {};
