@@ -11,7 +11,7 @@ const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 
 // Collections
-const QowSchemas = require('dsp_shared/database/model/ingestion/tables').qow_schemas;
+const QowSchemas = require('dsp_shared/database/model/ingestion/tables').schemas;
 const QowFields = require('dsp_shared/database/model/ingestion/tables').qow_fields;
 
 // Get all user schemas

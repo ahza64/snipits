@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes){
-  var qow_fields = sequelize.define('qow_fields', {
+  var qow_fields = sequelize.define('schema_fields', {
     name: { type: DataTypes.STRING },
     required: { type: DataTypes.BOOLEAN},
     qowSchemaId: { type: DataTypes.INTEGER},
@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes){
   }, {
     classMethods: {
       associate: function (models) {
-        qow_fields.belongsTo(models.qow_schemas);
+        qow_fields.belongsTo(models.schemas);
       }
     }
   });

@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function (models) {
-        qow_expected_taxonomies.belongsTo(models.qow_schemas);
+        qow_expected_taxonomies.belongsTo(models.schemas);
       }
     }
   });

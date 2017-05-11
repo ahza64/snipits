@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         Projects.belongsTo(models.companies);
         Projects.hasMany(models.ingestion_configurations);
-        Projects.hasMany(models.qow_schemas);
+        Projects.hasMany(models.schemas);
       }
     }
   });
