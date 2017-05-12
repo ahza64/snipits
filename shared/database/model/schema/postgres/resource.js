@@ -8,6 +8,13 @@ const jsonpatch = require('fast-json-patch');
 
 class PostgresResource {
 
+  /**
+   * @description Resource implementation for PostgreSQL
+   * @param {String} name resource name
+   * @param {Object} model sequelize model
+   * @param {Object} config resource configuration
+   * @param {Object} config.filters filter resource data by user data: { <resource_field_name>: <user_field_name> }
+   */
   constructor(name, model, config) {
     this.name = name;
     this.model = model;

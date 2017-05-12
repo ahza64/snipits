@@ -67,16 +67,6 @@ class PostgresSchema {
   }
 
   /**
-   * @description Get storage type name
-   * @return {String}
-   */
-  /* eslint-disable class-methods-use-this */
-  getType() {
-    return 'postgres';
-  }
-  /* eslint-enable class-methods-use-this */
-
-  /**
    * @description Create "schemas" table if it does not exist
    */
   sync() {

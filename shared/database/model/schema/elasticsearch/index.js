@@ -112,6 +112,9 @@ function prepareQuery(filters, sort) {
   return query;
 }
 
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["close"] }] */
+/* Ignore empty method "close". It created to provide the similar interface as for another storages */
+
 class EsSchema {
   /**
    * @description Schema implementation for Elasticsearch
@@ -133,16 +136,6 @@ class EsSchema {
       password: config.db_pass
     };
   }
-
-  /**
-   * @description Get storage type name
-   * @return {String}
-   */
-  /* eslint-disable class-methods-use-this */
-  getType() {
-    return 'elasticsearch';
-  }
-  /* eslint-enable class-methods-use-this */
 
   /**
    * @description Create new schema
@@ -207,17 +200,13 @@ class EsSchema {
    */
   getResource(name, fields, storage, config) {
     const self = this;
-    /* eslint-disable require-yield */
-    return co(function *get_resource() {
-      let resource = null;
-      if ((!storage) || (storage === self.name)) {
-        resource = new EsResource(self.config, name, fields, config);
-      } else {
-        log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
-      }
-      return resource;
-    });
-    /* eslint-enable require-yield */
+    let resource = null;
+    if ((!storage) || (storage === self.name)) {
+      resource = new EsResource(self.config, name, fields, config);
+    } else {
+      log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
+    }
+    return Promise.resolve(resource);
   }
 
   /**
@@ -253,9 +242,7 @@ class EsSchema {
   /**
    * @description close connection
    */
-  /* eslint-disable class-methods-use-this */
   close() {}
-  /* eslint-enable class-methods-use-this */
 }
 
 module.exports = EsSchema;

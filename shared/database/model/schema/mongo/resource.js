@@ -94,6 +94,13 @@ function process_filters(filters, config, user) {
 
 class Resource extends Emitter {
 
+  /**
+   * @description Resource implementation for MongoDB
+   * @param {Object} Model mongoose model
+   * @param {String} name resource name
+   * @param {Object} config resource configuration
+   * @param {Object} config.filters filter resource data by user data: { <resource_field_name>: <user_field_name> }
+   */
   constructor(Model, name, config) {
     super();
     this.name = name || Model.modelName.toLowerCase();

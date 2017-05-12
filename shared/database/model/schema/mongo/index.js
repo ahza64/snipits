@@ -147,16 +147,6 @@ class MongoSchema {
   }
 
   /**
-   * @description Get storage type name
-   * @return {String}
-   */
-  /* eslint-disable class-methods-use-this */
-  getType() {
-    return 'mongodb';
-  }
-  /* eslint-enable class-methods-use-this */
-
-  /**
    * @description Get schemas list
    * @param {Object} params filter parameters
    * @return {Object[]}
@@ -179,18 +169,14 @@ class MongoSchema {
    */
   getResource(name, fields, storage, config) {
     const self = this;
-    /* eslint-disable require-yield */
-    return co(function *get_resource() {
-      let resource = null;
-      if ((!storage) || (storage === self.name)) {
-        const model = self.getModel(name, fields);
-        resource = new Resource(model, name, config);
-      } else {
-        log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
-      }
-      return resource;
-    });
-    /* eslint-enable require-yield */
+    let resource = null;
+    if ((!storage) || (storage === self.name)) {
+      const model = self.getModel(name, fields);
+      resource = new Resource(model, name, config);
+    } else {
+      log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
+    }
+    return Promise.resolve(resource);
   }
 
   /**

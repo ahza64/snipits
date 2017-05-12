@@ -8,6 +8,20 @@ const jsonpatch = require('fast-json-patch');
 
 class EsResource {
 
+  /**
+   * @description Resource implementation for Elasticsearch
+   * @param {Object} config connection configuration
+   * @param {String} config.host host name ("localhost", "127.0.0.1" etc.)
+   * @param {Number} config.port host port
+   * @param {String} config.index database (index) name
+   * @param {String} config.user user name
+   * @param {String} config.password user password
+   * @param {String} name resource name
+   * @param {Object} fields fields description
+   * @param {Object} resourceConfig resource configuration
+   * @param {Object} resourceConfig.filters filter resource data by user data:
+   * { <resource_field_name>: <user_field_name> }
+   */
   constructor(config, name, fields, resourceConfig) {
     this.config = config;
     this.name = name;
