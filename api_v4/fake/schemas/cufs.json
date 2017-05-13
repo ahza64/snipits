@@ -1,0 +1,104 @@
+{
+    "name" : {
+        "required" : false,
+        "editable" : true,
+        "visible" : true,
+        "type" : "String"
+    },
+    "first" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "last" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "user" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "uniq_id" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "scuf" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "phone_number" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "status" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "trees_scheduled" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Number"
+    },
+    "pulse" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Date"
+    },
+    "pushed_trees" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Number"
+    },
+    "trees_assigned" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "Number"
+    },
+    "trees_sent" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "Number"
+    },
+    "trees_complete" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "Number"
+    },
+    "last_sent_at" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Date"
+    },
+    "location" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "GeoJSON"
+    },
+    "company" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    }
+}

@@ -16,6 +16,7 @@ class EsResource {
    * @param {String} config.index database (index) name
    * @param {String} config.user user name
    * @param {String} config.password user password
+   * @param {Boolean} config.prefixes add prefix to each field name
    * @param {String} name resource name
    * @param {Object} fields fields description
    * @param {Object} resourceConfig resource configuration
@@ -23,15 +24,17 @@ class EsResource {
    * { <resource_field_name>: <user_field_name> }
    */
   constructor(config, name, fields, resourceConfig) {
-    this.config = config;
+    this.config = config || {};
     this.name = name;
     this.fields = fields;
     this.fieldsWithoutPrefix = {};
     this.fieldsWithPrefix = {};
-    Object.keys(fields).forEach((field) => {
-      this.fieldsWithoutPrefix[field] = `${name}_${field}`;
-      this.fieldsWithPrefix[`${name}_${field}`] = field;
-    });
+    if (this.config.prefixes) {
+      Object.keys(fields).forEach((field) => {
+        this.fieldsWithoutPrefix[field] = `${name}_${field}`;
+        this.fieldsWithPrefix[`${name}_${field}`] = field;
+      });
+    }
     this.resourceConfig = resourceConfig;
   }
 
@@ -384,8 +387,13 @@ class EsResource {
     };
     const allFilters = Object.assign({}, filters, this.getFiltersByUserData(user));
     Object.keys(allFilters).forEach((field) => {
+      let notEqual = false;
       let value = allFilters[field];
       if (typeof value === 'string') {
+        if (value.startsWith('!')) {
+          value = value.substring(1);
+          notEqual = true;
+        }
         if (field === '_deleted') {
           value = value.toLowerCase() === 'true';
         }
@@ -396,8 +404,7 @@ class EsResource {
       } else {
         match[field] = value;
       }
-      if ((field === '_deleted') && (value === false)) {
-        match[field] = true;
+      if (notEqual) {
         query.query.bool.must_not.push({
           match: match
         });

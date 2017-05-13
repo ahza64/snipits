@@ -7,7 +7,7 @@ const rp = require('request-promise');
 const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const EsResource = require('./resource');
 
-function createSchemaMapping(name, fields) {
+function createSchemaMapping(name, fields, prefixes) {
   const properties = {};
   const fieldTypes = {
     string: { type: 'string' },
@@ -24,7 +24,8 @@ function createSchemaMapping(name, fields) {
       fieldType = fieldType.toLowerCase();
     }
     if (fieldType in fieldTypes) {
-      properties[`${name}_${field}`] = fieldTypes[fieldType];
+      const fieldName = prefixes ? `${name}_${field}` : field;
+      properties[fieldName] = fieldTypes[fieldType];
     } else {
       console.error(`Init create resource ${name} error: field type ${fieldType} is not allowed.`);
     }
@@ -125,6 +126,7 @@ class EsSchema {
    * @param {String} config.db_name database (index) name
    * @param {String} config.db_user user name
    * @param {String} config.db_pass user password
+   * @param {Boolean} config.exclude_fields_prefixes
    */
   constructor(name, config) {
     this.name = name;
@@ -133,7 +135,8 @@ class EsSchema {
       port: config.db_port,
       index: config.db_name,
       user: config.db_user,
-      password: config.db_pass
+      password: config.db_pass,
+      prefixes: !config.exclude_fields_prefixes
     };
   }
 

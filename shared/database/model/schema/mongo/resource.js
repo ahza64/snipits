@@ -57,6 +57,9 @@ function sanitizeHelper(doc, original, _sanitize_deleted) {
   if (!result.id && original) {
     result.id = original.id;
   }
+  if (!result.id) {
+    result.id = result._id;
+  }
 
   if (sanitize_deleted) {
     delete result._deleted;
@@ -339,8 +342,10 @@ class Resource extends Emitter {
         result = result.lean();
       }
       try {
-        const res = yield result.exec();
-        // TODO sanitize these?
+        let res = yield result.exec();
+        if (res) {
+          res = res.map(item => sanitizeHelper(item));
+        }
         return res;
       } catch (e) {
         log.error("error listing", e);

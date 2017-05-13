@@ -214,14 +214,23 @@ class PostgresResource {
     const prepared = {};
     if (filters) {
       Object.keys(filters).forEach((field) => {
-        if (typeof filters[field] === 'string') {
-          if (field === '_deleted') {
-            prepared[field] = filters[field].toLowerCase() === 'true';
-          } else {
-            prepared[field] = filters[field];
+        let value = filters[field];
+        let notEquals = false;
+        if (typeof value === 'string') {
+          if (value.startsWith('!')) {
+            notEquals = true;
+            value = value.substring(1);
           }
+          if (field === '_deleted') {
+            value = filters[field].toLowerCase() === 'true';
+          }
+        }
+        if (notEquals) {
+          prepared[field] = {
+            $ne: value
+          };
         } else {
-          prepared[field] = filters[field];
+          prepared[field] = value;
         }
       });
     }
