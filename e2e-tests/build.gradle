@@ -1,0 +1,75 @@
+/*
+	build.gradle file for building and running Selenium tests
+	Example uses:
+	gradle clean test 		- Rebuild and run tests
+	gradle test 			- Run tests only
+	gradle cleanTest test  	- Force tests to be run even if up to date
+	gradle viewResults		- Displays the report of test results (Windows only)
+*/
+
+// Support for building and testing
+apply plugin: 'java'
+
+// (Optional) configure name and version for jar
+jar {
+	version  '1.0'
+	baseName 'ML-Tests'
+	extension '.jar'
+}
+
+// Cf. Maven properties
+ext.junitVersion = '4.11'
+ext.seleniumVersion = '2.53.0'
+ext.testngVersion = '6.8.8'
+ext.appiumVersion = '4.1.2'
+ext.jsonSimpleVersion = '1.1'
+
+// Cf. Maven <dependencies>
+dependencies {
+	compile group: 'junit', name: 'junit', version: junitVersion
+	compile group: 'org.testng', name: 'testng', version: testngVersion
+	compile group: 'io.appium', name: 'java-client', version: appiumVersion
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version:seleniumVersion
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:seleniumVersion
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-api', version:seleniumVersion
+	compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version:seleniumVersion
+	compile group: 'com.googlecode.json-simple', name: 'json-simple', version:jsonSimpleVersion
+
+}
+
+test {
+	// enable TestNG suppor (default is JUnit)
+	useTestNG()
+
+
+	// // set TestNG output dir
+	// outputDirectory = file("$project.buildDir//testngOutput")
+	// required to turn on TestNG reports
+	// useDefaultListeners = true
+	// suites 'testng-myTests.xml'
+
+
+	// listen to events in the test execution lifecycle
+	beforeTest {
+		descriptor -> logger.lifecycle("Running test: " + descriptor)
+	}
+
+	// listen to standard out and standr error of the test JVM(s)
+	onOutput {
+		descriptor, event -> logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message)
+	}
+}
+
+
+// A custom task to show report on tests that have run
+task viewResults(dependsOn: ['test'] , type:Exec) {
+	workingDir './build/reports/tests'		
+	commandLine 'cmd', '/c', 'start index.html'	
+}
+ 
+// Resolve Maven dependencies as Maven does
+repositories {
+	mavenCentral()
+	mavenLocal() 
+}
+
