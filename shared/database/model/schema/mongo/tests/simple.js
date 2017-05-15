@@ -1,4 +1,5 @@
 /* globals describe, it */
+/* eslint-disable */
 const co = require('co');
 const config = require('dsp_config/config').get({ log4js: false });
 config.schema.mongo_db_name = "minishiva-test";
@@ -73,3 +74,4 @@ describe("Mini Schiva Tests", () => {
     });
   });
 });
+/* eslint-enable */
