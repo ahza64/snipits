@@ -35,7 +35,7 @@ public class IngestionConfigPage extends WebAppPage {
     {
         try {
             waitForVisible(By.xpath(addConfigFormCancelButton));
-            LOGGER.info("Add COnoig Form is displayed");
+            LOGGER.info("Add Config Form is displayed");
         } catch (MalformedURLException e) {
             LOGGER.info("Add Config Form is not displayed");
         }
@@ -91,6 +91,7 @@ public class IngestionConfigPage extends WebAppPage {
                     LOGGER.info(companyName + " " + projectName);
                     if(companyName.contentEquals("Company" + namePostFix) && projectName.contentEquals("Project" + namePostFix))
                     {
+                        LOGGER.info("Ingestion Configuration Added is Found");
                         isNewConfigAdded = true;
                         break;
                     }
