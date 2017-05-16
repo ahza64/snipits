@@ -20,6 +20,7 @@ public class ProjectPage extends WebAppPage {
     private String addProjectNameField = ".//label[text()='Work Project Name']/following-sibling::input";
     private String projectTable = ".//*[@class='row']";
     private String badgeCount = ".//*[text()='Total Work Projects Found']/div/span";
+    private String dropDownButton = ".//*[@class='dropdown']/a";
 
     ProjectPage() throws MalformedURLException
     {
@@ -32,9 +33,9 @@ public class ProjectPage extends WebAppPage {
     {
         try {
             waitForVisible(By.xpath(addProjectFormCancelButton));
-            LOGGER.info("Add Company Form is displayed");
+            LOGGER.info("Add Project Form is displayed");
         } catch (MalformedURLException e) {
-            LOGGER.info("Add Company Form is not displayed");
+            LOGGER.info("Add Project Form is not displayed");
         }
     }
 
@@ -70,7 +71,6 @@ public class ProjectPage extends WebAppPage {
             for(int i=2; i<totalRowsInProjectTable+2; i++)
             {
                 projectNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
-                LOGGER.info(projectNameDisplayed);
                 if(projectNameDisplayed.contentEquals("Project" + namePostFix))
                 {
                     LOGGER.info("Project Added is Found");
@@ -86,5 +86,11 @@ public class ProjectPage extends WebAppPage {
     public int getBadgeCount()
     {
         return Integer.parseInt(driver.findElement(By.xpath(badgeCount)).getText());
+    }
+
+    public DropDownMenu clickDropDownMenu()
+    {
+        clickOnElement(By.xpath(dropDownButton));
+        return new DropDownMenu();
     }
 }
