@@ -36,6 +36,7 @@ public class AdminInterfaceE2ETests {
     public void verifyAddNewCompany() throws MalformedURLException
     {
         Random rand = new Random();
+<<<<<<< eedadbc39db45388826e322920bc092a37568b59
         namePostFix = rand.nextInt(1000);
         companyPage.addNewCompany(namePostFix);
         companyPage.holdOnForACoupleOfSec();

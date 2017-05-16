@@ -46,6 +46,7 @@ public class CompanyPage extends WebAppPage {
         clickOnElement(By.xpath(addCompanyFormConfirmButton));
     }
 
+
     public boolean verifyNewCompanyIsAdded(int namePostFix)
     {
         boolean isNewCompanyAdded = false;
@@ -71,12 +72,10 @@ public class CompanyPage extends WebAppPage {
 
         return isNewCompanyAdded;
     }
-
     public DropDownMenu clickDropDownMenu()
     {
         clickOnElement(By.xpath(dropDownButton));
         return new DropDownMenu();
     }
-
 
 }
