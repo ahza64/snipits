@@ -8,12 +8,17 @@ import java.net.MalformedURLException;
 import java.util.Random;
 
 import pages.CompanyPage;
+import pages.DropDownMenu;
 import pages.LoginPage;
+import pages.ProjectPage;
 import setup.Driver;
 
 public class AdminInterfaceE2ETests {
     protected LoginPage loginPage;
     protected CompanyPage companyPage;
+    protected DropDownMenu dropDownMenu;
+    protected ProjectPage projectPage;
+    protected int namePostFix;
 
     @BeforeClass(description = "Launching Chrome Broswer")
     public void LaunchingAdminInterfaceWebApp()
@@ -31,10 +36,24 @@ public class AdminInterfaceE2ETests {
     public void verifyAddNewCompany() throws MalformedURLException
     {
         Random rand = new Random();
-        int companyNamePostFix = rand.nextInt(1000);
-        companyPage.addNewCompany(companyNamePostFix);
+        namePostFix = rand.nextInt(1000);
+        companyPage.addNewCompany(namePostFix);
         companyPage.holdOnForACoupleOfSec();
-        boolean isNewCompanyAddedFound = companyPage.verifyNewCompanyIsAdded(companyNamePostFix);
+        boolean isNewCompanyAddedFound = companyPage.verifyNewCompanyIsAdded(namePostFix);
         Assert.assertTrue(isNewCompanyAddedFound);
+    }
+
+    @Test(priority = 3, description = "Adding a new project")
+    public void verifyAddNewProject() throws MalformedURLException
+    {
+        dropDownMenu = companyPage.clickDropDownMenu();
+        projectPage = dropDownMenu.openProjectPage();
+        projectPage.selectCompany(namePostFix);
+        int badgeNumberBeforeAddingProject = projectPage.getBadgeCount();
+        projectPage.addNewProject(namePostFix);
+        projectPage.holdOnForACoupleOfSec();
+        projectPage.verifyNewProjectIsAdded(namePostFix);
+        int badgeNumberAfterAddingProject = projectPage.getBadgeCount();
+        Assert.assertEquals(badgeNumberAfterAddingProject, badgeNumberBeforeAddingProject+1);
     }
 }
