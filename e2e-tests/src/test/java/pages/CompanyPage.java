@@ -54,18 +54,24 @@ public class CompanyPage extends WebAppPage {
         {
             int totalRowsInCompanyTable = driver.findElements(By.xpath(".//*[@class='row']/descendant::tr")).size();
             LOGGER.info(String.valueOf(totalRowsInCompanyTable));
-            String companyNameDisplayed;
-
-            for(int i=2; i<totalRowsInCompanyTable+2; i++)
+            if(totalRowsInCompanyTable > 1)
             {
-                companyNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
-                if(companyNameDisplayed.contentEquals("Company" + namePostFix))
-                {
-                    LOGGER.info("Company Added is Found");
-                    isNewCompanyAdded = true;
-                    break;
+                String companyNameDisplayed;
+
+                for (int i = 2; i < totalRowsInCompanyTable + 2; i++) {
+                    companyNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
+                    if (companyNameDisplayed.contentEquals("Company" + namePostFix)) {
+                        LOGGER.info("Company Added is Found");
+                        isNewCompanyAdded = true;
+                        break;
+                    }
                 }
             }
+        }
+        else
+        {
+            isNewCompanyAdded = false;
+            LOGGER.info("No Company on Table is Found");
         }
 
         return isNewCompanyAdded;

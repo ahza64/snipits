@@ -4,6 +4,8 @@ import org.openqa.selenium.By;
 
 import java.net.MalformedURLException;
 
+import javax.xml.validation.Schema;
+
 import setup.WebAppPage;
 
 /**
@@ -44,5 +46,11 @@ public class DropDownMenu extends WebAppPage {
     {
         clickOnElement(By.xpath(usersDropDownButton));
         return new UserPage();
+    }
+
+    public SchemaPage openSchemaPage() throws MalformedURLException
+    {
+        clickOnElement(By.xpath(schemasDropDownButton));
+        return new SchemaPage();
     }
 }

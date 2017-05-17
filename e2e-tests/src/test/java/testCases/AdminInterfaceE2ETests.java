@@ -12,6 +12,7 @@ import pages.DropDownMenu;
 import pages.IngestionConfigPage;
 import pages.LoginPage;
 import pages.ProjectPage;
+import pages.SchemaPage;
 import pages.UserPage;
 import setup.Driver;
 
@@ -22,6 +23,7 @@ public class AdminInterfaceE2ETests {
     protected ProjectPage projectPage;
     protected IngestionConfigPage ingestionConfigPage;
     protected UserPage userPage;
+    protected SchemaPage schemaPage;
     protected int namePostFix;
 
     @BeforeClass(description = "Launching Chrome Broswer")
@@ -53,12 +55,15 @@ public class AdminInterfaceE2ETests {
         dropDownMenu = companyPage.clickDropDownMenu();
         projectPage = dropDownMenu.openProjectPage();
         projectPage.selectCompany(namePostFix);
-        int badgeNumberBeforeAddingProject = projectPage.getBadgeCount();
+        int countOnBadgeBeforeAdding = projectPage.getBadgeCount();
+        int countOnTableBeforeAdding = projectPage.getEntriesInTable();
         projectPage.addNewProject(namePostFix);
         projectPage.holdOnForACoupleOfSec();
         projectPage.verifyNewProjectIsAdded(namePostFix);
-        int badgeNumberAfterAddingProject = projectPage.getBadgeCount();
-        Assert.assertEquals(badgeNumberAfterAddingProject, badgeNumberBeforeAddingProject+1);
+        int countOnBadgeAfterAdding = projectPage.getBadgeCount();
+        int countOnTableAfterAdding = projectPage.getEntriesInTable();
+        boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
+        Assert.assertTrue(verifyCount);
     }
 
     @Test(priority = 4, description = "Adding a new Ingestion Config")
@@ -68,12 +73,15 @@ public class AdminInterfaceE2ETests {
         ingestionConfigPage = dropDownMenu.openIngestionConfigPage();
         ingestionConfigPage.selectCompany(namePostFix);
         ingestionConfigPage.selectProject(namePostFix);
-        int badgeNumberBeforeAddingConfig = ingestionConfigPage.getBadgeCount();
+        int countOnBadgeBeforeAdding = ingestionConfigPage.getBadgeCount();
+        int countOnTableBeforeAdding = ingestionConfigPage.getEntriesInTable();
         ingestionConfigPage.addNewConfig(namePostFix);
         ingestionConfigPage.holdOnForACoupleOfSec();
         ingestionConfigPage.verifyNewConfigIsAdded(namePostFix);
-        int badgeNumberAfterAddingConfig = ingestionConfigPage.getBadgeCount();
-        Assert.assertEquals(badgeNumberAfterAddingConfig, badgeNumberBeforeAddingConfig+1);
+        int countOnBadgeAfterAdding = ingestionConfigPage.getBadgeCount();
+        int countOnTableAfterAdding = projectPage.getEntriesInTable();
+        boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
+        Assert.assertTrue(verifyCount);
     }
 
     @Test(priority = 5, description = "Adding a new User")
@@ -87,5 +95,23 @@ public class AdminInterfaceE2ETests {
         userPage.verifyNewUserIsAdded(namePostFix);
         int badgeNumberAfterAddingUser = userPage.getBadgeCount();
         Assert.assertEquals(badgeNumberAfterAddingUser, badgeNumberBeforeAddingUser+1);
+    }
+
+    @Test(priority = 6, description = "Adding a new Schema")
+    public void verifyAddNewSchema() throws MalformedURLException
+    {
+        dropDownMenu = companyPage.clickDropDownMenu();
+        schemaPage = dropDownMenu.openSchemaPage();
+        schemaPage.selectCompany(namePostFix);
+        schemaPage.selectProject(namePostFix);
+        int countOnBadgeBeforeAdding = schemaPage.getBadgeCount();
+        int countOnTableBeforeAdding = schemaPage.getEntriesInTable();
+        schemaPage.addNewSchema(namePostFix);
+        schemaPage.holdOnForACoupleOfSec();
+        schemaPage.verifyNewSchemaIsAdded(namePostFix);
+        int countOnBadgeAfterAdding = schemaPage.getBadgeCount();
+        int countOnTableAfterAdding = schemaPage.getEntriesInTable();
+        boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
+        Assert.assertTrue(verifyCount);
     }
 }
