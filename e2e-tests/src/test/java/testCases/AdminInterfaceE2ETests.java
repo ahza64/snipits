@@ -20,6 +20,7 @@ import setup.Driver;
 import setup.WebAppPage;
 
 public class AdminInterfaceE2ETests {
+
     private LoginPage loginPage;
     private CompanyPage companyPage;
     private DropDownMenu dropDownMenu;
@@ -29,6 +30,7 @@ public class AdminInterfaceE2ETests {
     private SchemaPage schemaPage;
     private TaxonomyPage taxonomyPage;
     private int namePostFix;
+
 
     @BeforeClass(description = "Launching Chrome Broswer")
     public void LaunchingAdminInterfaceWebApp()
