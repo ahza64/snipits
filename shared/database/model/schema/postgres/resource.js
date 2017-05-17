@@ -8,6 +8,13 @@ const jsonpatch = require('fast-json-patch');
 
 class PostgresResource {
 
+  /**
+   * @description Resource implementation for PostgreSQL
+   * @param {String} name resource name
+   * @param {Object} model sequelize model
+   * @param {Object} config resource configuration
+   * @param {Object} config.filters filter resource data by user data: { <resource_field_name>: <user_field_name> }
+   */
   constructor(name, model, config) {
     this.name = name;
     this.model = model;
@@ -19,19 +26,18 @@ class PostgresResource {
   }
 
   prepareData(data) {
+    let prepared = null;
     if (data) {
       if (Array.isArray(data)) {
-        return data.map(item => this.prepareData(item));
+        prepared = data.map(item => this.prepareData(item));
       } else {
-        const prepared = _.omit(data, ['createdAt', 'updatedAt']);
+        prepared = _.omit(data, ['createdAt', 'updatedAt']);
         prepared.id = prepared._id;
         prepared.created = data.createdAt;
         prepared.updated = data.updatedAt;
-        return prepared;
       }
-    } else {
-      return null;
     }
+    return prepared;
   }
 
   /**
@@ -43,10 +49,10 @@ class PostgresResource {
   create(data, user) {
     const record = Object.assign({}, data);
     if (this.config && this.config.filters) {
-      for (const field in this.config.filters) {
+      Object.keys(this.config.filters).forEach((field) => {
         const value = user ? user[this.config.filters[field]] : null;
         record[field] = value;
-      }
+      });
     }
     const self = this;
     return co(function *create_gen() {
@@ -89,9 +95,8 @@ class PostgresResource {
       if (affected[0] > 0) {
         const updated = yield self.model.findOne({ where: { _id: id } });
         return self.prepareData(updated);
-      } else {
-        return null;
       }
+      return null;
     });
   }
 
@@ -118,12 +123,10 @@ class PostgresResource {
         const affected = yield self.model.update(patch, { where: { _id: id } });
         if (affected[0] > 0) {
           return Object.assign({}, original, patch);
-        } else {
-          return original;
         }
-      } else {
-        return null;
+        return original;
       }
+      return null;
     });
   }
 
@@ -184,9 +187,7 @@ class PostgresResource {
     const offset = options.offset || 0;
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
-    const select = options.select;
     let order = options.order || "createdAt";
-    const lean = options.lean;
 
     return co(function *list_gen() {
       const orderParams = [];
@@ -196,12 +197,13 @@ class PostgresResource {
           order = order.substring(1);
           orderDirection = 'DESC';
         }
+        order = PostgresResource.getRealFieldName(order);
         orderParams.push([order, orderDirection]);
       }
       const list = yield self.model.findAll({
         offset: offset,
         limit: limit,
-        where: PostgresResource.prepareFilters(filters, self.config , options.user),
+        where: PostgresResource.prepareFilters(filters, self.config, options.user),
         order: orderParams,
         raw: true
       });
@@ -209,26 +211,48 @@ class PostgresResource {
     });
   }
 
+  static getRealFieldName(field) {
+    const fields = {
+      created: 'createdAt',
+      updated: 'updatedAt'
+    };
+    let realField = field;
+    if (field in fields) {
+      realField = fields[field];
+    }
+    return realField;
+  }
+
   static prepareFilters(filters, config, user) {
     const prepared = {};
     if (filters) {
-      Object.keys(filters).forEach((field) => {
-        if (typeof filters[field] === 'string') {
-          if (field === '_deleted') {
-            prepared[field] = filters[field].toLowerCase() === 'true' ? true : false;
-          } else {
-            prepared[field] = filters[field];
+      Object.keys(filters).forEach((filterField) => {
+        const field = PostgresResource.getRealFieldName(filterField);
+        let value = filters[field];
+        let notEquals = false;
+        if (typeof value === 'string') {
+          if (value.startsWith('!')) {
+            notEquals = true;
+            value = value.substring(1);
           }
+          if (field === '_deleted') {
+            value = filters[field].toLowerCase() === 'true';
+          }
+        }
+        if (notEquals) {
+          prepared[field] = {
+            $ne: value
+          };
         } else {
-          prepared[field] = filters[field];
+          prepared[field] = value;
         }
       });
     }
     if (config && config.filters) {
-      for(const fieldName in config.filters) {
+      Object.keys(config.filters).forEach((fieldName) => {
         const userFieldName = config.filters[fieldName];
         prepared[fieldName] = user ? user[userFieldName] : null;
-      }
+      });
     }
     return prepared;
   }
