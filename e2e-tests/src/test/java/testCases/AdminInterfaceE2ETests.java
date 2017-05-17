@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
+import java.util.Random;
 
 import pages.CompanyPage;
 import pages.LoginPage;
@@ -24,5 +25,16 @@ public class AdminInterfaceE2ETests {
     public void performLoginAdminInterfaceWebApp() throws MalformedURLException
     {
         companyPage = loginPage.login(Driver.getAdminUserName(), Driver.getAdminPassword());
+    }
+
+    @Test(priority = 2, description = "Adding a new company")
+    public void verifyAddNewCompany() throws MalformedURLException
+    {
+        Random rand = new Random();
+        int companyNamePostFix = rand.nextInt(1000);
+        companyPage.addNewCompany(companyNamePostFix);
+        companyPage.holdOnForACoupleOfSec();
+        boolean isNewCompanyAddedFound = companyPage.verifyNewCompanyIsAdded(companyNamePostFix);
+        Assert.assertTrue(isNewCompanyAddedFound);
     }
 }
