@@ -197,6 +197,7 @@ class PostgresResource {
           order = order.substring(1);
           orderDirection = 'DESC';
         }
+        order = PostgresResource.getRealFieldName(order);
         orderParams.push([order, orderDirection]);
       }
       const list = yield self.model.findAll({
@@ -210,10 +211,23 @@ class PostgresResource {
     });
   }
 
+  static getRealFieldName(field) {
+    const fields = {
+      created: 'createdAt',
+      updated: 'updatedAt'
+    };
+    let realField = field;
+    if (field in fields) {
+      realField = fields[field];
+    }
+    return realField;
+  }
+
   static prepareFilters(filters, config, user) {
     const prepared = {};
     if (filters) {
-      Object.keys(filters).forEach((field) => {
+      Object.keys(filters).forEach((filterField) => {
+        const field = PostgresResource.getRealFieldName(filterField);
         let value = filters[field];
         let notEquals = false;
         if (typeof value === 'string') {
