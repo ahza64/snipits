@@ -12,7 +12,7 @@ const INACTIVE = 'inactive';
 
 // Collections
 const QowSchemas = require('dsp_shared/database/model/ingestion/tables').schemas;
-const QowFields = require('dsp_shared/database/model/ingestion/tables').qow_fields;
+const QowFields = require('dsp_shared/database/model/ingestion/tables').schema_fields;
 
 // Get all user schemas
 router.get(
