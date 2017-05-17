@@ -77,6 +77,4 @@ public class CompanyPage extends WebAppPage {
         clickOnElement(By.xpath(dropDownButton));
         return new DropDownMenu();
     }
-
-
 }

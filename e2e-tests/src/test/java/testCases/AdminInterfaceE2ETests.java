@@ -55,5 +55,6 @@ public class AdminInterfaceE2ETests {
         projectPage.verifyNewProjectIsAdded(namePostFix);
         int badgeNumberAfterAddingProject = projectPage.getBadgeCount();
         Assert.assertEquals(badgeNumberAfterAddingProject, badgeNumberBeforeAddingProject+1);
+
     }
 }
