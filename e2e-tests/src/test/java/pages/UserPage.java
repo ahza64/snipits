@@ -69,23 +69,31 @@ public class UserPage extends WebAppPage {
         {
             int totalRowsInUserTable = driver.findElements(By.xpath(userTable + "/descendant::tr")).size();
             LOGGER.info(String.valueOf(totalRowsInUserTable));
-            String UserNameDisplayed;
-
-            for(int i=2; i<totalRowsInUserTable+2; i++)
+            if(totalRowsInUserTable > 1)
             {
-                UserNameDisplayed = driver.findElement(By.xpath(userTable + "/descendant::tr[" + i + "]/td[2]")).getText();
-                if(UserNameDisplayed.contentEquals("FN" + namePostFix + " " + "LN" + namePostFix))
+                String UserNameDisplayed;
+
+                for(int i=2; i<totalRowsInUserTable+2; i++)
                 {
-                    String companyName;
-                    companyName = driver.findElement(By.xpath(userTable + "/descendant::tr[" + i + "]/td[4]")).getText();
-                    LOGGER.info(companyName);
-                    if(companyName.contentEquals("Company" + namePostFix))
+                    UserNameDisplayed = driver.findElement(By.xpath(userTable + "/descendant::tr[" + i + "]/td[2]")).getText();
+                    if(UserNameDisplayed.contentEquals("FN" + namePostFix + " " + "LN" + namePostFix))
                     {
-                        LOGGER.info("User Added is Found");
-                        isNewUserAdded = true;
-                        break;
+                        String companyName;
+                        companyName = driver.findElement(By.xpath(userTable + "/descendant::tr[" + i + "]/td[4]")).getText();
+                        LOGGER.info(companyName);
+                        if(companyName.contentEquals("Company" + namePostFix))
+                        {
+                            LOGGER.info("User Added is Found");
+                            isNewUserAdded = true;
+                            break;
+                        }
                     }
                 }
+            }
+            else
+            {
+                isNewUserAdded = false;
+                LOGGER.info("No User on Table is Found");
             }
         }
 
