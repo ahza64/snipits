@@ -1,0 +1,92 @@
+{
+    "pge_pmd_num" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "project" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "division" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "name" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "detected_count" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Number"
+    },
+    "allgood_count" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Number"
+    },
+    "inspected_count" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Number"
+    },
+    "listed_count" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Number"
+    },
+    "worked_count" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Number"
+    },
+    "total_count" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "Number"
+    },
+    "plan_pi_complete" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Date"
+    },
+    "type" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "plan_tc_complete" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "Date"
+    },
+    "vmd_circuit_num" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "region" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    }
+}

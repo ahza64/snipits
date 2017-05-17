@@ -57,6 +57,9 @@ function sanitizeHelper(doc, original, _sanitize_deleted) {
   if (!result.id && original) {
     result.id = original.id;
   }
+  if (!result.id) {
+    result.id = result._id;
+  }
 
   if (sanitize_deleted) {
     delete result._deleted;
@@ -83,10 +86,10 @@ function process_filters(filters, config, user) {
     });
   }
   if (config && config.filters) {
-    for (const field in config.filters) {
+    Object.keys(config.filters).forEach((field) => {
       const value = user ? user[config.filters[field]] : null;
       f[field] = value;
-    }
+    });
   }
   return f;
 }
@@ -94,6 +97,13 @@ function process_filters(filters, config, user) {
 
 class Resource extends Emitter {
 
+  /**
+   * @description Resource implementation for MongoDB
+   * @param {Object} Model mongoose model
+   * @param {String} name resource name
+   * @param {Object} config resource configuration
+   * @param {Object} config.filters filter resource data by user data: { <resource_field_name>: <user_field_name> }
+   */
   constructor(Model, name, config) {
     super();
     this.name = name || Model.modelName.toLowerCase();
@@ -122,10 +132,10 @@ class Resource extends Emitter {
     }
     query[field] = id;
     if (this.config && this.config.filters) {
-      for (const field in this.config.filters) {
-        const value = user ? user[this.config.filters[field]] : null;
-        query[field] = value;
-      }
+      Object.keys(this.config.filters).forEach((filterField) => {
+        const value = user ? user[this.config.filters[filterField]] : null;
+        query[filterField] = value;
+      });
     }
     return query;
   }
@@ -140,10 +150,10 @@ class Resource extends Emitter {
   create(data, user) {
     const record = Object.assign({}, data);
     if (this.config && this.config.filters) {
-      for (const field in this.config.filters) {
+      Object.keys(this.config.filters).forEach((field) => {
         const value = user ? user[this.config.filters[field]] : null;
         record[field] = value;
-      }
+      });
     }
     const self = this;
     return co(function *create_gen() {
@@ -332,8 +342,10 @@ class Resource extends Emitter {
         result = result.lean();
       }
       try {
-        const res = yield result.exec();
-        // TODO sanitize these?
+        let res = yield result.exec();
+        if (res) {
+          res = res.map(item => sanitizeHelper(item));
+        }
         return res;
       } catch (e) {
         log.error("error listing", e);
