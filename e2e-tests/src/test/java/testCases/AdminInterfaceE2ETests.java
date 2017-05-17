@@ -25,10 +25,4 @@ public class AdminInterfaceE2ETests {
     {
         companyPage = loginPage.login(Driver.getAdminUserName(), Driver.getAdminPassword());
     }
-
-    @Test(priority = 2, description = "Adding a new company")
-    public void verifyAddNewCompany() throws MalformedURLException
-    {
-        companyPage.addNewCompany();
-    }
 }
