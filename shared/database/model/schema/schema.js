@@ -10,17 +10,25 @@ const EsSchema = require('./elasticsearch');
 const MongoSchema = require('./mongo');
 
 const SchmeaModels = {
-  'postgres': PostgresSchema,
-  'mongo': MongoSchema,
-  'elasticsearch': EsSchema
+  postgres: PostgresSchema,
+  mongo: MongoSchema,
+  elasticsearch: EsSchema
 };
 
 function getFields(schema) {
   const excludedFields = ['_name', '_version', 'id', 'created', 'updated',
-  '_api', '_storage', '_id', '__v', '_config'];
+    '_api', '_storage', '_id', '__v', '_config'];
   return _.omit(schema, excludedFields);
 }
 
+/**
+ * @description Create Schema object that provides unified access to different storages
+ * (mongodb, postgresql and elasticsearch)
+ * @param {Object} config schema configuration
+ * @param {Object} config.storages list of all storage (connections configurations)
+ * @param {String} config.defaultStorage name of default storage that contains links to all resources
+ * @return {Object}
+ */
 function getSchema(config) {
   let defaultSchema = null;
   const storages = config.storages || {};
@@ -44,13 +52,15 @@ function getSchema(config) {
           const schemasList = yield find(params);
           return schemasList.map((schema) => {
             const result = Object.assign({}, schema);
+            /* eslint-disable no-underscore-dangle */
             const storageName = result._storage || defaultStorage;
             const schemaName = result._name;
-            const config = result._config;
+            const schemaConfig = result._config;
+            /* eslint-enable no-underscore-dangle */
             const fields = getFields(schema);
             result.getResource = () => {
               return co(function *get_resource() {
-                return yield schemas[storageName].getResource(schemaName, fields, storageName, config);
+                return yield schemas[storageName].getResource(schemaName, fields, storageName, schemaConfig);
               });
             };
             return result;

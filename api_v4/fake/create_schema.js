@@ -3,14 +3,20 @@
  * Create a schema
  */
 
-const config = require('dsp_shared/config/config').get({log4js:false});
+require('dsp_shared/config/config').get({ log4js: false });
+
 const util = require('dsp_shared/lib/cmd_utils');
+const treesSchema = require('./schemas/trees.json');
+const cufsSchema = require('./schemas/cufs.json');
+const projectsSchema = require('./schemas/projects.json');
+
 util.connect([]);
 const Schema = require('dsp_shared/database/model/schema');
 
-
 const schemas = {
-  trees: require('./schemas/trees.json')
+  trees: treesSchema,
+  cufs: cufsSchema,
+  projects: projectsSchema,
 };
 
 const default_schema_model = {
