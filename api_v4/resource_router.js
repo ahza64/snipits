@@ -33,7 +33,6 @@ function createRouter(resource, _options) {
   const options = _options || {};
   const resource_name = options.name || resource.getName();
   const route = router();
-  const accepted_filters = options.accepted_filters || [];
 
   // remove underscores from url
   const res_url = `/${resource_name.replace(/_/g, '')}`;
@@ -48,29 +47,13 @@ function createRouter(resource, _options) {
 
 
   function processFilters(query) {
-    // check api query keys against accepted values
-    const valid_queries = ["offset", "length", "select", "order"].concat(accepted_filters);
-    const keys = Object.keys(query);
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      if (!_.contains(valid_queries, key)) {
-        throw new Error(`Bad Query Parameter: ${key}`);
+    const filter = Object.assign({}, query);
+    // remove the reserved query params from the filter
+    ['offset', 'length', 'limit', 'select', 'order'].forEach((field) => {
+      if (filter[field]) {
+        delete filter[field];
       }
-    }
-
-    // filters
-    const filter = {};
-    for (let i = 0; i < accepted_filters.length; i++) {
-      const key = accepted_filters[i];
-      let value = query[key];
-      if (value !== undefined) {
-        if (typeof value === 'string') {
-          value = filter[key].split('|');
-        }
-        filter[key] = value;
-      }
-    }
-
+    });
     return filter;
   }
 
@@ -132,15 +115,8 @@ function createRouter(resource, _options) {
         if (offset) {
           offset = parseInt(offset, 10);
         }
-        
-        // const filter = processFilters(context.query);
-        filter = Object.assign({}, context.query);
-        // remove the reserved query params from the filter
-        ['offset', 'length', 'limit', 'select', 'order'].forEach((field) => {
-          if (filter[field]) {
-            delete filter[field];
-          }
-        });
+
+        const filter = processFilters(context.query);
 
         data = yield resource.list({
           offset: offset,
@@ -170,63 +146,44 @@ function createRouter(resource, _options) {
     }
   }
 
-
   // HEAD request obtains headers for single resoruce
   route.head(`${res_url}/:id`, function *head_route() {
     yield get_req(this.params.id, this);
   });
 
-
   // GET single resource
-  route.get(`${res_url}/:id`, function *() {
+  route.get(`${res_url}/:id`, function *get_by_id() {
     yield get_req(this.params.id, this);
   });
 
   // HEAD list
-  route.head(res_url, function *() {
+  route.head(res_url, function *head_route() {
     yield get_req(undefined, this);
   });
   // GET request for list resource
-  route.get(res_url, function *() {
+  route.get(res_url, function *get_list() {
     yield get_req(undefined, this);
   });
-
 
   if (!read_only) {
     // PUT update request for specific resoruce
     route.put(`${res_url}/:id`, function *put_route() {
-      try {
-        this.body = yield resource.update(this.params.id, this.request.body, { set: true, user: fakeUser });
-      } catch (e) {
-        handleCRUDError(e, this, this.body);
-      }
+      this.body = yield resource.update(this.params.id, this.request.body, { set: true, user: fakeUser });
     });
 
     // PATCH request updates fields in a particular Object
     route.patch(`${res_url}/:id`, function *patch_route() {
-      try {
-        this.body = yield resource.patch(this.params.id, this.request.body, fakeUser);
-      } catch (e) {
-        handleCRUDError(e, this, this.body);
-      }
+      this.body = yield resource.patch(this.params.id, this.request.body, fakeUser);
     });
 
     // POST request to create resoruce
     route.post(`${res_url}`, function *post_route() {
-      try {
-        this.body = yield resource.create(this.request.body, fakeUser);
-      } catch (e) {
-        handleCRUDError(e, this, this.body);
-      }
+      this.body = yield resource.create(this.request.body, fakeUser);
     });
 
     // DELETE request to delete resoruce
     route.delete(`${res_url}/:id`, function *delete_route() {
-      try {
-        this.body = yield resource.delete(this.params.id, fakeUser);
-      } catch (e) {
-        handleCRUDError(e, this, this.body);
-      }
+      this.body = yield resource.delete(this.params.id, fakeUser);
     });
   }
 
