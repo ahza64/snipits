@@ -1,5 +1,5 @@
 {
-  "name": "services",
+  "name": "dsp-services",
   "version": "1.0.0",
   "description": "Services is a repo of smaller packages.  This master file is just here to help with linting and management.",
   "main": "index.js",
