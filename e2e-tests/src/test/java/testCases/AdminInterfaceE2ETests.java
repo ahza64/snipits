@@ -1,5 +1,6 @@
 package testCases;
 
+import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -13,18 +14,21 @@ import pages.IngestionConfigPage;
 import pages.LoginPage;
 import pages.ProjectPage;
 import pages.SchemaPage;
+import pages.TaxonomyPage;
 import pages.UserPage;
 import setup.Driver;
+import setup.WebAppPage;
 
 public class AdminInterfaceE2ETests {
-    protected LoginPage loginPage;
-    protected CompanyPage companyPage;
-    protected DropDownMenu dropDownMenu;
-    protected ProjectPage projectPage;
-    protected IngestionConfigPage ingestionConfigPage;
-    protected UserPage userPage;
-    protected SchemaPage schemaPage;
-    protected int namePostFix;
+    private LoginPage loginPage;
+    private CompanyPage companyPage;
+    private DropDownMenu dropDownMenu;
+    private ProjectPage projectPage;
+    private IngestionConfigPage ingestionConfigPage;
+    private UserPage userPage;
+    private SchemaPage schemaPage;
+    private TaxonomyPage taxonomyPage;
+    private int namePostFix;
 
     @BeforeClass(description = "Launching Chrome Broswer")
     public void LaunchingAdminInterfaceWebApp()
@@ -100,7 +104,7 @@ public class AdminInterfaceE2ETests {
     @Test(priority = 6, description = "Adding a new Schema")
     public void verifyAddNewSchema() throws MalformedURLException
     {
-        dropDownMenu = companyPage.clickDropDownMenu();
+        dropDownMenu = userPage.clickDropDownMenu();
         schemaPage = dropDownMenu.openSchemaPage();
         schemaPage.selectCompany(namePostFix);
         schemaPage.selectProject(namePostFix);
@@ -113,5 +117,29 @@ public class AdminInterfaceE2ETests {
         int countOnTableAfterAdding = schemaPage.getEntriesInTable();
         boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
         Assert.assertTrue(verifyCount);
+    }
+
+    @Test(priority = 7, description = "Adding a new Taxonomy")
+    public void verifyAddNewTaxonomy() throws MalformedURLException
+    {
+        dropDownMenu = schemaPage.clickDropDownMenu();
+        taxonomyPage = dropDownMenu.openTaxonomyPagePage();
+        taxonomyPage.selectCompany(namePostFix);
+        taxonomyPage.selectProject(namePostFix);
+        taxonomyPage.selectSchema(namePostFix);
+        int countOnBadgeBeforeAdding = taxonomyPage.getBadgeCount();
+        int countOnTableBeforeAdding = taxonomyPage.getEntriesInTable();
+        taxonomyPage.addNewTaxonomy(namePostFix);
+        taxonomyPage.holdOnForACoupleOfSec();
+        taxonomyPage.verifyNewTaxonomyIsAdded(namePostFix);
+        int countOnBadgeAfterAdding = taxonomyPage.getBadgeCount();
+        int countOnTableAfterAdding = taxonomyPage.getEntriesInTable();
+        if((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1))
+        {
+            WebAppPage.LOGGER.info("Valid Counts");
+        }
+        taxonomyPage.clickSaveChanges();
+        boolean isTaxonmySaved = taxonomyPage.verifySaveChanges(namePostFix);
+        Assert.assertTrue(isTaxonmySaved);
     }
 }

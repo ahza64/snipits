@@ -106,7 +106,6 @@ public class SchemaPage extends WebAppPage {
         return isNewSchemaAdded;
     }
 
-
     public int getBadgeCount()
     {
         return Integer.parseInt(driver.findElement(By.xpath(badgeCount)).getText());
