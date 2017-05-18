@@ -18,7 +18,7 @@ public class TaxonomyPage extends WebAppPage {
     private String selectCompanyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String selectProjectDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String selectSchemaDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String addTaxonomyButton = ".//*[@class='col-lg-2 col-md-2 col-sm-0 col-xs-0']/descendant::span[text()='Add Taxonomy']";
+    private String addTaxonomyButton = ".//span[text()='Add Taxonomy']";
     private String addTaxonomyFormCancelButton = ".//span[text()='Cancel']";
     private String addTaxonomyFormConfirmButton = ".//span[text()='Confirm']";
     private String addTaxonomyCompanyField = ".//td[text()='Company']/parent::tr/descendant::input";
@@ -52,32 +52,17 @@ public class TaxonomyPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        clickOnElement(By.xpath(selectCompanyButton));
-        waitForVisible(By.xpath(selectCompanyDropDown));
-        holdOnForASec();
-        clickOnElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='Company" + namePostFix + "']"));
-        LOGGER.info("Company is Selected");
-        holdOnForASec();
+        selectEntity("Company", namePostFix, selectCompanyButton, selectCompanyDropDown);
     }
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        clickOnElement(By.xpath(selectProjectButton));
-        waitForVisible(By.xpath(selectProjectDropDown));
-        holdOnForASec();
-        clickOnElement(By.xpath(selectProjectDropDown + "/descendant::div[text()='Project" + namePostFix + "']"));
-        LOGGER.info("Project is Selected");
-        holdOnForASec();
+        selectEntity("Project", namePostFix, selectProjectButton, selectProjectDropDown);
     }
 
     public void selectSchema(int namePostFix) throws MalformedURLException
     {
-        clickOnElement(By.xpath(selectSchemaButton));
-        waitForVisible(By.xpath(selectSchemaDropDown));
-        holdOnForASec();
-        clickOnElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='Schema" + namePostFix + "']"));
-        LOGGER.info("Schema is Selected");
-        holdOnForASec();
+        selectEntity("Schema", namePostFix, selectSchemaButton, selectSchemaDropDown);
     }
 
     private boolean verifyValuesOnForm(int namePostFix)
@@ -103,7 +88,7 @@ public class TaxonomyPage extends WebAppPage {
         waitForAddTaxonomyFormToDisplay();
 
         if(verifyValuesOnForm(namePostFix)) {
-            driver.findElement(By.xpath(addTaxonomyFieldNameField)).sendKeys("FieldName" + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyFieldNameField)).sendKeys("Taxonomy" + namePostFix);
             driver.findElement(By.xpath(addTaxonomyNodeField)).sendKeys("Node" + namePostFix);
             driver.findElement(By.xpath(addTaxonomyKeysField)).sendKeys("Keys" + namePostFix);
             clickOnElement(By.xpath(addTaxonomyFormConfirmButton));
@@ -132,7 +117,7 @@ public class TaxonomyPage extends WebAppPage {
                     nodeTypeDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[6]")).getText();
                     keysDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[7]")).getText();
 
-                    if (fieldNameDisplayed.contentEquals("FieldName" + namePostFix) &&
+                    if (fieldNameDisplayed.contentEquals("Taxonomy" + namePostFix) &&
                             nodeTypeDisplayed.contentEquals("Node" + namePostFix) &&
                             keysDisplayed.contentEquals("Keys" + namePostFix))
                     {
@@ -193,7 +178,7 @@ public class TaxonomyPage extends WebAppPage {
                     nodeTypeDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[6]")).getText();
                     keysDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[7]")).getText();
 
-                    if (fieldNameDisplayed.contentEquals("FieldName" + namePostFix) &&
+                    if (fieldNameDisplayed.contentEquals("Taxonomy" + namePostFix) &&
                             nodeTypeDisplayed.contentEquals("Node" + namePostFix) &&
                             keysDisplayed.contentEquals("Keys" + namePostFix))
                     {

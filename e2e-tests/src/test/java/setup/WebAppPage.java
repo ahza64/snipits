@@ -524,4 +524,14 @@ public class WebAppPage
     {
         return driver.findElements(By.xpath(".//*[@class='row']/descendant::tr")).size();
     }
+
+    protected void selectEntity(String entityType, int namePostFix, String buttonLocator, String dropDownLocator) throws MalformedURLException
+    {
+        clickOnElement(By.xpath(buttonLocator));
+        waitForVisible(By.xpath(dropDownLocator));
+        holdOnForASec();
+        clickOnElement(By.xpath(dropDownLocator + "/descendant::div[text()='" + entityType + namePostFix + "']"));
+        LOGGER.info(entityType + " is Selected");
+        holdOnForASec();
+    }
 }

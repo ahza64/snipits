@@ -15,6 +15,7 @@ import pages.LoginPage;
 import pages.ProjectPage;
 import pages.SchemaPage;
 import pages.TaxonomyPage;
+import pages.TaxonomyValuesPage;
 import pages.UserPage;
 import setup.Driver;
 import setup.WebAppPage;
@@ -29,6 +30,7 @@ public class AdminInterfaceE2ETests {
     private UserPage userPage;
     private SchemaPage schemaPage;
     private TaxonomyPage taxonomyPage;
+    private TaxonomyValuesPage taxonomyValuesPage;
     private int namePostFix;
 
 
@@ -143,5 +145,25 @@ public class AdminInterfaceE2ETests {
         taxonomyPage.clickSaveChanges();
         boolean isTaxonmySaved = taxonomyPage.verifySaveChanges(namePostFix);
         Assert.assertTrue(isTaxonmySaved);
+    }
+
+    @Test(priority = 8, description = "Adding a new Taxonomy Field Value")
+    public void verifyAddNewTaxonomyValue() throws MalformedURLException
+    {
+        dropDownMenu = taxonomyPage.clickDropDownMenu();
+        taxonomyValuesPage = dropDownMenu.openTaxonomyValuePagePage();
+        taxonomyValuesPage.selectCompany(namePostFix);
+        taxonomyValuesPage.selectProject(namePostFix);
+        taxonomyValuesPage.selectSchema(namePostFix);
+        taxonomyValuesPage.selectTaxonomy(namePostFix);
+        int countOnBadgeBeforeAdding = taxonomyValuesPage.getBadgeCount();
+        int countOnTableBeforeAdding = taxonomyValuesPage.getEntriesInTable();
+        taxonomyValuesPage.addNewTaxonomyValues(namePostFix);
+        taxonomyValuesPage.holdOnForACoupleOfSec();
+        taxonomyValuesPage.verifyNewTaxonomyValueIsAdded(namePostFix);
+        int countOnBadgeAfterAdding = taxonomyValuesPage.getBadgeCount();
+        int countOnTableAfterAdding = taxonomyValuesPage.getEntriesInTable();
+        boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
+        Assert.assertTrue(verifyCount);
     }
 }

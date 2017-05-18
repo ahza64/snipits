@@ -14,7 +14,7 @@ import setup.WebAppPage;
 
 public class CompanyPage extends WebAppPage {
 
-    private String addCompanyButton = ".//*[@class='col-lg-8 col-md-8 col-sm-8 col-xs-8']/descendant::span[text()='Add company']";
+    private String addCompanyButton = ".//span[text()='Add company']";
     private String addCompanyFormCancelButton = ".//span[text()='Cancel']";
     private String addCompanyFormConfirmButton = ".//span[text()='Confirm']";
     private String addCompanyNameField = ".//label[text()='Company Name']/following-sibling::input";
