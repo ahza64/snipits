@@ -438,7 +438,7 @@ class EsResource {
    */
   count(filters, user) {
     const self = this;
-    const query = self.prepareQuery({ _deleted: false }, null, user);
+    const query = self.prepareQuery(filters, null, user);
     return co(function *get_count() {
       let result = null;
       const response = yield self.doRequest('POST', '_search?size=0', query);

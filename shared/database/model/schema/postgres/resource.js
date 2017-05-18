@@ -228,7 +228,7 @@ class PostgresResource {
     if (filters) {
       Object.keys(filters).forEach((filterField) => {
         const field = PostgresResource.getRealFieldName(filterField);
-        let value = filters[field];
+        let value = filters[filterField];
         let notEquals = false;
         if (typeof value === 'string') {
           if (value.startsWith('!')) {
@@ -236,7 +236,7 @@ class PostgresResource {
             value = value.substring(1);
           }
           if (field === '_deleted') {
-            value = filters[field].toLowerCase() === 'true';
+            value = value.toLowerCase() === 'true';
           }
         }
         if (notEquals) {
@@ -264,7 +264,8 @@ class PostgresResource {
   count(filters, user) {
     const self = this;
     return co(function *get_count() {
-      return yield self.model.count({ where: PostgresResource.prepareFilters(filters, self.config, user) });
+      const where = PostgresResource.prepareFilters(filters, self.config, user);
+      return yield self.model.count({ where: where });
     });
   }
 }

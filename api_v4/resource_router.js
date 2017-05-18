@@ -57,39 +57,6 @@ function createRouter(resource, _options) {
     return filter;
   }
 
-
-  /**
-  *this function handles CRUD erors
-  * @param {Error} error_msg
-  * @param {App} application in use
-  * @param {Object} result
-  * @throws {Error} e
-  */
-  function handleCRUDError(e, context, result) {
-    if (e.name === 'ValidationError') {
-      const error_msgs = Object.keys(e.errors).map((key) => {
-        return e.errors[key].message;
-      });
-      context.throw(error_msgs.join('; '), 400);
-    } else if (e.name === 'MongoError' && e.code === 16755) {
-      console.error("Bad Geospaial Data", result);
-      context.throw("Bad Geospaial Data", 400);
-    } else if (e.name === 'MongoError' && e.code === 11000) {
-      context.throw(`ERROR: Duplicate key: ${e.toString()}`, 409);
-    } else if (e.message === "Can not update host") {
-      context.throw(e.message, 400);
-    } if (e.name === "CastError" && e.path === '_id') {
-      context.throw("Bad Resource ID", 400);
-    } else if (e.message.startsWith("Bad Query Parameter")) {
-      context.throw(e.message, 400);
-    } else if (e.message === "Resource Not Found") {
-      context.throw("Resource Not Found", 404);
-    } else {
-      console.warn('Unhandled Error', e.message);
-      context.throw(e);
-    }
-  }
-
   /*
   * @param {String} id - the _id of the particular resource
   * @param {Object} response - the response to the request
@@ -100,49 +67,41 @@ function createRouter(resource, _options) {
   */
   function *get_req(id, context) {
     let data;
-    try {
-      if (id === undefined || id === null) {
-        const query = context.request.query;
-        console.log("get", query);
-        let offset = query.offset || 0;
-        let len = query.length || query.limit;  // Need to manage this on the client we can't always get all of them
-        const select = query.select || excluded;
-        const order = query.order;
+    if (id === undefined || id === null) {
+      const query = context.request.query;
+      let offset = query.offset || 0;
+      let len = query.length || query.limit;  // Need to manage this on the client we can't always get all of them
+      const select = query.select || excluded;
+      const order = query.order;
 
-        if (len) {
-          len = parseInt(len, 10);
-        }
-        if (offset) {
-          offset = parseInt(offset, 10);
-        }
-
-        const filter = processFilters(context.query);
-
-        data = yield resource.list({
-          offset: offset,
-          length: len,
-          filter: filter,
-          select: select,
-          order: order,
-          lean: true,
-          user: fakeUser
-        });
-        if (context.dsp_env) {
-          offset = offset || 0;
-          context.dsp_env.total = yield resource.count(filter);
-          context.dsp_env.offset = Math.min(offset, context.dsp_env.total);
-          context.dsp_env.length = data.length;
-        }
-      } else {
-        data = yield resource.read(id, context.query, fakeUser);
+      if (len) {
+        len = parseInt(len, 10);
       }
-      if (data) {
-        context.body = data;
-      } else {
-        throw new Error("Resource Not Found");
+      if (offset) {
+        offset = parseInt(offset, 10);
       }
-    } catch (e) {
-      handleCRUDError(e, context);
+      const filter = processFilters(context.query);
+      data = yield resource.list({
+        offset: offset,
+        length: len,
+        filter: filter,
+        select: select,
+        order: order,
+        lean: true,
+        user: fakeUser
+      });
+      if (context.dsp_env) {
+        context.dsp_env.total = yield resource.count(filter);
+        context.dsp_env.offset = offset;
+        context.dsp_env.length = data.length;
+      }
+    } else {
+      data = yield resource.read(id, context.query, fakeUser);
+    }
+    if (data) {
+      context.body = data;
+    } else {
+      throw new Error("Resource Not Found");
     }
   }
 

@@ -49,6 +49,7 @@ function envelope(ctx, err) {
       },
       data: ctx.body
     };
+    ctx.body.envelope = Object.assign({}, ctx.body.envelope, ctx.dsp_env);
     if (ctx.request && ctx.request.header) {
       ctx.body.envelope.host = ctx.request.header.host;
     }
@@ -60,6 +61,7 @@ function envelope(ctx, err) {
 
 module.exports = {
   envelope: function *envelope_response_body(next) {
+    this.dsp_env = {};
     let err = null;
     try {
       yield next;
