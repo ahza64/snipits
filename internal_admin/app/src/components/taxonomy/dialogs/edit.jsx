@@ -43,6 +43,7 @@ export default class EditTaxonomyDialog extends React.Component {
     this.setState({
       taxFieldName: fieldName
     });
+    this.isConfirmButtonDisabled();
   }
 
   handleOrderChange(event, value) {
@@ -64,6 +65,13 @@ export default class EditTaxonomyDialog extends React.Component {
     this.setState({
       taxKeys: keys
     });
+  }
+
+  isConfirmButtonDisabled() {
+    if (this.state.taxFieldName.length > 0) {
+      return false;
+    }
+    return true;
   }
 
   handleTaxonomySubmit(event) {
@@ -130,6 +138,7 @@ export default class EditTaxonomyDialog extends React.Component {
           label="Confirm"
           primary={ true }
           keyboardFocused={ false }
+          disabled={ this.isConfirmButtonDisabled() }
           onTouchTap={ event => this.handleTaxonomySubmit(event) }
         />
       ]

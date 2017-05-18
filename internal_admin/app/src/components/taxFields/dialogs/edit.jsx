@@ -63,7 +63,7 @@ export default class EditTaxValueDialog extends React.Component {
         workProjectId: this.props.workProjectId,
         companyId: this.props.companyId
       };
-        
+
       request
       .post(taxFieldsUrl)
       .send(taxValue)
@@ -91,6 +91,7 @@ export default class EditTaxValueDialog extends React.Component {
     this.setState({
       fieldValue: tValue
     });
+    this.isConfirmButtonDisabled();
   }
 
   handleValidationClose() {
@@ -98,6 +99,13 @@ export default class EditTaxValueDialog extends React.Component {
       showValidationDialog: false,
       fieldValue: ''
     });
+  }
+
+  isConfirmButtonDisabled() {
+    if (this.state.fieldValue.length > 0) {
+      return false;
+    }
+    return true;
   }
 
   renderDialogs() {
@@ -150,6 +158,7 @@ export default class EditTaxValueDialog extends React.Component {
         <RaisedButton
           label="Confirm"
           primary={ true }
+          disabled={ this.isConfirmButtonDisabled() }
           onClick={ event => this.handleTaxValueSubmit(event) }
         />
       ]

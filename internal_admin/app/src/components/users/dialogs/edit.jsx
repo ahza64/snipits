@@ -203,6 +203,13 @@ export default class EditUserDialog extends React.Component {
     }
   }
 
+  isConfirmButtonDisabled() {
+    if ((this.state.email.length > 5) && (this.state.password.length > 0)) {
+      return false;
+    }
+    return true;
+  }
+
   handleCompanySelectChanged(event, value) {
     this.setState({
       companyId: value
@@ -223,7 +230,7 @@ export default class EditUserDialog extends React.Component {
         <SelectField
           fullWidth={true}
           value={ this.state.companyId }
-          disabled={ (this.props.user.companyId || this.props.user.id) ? true : false }
+          disabled={ (this.props.user.companyId && this.props.user.id) ? true : false }
           onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) } >
           { this.props.companies.map((company, idx) => {
               return(
@@ -246,7 +253,7 @@ export default class EditUserDialog extends React.Component {
         label="Confirm"
         primary={ true }
         keyboardFocused={ false }
-        disabled={ this.state.saving }
+        disabled={ this.state.saving || this.isConfirmButtonDisabled() }
         onTouchTap={ (event) => this.handleSubmit(event) }
       />
     ];
