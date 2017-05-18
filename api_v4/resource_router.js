@@ -110,9 +110,22 @@ function createRouter(resource, _options) {
     yield get_req(this.params.id, this);
   });
 
-  // GET single resource
+  // GET resources by id
   route.get(`${res_url}/:id`, function *get_by_id() {
-    yield get_req(this.params.id, this);
+    const id = this.params.id;
+    if ((typeof id === 'string') && (id.indexOf(',') !== -1)) {
+      const ids = id.split(',').map((val) => {
+        const num = parseInt(val, 10);
+        return isNaN(num) ? val : num;
+      });
+      this.body = yield resource.list({
+        filter: {
+          id: ids
+        }
+      });
+    } else {
+      yield get_req(this.params.id, this);
+    }
   });
 
   // HEAD list

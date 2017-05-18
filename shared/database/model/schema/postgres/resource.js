@@ -214,7 +214,8 @@ class PostgresResource {
   static getRealFieldName(field) {
     const fields = {
       created: 'createdAt',
-      updated: 'updatedAt'
+      updated: 'updatedAt',
+      id: '_id'
     };
     let realField = field;
     if (field in fields) {
@@ -229,22 +230,28 @@ class PostgresResource {
       Object.keys(filters).forEach((filterField) => {
         const field = PostgresResource.getRealFieldName(filterField);
         let value = filters[filterField];
-        let notEquals = false;
-        if (typeof value === 'string') {
-          if (value.startsWith('!')) {
-            notEquals = true;
-            value = value.substring(1);
-          }
-          if (field === '_deleted') {
-            value = value.toLowerCase() === 'true';
-          }
-        }
-        if (notEquals) {
+        if (Array.isArray(value)) {
           prepared[field] = {
-            $ne: value
+            $in: value
           };
         } else {
-          prepared[field] = value;
+          let notEquals = false;
+          if (typeof value === 'string') {
+            if (value.startsWith('!')) {
+              notEquals = true;
+              value = value.substring(1);
+            }
+            if (field === '_deleted') {
+              value = value.toLowerCase() === 'true';
+            }
+          }
+          if (notEquals) {
+            prepared[field] = {
+              $ne: value
+            };
+          } else {
+            prepared[field] = value;
+          }
         }
       });
     }

@@ -35,6 +35,7 @@ class EsResource {
         this.fieldsWithPrefix[`${name}_${field}`] = field;
       });
     }
+    this.fieldsWithoutPrefix.id = '_id';
     this.resourceConfig = resourceConfig;
   }
 
@@ -404,7 +405,11 @@ class EsResource {
       } else {
         match[field] = value;
       }
-      if (notEqual) {
+      if (Array.isArray(value)) {
+        query.query.bool.must.push({
+          terms: match
+        });
+      } else if (notEqual) {
         query.query.bool.must_not.push({
           match: match
         });
