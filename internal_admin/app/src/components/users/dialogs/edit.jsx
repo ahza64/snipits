@@ -14,6 +14,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { userUrl } from '../../../config';
 
 import validator from 'validator';
+import passwordValidator from 'password-validator';
 
 // Constants
 const STATUS_ACTIVE = 'active';
@@ -30,6 +31,8 @@ const INIT_STATE = {
   confirmError: null,
   saving: false
 };
+const passValidation = new passwordValidator();
+passValidation.is().min(6);
 
 export default class EditUserDialog extends React.Component {
 
@@ -117,6 +120,9 @@ export default class EditUserDialog extends React.Component {
     }
 
     var passwordError = (this.state.password === '') ? 'This field is required' : null;
+    if (!passValidation.validate(this.state.password)) {
+      passwordError = 'Password must have 6 charaters minimum';
+    }
 
     var confirmError = null;
     if (this.state.password !== this.state.confirm) {
