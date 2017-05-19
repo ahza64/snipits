@@ -300,6 +300,24 @@ class Resource extends Emitter {
     });
   }
 
+  aggregate(options) {
+    const self = this;
+    return co(function *aggregate_data() {
+      const group = {
+        _id: `$${options.aggregate}`,
+        count: { $sum: 1 }
+      };
+      const match = process_filters(options.filter, self.config, options.user);
+      const res = yield self.Model.aggregate([{ $match: match }, { $group: group }]);
+      return res.map((item) => {
+        const records = {};
+        records[options.aggregate] = item._id;
+        records.count = item.count;
+        return records;
+      });
+    });
+  }
+
   /**
     * @param {Object} options
     * @param {Number} options.offset skip the first (offset) matches
@@ -320,6 +338,11 @@ class Resource extends Emitter {
     const select = options.select;
     const order = options.order || "created";
     const lean = options.lean;
+
+    if (options.aggregate) {
+      return this.aggregate(options);
+    }
+
     return co(function *list_gen() {
       log.info("LIST", self.Model.modelName, { offset: offset, len: len, filters: filters });
       const sort = {};
@@ -328,7 +351,7 @@ class Resource extends Emitter {
       } else {
         sort[order] = 1;
       }
-      console.log("SORTING", sort);
+
       let result = self.Model.find().sort(sort);
       if (select) {
         result = result.select(select);
@@ -340,7 +363,7 @@ class Resource extends Emitter {
         result.limit(len);
       }
 
-      const f = process_filters(filters, self.config, _options.user);
+      const f = process_filters(filters, self.config, options.user);
       if (Object.keys(f).length > 0) {
         result = result.find(f);
       }
@@ -367,7 +390,7 @@ class Resource extends Emitter {
   */
   count(filters, user) {
     const f = process_filters(filters, this.config, user);
-    return this.Model.find(f).count();
+    return this.Model.count(f);
   }
 }
 

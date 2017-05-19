@@ -59,7 +59,7 @@ function createRouter(resource, _options) {
 
   function *exec_query(params, context) {
     const list = yield resource.list(params);
-    if (context.dsp_env) {
+    if (context.dsp_env && (!params.aggregate)) {
       context.dsp_env.total = yield resource.count(params.filter);
       context.dsp_env.offset = params.offset;
       context.dsp_env.length = list.length;
@@ -83,6 +83,7 @@ function createRouter(resource, _options) {
       let len = query.length || query.limit;  // Need to manage this on the client we can't always get all of them
       const select = query.select || excluded;
       const order = query.order;
+      const aggregate = query.aggregate;
 
       if (len) {
         len = parseInt(len, 10);
@@ -97,6 +98,7 @@ function createRouter(resource, _options) {
         filter: filter,
         select: select,
         order: order,
+        aggregate: aggregate,
         lean: true,
         user: fakeUser
       }, context);
@@ -152,6 +154,7 @@ function createRouter(resource, _options) {
       params.offset = body.offset || 0;
       params.length = body.length || body.limit;
       params.order = body.order;
+      params.aggregate = body.aggregate;
     }
     this.body = yield exec_query(params, this);
   });

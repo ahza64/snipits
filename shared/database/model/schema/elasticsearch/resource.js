@@ -6,6 +6,25 @@ const co = require('co');
 const rp = require('request-promise');
 const jsonpatch = require('fast-json-patch');
 
+function prepareAggregations(aggs) {
+  let prepared = null;
+  if (aggs && (Object.keys(aggs).length > 0)) {
+    const field = Object.keys(aggs)[0];
+    if (aggs[field] && aggs[field].buckets) {
+      const buckets = aggs[field].buckets;
+      if (Array.isArray(buckets)) {
+        prepared = buckets.map((bucket) => {
+          const item = {};
+          item[field] = bucket.key;
+          item.count = bucket.doc_count;
+          return item;
+        });
+      }
+    }
+  }
+  return prepared;
+}
+
 class EsResource {
 
   /**
@@ -65,13 +84,17 @@ class EsResource {
 
   prepareData(data) {
     let prepared = null;
-    if (data && data.hits && data.hits.hits) {
-      const list = data.hits.hits;
-      if (Array.isArray(list)) {
-        prepared = list.map(item => this.prepareItem(item));
+    if (data) {
+      if (data.aggregations) {
+        prepared = prepareAggregations(data.aggregations);
+      } else if (data && data.hits && data.hits.hits) {
+        const list = data.hits.hits;
+        if (Array.isArray(list)) {
+          prepared = list.map(item => this.prepareItem(item));
+        }
+      } else if (data && data._source) {
+        prepared = this.prepareItem(data);
       }
-    } else if (data && data._source) {
-      prepared = this.prepareItem(data);
     }
     return this.excludePrefixes(prepared);
   }
@@ -341,12 +364,15 @@ class EsResource {
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
     const sort = options.order || "created";
+    const aggregate = options.aggregate;
 
     const params = [];
     if (offset) {
       params.push(`from=${offset}`);
     }
-    if (limit) {
+    if (aggregate) {
+      params.push(`size=0`);
+    } else if (limit) {
       params.push(`size=${limit}`);
     }
 
@@ -356,7 +382,7 @@ class EsResource {
     }
 
     return co(function *list_gen() {
-      const query = self.prepareQuery(filters, sort, options.user);
+      const query = self.prepareQuery(filters, sort, aggregate, options.user);
       let list = [];
       const response = yield self.doRequest('POST', `_search${queryParams}`, query);
       if (response) {
@@ -377,7 +403,24 @@ class EsResource {
     return filters;
   }
 
-  prepareQuery(filters, sort, user) {
+  prepareAggsQuery(fields) {
+    let aggs = null;
+    if (typeof fields === 'string') {
+      let fieldName = fields;
+      if (fieldName in this.fieldsWithoutPrefix) {
+        fieldName = this.fieldsWithoutPrefix[fieldName];
+      }
+      aggs = {};
+      aggs[fields] = {
+        terms: {
+          field: fieldName
+        }
+      };
+    }
+    return aggs;
+  }
+
+  prepareQuery(filters, sort, aggregate, user) {
     const query = {
       query: {
         bool: {
@@ -386,6 +429,9 @@ class EsResource {
         }
       }
     };
+    if (aggregate) {
+      query.aggs = this.prepareAggsQuery(aggregate);
+    }
     const allFilters = Object.assign({}, filters, this.getFiltersByUserData(user));
     Object.keys(allFilters).forEach((field) => {
       let notEqual = false;
@@ -451,7 +497,7 @@ class EsResource {
    */
   count(filters, user) {
     const self = this;
-    const query = self.prepareQuery(filters, null, user);
+    const query = self.prepareQuery(filters, null, null, user);
     return co(function *get_count() {
       let result = null;
       const response = yield self.doRequest('POST', '_search?size=0', query);

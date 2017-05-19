@@ -4,6 +4,7 @@
 
 const co = require('co');
 const jsonpatch = require('fast-json-patch');
+const sequelize = require('sequelize');
 
 class PostgresResource {
 
@@ -185,6 +186,7 @@ class PostgresResource {
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
     let order = options.order || "created";
+    const aggregate = options.aggregate;
 
     return co(function *list_gen() {
       const orderParams = [];
@@ -197,13 +199,23 @@ class PostgresResource {
         order = PostgresResource.getRealFieldName(order);
         orderParams.push([order, orderDirection]);
       }
-      const list = yield self.model.findAll({
-        offset: offset,
-        limit: limit,
-        where: PostgresResource.prepareFilters(filters, self.config, options.user),
-        order: orderParams,
-        raw: true
-      });
+      let list = [];
+      if (aggregate) {
+        list = yield self.model.findAll({
+          group: [aggregate],
+          attributes: [aggregate, [sequelize.fn('COUNT', sequelize.col('_id')), 'count']],
+          where: PostgresResource.prepareFilters(filters, self.config, options.user),
+          raw: true
+        });
+      } else {
+        list = yield self.model.findAll({
+          offset: offset,
+          limit: limit,
+          where: PostgresResource.prepareFilters(filters, self.config, options.user),
+          order: orderParams,
+          raw: true
+        });
+      }
       return self.prepareData(list);
     });
   }
