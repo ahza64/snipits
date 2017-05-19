@@ -19,6 +19,7 @@ public class CompanyPage extends WebAppPage {
     private String addCompanyFormConfirmButton = ".//span[text()='Confirm']";
     private String addCompanyNameField = ".//label[text()='Company Name']/following-sibling::input";
     private String companyTable = ".//*[@class='row']";
+    private String dropDownButton = ".//*[@class='dropdown']/a";
 
     CompanyPage() throws MalformedURLException
     {
@@ -37,15 +38,15 @@ public class CompanyPage extends WebAppPage {
         }
     }
 
-    public void addNewCompany(int companyNamePostFix)
+    public void addNewCompany(int namePostFix)
     {
         clickOnElement(By.xpath(addCompanyButton));
         waitForAddCompanyFormToDisplay();
-        driver.findElement(By.xpath(addCompanyNameField)).sendKeys("Company" + companyNamePostFix);
+        driver.findElement(By.xpath(addCompanyNameField)).sendKeys("Company" + namePostFix);
         clickOnElement(By.xpath(addCompanyFormConfirmButton));
     }
 
-    public boolean verifyNewCompanyIsAdded(int companyNamePostFix)
+    public boolean verifyNewCompanyIsAdded(int namePostFix)
     {
         boolean isNewCompanyAdded = false;
 
@@ -59,7 +60,7 @@ public class CompanyPage extends WebAppPage {
             {
                 companyNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
                 LOGGER.info(companyNameDisplayed);
-                if(companyNameDisplayed.contentEquals("Company" + companyNamePostFix))
+                if(companyNameDisplayed.contentEquals("Company" + namePostFix))
                 {
                     LOGGER.info("Company Added is Found");
                     isNewCompanyAdded = true;
@@ -69,5 +70,11 @@ public class CompanyPage extends WebAppPage {
         }
 
         return isNewCompanyAdded;
+    }
+  
+    public DropDownMenu clickDropDownMenu()
+    {
+        clickOnElement(By.xpath(dropDownButton));
+        return new DropDownMenu();
     }
 }
