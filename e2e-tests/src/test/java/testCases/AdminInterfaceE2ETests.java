@@ -77,21 +77,6 @@ public class AdminInterfaceE2ETests {
         Assert.assertEquals(badgeNumberAfterAddingConfig, badgeNumberBeforeAddingConfig+1);
     }
 
-    @Test(priority = 4, description = "Adding a new Ingestion Config")
-    public void verifyAddNewIngestionConfig() throws MalformedURLException
-    {
-        dropDownMenu = projectPage.clickDropDownMenu();
-        ingestionConfigPage = dropDownMenu.openIngestionConfigPage();
-        ingestionConfigPage.selectCompany(namePostFix);
-        ingestionConfigPage.selectProject(namePostFix);
-        int badgeNumberBeforeAddingConfig = ingestionConfigPage.getBadgeCount();
-        ingestionConfigPage.addNewConfig(namePostFix);
-        ingestionConfigPage.holdOnForACoupleOfSec();
-        ingestionConfigPage.verifyNewConfigIsAdded(namePostFix);
-        int badgeNumberAfterAddingConfig = ingestionConfigPage.getBadgeCount();
-        Assert.assertEquals(badgeNumberAfterAddingConfig, badgeNumberBeforeAddingConfig+1);
-    }
-
     @Test(priority = 5, description = "Adding a new User")
     public void verifyAddNewUser() throws MalformedURLException
     {
