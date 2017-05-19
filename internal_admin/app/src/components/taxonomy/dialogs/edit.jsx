@@ -68,7 +68,7 @@ export default class EditTaxonomyDialog extends React.Component {
   }
 
   isConfirmButtonDisabled() {
-    if (this.state.taxFieldName.length > 0) {
+    if ((this.state.taxFieldName.length > 0) && this.state.taxFieldName.match(/^[\w\.]+$/g)){
       return false;
     }
     return true;

@@ -102,7 +102,7 @@ export default class EditTaxValueDialog extends React.Component {
   }
 
   isConfirmButtonDisabled() {
-    if (this.state.fieldValue.length > 0) {
+    if ((this.state.fieldValue.length > 0) && this.state.fieldValue.match(/^[\w\.]+$/g)) {
       return false;
     }
     return true;
