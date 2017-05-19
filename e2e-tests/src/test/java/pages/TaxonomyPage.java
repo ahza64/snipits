@@ -98,6 +98,7 @@ public class TaxonomyPage extends WebAppPage {
         {
             LOGGER.info("Invalid Values of Company/Project/Scheme is shown on Form");
         }
+        waitForElementToDisappear(By.xpath(addTaxonomyFormCancelButton));
     }
 
     public boolean verifyNewTaxonomyIsAdded(int namePostFix)

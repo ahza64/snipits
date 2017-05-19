@@ -51,6 +51,7 @@ public class ProjectPage extends WebAppPage {
         driver.findElement(By.xpath(addProjectNameField)).sendKeys("Project" + namePostFix);
         clickOnElement(By.xpath(addProjectFormConfirmButton));
         LOGGER.info("Project is Added");
+        waitForElementToDisappear(By.xpath(addProjectFormCancelButton));
     }
 
     public boolean verifyNewProjectIsAdded(int namePostFix)

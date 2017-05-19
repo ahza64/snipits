@@ -58,6 +58,7 @@ public class SchemaPage extends WebAppPage {
         driver.findElement(By.xpath(addSchemaNameField)).sendKeys("Schema" + namePostFix);
         clickOnElement(By.xpath(addSchemaFormConfirmButton));
         LOGGER.info("Schema is Added");
+        waitForElementToDisappear(By.xpath(addSchemaFormCancelButton));
     }
 
     public boolean verifyNewSchemaIsAdded(int namePostFix)

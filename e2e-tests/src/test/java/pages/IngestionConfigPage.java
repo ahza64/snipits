@@ -58,6 +58,7 @@ public class IngestionConfigPage extends WebAppPage {
         driver.findElement(By.xpath(addConfigNameField)).sendKeys("Config" + namePostFix);
         clickOnElement(By.xpath(addConfigFormConfirmButton));
         LOGGER.info("Ingestion Config is Added");
+        waitForElementToDisappear(By.xpath(addConfigFormCancelButton));
     }
 
     public boolean verifyNewConfigIsAdded(int namePostFix)

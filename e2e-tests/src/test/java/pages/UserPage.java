@@ -59,6 +59,7 @@ public class UserPage extends WebAppPage {
         holdOnForASec();
         clickOnElement(By.xpath(addUserFormConfirmButton));
         LOGGER.info("User is Added");
+        waitForElementToDisappear(By.xpath(addUserFormCancelButton));
     }
 
     public boolean verifyNewUserIsAdded(int namePostFix)

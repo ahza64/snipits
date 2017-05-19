@@ -20,7 +20,10 @@ public class TaxonomyValuesPage extends WebAppPage {
     private String selectProjectDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String selectSchemaDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String selectTaxonomyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String addTaxonomyValueButton = ".//span[text()='Add Root Value']";
+    private String addTaxonomyValueRootButton = ".//span[text()='Add Root Value']";
+    private String addTaxonomyValueChildButton = ".//span[text()='Add Child Value]";
+    private String viewByValueTaxonomyValueButton = ".//span[text()='View values by Schema']";
+    private String removeAllValuesTaxonomyValueButton = ".//span[text()='Remove all Values']";
     private String addTaxonomyValueFormCancelButton = ".//span[text()='Cancel']";
     private String addTaxonomyValueFormConfirmButton = ".//span[text()='Confirm']";
     private String addTaxonomyFieldName = ".//td[text()='Taxonomy Field Name']/parent::tr/descendant::input";
@@ -31,7 +34,7 @@ public class TaxonomyValuesPage extends WebAppPage {
 
     TaxonomyValuesPage() throws MalformedURLException
     {
-        waitForVisible(By.xpath(addTaxonomyValueButton));
+        waitForVisible(By.xpath(removeAllValuesTaxonomyValueButton));
         waitForPageLoadComplete();
         holdOnForACoupleOfSec();
     }
@@ -81,7 +84,7 @@ public class TaxonomyValuesPage extends WebAppPage {
 
     public void addNewTaxonomyValues(int namePostFix) throws MalformedURLException
     {
-        clickOnElement(By.xpath(addTaxonomyValueButton));
+        clickOnElement(By.xpath(addTaxonomyValueRootButton));
         waitForAddTaxonomyValuesFormToDisplay();
 
         if(verifyValuesOnForm(namePostFix)) {
@@ -93,6 +96,7 @@ public class TaxonomyValuesPage extends WebAppPage {
         {
             LOGGER.info("Invalid Values of Company/Project/Scheme is shown on Form");
         }
+        waitForElementToDisappear(By.xpath(addTaxonomyValueFormCancelButton));
     }
 
     public boolean verifyNewTaxonomyValueIsAdded(int namePostFix)
@@ -111,7 +115,7 @@ public class TaxonomyValuesPage extends WebAppPage {
                     fieldValueDisplayed = driver.findElement(By.xpath(taxonomyValueTable + "/descendant::tr[" + i + "]/td[2]")).getText();
                     fieldNameDisplayed = driver.findElement(By.xpath(taxonomyValueTable + "/descendant::tr[" + i + "]/td[3]")).getText();
 
-                    if (fieldNameDisplayed.contentEquals("FieldName" + namePostFix) &&
+                    if (fieldNameDisplayed.contentEquals("Taxonomy" + namePostFix) &&
                             fieldValueDisplayed.contentEquals("FieldValue" + namePostFix))
                     {
                         LOGGER.info("Taxonomy Value Added is Found");

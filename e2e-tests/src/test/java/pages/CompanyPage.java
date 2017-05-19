@@ -38,12 +38,13 @@ public class CompanyPage extends WebAppPage {
         }
     }
 
-    public void addNewCompany(int namePostFix)
+    public void addNewCompany(int namePostFix) throws MalformedURLException
     {
         clickOnElement(By.xpath(addCompanyButton));
         waitForAddCompanyFormToDisplay();
         driver.findElement(By.xpath(addCompanyNameField)).sendKeys("Company" + namePostFix);
         clickOnElement(By.xpath(addCompanyFormConfirmButton));
+        waitForElementToDisappear(By.xpath(addCompanyFormCancelButton));
     }
 
     public boolean verifyNewCompanyIsAdded(int namePostFix)
