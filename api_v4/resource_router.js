@@ -57,6 +57,16 @@ function createRouter(resource, _options) {
     return filter;
   }
 
+  function *exec_query(params, context) {
+    const list = yield resource.list(params);
+    if (context.dsp_env) {
+      context.dsp_env.total = yield resource.count(params.filter);
+      context.dsp_env.offset = params.offset;
+      context.dsp_env.length = list.length;
+    }
+    return list;
+  }
+
   /*
   * @param {String} id - the _id of the particular resource
   * @param {Object} response - the response to the request
@@ -81,7 +91,7 @@ function createRouter(resource, _options) {
         offset = parseInt(offset, 10);
       }
       const filter = processFilters(context.query);
-      data = yield resource.list({
+      data = yield exec_query({
         offset: offset,
         length: len,
         filter: filter,
@@ -89,12 +99,7 @@ function createRouter(resource, _options) {
         order: order,
         lean: true,
         user: fakeUser
-      });
-      if (context.dsp_env) {
-        context.dsp_env.total = yield resource.count(filter);
-        context.dsp_env.offset = offset;
-        context.dsp_env.length = data.length;
-      }
+      }, context);
     } else {
       data = yield resource.read(id, context.query, fakeUser);
     }
@@ -132,9 +137,23 @@ function createRouter(resource, _options) {
   route.head(res_url, function *head_route() {
     yield get_req(undefined, this);
   });
+
   // GET request for list resource
   route.get(res_url, function *get_list() {
     yield get_req(undefined, this);
+  });
+
+  // POST request for list resource
+  route.post(`${res_url}/query`, function *post_route() {
+    const params = {};
+    const body = this.request.body;
+    if (body) {
+      params.filter = body.filters;
+      params.offset = body.offset || 0;
+      params.length = body.length || body.limit;
+      params.order = body.order;
+    }
+    this.body = yield exec_query(params, this);
   });
 
   if (!read_only) {
