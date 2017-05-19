@@ -166,4 +166,12 @@ public class AdminInterfaceE2ETests {
         boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
         Assert.assertTrue(verifyCount);
     }
+
+    @Test(priority = 9, description = "Switch the table view for taxonomy field values")
+    public void verifySwitchNewTaxonomyValue() throws MalformedURLException
+    {
+        boolean verifyViewSchema = taxonomyValuesPage.viewValuesByScheme(namePostFix);
+        boolean verifyViewTaxonomy = taxonomyValuesPage.viewValuesByTaxonomy(namePostFix);
+        Assert.assertTrue(verifyViewSchema && verifyViewTaxonomy);
+    }
 }

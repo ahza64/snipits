@@ -22,7 +22,8 @@ public class TaxonomyValuesPage extends WebAppPage {
     private String selectTaxonomyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String addTaxonomyValueRootButton = ".//span[text()='Add Root Value']";
     private String addTaxonomyValueChildButton = ".//span[text()='Add Child Value]";
-    private String viewByValueTaxonomyValueButton = ".//span[text()='View values by Schema']";
+    private String viewByValueTaxonomyValueButton = ".//span[text()='View values by Taxonomy']";
+    private String viewByValueSchemaValueButton = ".//span[text()='View values by Schema']";
     private String removeAllValuesTaxonomyValueButton = ".//span[text()='Remove all Values']";
     private String addTaxonomyValueFormCancelButton = ".//span[text()='Cancel']";
     private String addTaxonomyValueFormConfirmButton = ".//span[text()='Confirm']";
@@ -144,4 +145,25 @@ public class TaxonomyValuesPage extends WebAppPage {
         return new DropDownMenu();
     }
 
+    public boolean viewValuesByScheme(int namePostFix)
+    {
+        clickOnElement(By.xpath(viewByValueSchemaValueButton));
+        holdOnForASec();
+        boolean isValueDisplayed = verifyNewTaxonomyValueIsAdded(namePostFix);
+        if(!isValueDisplayed)
+            LOGGER.severe("Value associated with selected Schema is not displayed");
+
+        return isValueDisplayed;
+    }
+
+    public boolean viewValuesByTaxonomy(int namePostFix)
+    {
+        clickOnElement(By.xpath(viewByValueTaxonomyValueButton));
+        holdOnForASec();
+        boolean isValueDisplayed =verifyNewTaxonomyValueIsAdded(namePostFix);
+        if(!isValueDisplayed)
+            LOGGER.severe("Value associated with selected Taxonomy is not displayed");
+
+        return isValueDisplayed;
+    }
 }
