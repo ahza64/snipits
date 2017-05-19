@@ -66,9 +66,9 @@ export default class EditTaxonomyDialog extends React.Component {
       taxKeys: keys
     });
   }
-
+  // regex checks for non-alphanumeric and non-underscore values
   isConfirmButtonDisabled() {
-    if ((this.state.taxFieldName.length > 0) && this.state.taxFieldName.match(/^[\w\.]+$/g)){
+    if ((this.state.taxFieldName.length > 0) && this.state.taxFieldName.match(/^[\w]+$/g)){
       return false;
     }
     return true;
