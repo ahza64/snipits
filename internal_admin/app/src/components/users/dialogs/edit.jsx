@@ -230,7 +230,7 @@ export default class EditUserDialog extends React.Component {
         <SelectField
           fullWidth={true}
           value={ this.state.companyId }
-          disabled={ (this.props.user.companyId && this.props.user.id) ? true : false }
+          disabled={ (this.props.user.companyId || this.props.user.id) ? true : false }
           onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) } >
           { this.props.companies.map((company, idx) => {
               return(
