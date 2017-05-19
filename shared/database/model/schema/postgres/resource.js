@@ -3,7 +3,6 @@
  */
 
 const co = require('co');
-const _ = require('underscore');
 const jsonpatch = require('fast-json-patch');
 
 class PostgresResource {
@@ -31,10 +30,8 @@ class PostgresResource {
       if (Array.isArray(data)) {
         prepared = data.map(item => this.prepareData(item));
       } else {
-        prepared = _.omit(data, ['createdAt', 'updatedAt']);
+        prepared = Object.assign({}, data);
         prepared.id = prepared._id;
-        prepared.created = data.createdAt;
-        prepared.updated = data.updatedAt;
       }
     }
     return prepared;
@@ -187,7 +184,7 @@ class PostgresResource {
     const offset = options.offset || 0;
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
-    let order = options.order || "createdAt";
+    let order = options.order || "created";
 
     return co(function *list_gen() {
       const orderParams = [];
@@ -213,8 +210,6 @@ class PostgresResource {
 
   static getRealFieldName(field) {
     const fields = {
-      created: 'createdAt',
-      updated: 'updatedAt',
       id: '_id'
     };
     let realField = field;
@@ -234,6 +229,10 @@ class PostgresResource {
           prepared[field] = {
             $in: value
           };
+        } else if (typeof value === 'object') {
+          if (value.regex) {
+            throw new Error('Regex filter is not acceptable for PostgreSQL resource');
+          }
         } else {
           let notEquals = false;
           if (typeof value === 'string') {

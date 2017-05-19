@@ -400,15 +400,23 @@ class EsResource {
         }
       }
       const match = {};
+      let fieldName = field;
       if (field in this.fieldsWithoutPrefix) {
-        match[this.fieldsWithoutPrefix[field]] = value;
-      } else {
-        match[field] = value;
+        fieldName = this.fieldsWithoutPrefix[field];
       }
+      match[fieldName] = value;
       if (Array.isArray(value)) {
         query.query.bool.must.push({
           terms: match
         });
+      } else if (typeof value === 'object') {
+        if (value.regex) {
+          const regexp = {};
+          regexp[fieldName] = value.regex;
+          query.query.bool.must.push({
+            regexp: regexp
+          });
+        }
       } else if (notEqual) {
         query.query.bool.must_not.push({
           match: match

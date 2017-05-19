@@ -80,6 +80,13 @@ function process_filters(filters, config, user) {
           return { $ne: val.slice(1) };
         } else if (Array.isArray(val)) {
           return { $in: val };
+        } else if (typeof val === 'object') {
+          if (val.regex) {
+            return {
+              $regex: new RegExp(val.regex),
+              $options: 'i'
+            };
+          }
         }
       }
       return val;
