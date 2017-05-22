@@ -124,7 +124,7 @@ router.put('/schema', function* () {
       field.createdAt = Date.now();
       field.updatedAt = Date.now();
       field.version = newSchema.version;
-      field.qowSchemaId= newSchema.id;
+      field.schemaId= newSchema.id;
     })
 
     var result = yield QowFields.bulkCreate(fields);

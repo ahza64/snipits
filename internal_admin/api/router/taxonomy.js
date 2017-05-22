@@ -23,13 +23,13 @@ router.get(
     if (permissions.has(this.req.user, companyId) && schemaId) {
       var schemaTaxonomies = yield QowTaxonomies.findAll({
         where: {
-          qowSchemaId: schemaId
+          schemaId: schemaId
         },
         raw: true
       });
       var schemaValues = yield QowExpectedTaxonomies.findAll({
         where: {
-          qowSchemaId: schemaId
+          schemaId: schemaId
         },
         raw: true
       });
@@ -53,7 +53,7 @@ router.post(
       try {
         yield QowTaxonomies.destroy({
           where: {
-            qowSchemaId: body[0].qowSchemaId
+            schemaId: body[0].schemaId
           }
         });
         for ( var i = 0; i < body.length; i++) {
@@ -132,7 +132,7 @@ router.delete(
     var schemaId = this.params.schemaId;
     if (permissions.has(this.req.user, null)) {
       try {
-        this.body = yield QowExpectedTaxonomies.destroy({ where: { qowSchemaId: schemaId } });
+        this.body = yield QowExpectedTaxonomies.destroy({ where: { schemaId: schemaId } });
       } catch (e) {
         console.error(e);
         this.throw(500);
