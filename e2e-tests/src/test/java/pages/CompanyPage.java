@@ -46,6 +46,7 @@ public class CompanyPage extends WebAppPage {
         clickOnElement(By.xpath(addCompanyFormConfirmButton));
     }
 
+
     public boolean verifyNewCompanyIsAdded(int namePostFix)
     {
         boolean isNewCompanyAdded = false;
@@ -59,7 +60,6 @@ public class CompanyPage extends WebAppPage {
             for(int i=2; i<totalRowsInCompanyTable+2; i++)
             {
                 companyNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
-                LOGGER.info(companyNameDisplayed);
                 if(companyNameDisplayed.contentEquals("Company" + namePostFix))
                 {
                     LOGGER.info("Company Added is Found");
@@ -71,7 +71,7 @@ public class CompanyPage extends WebAppPage {
 
         return isNewCompanyAdded;
     }
-  
+
     public DropDownMenu clickDropDownMenu()
     {
         clickOnElement(By.xpath(dropDownButton));

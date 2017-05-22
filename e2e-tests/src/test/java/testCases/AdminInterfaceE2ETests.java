@@ -9,6 +9,7 @@ import java.util.Random;
 
 import pages.CompanyPage;
 import pages.DropDownMenu;
+import pages.IngestionConfigPage;
 import pages.LoginPage;
 import pages.ProjectPage;
 import setup.Driver;
@@ -18,6 +19,7 @@ public class AdminInterfaceE2ETests {
     protected CompanyPage companyPage;
     protected DropDownMenu dropDownMenu;
     protected ProjectPage projectPage;
+    protected IngestionConfigPage ingestionConfigPage;
     protected int namePostFix;
 
     @BeforeClass(description = "Launching Chrome Broswer")
@@ -56,5 +58,20 @@ public class AdminInterfaceE2ETests {
         int badgeNumberAfterAddingProject = projectPage.getBadgeCount();
         Assert.assertEquals(badgeNumberAfterAddingProject, badgeNumberBeforeAddingProject+1);
 
+    }
+
+    @Test(priority = 4, description = "Adding a new Ingestion Config")
+    public void verifyAddNewIngestionConfig() throws MalformedURLException
+    {
+        dropDownMenu = projectPage.clickDropDownMenu();
+        ingestionConfigPage = dropDownMenu.openIngestionConfigPage();
+        ingestionConfigPage.selectCompany(namePostFix);
+        ingestionConfigPage.selectProject(namePostFix);
+        int badgeNumberBeforeAddingConfig = ingestionConfigPage.getBadgeCount();
+        ingestionConfigPage.addNewConfig(namePostFix);
+        ingestionConfigPage.holdOnForACoupleOfSec();
+        ingestionConfigPage.verifyNewConfigIsAdded(namePostFix);
+        int badgeNumberAfterAddingConfig = ingestionConfigPage.getBadgeCount();
+        Assert.assertEquals(badgeNumberAfterAddingConfig, badgeNumberBeforeAddingConfig+1);
     }
 }

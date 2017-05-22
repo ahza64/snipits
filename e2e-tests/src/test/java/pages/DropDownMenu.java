@@ -33,4 +33,10 @@ public class DropDownMenu extends WebAppPage {
         clickOnElement(By.xpath(workProjectsDropDownButton));
         return new ProjectPage();
     }
+
+    public IngestionConfigPage openIngestionConfigPage() throws MalformedURLException
+    {
+        clickOnElement(By.xpath(ingestionsDropDownButton));
+        return new IngestionConfigPage();
+    }
 }
