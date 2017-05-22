@@ -46,7 +46,6 @@ public class CompanyPage extends WebAppPage {
         clickOnElement(By.xpath(addCompanyFormConfirmButton));
     }
 
-
     public boolean verifyNewCompanyIsAdded(int namePostFix)
     {
         boolean isNewCompanyAdded = false;

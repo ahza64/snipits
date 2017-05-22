@@ -12,6 +12,7 @@ import pages.DropDownMenu;
 import pages.IngestionConfigPage;
 import pages.LoginPage;
 import pages.ProjectPage;
+import pages.UserPage;
 import setup.Driver;
 
 public class AdminInterfaceE2ETests {
@@ -20,6 +21,7 @@ public class AdminInterfaceE2ETests {
     protected DropDownMenu dropDownMenu;
     protected ProjectPage projectPage;
     protected IngestionConfigPage ingestionConfigPage;
+    protected UserPage userPage;
     protected int namePostFix;
 
     @BeforeClass(description = "Launching Chrome Broswer")
@@ -57,7 +59,6 @@ public class AdminInterfaceE2ETests {
         projectPage.verifyNewProjectIsAdded(namePostFix);
         int badgeNumberAfterAddingProject = projectPage.getBadgeCount();
         Assert.assertEquals(badgeNumberAfterAddingProject, badgeNumberBeforeAddingProject+1);
-
     }
 
     @Test(priority = 4, description = "Adding a new Ingestion Config")
@@ -73,5 +74,18 @@ public class AdminInterfaceE2ETests {
         ingestionConfigPage.verifyNewConfigIsAdded(namePostFix);
         int badgeNumberAfterAddingConfig = ingestionConfigPage.getBadgeCount();
         Assert.assertEquals(badgeNumberAfterAddingConfig, badgeNumberBeforeAddingConfig+1);
+    }
+
+    @Test(priority = 5, description = "Adding a new User")
+    public void verifyAddNewUser() throws MalformedURLException
+    {
+        dropDownMenu = ingestionConfigPage.clickDropDownMenu();
+        userPage = dropDownMenu.openUserPage();
+        int badgeNumberBeforeAddingUser = userPage.getBadgeCount();
+        userPage.addNewUser(namePostFix);
+        userPage.holdOnForACoupleOfSec();
+        userPage.verifyNewUserIsAdded(namePostFix);
+        int badgeNumberAfterAddingUser = userPage.getBadgeCount();
+        Assert.assertEquals(badgeNumberAfterAddingUser, badgeNumberBeforeAddingUser+1);
     }
 }
