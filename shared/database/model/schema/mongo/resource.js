@@ -303,17 +303,18 @@ class Resource extends Emitter {
   aggregate(options) {
     const self = this;
     return co(function *aggregate_data() {
+      const fields = Array.isArray(options.aggregate) ? options.aggregate : [options.aggregate];
       const group = {
-        _id: `$${options.aggregate}`,
+        _id: {},
         count: { $sum: 1 }
       };
+      fields.forEach((field) => {
+        group._id[field] = `$${field}`;
+      });
       const match = process_filters(options.filter, self.config, options.user);
       const res = yield self.Model.aggregate([{ $match: match }, { $group: group }]);
       return res.map((item) => {
-        const records = {};
-        records[options.aggregate] = item._id;
-        records.count = item.count;
-        return records;
+        return Object.assign({}, item._id, { count: item.count });
       });
     });
   }

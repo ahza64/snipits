@@ -201,12 +201,7 @@ class PostgresResource {
       }
       let list = [];
       if (aggregate) {
-        list = yield self.model.findAll({
-          group: [aggregate],
-          attributes: [aggregate, [sequelize.fn('COUNT', sequelize.col('_id')), 'count']],
-          where: PostgresResource.prepareFilters(filters, self.config, options.user),
-          raw: true
-        });
+        list = yield self.aggregatedList(filters, self.config, options.user, aggregate);
       } else {
         list = yield self.model.findAll({
           offset: offset,
@@ -217,6 +212,26 @@ class PostgresResource {
         });
       }
       return self.prepareData(list);
+    });
+  }
+
+  aggregatedList(filters, config, user, aggregate) {
+    const self = this;
+    return co(function *get_count() {
+      let list = null;
+      if (aggregate) {
+        const fields = Array.isArray(aggregate) ? aggregate : [aggregate];
+        list = yield self.model.findAll({
+          group: fields,
+          attributes: [].concat(fields, [[sequelize.fn('COUNT', sequelize.col('_id')), 'count']]),
+          where: PostgresResource.prepareFilters(filters, config, user),
+          raw: true
+        });
+        list = list.map((item) => {
+          return Object.assign({}, item, { count: parseInt(item.count, 10) });
+        });
+      }
+      return list;
     });
   }
 

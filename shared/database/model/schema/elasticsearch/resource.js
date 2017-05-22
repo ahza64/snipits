@@ -5,22 +5,36 @@
 const co = require('co');
 const rp = require('request-promise');
 const jsonpatch = require('fast-json-patch');
+const _ = require('underscore');
 
-function prepareAggregations(aggs) {
+function prepareAggregations(bucket, field) {
   let prepared = null;
-  if (aggs && (Object.keys(aggs).length > 0)) {
-    const field = Object.keys(aggs)[0];
-    if (aggs[field] && aggs[field].buckets) {
-      const buckets = aggs[field].buckets;
+  if (bucket && field) {
+    if (bucket[field]) {
+      const buckets = bucket[field].buckets;
       if (Array.isArray(buckets)) {
-        prepared = buckets.map((bucket) => {
-          const item = {};
-          item[field] = bucket.key;
-          item.count = bucket.doc_count;
-          return item;
+        prepared = [];
+        buckets.forEach((subbucket) => {
+          const subfields = Object.keys(_.omit(subbucket, ['key', 'doc_count']));
+          if (subfields.length > 0) {
+            const subfield = subfields[0];
+            const subitems = prepareAggregations(subbucket, subfield);
+            subitems.forEach((subitem) => {
+              const item = {};
+              item[field] = subbucket.key;
+              prepared.push(Object.assign(item, subitem));
+            });
+          } else {
+            const item = {};
+            item[field] = subbucket.key;
+            item.count = subbucket.doc_count;
+            prepared.push(item);
+          }
         });
       }
     }
+  } else if (bucket && (Object.keys(bucket).length > 0)) {
+    prepared = prepareAggregations(bucket, Object.keys(bucket)[0]);
   }
   return prepared;
 }
@@ -403,21 +417,23 @@ class EsResource {
     return filters;
   }
 
-  prepareAggsQuery(fields) {
-    let aggs = null;
-    if (typeof fields === 'string') {
-      let fieldName = fields;
-      if (fieldName in this.fieldsWithoutPrefix) {
-        fieldName = this.fieldsWithoutPrefix[fieldName];
-      }
-      aggs = {};
-      aggs[fields] = {
-        terms: {
-          field: fieldName
+  prepareAggsQuery(fields, query) {
+    if (fields && query) {
+      let subquery = query;
+      fields.forEach((field) => {
+        let fieldName = field;
+        if (fieldName in this.fieldsWithoutPrefix) {
+          fieldName = this.fieldsWithoutPrefix[fieldName];
         }
-      };
+        subquery.aggs = {};
+        subquery.aggs[field] = {
+          terms: {
+            field: fieldName
+          }
+        };
+        subquery = subquery.aggs[field];
+      });
     }
-    return aggs;
   }
 
   prepareQuery(filters, sort, aggregate, user) {
@@ -430,7 +446,8 @@ class EsResource {
       }
     };
     if (aggregate) {
-      query.aggs = this.prepareAggsQuery(aggregate);
+      const fields = Array.isArray(aggregate) ? aggregate : [aggregate];
+      this.prepareAggsQuery(fields, query);
     }
     const allFilters = Object.assign({}, filters, this.getFiltersByUserData(user));
     Object.keys(allFilters).forEach((field) => {

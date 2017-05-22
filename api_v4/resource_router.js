@@ -49,7 +49,7 @@ function createRouter(resource, _options) {
   function processFilters(query) {
     const filter = Object.assign({}, query);
     // remove the reserved query params from the filter
-    ['offset', 'length', 'limit', 'select', 'order'].forEach((field) => {
+    ['offset', 'length', 'limit', 'select', 'order', 'aggregate'].forEach((field) => {
       if (filter[field]) {
         delete filter[field];
       }
@@ -83,7 +83,10 @@ function createRouter(resource, _options) {
       let len = query.length || query.limit;  // Need to manage this on the client we can't always get all of them
       const select = query.select || excluded;
       const order = query.order;
-      const aggregate = query.aggregate;
+      let aggregate = query.aggregate;
+      if (aggregate && (aggregate.indexOf(',') >= 0)) {
+        aggregate = aggregate.split(',');
+      }
 
       if (len) {
         len = parseInt(len, 10);
