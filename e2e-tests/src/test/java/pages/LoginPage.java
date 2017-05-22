@@ -42,6 +42,7 @@ public class LoginPage extends WebAppPage {
     public CompanyPage login(String username, String password) throws MalformedURLException {
         clearAndType(userNameField, username);
         clearAndType(passwordField, password);
+        holdOnForASec();
         clickOnElement(loginBtn);
         LOGGER.info("Clicked Login Button");
         waitForPageLoadComplete();

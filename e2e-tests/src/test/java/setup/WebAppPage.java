@@ -519,4 +519,9 @@ public class WebAppPage
         }
         return jsonObject;
     }
+
+    public int getEntriesInTable()
+    {
+        return driver.findElements(By.xpath(".//*[@class='row']/descendant::tr")).size();
+    }
 }

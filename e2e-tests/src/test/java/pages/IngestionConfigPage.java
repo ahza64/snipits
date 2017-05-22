@@ -78,24 +78,28 @@ public class IngestionConfigPage extends WebAppPage {
         {
             int totalRowsInConfigTable = driver.findElements(By.xpath(configTable + "/descendant::tr")).size();
             LOGGER.info(String.valueOf(totalRowsInConfigTable));
-            String configNameDisplayed;
+            if(totalRowsInConfigTable > 1) {
+                String configNameDisplayed;
 
-            for(int i=2; i<totalRowsInConfigTable+2; i++)
-            {
-                configNameDisplayed = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[4]")).getText();
-                if(configNameDisplayed.contentEquals("Config" + namePostFix))
-                {
-                    String companyName, projectName;
-                    companyName = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[2]")).getText();
-                    projectName = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[3]")).getText();
-                    LOGGER.info(companyName + " " + projectName);
-                    if(companyName.contentEquals("Company" + namePostFix) && projectName.contentEquals("Project" + namePostFix))
-                    {
-                        LOGGER.info("Ingestion Configuration Added is Found");
-                        isNewConfigAdded = true;
-                        break;
+                for (int i = 2; i < totalRowsInConfigTable + 2; i++) {
+                    configNameDisplayed = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[4]")).getText();
+                    if (configNameDisplayed.contentEquals("Config" + namePostFix)) {
+                        String companyName, projectName;
+                        companyName = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[2]")).getText();
+                        projectName = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[3]")).getText();
+                        LOGGER.info(companyName + " " + projectName);
+                        if (companyName.contentEquals("Company" + namePostFix) && projectName.contentEquals("Project" + namePostFix)) {
+                            LOGGER.info("Ingestion Configuration Added is Found");
+                            isNewConfigAdded = true;
+                            break;
+                        }
                     }
                 }
+            }
+            else
+            {
+                isNewConfigAdded = false;
+                LOGGER.info("No Ingestion Config on Table is Found");
             }
         }
 

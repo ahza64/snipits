@@ -66,19 +66,28 @@ public class ProjectPage extends WebAppPage {
         {
             int totalRowsInProjectTable = driver.findElements(By.xpath(".//*[@class='row']/descendant::tr")).size();
             LOGGER.info(String.valueOf(totalRowsInProjectTable));
-            String projectNameDisplayed;
-
-            for(int i=2; i<totalRowsInProjectTable+2; i++)
+            if(totalRowsInProjectTable > 1)
             {
-                projectNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
-                if(projectNameDisplayed.contentEquals("Project" + namePostFix))
+                String projectNameDisplayed;
+
+                for(int i=2; i<totalRowsInProjectTable+2; i++)
                 {
-                    LOGGER.info("Project Added is Found");
-                    isNewProjectAdded = true;
-                    break;
+                    projectNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
+                    if(projectNameDisplayed.contentEquals("Project" + namePostFix))
+                    {
+                        LOGGER.info("Project Added is Found");
+                        isNewProjectAdded = true;
+                        break;
+                    }
                 }
             }
+            else
+            {
+                isNewProjectAdded = false;
+                LOGGER.info("No Project on Table is Found");
+            }
         }
+
 
         return isNewProjectAdded;
     }
