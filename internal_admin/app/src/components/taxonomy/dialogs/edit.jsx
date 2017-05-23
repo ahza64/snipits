@@ -80,7 +80,7 @@ export default class EditTaxonomyDialog extends React.Component {
         fieldName: this.state.taxFieldName,
         nodeType: this.state.taxNodeType,
         keys: this.state.taxKeys,
-        qowSchemaId: this.props.schemaId,
+        schemaId: this.props.schemaId,
         companyId: this.props.companyId,
         workProjectId: this.props.projectId
       };

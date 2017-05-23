@@ -6,8 +6,7 @@ module.exports = function (sequelize, DataTypes) {
     nodeType: { type: DataTypes.STRING },
     keys: { type: DataTypes.STRING },
     companyId: { type: DataTypes.INTEGER },
-    workProjectId: { type: DataTypes.INTEGER },
-    qowSchemaId: { type: DataTypes.INTEGER }
+    workProjectId: { type: DataTypes.INTEGER }
   }, {
     classMethods: {
       associate: function (models) {

@@ -4,8 +4,7 @@ module.exports = function (sequelize, DataTypes) {
     fieldValue: { type: DataTypes.STRING },
     parentId: { type: DataTypes.INTEGER },
     companyId: { type: DataTypes.INTEGER },
-    workProjectId: { type: DataTypes.INTEGER },
-    qowSchemaId: { type: DataTypes.INTEGER }
+    workProjectId: { type: DataTypes.INTEGER }
   }, {
     classMethods: {
       associate: function (models) {
