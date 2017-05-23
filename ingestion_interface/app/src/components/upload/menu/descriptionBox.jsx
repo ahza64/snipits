@@ -30,7 +30,7 @@ export default class DescriptionBox extends UploadLib {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      description: nextProps.description,
+      description: nextProps.description ? nextProps.description : '',
       fileId: nextProps.fileId
     });
   }
@@ -60,11 +60,19 @@ export default class DescriptionBox extends UploadLib {
     });
   }
 
+  isSubmitButtonDisabled() {
+    if (0 < this.state.description.length && this.state.description.length < 255) {
+      return false;
+    }
+    return true;
+  }
+
   render() {
     const actions = [
       <FlatButton
         label='Submit'
         primary={ true }
+        disabled={ this.isSubmitButtonDisabled() }
         onClick={ this.handleDescriptionSubmit }
       />,
       <FlatButton
