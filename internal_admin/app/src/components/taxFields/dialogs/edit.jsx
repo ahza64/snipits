@@ -91,6 +91,7 @@ export default class EditTaxValueDialog extends React.Component {
     this.setState({
       fieldValue: tValue
     });
+    this.isConfirmButtonDisabled();
   }
 
   handleValidationClose() {
@@ -98,6 +99,13 @@ export default class EditTaxValueDialog extends React.Component {
       showValidationDialog: false,
       fieldValue: ''
     });
+  }
+  // regex checks for non-alphanumeric and non-underscore values
+  isConfirmButtonDisabled() {
+    if ((this.state.fieldValue.length > 0) && this.state.fieldValue.match(/^[\w\.]+$/g)) {
+      return false;
+    }
+    return true;
   }
 
   renderDialogs() {
@@ -150,6 +158,7 @@ export default class EditTaxValueDialog extends React.Component {
         <RaisedButton
           label="Confirm"
           primary={ true }
+          disabled={ this.isConfirmButtonDisabled() }
           onClick={ event => this.handleTaxValueSubmit(event) }
         />
       ]
