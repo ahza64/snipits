@@ -121,6 +121,10 @@ export default class SchemasLayout extends React.Component {
         console.error(err);
       } else if (callback) {
         callback(res);
+        this.getSchema((res) => {
+          console.log("res", res);
+          this.setSchemaFields(res);
+        });
       }
     });
   }
