@@ -83,6 +83,26 @@ function prepareAttributes(attrs) {
   return prepared;
 }
 
+function urlToConfig(url) {
+  let config = null;
+  if (typeof url === 'string') {
+    const re = /(http|https):\/\/([^:^/]+):(\d+)\/(.*)/i;
+    const params = url.match(re);
+    if (params) {
+      config = {
+        protocol: params[1],
+        host: params[2],
+        port: params[3],
+        route: params[4],
+        dataField: 'data',
+        user: 'user',
+        password: '123'
+      };
+    }
+  }
+  return config;
+}
+
 function *create_schema(schema_name, storage_name, config_name) {
   console.log(`Calling create_schema for ${schema_name}`);
   if (Schema.create) {
@@ -92,7 +112,14 @@ function *create_schema(schema_name, storage_name, config_name) {
       const type = prepareAttributes(schemaModel[field]);
       model[field] = type;
     });
-    yield Schema.create(schema_name, '0.0.1', 'v4', model, storage_name, schemaConfig[config_name]);
+    let config = null;
+    if (storage_name === 'crud') {
+      const url = config_name;
+      config = urlToConfig(url);
+    } else if (config_name && schemaConfig[config_name]) {
+      config = schemaConfig[config_name];
+    }
+    yield Schema.create(schema_name, '0.0.1', 'v4', model, storage_name, config);
     setTimeout(() => {
       Schema.closeConnections();
     }, 2000);

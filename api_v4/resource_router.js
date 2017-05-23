@@ -162,6 +162,12 @@ function createRouter(resource, _options) {
     this.body = yield exec_query(params, this);
   });
 
+  // GET request to get documents count
+  route.get(`${res_url}/count`, function *get_route() {
+    const filter = processFilters(this.query);
+    this.body = yield resource.count(filter);
+  });
+
   if (!read_only) {
     // PUT update request for specific resoruce
     route.put(`${res_url}/:id`, function *put_route() {

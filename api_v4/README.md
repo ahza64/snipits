@@ -85,6 +85,17 @@ $ node fake/create_schema.js create_schema {fake_schema_name} {storage_name} {co
 * `storage_name` is not a necessary parameter, but it can be used for creating a resource in the selected storage
 * `config_name` is not a necessary parameter, but it can be used for filtering data based on user data. For example, if set 'test' the resource data will be filtered by companyId. Authontification is not implemented yet, but you can edit `fakeUser` in `resource_router.js` to check how filtering works.
 
+### Create CRUD schema redirect
+
+If you already have the REST service you are able to link it using by `crud` storage type.
+
+```
+$ cd services/api_v4
+$ node fake/create_schema.js create_schema {schema_name} crud {service_url}
+```
+
+`service_url` should look like `http://localhost:3004/api/v4/origin`.
+
 ### Generate fake data for one fake schema
 ```
 $ cd services/api_v4
