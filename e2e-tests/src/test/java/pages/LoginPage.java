@@ -7,6 +7,7 @@ import org.openqa.selenium.support.How;
 import java.net.MalformedURLException;
 
 import constants.Constants;
+import setup.Driver;
 import setup.WebAppPage;
 
 /**
@@ -19,7 +20,7 @@ public class LoginPage extends WebAppPage {
     {
         if(isLaunching)
             launchWebsite();
-        openURL(Constants.webAppURL);
+        openURL(Driver.getWebAppURL());
         validate();
     }
 

@@ -53,9 +53,9 @@ public class UserPage extends WebAppPage {
         scrollToElement(driver.findElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='Company" + namePostFix + "']")));
         clickOnElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='Company" + namePostFix + "']"));
         holdOnForASec();
-        driver.findElement(By.xpath(addUserFormPasswordField)).sendKeys("123");
+        driver.findElement(By.xpath(addUserFormPasswordField)).sendKeys("123456");
         holdOnForASec();
-        driver.findElement(By.xpath(addUserFormPasswordConfirmField)).sendKeys("123");
+        driver.findElement(By.xpath(addUserFormPasswordConfirmField)).sendKeys("123456");
         holdOnForASec();
         clickOnElement(By.xpath(addUserFormConfirmButton));
         LOGGER.info("User is Added");

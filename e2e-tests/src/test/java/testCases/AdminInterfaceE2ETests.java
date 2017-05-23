@@ -32,6 +32,7 @@ public class AdminInterfaceE2ETests {
     private TaxonomyPage taxonomyPage;
     private TaxonomyValuesPage taxonomyValuesPage;
     private int namePostFix;
+    private int editNamePostFix;
 
 
     @BeforeClass(description = "Launching Chrome Broswer")
@@ -143,8 +144,8 @@ public class AdminInterfaceE2ETests {
             WebAppPage.LOGGER.info("Valid Counts");
         }
         taxonomyPage.clickSaveChanges();
-        boolean isTaxonmySaved = taxonomyPage.verifySaveChanges(namePostFix);
-        Assert.assertTrue(isTaxonmySaved);
+        boolean isTaxonomySaved = taxonomyPage.verifySaveChanges(namePostFix);
+        Assert.assertTrue(isTaxonomySaved);
     }
 
     @Test(priority = 8, description = "Adding a new Taxonomy Field Value")
@@ -173,5 +174,19 @@ public class AdminInterfaceE2ETests {
         boolean verifyViewSchema = taxonomyValuesPage.viewValuesByScheme(namePostFix);
         boolean verifyViewTaxonomy = taxonomyValuesPage.viewValuesByTaxonomy(namePostFix);
         Assert.assertTrue(verifyViewSchema && verifyViewTaxonomy);
+    }
+
+    @Test(priority = 10, description = "Edit a taxonomy field value")
+    public void verifyEditTaxonomyValue() throws MalformedURLException
+    {
+        Random rand = new Random();
+        editNamePostFix = rand.nextInt(1000);
+        taxonomyValuesPage.selectCompany(namePostFix);
+        taxonomyValuesPage.selectProject(namePostFix);
+        taxonomyValuesPage.selectSchema(namePostFix);
+        taxonomyValuesPage.selectTaxonomy(namePostFix);
+        taxonomyValuesPage.editTaxonomyValue(editNamePostFix);
+        boolean isTaxonomyValueEdited = taxonomyValuesPage.verifyEditedTaxonomyValueIsAdded(namePostFix, editNamePostFix);
+        Assert.assertTrue(isTaxonomyValueEdited);
     }
 }

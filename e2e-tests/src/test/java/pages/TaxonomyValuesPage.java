@@ -32,6 +32,9 @@ public class TaxonomyValuesPage extends WebAppPage {
     private String taxonomyValueTable = ".//*[@class='row']";
     private String badgeCount = ".//*[text()='Total of all values for the selected schema: \"']/following-sibling::div/div/span";
     private String dropDownButton = ".//*[@class='dropdown']/a";
+    private String editDeleteButton = ".//span[text()='Edit/Delete'][1]";
+    private String editTaxonomyButton = ".//div[text()='Edit Taxonomy Value']";
+    private String deleteTaxonomyButton = ".//div[text()='Delete Taxonomy Value']";
 
     TaxonomyValuesPage() throws MalformedURLException
     {
@@ -165,5 +168,56 @@ public class TaxonomyValuesPage extends WebAppPage {
             LOGGER.severe("Value associated with selected Taxonomy is not displayed");
 
         return isValueDisplayed;
+    }
+
+    public void editTaxonomyValue(int editNamePostFix) throws MalformedURLException
+    {
+        if(isElementPresentAndDisplayedByLocator(By.xpath(taxonomyValueTable)))
+        {
+            clickOnElement(By.xpath(editDeleteButton));
+            waitForVisible(By.xpath(editTaxonomyButton));
+            clickOnElement(By.xpath(editTaxonomyButton));
+            waitForAddTaxonomyValuesFormToDisplay();
+            driver.findElement(By.xpath(addTaxonomyFieldValue)).clear();
+            driver.findElement(By.xpath(addTaxonomyFieldValue)).sendKeys("FieldValue" + editNamePostFix);
+            holdOnForASec();
+            clickOnElement(By.xpath(addTaxonomyValueFormConfirmButton));
+            waitForElementToDisappear(By.xpath(addTaxonomyValueFormCancelButton));
+            LOGGER.info("Taxonomy Values is Edited");
+        }
+    }
+
+    public boolean verifyEditedTaxonomyValueIsAdded(int namePostFix, int editNamePostFix)
+    {
+        boolean isNewTaxonomyValueEdited = false;
+
+        if(isElementPresentAndDisplayedByLocator(By.xpath(taxonomyValueTable)))
+        {
+            int totalRowsInSchemaTable = driver.findElements(By.xpath(taxonomyValueTable + "/descendant::tr")).size();
+            LOGGER.info(String.valueOf(totalRowsInSchemaTable));
+            if(totalRowsInSchemaTable > 1)
+            {
+                String fieldNameDisplayed, fieldValueDisplayed;
+                for (int i = 2; i < totalRowsInSchemaTable + 2; i++)
+                {
+                    fieldValueDisplayed = driver.findElement(By.xpath(taxonomyValueTable + "/descendant::tr[" + i + "]/td[2]")).getText();
+                    fieldNameDisplayed = driver.findElement(By.xpath(taxonomyValueTable + "/descendant::tr[" + i + "]/td[3]")).getText();
+
+                    if (fieldNameDisplayed.contentEquals("Taxonomy" + namePostFix) &&
+                            fieldValueDisplayed.contentEquals("FieldValue" + editNamePostFix))
+                    {
+                        LOGGER.info("Taxonomy Value Edited is Found");
+                        isNewTaxonomyValueEdited = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                LOGGER.info("No Taxonomy Value on Table is Found");
+            }
+        }
+
+        return isNewTaxonomyValueEdited;
     }
 }
