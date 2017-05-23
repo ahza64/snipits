@@ -59,4 +59,10 @@ public class DropDownMenu extends WebAppPage {
         clickOnElement(By.xpath(taxonomyDropDownButton));
         return new TaxonomyPage();
     }
+
+    public TaxonomyValuesPage openTaxonomyValuePagePage() throws MalformedURLException
+    {
+        clickOnElement(By.xpath(taxonomyValuesDropDownButton));
+        return new TaxonomyValuesPage();
+    }
 }

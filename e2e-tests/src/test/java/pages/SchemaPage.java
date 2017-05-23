@@ -16,7 +16,7 @@ public class SchemaPage extends WebAppPage {
     private String selectProjectButton = "//label[text()='Project']/parent::div/div/descendant::button";
     private String selectCompanyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String selectProjectDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String addSchemaButton = ".//*[@class='col-lg-2 col-md-2 col-sm-0 col-xs-0']/descendant::span[text()='Add Schema']";
+    private String addSchemaButton = ".//span[text()='Add Schema']";
     private String addSchemaFormCancelButton = ".//span[text()='Cancel']";
     private String addSchemaFormConfirmButton = ".//span[text()='Create Schema']";
     private String addSchemaNameField = ".//div[text()='Schema Name']/following-sibling::input";
@@ -43,22 +43,12 @@ public class SchemaPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        clickOnElement(By.xpath(selectCompanyButton));
-        waitForVisible(By.xpath(selectCompanyDropDown));
-        holdOnForASec();
-        clickOnElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='Company" + namePostFix + "']"));
-        LOGGER.info("Company is Selected");
-        holdOnForASec();
+        selectEntity("Company", namePostFix, selectCompanyButton, selectCompanyDropDown);
     }
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        clickOnElement(By.xpath(selectProjectButton));
-        waitForVisible(By.xpath(selectProjectDropDown));
-        holdOnForASec();
-        clickOnElement(By.xpath(selectProjectDropDown + "/descendant::div[text()='Project" + namePostFix + "']"));
-        LOGGER.info("Project is Selected");
-        holdOnForASec();
+        selectEntity("Project", namePostFix, selectProjectButton, selectProjectDropDown);
     }
 
     public void addNewSchema(int namePostFix) throws MalformedURLException
@@ -68,6 +58,7 @@ public class SchemaPage extends WebAppPage {
         driver.findElement(By.xpath(addSchemaNameField)).sendKeys("Schema" + namePostFix);
         clickOnElement(By.xpath(addSchemaFormConfirmButton));
         LOGGER.info("Schema is Added");
+        waitForElementToDisappear(By.xpath(addSchemaFormCancelButton));
     }
 
     public boolean verifyNewSchemaIsAdded(int namePostFix)

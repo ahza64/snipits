@@ -14,7 +14,7 @@ public class ProjectPage extends WebAppPage {
 
     private String selectCompanyButton = ".//label[text()='Company']/parent::div/div/descendant::button";
     private String selectCompanyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String addProjectButton = ".//*[@class='col-lg-2 col-md-2 col-sm-0 col-xs-0']/descendant::span[text()='Add Work Project']";
+    private String addProjectButton = ".//span[text()='Add Work Project']";
     private String addProjectFormCancelButton = ".//span[text()='Cancel']";
     private String addProjectFormConfirmButton = ".//span[text()='Confirm']";
     private String addProjectNameField = ".//label[text()='Work Project Name']/following-sibling::input";
@@ -41,12 +41,7 @@ public class ProjectPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        clickOnElement(By.xpath(selectCompanyButton));
-        waitForVisible(By.xpath(selectCompanyDropDown));
-        holdOnForASec();
-        clickOnElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='Company" + namePostFix + "']"));
-        LOGGER.info("Company is Selected");
-        holdOnForASec();
+        selectEntity("Company", namePostFix, selectCompanyButton, selectCompanyDropDown);
     }
 
     public void addNewProject(int namePostFix) throws MalformedURLException
@@ -56,6 +51,7 @@ public class ProjectPage extends WebAppPage {
         driver.findElement(By.xpath(addProjectNameField)).sendKeys("Project" + namePostFix);
         clickOnElement(By.xpath(addProjectFormConfirmButton));
         LOGGER.info("Project is Added");
+        waitForElementToDisappear(By.xpath(addProjectFormCancelButton));
     }
 
     public boolean verifyNewProjectIsAdded(int namePostFix)

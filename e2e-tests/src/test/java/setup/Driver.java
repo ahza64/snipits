@@ -75,6 +75,11 @@ public class Driver
         return prop.getProperty("adminPassword");
     }
 
+    public static String getWebAppURL()
+    {
+        return prop.getProperty("webAppURL");
+    }
+
     public static String getIPAddress() {
         String ipAddress = null;
         Enumeration<NetworkInterface> ifaces = null;
