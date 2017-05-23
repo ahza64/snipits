@@ -520,9 +520,14 @@ public class WebAppPage
         return jsonObject;
     }
 
-    public int getEntriesInTable()
+    public int getEntriesInTable() throws MalformedURLException
     {
-        return driver.findElements(By.xpath(".//*[@class='row']/descendant::tr")).size();
+        int totalEnteriesInTable = 0;
+        if(isElementPresent(By.xpath(".//*[@class='row']/descendant::tr")))
+        {
+            totalEnteriesInTable = driver.findElements(By.xpath(".//*[@class='row']/descendant::tr")).size();
+        }
+        return totalEnteriesInTable;
     }
 
     protected void selectEntity(String entityType, int namePostFix, String buttonLocator, String dropDownLocator) throws MalformedURLException

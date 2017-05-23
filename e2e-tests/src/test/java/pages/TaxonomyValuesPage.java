@@ -24,9 +24,9 @@ public class TaxonomyValuesPage extends WebAppPage {
     private String addTaxonomyValueChildButton = ".//span[text()='Add Child Value]";
     private String viewByValueTaxonomyValueButton = ".//span[text()='View values by Taxonomy']";
     private String viewByValueSchemaValueButton = ".//span[text()='View values by Schema']";
-    private String removeAllValuesTaxonomyValueButton = ".//span[text()='Remove all Values']";
-    private String addTaxonomyValueFormCancelButton = ".//span[text()='Cancel']";
-    private String addTaxonomyValueFormConfirmButton = ".//span[text()='Confirm']";
+    private String removeAllValuesButton = ".//span[text()='Remove all Values']";
+    private String taxonomyValueFormCancelButton = ".//span[text()='Cancel']";
+    private String taxonomyValueFormConfirmButton = ".//span[text()='Confirm']";
     private String addTaxonomyFieldName = ".//td[text()='Taxonomy Field Name']/parent::tr/descendant::input";
     private String addTaxonomyFieldValue = ".//td[text()='Taxonomy Field Value']/parent::tr/descendant::input";
     private String taxonomyValueTable = ".//*[@class='row']";
@@ -38,7 +38,7 @@ public class TaxonomyValuesPage extends WebAppPage {
 
     TaxonomyValuesPage() throws MalformedURLException
     {
-        waitForVisible(By.xpath(removeAllValuesTaxonomyValueButton));
+        waitForVisible(By.xpath(removeAllValuesButton));
         waitForPageLoadComplete();
         holdOnForACoupleOfSec();
     }
@@ -46,7 +46,7 @@ public class TaxonomyValuesPage extends WebAppPage {
     private void waitForAddTaxonomyValuesFormToDisplay()
     {
         try {
-            waitForVisible(By.xpath(addTaxonomyValueFormCancelButton));
+            waitForVisible(By.xpath(taxonomyValueFormCancelButton));
             LOGGER.info("Add Taxonomy Values Form is displayed");
         } catch (MalformedURLException e) {
             LOGGER.info("Add Taxonomy Values Form is not displayed");
@@ -93,14 +93,14 @@ public class TaxonomyValuesPage extends WebAppPage {
 
         if(verifyValuesOnForm(namePostFix)) {
             driver.findElement(By.xpath(addTaxonomyFieldValue)).sendKeys("FieldValue" + namePostFix);
-            clickOnElement(By.xpath(addTaxonomyValueFormConfirmButton));
+            clickOnElement(By.xpath(taxonomyValueFormConfirmButton));
             LOGGER.info("Taxonomy Values is Added");
         }
         else
         {
             LOGGER.info("Invalid Values of Company/Project/Scheme is shown on Form");
         }
-        waitForElementToDisappear(By.xpath(addTaxonomyValueFormCancelButton));
+        waitForElementToDisappear(By.xpath(taxonomyValueFormCancelButton));
     }
 
     public boolean verifyNewTaxonomyValueIsAdded(int namePostFix)
@@ -148,26 +148,22 @@ public class TaxonomyValuesPage extends WebAppPage {
         return new DropDownMenu();
     }
 
-    public boolean viewValuesByScheme(int namePostFix)
+    public void viewValuesByScheme() throws MalformedURLException
     {
-        clickOnElement(By.xpath(viewByValueSchemaValueButton));
-        holdOnForASec();
-        boolean isValueDisplayed = verifyNewTaxonomyValueIsAdded(namePostFix);
-        if(!isValueDisplayed)
-            LOGGER.severe("Value associated with selected Schema is not displayed");
-
-        return isValueDisplayed;
+        if(isElementPresent(By.xpath(viewByValueSchemaValueButton)))
+        {
+            clickOnElement(By.xpath(viewByValueSchemaValueButton));
+            holdOnForASec();
+        }
     }
 
-    public boolean viewValuesByTaxonomy(int namePostFix)
+    public void viewValuesByTaxonomy() throws MalformedURLException
     {
-        clickOnElement(By.xpath(viewByValueTaxonomyValueButton));
-        holdOnForASec();
-        boolean isValueDisplayed =verifyNewTaxonomyValueIsAdded(namePostFix);
-        if(!isValueDisplayed)
-            LOGGER.severe("Value associated with selected Taxonomy is not displayed");
-
-        return isValueDisplayed;
+        if (isElementPresent(By.xpath(viewByValueTaxonomyValueButton)))
+        {
+            clickOnElement(By.xpath(viewByValueTaxonomyValueButton));
+            holdOnForASec();
+        }
     }
 
     public void editTaxonomyValue(int editNamePostFix) throws MalformedURLException
@@ -181,8 +177,8 @@ public class TaxonomyValuesPage extends WebAppPage {
             driver.findElement(By.xpath(addTaxonomyFieldValue)).clear();
             driver.findElement(By.xpath(addTaxonomyFieldValue)).sendKeys("FieldValue" + editNamePostFix);
             holdOnForASec();
-            clickOnElement(By.xpath(addTaxonomyValueFormConfirmButton));
-            waitForElementToDisappear(By.xpath(addTaxonomyValueFormCancelButton));
+            clickOnElement(By.xpath(taxonomyValueFormConfirmButton));
+            waitForElementToDisappear(By.xpath(taxonomyValueFormCancelButton));
             LOGGER.info("Taxonomy Values is Edited");
         }
     }
@@ -219,5 +215,14 @@ public class TaxonomyValuesPage extends WebAppPage {
         }
 
         return isNewTaxonomyValueEdited;
+    }
+
+    public void removeAllValuesBySchema() throws MalformedURLException
+    {
+        clickOnElement(By.xpath(removeAllValuesButton));
+        holdOnForACoupleOfSec();
+        waitForVisible(By.xpath(taxonomyValueFormConfirmButton));
+        clickOnElement(By.xpath(taxonomyValueFormConfirmButton));
+        waitForElementToDisappear(By.xpath(taxonomyValueFormConfirmButton));
     }
 }

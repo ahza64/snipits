@@ -20,6 +20,8 @@ import pages.UserPage;
 import setup.Driver;
 import setup.WebAppPage;
 
+import static setup.WebAppPage.LOGGER;
+
 public class AdminInterfaceE2ETests {
 
     private LoginPage loginPage;
@@ -141,7 +143,7 @@ public class AdminInterfaceE2ETests {
         int countOnTableAfterAdding = taxonomyPage.getEntriesInTable();
         if((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1))
         {
-            WebAppPage.LOGGER.info("Valid Counts");
+            LOGGER.info("Valid Counts");
         }
         taxonomyPage.clickSaveChanges();
         boolean isTaxonomySaved = taxonomyPage.verifySaveChanges(namePostFix);
@@ -171,8 +173,15 @@ public class AdminInterfaceE2ETests {
     @Test(priority = 9, description = "Switch the table view for taxonomy field values")
     public void verifySwitchNewTaxonomyValue() throws MalformedURLException
     {
-        boolean verifyViewSchema = taxonomyValuesPage.viewValuesByScheme(namePostFix);
-        boolean verifyViewTaxonomy = taxonomyValuesPage.viewValuesByTaxonomy(namePostFix);
+        taxonomyValuesPage.viewValuesByScheme();
+        boolean verifyViewSchema = taxonomyValuesPage.verifyNewTaxonomyValueIsAdded(namePostFix);
+        if (!verifyViewSchema)
+            LOGGER.severe("Value associated with selected Schema is not displayed");
+
+        taxonomyValuesPage.viewValuesByTaxonomy();
+        boolean verifyViewTaxonomy = taxonomyValuesPage.verifyNewTaxonomyValueIsAdded(namePostFix);
+        if (!verifyViewTaxonomy)
+            LOGGER.severe("Value associated with selected Taxonomy is not displayed");
         Assert.assertTrue(verifyViewSchema && verifyViewTaxonomy);
     }
 
@@ -188,5 +197,19 @@ public class AdminInterfaceE2ETests {
         taxonomyValuesPage.editTaxonomyValue(editNamePostFix);
         boolean isTaxonomyValueEdited = taxonomyValuesPage.verifyEditedTaxonomyValueIsAdded(namePostFix, editNamePostFix);
         Assert.assertTrue(isTaxonomyValueEdited);
+    }
+
+    @Test(priority = 11, description = "Verify delete all taxonomy field values by schema")
+    public void verifyDeleteTaxonomyValueBySchema() throws MalformedURLException
+    {
+        taxonomyValuesPage.viewValuesByScheme();
+        int countOnBadgeBeforeDeleting = taxonomyValuesPage.getBadgeCount();
+        int countOnTableBeforeDeleting = taxonomyValuesPage.getEntriesInTable();
+        taxonomyValuesPage.removeAllValuesBySchema();
+        int countOnBadgeAfterDeleting = taxonomyValuesPage.getBadgeCount();
+        int countOnTableAfterDeleting = taxonomyValuesPage.getEntriesInTable();
+        boolean isDeleted = (countOnBadgeBeforeDeleting > 0 && countOnTableBeforeDeleting > 0) &&
+                (countOnBadgeAfterDeleting == 0 && countOnTableAfterDeleting == 0);
+        Assert.assertTrue(isDeleted);
     }
 }
