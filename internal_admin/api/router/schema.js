@@ -163,7 +163,7 @@ router.get('/schemaField/:schemaId', function* () {
   if (permissions.has(this.req.user, companyId) && schemaId) {
     var targetFields = yield QowFields.findAll({
       where : {
-        qowSchemaId : schemaId,
+        schemaId : schemaId,
         status: true
       }
     });
