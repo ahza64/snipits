@@ -103,7 +103,7 @@ public class TaxonomyValuesPage extends WebAppPage {
         waitForElementToDisappear(By.xpath(taxonomyValueFormCancelButton));
     }
 
-    public boolean verifyTaxonomyValueInTable(int fieldValuePostFix, int fieldNamePostFix)
+    public boolean verifyTaxonomyValueInTable(int fieldNamePostFix, int fieldValuePostFix)
     {
         boolean isNewTaxonomyValueAdded = false;
 
