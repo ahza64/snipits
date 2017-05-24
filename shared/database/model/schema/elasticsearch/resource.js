@@ -7,6 +7,24 @@ const rp = require('request-promise');
 const jsonpatch = require('fast-json-patch');
 const _ = require('underscore');
 
+function prepareClusters(clusters) {
+  return clusters.map((cluster) => {
+    const item = {
+      _id: cluster.key,
+      type: 'cluster',
+      location: {
+        type: 'Point'
+      },
+      count: cluster.doc_count
+    };
+    const coordinates = item.location.coordinates;
+    if (cluster.lon && cluster.lon.value && cluster.lat && cluster.lat.value) {
+      item.location.coordinates = [cluster.lon.value, cluster.lat.value];
+    }
+    return item;
+  });
+}
+
 function prepareAggregations(bucket, field) {
   let prepared = null;
   if (bucket && field) {
@@ -14,23 +32,27 @@ function prepareAggregations(bucket, field) {
       const buckets = bucket[field].buckets;
       if (Array.isArray(buckets)) {
         prepared = [];
-        buckets.forEach((subbucket) => {
-          const subfields = Object.keys(_.omit(subbucket, ['key', 'doc_count']));
-          if (subfields.length > 0) {
-            const subfield = subfields[0];
-            const subitems = prepareAggregations(subbucket, subfield);
-            subitems.forEach((subitem) => {
+        if (field === 'clusters') {
+          prepared = prepareClusters(buckets);
+        } else {
+          buckets.forEach((subbucket) => {
+            const subfields = Object.keys(_.omit(subbucket, ['key', 'doc_count']));
+            if (subfields.length > 0) {
+              const subfield = subfields[0];
+              const subitems = prepareAggregations(subbucket, subfield);
+              subitems.forEach((subitem) => {
+                const item = {};
+                item[field] = subbucket.key;
+                prepared.push(Object.assign(item, subitem));
+              });
+            } else {
               const item = {};
               item[field] = subbucket.key;
-              prepared.push(Object.assign(item, subitem));
-            });
-          } else {
-            const item = {};
-            item[field] = subbucket.key;
-            item.count = subbucket.doc_count;
-            prepared.push(item);
-          }
-        });
+              item.count = subbucket.doc_count;
+              prepared.push(item);
+            }
+          });
+        }
       }
     }
   } else if (bucket && (Object.keys(bucket).length > 0)) {
@@ -360,6 +382,31 @@ class EsResource {
     });
   }
 
+  isAggregationRequired(filters, aggregate, user) {
+    const self = this;
+    return co(function *get_count() {
+      let required = false;
+      if (aggregate) {
+        if ((!Array.isArray(aggregate)) && (typeof aggregate === 'object')) {
+          const type = aggregate.type;
+          if ((typeof type === 'string') && (type.toLowerCase() === 'geohash')) {
+            if (aggregate.min) {
+              const total = yield self.count(filters, user);
+              if (total >= aggregate.min) {
+                required = true;
+              }
+            } else {
+              required = true;
+            }
+          }
+        } else {
+          required = true;
+        }
+      }
+      return required;
+    });
+  }
+
   /**
     * @param {Object} options
     * @param {Number} options.offset skip the first (offset) matches
@@ -378,24 +425,29 @@ class EsResource {
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
     const sort = options.order || "created";
-    const aggregate = options.aggregate;
-
-    const params = [];
-    if (offset) {
-      params.push(`from=${offset}`);
-    }
-    if (aggregate) {
-      params.push(`size=0`);
-    } else if (limit) {
-      params.push(`size=${limit}`);
-    }
-
-    let queryParams = '';
-    if (params.length > 0) {
-      queryParams = `?${params.join('&')}`;
-    }
+    let aggregate = options.aggregate;
 
     return co(function *list_gen() {
+      const params = [];
+      if (offset) {
+        params.push(`from=${offset}`);
+      }
+
+      if (!(yield self.isAggregationRequired(filters, aggregate, options.user))) {
+        aggregate = null;
+      }
+
+      if (aggregate) {
+        params.push(`size=0`);
+      } else if (limit) {
+        params.push(`size=${limit}`);
+      }
+
+      let queryParams = '';
+      if (params.length > 0) {
+        queryParams = `?${params.join('&')}`;
+      }
+
       const query = self.prepareQuery(filters, sort, aggregate, options.user);
       let list = [];
       const response = yield self.doRequest('POST', `_search${queryParams}`, query);
@@ -417,22 +469,58 @@ class EsResource {
     return filters;
   }
 
-  prepareAggsQuery(fields, query) {
-    if (fields && query) {
-      let subquery = query;
-      fields.forEach((field) => {
-        let fieldName = field;
-        if (fieldName in this.fieldsWithoutPrefix) {
-          fieldName = this.fieldsWithoutPrefix[fieldName];
-        }
-        subquery.aggs = {};
-        subquery.aggs[field] = {
-          terms: {
-            field: fieldName
+  prepareGeohashAggs(field, precision) {
+    let fieldName = field;
+    if (fieldName in this.fieldsWithoutPrefix) {
+      fieldName = this.fieldsWithoutPrefix[fieldName];
+    }
+    return {
+      clusters: {
+        geohash_grid: {
+          field: fieldName,
+          precision: precision
+        },
+        aggs: {
+          lat: {
+            avg: {
+              script: `doc['${fieldName}'].lat`
+            }
+          },
+          lon: {
+            avg: {
+              script: `doc['${fieldName}'].lon`
+            }
           }
-        };
-        subquery = subquery.aggs[field];
-      });
+        }
+      }
+    };
+  }
+
+  prepareAggsQuery(aggregate, query) {
+    if (aggregate && query) {
+      if (Array.isArray(aggregate)) {
+        const fields = aggregate;
+        let subquery = query;
+        fields.forEach((field) => {
+          let fieldName = field;
+          if (fieldName in this.fieldsWithoutPrefix) {
+            fieldName = this.fieldsWithoutPrefix[fieldName];
+          }
+          subquery.aggs = {};
+          subquery.aggs[field] = {
+            terms: {
+              field: fieldName
+            }
+          };
+          subquery = subquery.aggs[field];
+        });
+      } else if (typeof aggregate === 'object') {
+        const type = typeof aggregate.type === 'string' ? aggregate.type.toLowerCase() : null;
+        if ((type === 'geohash') && (aggregate.field)) {
+          const precision = aggregate.precision || 4;
+          query.aggs = this.prepareGeohashAggs(aggregate.field, precision);
+        }
+      }
     }
   }
 
@@ -446,7 +534,7 @@ class EsResource {
       }
     };
     if (aggregate) {
-      const fields = Array.isArray(aggregate) ? aggregate : [aggregate];
+      const fields = typeof aggregate === 'string' ? [aggregate] : aggregate;
       this.prepareAggsQuery(fields, query);
     }
     const allFilters = Object.assign({}, filters, this.getFiltersByUserData(user));
