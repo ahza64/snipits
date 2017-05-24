@@ -5,6 +5,7 @@ const permissions = require('./permissions');
 const notifications = require('./notifications');
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
+const passwordValidator = require('password-validator');
 
 // App
 const app = koa();
@@ -14,51 +15,56 @@ const Users = require('dsp_shared/database/model/ingestion/tables').users;
 const Companies = require('dsp_shared/database/model/ingestion/tables').companies;
 const Admins = require('dsp_shared/database/model/ingestion/tables').dispatchr_admins;
 
+const passValidation = new passwordValidator();
+passValidation.is().min(6)
+
 // Create / update a user
 router.post(
   '/user',
   function*() {
     if (permissions.has(this.req.user, null)) {
-      var body = this.request.body;
-      if (body.id) {
-        this.body = yield updateUser(body);
-      } else {
-        var companyId = body.companyId;
-        var companyName = body.company;
-        if ((!companyId) && (companyName)) {
-          company = yield Companies.findOne({
-            where: { name: companyName },
-            raw: true
-          });
-          companyId = company.id;
-        }
-        if (!companyName) {
-          company = yield Companies.findOne({
-            where: { id: companyId },
-            raw: true
-          });
-          companyName = company.name;
-        }
-
-        var user = {
-          name: body.firstname + ' ' + body.lastname,
-          email: body.email,
-          password: Users.build().generateHash(body.password),
-          status: ACTIVE,
-          companyId: companyId
-        };
-
-        if (body.role) {
-          user.role = body.role;
-          user = yield Admins.create(user);
-          // console.log('In body role', user);
+      var body = this.request.body
+      if (passValidation.validate(body.password) && body.password !== '') {
+        if (body.id) {
+          this.body = yield updateUser(body);
         } else {
-          user = yield Users.create(user);
-          // console.log('In else part', user);
-          yield notifications.userCreated(companyName, user, body.password);
-        }
+          var companyId = body.companyId;
+          var companyName = body.company;
+          if ((!companyId) && (companyName)) {
+            company = yield Companies.findOne({
+              where: { name: companyName },
+              raw: true
+            });
+            companyId = company.id;
+          }
+          if (!companyName) {
+            company = yield Companies.findOne({
+              where: { id: companyId },
+              raw: true
+            });
+            companyName = company.name;
+          }
 
-        this.body = user;
+          var user = {
+            name: body.firstname + ' ' + body.lastname,
+            email: body.email,
+            password: Users.build().generateHash(body.password),
+            status: ACTIVE,
+            companyId: companyId
+          };
+
+          if (body.role) {
+            user.role = body.role;
+            user = yield Admins.create(user);
+            // console.log('In body role', user);
+          } else {
+            user = yield Users.create(user);
+            // console.log('In else part', user);
+            yield notifications.userCreated(companyName, user, body.password);
+          }
+
+          this.body = user;
+        }
       }
     } else {
       this.throw(403);
