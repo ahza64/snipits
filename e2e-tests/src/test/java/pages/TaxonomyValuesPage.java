@@ -103,7 +103,7 @@ public class TaxonomyValuesPage extends WebAppPage {
         waitForElementToDisappear(By.xpath(taxonomyValueFormCancelButton));
     }
 
-    public boolean verifyTaxonomyValueInTable(int namePostFix, int editNamePostFix)
+    public boolean verifyTaxonomyValueInTable(int fieldValuePostFix, int fieldNamePostFix)
     {
         boolean isNewTaxonomyValueAdded = false;
 
@@ -119,8 +119,8 @@ public class TaxonomyValuesPage extends WebAppPage {
                     fieldValueDisplayed = driver.findElement(By.xpath(taxonomyValueTable + "/descendant::tr[" + i + "]/td[2]")).getText();
                     fieldNameDisplayed = driver.findElement(By.xpath(taxonomyValueTable + "/descendant::tr[" + i + "]/td[3]")).getText();
 
-                    if (fieldNameDisplayed.contentEquals("Taxonomy" + namePostFix) &&
-                            fieldValueDisplayed.contentEquals("FieldValue" + editNamePostFix))
+                    if (fieldNameDisplayed.contentEquals("Taxonomy" + fieldNamePostFix) &&
+                            fieldValueDisplayed.contentEquals("FieldValue" + fieldValuePostFix))
                     {
                         isNewTaxonomyValueAdded = true;
                         break;
