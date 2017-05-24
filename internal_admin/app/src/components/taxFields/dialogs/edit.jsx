@@ -102,7 +102,7 @@ export default class EditTaxValueDialog extends React.Component {
   }
   // regex checks for non-alphanumeric and non-underscore values
   isConfirmButtonDisabled() {
-    if ((this.state.fieldValue.length > 0) && this.state.fieldValue.match(/^[\w\.]+$/g)) {
+    if ((this.state.fieldValue.length > 0) && this.state.fieldValue.match(/^[\w]+$/g)) {
       return false;
     }
     return true;

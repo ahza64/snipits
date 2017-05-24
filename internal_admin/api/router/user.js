@@ -6,6 +6,7 @@ const notifications = require('./notifications');
 const ACTIVE = 'active';
 const INACTIVE = 'inactive';
 const passwordValidator = require('password-validator');
+const validator = require('validator');
 
 // App
 const app = koa();
@@ -24,7 +25,7 @@ router.post(
   function*() {
     if (permissions.has(this.req.user, null)) {
       var body = this.request.body
-      if (passValidation.validate(body.password) && body.password !== '' && body.email === body.email.toLowerCase()) {
+      if (passValidation.validate(body.password) && body.password !== '' && body.email === body.email.toLowerCase() && validator.isEmail(body.email)) {
         if (body.id) {
           this.body = yield updateUser(body);
         } else {

@@ -56,10 +56,12 @@ router.post(
             schemaId: body[0].schemaId
           }
         });
-        for ( var i = 0; i < body.length; i++) {
-          body[i].order = i + 1;
-          taxonomy = yield (QowTaxonomies.create(body[i]));
-          taxonomies.push(taxonomy);
+        for (var i = 0; i < body.length; i++) {
+          if (body[i].fieldName.match(/^[\w]+$/g)) {
+            body[i].order = i + 1;
+            taxonomy = yield (QowTaxonomies.create(body[i]));
+            taxonomies.push(taxonomy);
+          }
         }
       } catch (e) {
         console.error(e);
@@ -93,7 +95,8 @@ router.post(
     var taxValId = body.id;
     var companyUserId = this.req.user.companyId;
     var taxValue;
-    if (permissions.has(this.req.user, companyUserId)) {
+
+    if (permissions.has(this.req.user, companyUserId) && body.fieldValue.match(/^[\w]+$/g)) {
       try {
         if (taxValId) {
           taxValue = yield QowExpectedTaxonomies.find({ where: { id: taxValId } });
