@@ -24,7 +24,7 @@ router.post(
   function*() {
     if (permissions.has(this.req.user, null)) {
       var body = this.request.body
-      if (passValidation.validate(body.password) && body.password !== '') {
+      if (passValidation.validate(body.password) && body.password !== '' && body.email === body.email.toLowerCase()) {
         if (body.id) {
           this.body = yield updateUser(body);
         } else {

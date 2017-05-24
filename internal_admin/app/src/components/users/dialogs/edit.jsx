@@ -158,7 +158,7 @@ export default class EditUserDialog extends React.Component {
   }
 
   handleEmailChanged(event) {
-    var email = event.target.value;
+    var email = event.target.value.toLowerCase();
     this.setState({
       email: email,
       emailError: null
