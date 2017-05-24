@@ -200,7 +200,7 @@ class PostgresResource {
         orderParams.push([order, orderDirection]);
       }
       let list = [];
-      if (aggregate) {
+      if (aggregate && (Array.isArray(aggregate) || (typeof aggregate === 'string'))) {
         list = yield self.aggregatedList(filters, self.config, options.user, aggregate);
       } else {
         list = yield self.model.findAll({

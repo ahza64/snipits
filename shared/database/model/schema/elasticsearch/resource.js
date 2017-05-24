@@ -17,7 +17,6 @@ function prepareClusters(clusters) {
       },
       count: cluster.doc_count
     };
-    const coordinates = item.location.coordinates;
     if (cluster.lon && cluster.lon.value && cluster.lat && cluster.lat.value) {
       item.location.coordinates = [cluster.lon.value, cluster.lat.value];
     }
@@ -59,6 +58,21 @@ function prepareAggregations(bucket, field) {
     prepared = prepareAggregations(bucket, Object.keys(bucket)[0]);
   }
   return prepared;
+}
+
+function prepareExtentFilter(field, extent) {
+  const extentFilter = {
+    geo_bounding_box: {
+      type: 'indexed'
+    }
+  };
+  if (extent) {
+    extentFilter.geo_bounding_box[field] = {
+      top_left: [extent.xmin, extent.ymax],
+      bottom_right: [extent.xmax, extent.ymin]
+    };
+  }
+  return extentFilter;
 }
 
 class EsResource {
@@ -178,10 +192,7 @@ class EsResource {
       }, self.includePrefixes(data));
       if (self.resourceConfig && self.resourceConfig.filters) {
         Object.keys(self.resourceConfig.filters).forEach((field) => {
-          let itemField = field;
-          if (field in self.fieldsWithoutPrefix) {
-            itemField = self.fieldsWithoutPrefix[field];
-          }
+          const itemField = this.getFieldNameWithPrefix(field);
           const value = user ? user[self.resourceConfig.filters[field]] : null;
           body[itemField] = value;
         });
@@ -197,11 +208,8 @@ class EsResource {
   includePrefixes(data) {
     const result = {};
     Object.keys(data).forEach((field) => {
-      if (field in this.fieldsWithoutPrefix) {
-        result[this.fieldsWithoutPrefix[field]] = data[field];
-      } else {
-        result[field] = data[field];
-      }
+      const fieldWithPrefix = this.getFieldNameWithPrefix(field);
+      result[fieldWithPrefix] = data[field];
     });
     return result;
   }
@@ -227,10 +235,7 @@ class EsResource {
     let valid = true;
     if (item && item._source && this.resourceConfig && this.resourceConfig.filters) {
       Object.keys(this.resourceConfig.filters).forEach((field) => {
-        let itemField = field;
-        if (field in this.fieldsWithoutPrefix) {
-          itemField = this.fieldsWithoutPrefix[field];
-        }
+        const itemField = this.getFieldNameWithPrefix(field);
         const value = user ? user[this.resourceConfig.filters[field]] : null;
         if (item._source[itemField] !== value) {
           valid = false;
@@ -414,6 +419,11 @@ class EsResource {
     * @param {Object} options.filters of requirements the object must meet
     * @param {String} options.select return only (select)ed fields
     * @param {String} options.order field to sort by, ascending. If prepended with '-' then descending
+    * @param {String|Array|Object} options.aggregate fields to group data
+    * @param {String} options.aggregate.type aggregation type ('geohash')
+    * @param {String} options.aggregate.field field name (may looks like 'location.coordinates')
+    * @param {Number} options.aggregate.precision precision of geohash
+    * @param {Number} options.aggregate.min do aggregation if object count more or equal than min value
     * @param {Boolean} options.lean retun a plain Javascript document rather than a MongooseDocument
     * @param {Object} options.user user's data
     * @return {Array} result the objects that agree with arguments list lists the results of a query
@@ -470,10 +480,7 @@ class EsResource {
   }
 
   prepareGeohashAggs(field, precision) {
-    let fieldName = field;
-    if (fieldName in this.fieldsWithoutPrefix) {
-      fieldName = this.fieldsWithoutPrefix[fieldName];
-    }
+    const fieldName = this.getFieldNameWithPrefix(field);
     return {
       clusters: {
         geohash_grid: {
@@ -502,10 +509,7 @@ class EsResource {
         const fields = aggregate;
         let subquery = query;
         fields.forEach((field) => {
-          let fieldName = field;
-          if (fieldName in this.fieldsWithoutPrefix) {
-            fieldName = this.fieldsWithoutPrefix[fieldName];
-          }
+          const fieldName = this.getFieldNameWithPrefix(field);
           subquery.aggs = {};
           subquery.aggs[field] = {
             terms: {
@@ -522,6 +526,25 @@ class EsResource {
         }
       }
     }
+  }
+
+  getFieldNameWithPrefix(field) {
+    let fieldWithPrefix = field;
+    if (typeof field === 'string') {
+      if (field.indexOf('.') >= 0) {
+        // composite field name
+        const fields = field.split('.');
+        if (fields.length > 0) {
+          if (fields[0] in this.fieldsWithoutPrefix) {
+            fields[0] = this.fieldsWithoutPrefix[fields[0]];
+            fieldWithPrefix = fields.join('.');
+          }
+        }
+      } else if (field in this.fieldsWithoutPrefix) {
+        fieldWithPrefix = this.fieldsWithoutPrefix[field];
+      }
+    }
+    return fieldWithPrefix;
   }
 
   prepareQuery(filters, sort, aggregate, user) {
@@ -551,10 +574,7 @@ class EsResource {
         }
       }
       const match = {};
-      let fieldName = field;
-      if (field in this.fieldsWithoutPrefix) {
-        fieldName = this.fieldsWithoutPrefix[field];
-      }
+      const fieldName = this.getFieldNameWithPrefix(field);
       match[fieldName] = value;
       if (Array.isArray(value)) {
         query.query.bool.must.push({
@@ -567,6 +587,8 @@ class EsResource {
           query.query.bool.must.push({
             regexp: regexp
           });
+        } else if (value.extent) {
+          query.query.bool.must.push(prepareExtentFilter(fieldName, value.extent));
         }
       } else if (notEqual) {
         query.query.bool.must_not.push({
@@ -585,9 +607,7 @@ class EsResource {
         field = sort.substring(1);
         order = 'desc';
       }
-      if (field in this.fieldsWithoutPrefix) {
-        field = this.fieldsWithoutPrefix[field];
-      }
+      field = this.getFieldNameWithPrefix(field);
       query.sort = {};
       query.sort[field] = {
         order: order

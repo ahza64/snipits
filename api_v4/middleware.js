@@ -66,6 +66,7 @@ module.exports = {
     try {
       yield next;
     } catch (e) {
+      console.error(e.message, e.stack);
       err = e;
     }
     envelope(this, err);
