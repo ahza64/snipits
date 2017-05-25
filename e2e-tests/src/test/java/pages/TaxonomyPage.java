@@ -32,6 +32,9 @@ public class TaxonomyPage extends WebAppPage {
     private String saveChangesPopupButton = ".//h3[text()='ALERT!!!']/parent::div/descendant::span[text()='Save Changes']";
     private String badgeCount = ".//*[text()='Total Taxonomy Definitions Found']/following-sibling::div/span";
     private String dropDownButton = ".//*[@class='dropdown']/a";
+    private String editDeleteButton = ".//span[text()='Edit/Delete'][1]";
+    private String editTaxonomyButton = ".//div[text()='Edit Taxonomy']";
+    private String deleteTaxonomyButton = ".//div[text()='Delete Taxonomy']";
 
     TaxonomyPage() throws MalformedURLException
     {
@@ -101,7 +104,9 @@ public class TaxonomyPage extends WebAppPage {
         waitForElementToDisappear(By.xpath(addTaxonomyFormCancelButton));
     }
 
-    public boolean verifyNewTaxonomyIsAdded(int namePostFix)
+    // if addOrSave == true then its verifying add feature
+    // if addOrSave == false then its verifying save feature
+    public boolean verifyTaxonomy(boolean addOrSave, int namePostFix)
     {
         boolean isNewTaxonomyAdded = false;
 
@@ -125,8 +130,13 @@ public class TaxonomyPage extends WebAppPage {
                         String savedToDataBaseDisplayed;
                         savedToDataBaseDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[2]")).getText();
 
-                        if (savedToDataBaseDisplayed.contentEquals("No!!")) {
+                        if (addOrSave && savedToDataBaseDisplayed.contentEquals("No!!")) {
                             LOGGER.info("Taxonomy Added is Found");
+                            isNewTaxonomyAdded = true;
+                            break;
+                        }
+                        else if (!addOrSave && savedToDataBaseDisplayed.contentEquals("Yes")) {
+                            LOGGER.info("Taxonomy Added is Saved");
                             isNewTaxonomyAdded = true;
                             break;
                         }
@@ -162,44 +172,24 @@ public class TaxonomyPage extends WebAppPage {
         holdOnForACoupleOfSec();
     }
 
-    public boolean verifySaveChanges(int namePostFix)
+    public void editTaxonomyFieldName(int namePostFix) throws MalformedURLException
     {
-        boolean isNewTaxonomySaved = false;
-
         if(isElementPresentAndDisplayedByLocator(By.xpath(taxonomyTable)))
         {
-            int totalRowsInSchemaTable = driver.findElements(By.xpath(taxonomyTable + "/descendant::tr")).size();
-            LOGGER.info(String.valueOf(totalRowsInSchemaTable));
-            if(totalRowsInSchemaTable > 1)
-            {
-                String fieldNameDisplayed, nodeTypeDisplayed, keysDisplayed;
-                for (int i = 2; i < totalRowsInSchemaTable + 2; i++)
-                {
-                    fieldNameDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[3]")).getText();
-                    nodeTypeDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[6]")).getText();
-                    keysDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[7]")).getText();
-
-                    if (fieldNameDisplayed.contentEquals("Taxonomy" + namePostFix) &&
-                            nodeTypeDisplayed.contentEquals("Node" + namePostFix) &&
-                            keysDisplayed.contentEquals("Keys" + namePostFix))
-                    {
-                        String savedToDataBaseDisplayed;
-                        savedToDataBaseDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[2]")).getText();
-
-                        if (savedToDataBaseDisplayed.contentEquals("Yes")) {
-                            LOGGER.info("Taxonomy Added is Found");
-                            isNewTaxonomySaved = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                LOGGER.info("No Taxonomy on Table is Found");
-            }
+            clickOnElement(By.xpath(editDeleteButton));
+            waitForVisible(By.xpath(editTaxonomyButton));
+            clickOnElement(By.xpath(editTaxonomyButton));
+            waitForAddTaxonomyFormToDisplay();
+            driver.findElement(By.xpath(addTaxonomyFieldNameField)).clear();
+            driver.findElement(By.xpath(addTaxonomyFieldNameField)).sendKeys("Taxonomy" + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyNodeField)).clear();
+            driver.findElement(By.xpath(addTaxonomyNodeField)).sendKeys("Node" + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyKeysField)).clear();
+            driver.findElement(By.xpath(addTaxonomyKeysField)).sendKeys("Keys" + namePostFix);
+            holdOnForASec();
+            clickOnElement(By.xpath(addTaxonomyFormConfirmButton));
+            waitForElementToDisappear(By.xpath(addTaxonomyFormCancelButton));
+            LOGGER.info("Taxonomy Values is Edited");
         }
-
-        return isNewTaxonomySaved;
     }
 }

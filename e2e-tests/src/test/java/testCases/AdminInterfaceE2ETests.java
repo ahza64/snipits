@@ -136,7 +136,7 @@ public class AdminInterfaceE2ETests {
         int countOnTableBeforeAdding = taxonomyPage.getEntriesInTable();
         taxonomyPage.addNewTaxonomy(namePostFix);
         taxonomyPage.holdOnForACoupleOfSec();
-        taxonomyPage.verifyNewTaxonomyIsAdded(namePostFix);
+        taxonomyPage.verifyTaxonomy(true, namePostFix);
         int countOnBadgeAfterAdding = taxonomyPage.getBadgeCount();
         int countOnTableAfterAdding = taxonomyPage.getEntriesInTable();
         if((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1))
@@ -144,7 +144,7 @@ public class AdminInterfaceE2ETests {
             LOGGER.info("Valid Counts");
         }
         taxonomyPage.clickSaveChanges();
-        boolean isTaxonomySaved = taxonomyPage.verifySaveChanges(namePostFix);
+        boolean isTaxonomySaved = taxonomyPage.verifyTaxonomy(false, namePostFix);
         Assert.assertTrue(isTaxonomySaved);
     }
 
@@ -222,5 +222,21 @@ public class AdminInterfaceE2ETests {
         boolean isDeleted = ((countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) &&
                 (countOnTableBeforeDeleting == countOnTableAfterDeleting + 1) && !verifyDeletion);
         Assert.assertTrue(isDeleted);
+    }
+
+    @Test(priority = 13, description = "Edit a taxonomy field name")
+    public void verifyEditTaxonomyFieldValue() throws MalformedURLException
+    {
+        dropDownMenu = taxonomyValuesPage.clickDropDownMenu();
+        taxonomyPage = dropDownMenu.openTaxonomyPagePage();
+        taxonomyPage.selectCompany(namePostFix);
+        taxonomyPage.selectProject(namePostFix);
+        taxonomyPage.selectSchema(namePostFix);
+        taxonomyPage.editTaxonomyFieldName(editNamePostFix);
+        taxonomyPage.holdOnForACoupleOfSec();
+        taxonomyPage.clickSaveChanges();
+        taxonomyPage.holdOnForACoupleOfSec();
+        boolean isTaxonomySaved = taxonomyPage.verifyTaxonomy(false, editNamePostFix);
+        Assert.assertTrue(isTaxonomySaved);
     }
 }
