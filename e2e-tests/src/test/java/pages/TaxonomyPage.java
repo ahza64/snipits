@@ -192,4 +192,22 @@ public class TaxonomyPage extends WebAppPage {
             LOGGER.info("Taxonomy Values is Edited");
         }
     }
+
+    public String deleteTaxonomyFieldName() throws MalformedURLException
+    {
+        String fieldValueDisplayed = null;
+        if(isElementPresentAndDisplayedByLocator(By.xpath(taxonomyTable)))
+        {
+            fieldValueDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[2]/td[2]")).getText();
+            clickOnElement(By.xpath(editDeleteButton));
+            waitForVisible(By.xpath(deleteTaxonomyButton));
+            clickOnElement(By.xpath(deleteTaxonomyButton));
+            waitForAddTaxonomyFormToDisplay();
+            holdOnForASec();
+            clickOnElement(By.xpath(addTaxonomyFormConfirmButton));
+            waitForElementToDisappear(By.xpath(addTaxonomyFormCancelButton));
+            LOGGER.info("Taxonomy Field Name is Deleted");
+        }
+        return fieldValueDisplayed;
+    }
 }
