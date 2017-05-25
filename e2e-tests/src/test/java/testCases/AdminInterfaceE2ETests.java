@@ -38,14 +38,12 @@ public class AdminInterfaceE2ETests {
 
 
     @BeforeClass(description = "Launching Chrome Broswer")
-    public void LaunchingAdminInterfaceWebApp()
-    {
+    public void LaunchingAdminInterfaceWebApp() {
         loginPage = new LoginPage(true);
     }
 
     @Test(priority = 1, description = "Performing login on AdminInterface WebApp")
-    public void performLoginAdminInterfaceWebApp() throws MalformedURLException
-    {
+    public void performLoginAdminInterfaceWebApp() throws MalformedURLException {
         companyPage = loginPage.login(Driver.getAdminUserName(), Driver.getAdminPassword());
     }
 
@@ -163,7 +161,7 @@ public class AdminInterfaceE2ETests {
         int countOnTableBeforeAdding = taxonomyValuesPage.getEntriesInTable();
         taxonomyValuesPage.addNewTaxonomyValues(namePostFix);
         taxonomyValuesPage.holdOnForACoupleOfSec();
-        taxonomyValuesPage.verifyNewTaxonomyValueIsAdded(namePostFix);
+        taxonomyValuesPage.verifyTaxonomyValueInTable(namePostFix, namePostFix);
         int countOnBadgeAfterAdding = taxonomyValuesPage.getBadgeCount();
         int countOnTableAfterAdding = taxonomyValuesPage.getEntriesInTable();
         boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
@@ -174,14 +172,14 @@ public class AdminInterfaceE2ETests {
     public void verifySwitchNewTaxonomyValue() throws MalformedURLException
     {
         taxonomyValuesPage.viewValuesByScheme();
-        boolean verifyViewSchema = taxonomyValuesPage.verifyNewTaxonomyValueIsAdded(namePostFix);
+        boolean verifyViewSchema = taxonomyValuesPage.verifyTaxonomyValueInTable(namePostFix, namePostFix);
         if (!verifyViewSchema)
-            LOGGER.severe("Value associated with selected Schema is not displayed");
+            LOGGER.severe("Values associated with selected Schema are not displayed");
 
         taxonomyValuesPage.viewValuesByTaxonomy();
-        boolean verifyViewTaxonomy = taxonomyValuesPage.verifyNewTaxonomyValueIsAdded(namePostFix);
+        boolean verifyViewTaxonomy = taxonomyValuesPage.verifyTaxonomyValueInTable(namePostFix, namePostFix);
         if (!verifyViewTaxonomy)
-            LOGGER.severe("Value associated with selected Taxonomy is not displayed");
+            LOGGER.severe("Values associated with selected Taxonomy are not displayed");
         Assert.assertTrue(verifyViewSchema && verifyViewTaxonomy);
     }
 
@@ -190,12 +188,8 @@ public class AdminInterfaceE2ETests {
     {
         Random rand = new Random();
         editNamePostFix = rand.nextInt(1000);
-        taxonomyValuesPage.selectCompany(namePostFix);
-        taxonomyValuesPage.selectProject(namePostFix);
-        taxonomyValuesPage.selectSchema(namePostFix);
-        taxonomyValuesPage.selectTaxonomy(namePostFix);
         taxonomyValuesPage.editTaxonomyValue(editNamePostFix);
-        boolean isTaxonomyValueEdited = taxonomyValuesPage.verifyEditedTaxonomyValueIsAdded(namePostFix, editNamePostFix);
+        boolean isTaxonomyValueEdited = taxonomyValuesPage.verifyTaxonomyValueInTable(namePostFix, editNamePostFix);
         Assert.assertTrue(isTaxonomyValueEdited);
     }
 
@@ -210,6 +204,23 @@ public class AdminInterfaceE2ETests {
         int countOnTableAfterDeleting = taxonomyValuesPage.getEntriesInTable();
         boolean isDeleted = (countOnBadgeBeforeDeleting > 0 && countOnTableBeforeDeleting > 0) &&
                 (countOnBadgeAfterDeleting == 0 && countOnTableAfterDeleting == 0);
+        Assert.assertTrue(isDeleted);
+    }
+
+    @Test(priority = 12, description = "Verify delete all taxonomy field value")
+    public void verifyDeleteTaxonomyValue() throws MalformedURLException
+    {
+        taxonomyValuesPage.addNewTaxonomyValues(namePostFix);
+        int countOnBadgeBeforeDeleting = taxonomyValuesPage.getBadgeCount();
+        int countOnTableBeforeDeleting = taxonomyValuesPage.getEntriesInTable();
+        String deletedTaxonomyValue = taxonomyValuesPage.deleteTaxonomyValue();
+        LOGGER.info(deletedTaxonomyValue);
+        taxonomyValuesPage.holdOnForACoupleOfSec();
+        boolean verifyDeletion = taxonomyValuesPage.verifyTaxonomyValueInTable(namePostFix, namePostFix);
+        int countOnBadgeAfterDeleting = taxonomyValuesPage.getBadgeCount();
+        int countOnTableAfterDeleting = taxonomyValuesPage.getEntriesInTable();
+        boolean isDeleted = ((countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) &&
+                (countOnTableBeforeDeleting == countOnTableAfterDeleting + 1) && !verifyDeletion);
         Assert.assertTrue(isDeleted);
     }
 }
