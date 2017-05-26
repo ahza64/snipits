@@ -37,7 +37,7 @@ export default class SchemaEditDialog extends React.Component {
   handleDeleteField(field) {
     var news = _.filter(this.state.schema, (thing) => {
       return field.id !== thing.id;
-    })
+    });
     console.log("remaining Fields", news);
     this.setState({
       schema: news
@@ -58,10 +58,10 @@ export default class SchemaEditDialog extends React.Component {
       } else {
         this.props.onClose(true, res.body);
       }
-    })
+    });
   }
 
-  closeAddFieldDialog(field){
+  closeAddFieldDialog(field) {
     if (field) {
       this.state.schema.push(field);
     }
@@ -108,7 +108,7 @@ export default class SchemaEditDialog extends React.Component {
         label="Save"
         icon={ <SaveIcon /> }
         primary
-        onTouchTap={ (event)=>{ this.handleSave()} }
+        onTouchTap={ (event) => { this.handleSave(); } }
       />,
       <FlatButton
         label="Cancel"
@@ -125,13 +125,13 @@ export default class SchemaEditDialog extends React.Component {
       <FlatButton
         label="Delete Schema"
         icon={ <DeleteForeverIcon /> }
-        onTouchTap={ (event)=> this.deleteSchema() }
+        onTouchTap={ (event) => this.deleteSchema() }
       />,
     ];
 
     return (
       <Dialog
-        open={this.props.open}
+        open={ this.props.open }
         fullWidth
         modal
         actions={ actions }
