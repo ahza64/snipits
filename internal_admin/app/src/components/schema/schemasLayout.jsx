@@ -384,7 +384,6 @@ export default class SchemasLayout extends React.Component {
       this.setState({
         schemaId: res.id,
       }, () => {
-        this.updateSchemas();
         this.updateSchema();
       });
     }
