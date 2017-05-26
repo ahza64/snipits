@@ -257,7 +257,17 @@ class PostgresResource {
             $in: value
           };
         } else if (typeof value === 'object') {
-          if (value.regex) {
+          if (value.not) {
+            if (Array.isArray(value.not)) {
+              prepared[field] = {
+                $notIn: value.not
+              };
+            } else {
+              prepared[field] = {
+                $ne: value.not
+              };
+            }
+          } else if (value.regex) {
             throw new Error('Regex filter is not acceptable for PostgreSQL resource');
           }
         } else {

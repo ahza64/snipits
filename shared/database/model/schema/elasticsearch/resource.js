@@ -589,6 +589,17 @@ class EsResource {
           });
         } else if (value.extent) {
           query.query.bool.must.push(prepareExtentFilter(fieldName, value.extent));
+        } else if (value.not) {
+          match[fieldName] = value.not;
+          if (Array.isArray(value.not)) {
+            query.query.bool.must_not.push({
+              terms: match
+            });
+          } else {
+            query.query.bool.must_not.push({
+              match: match
+            });
+          }
         }
       } else if (notEqual) {
         query.query.bool.must_not.push({

@@ -73,23 +73,35 @@ function sanitizeHelper(doc, original, _sanitize_deleted) {
 function process_filters(filters, config, user) {
   let f = {};
   if (filters) {
-    // log.debug("FILTERS", filters);
     f = _.mapObject(filters, (val) => {
+      let filter = null;
       if (val) {
-        if (typeof val === 'string' && val.startsWith('!')) {
-          return { $ne: val.slice(1) };
+        if (typeof val === 'string') {
+          if (val.startsWith('!')) {
+            filter = { $ne: val.slice(1) };
+          } else {
+            filter = val;
+          }
         } else if (Array.isArray(val)) {
-          return { $in: val };
+          filter = { $in: val };
         } else if (typeof val === 'object') {
           if (val.regex) {
-            return {
+            filter = {
               $regex: new RegExp(val.regex),
               $options: 'i'
             };
+          } else if (val.not) {
+            if (Array.isArray(val.not)) {
+              filter = { $nin: val.not };
+            } else {
+              filter = { $ne: val.not };
+            }
           }
+        } else {
+          filter = val;
         }
       }
-      return val;
+      return filter;
     });
   }
   if (config && config.filters) {
