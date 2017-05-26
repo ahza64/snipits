@@ -204,18 +204,15 @@ public class SchemaPage extends WebAppPage {
     public boolean deleteSchemaField(int namePostFix, String dataTypeSelect) throws MalformedURLException
     {
         boolean isFieldDeleted = false;
-        if(isElementPresent(By.xpath(moduleTable)))
-        {
+        if (isElementPresent(By.xpath(moduleTable))) {
             int totalFields = driver.findElements(By.xpath(moduleTable + "/descendant::tr")).size();
 
-            for(int i=1; i<=totalFields; i++)
-            {
+            for (int i = 1; i <= totalFields; i++) {
                 String fieldNameDisplayed, dataTypeDisplayed;
                 fieldNameDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[2]")).getText();
                 dataTypeDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[3]")).getText();
-                if(fieldNameDisplayed.contentEquals("FieldNameSchema" + namePostFix) &&
-                        dataTypeDisplayed.contentEquals(dataTypeSelect))
-                {
+                if (fieldNameDisplayed.contentEquals("FieldNameSchema" + namePostFix) &&
+                        dataTypeDisplayed.contentEquals(dataTypeSelect)) {
                     isFieldDeleted = true;
                     clickOnElement(By.xpath(moduleTable + "/descendant::tr[1]/descendant::button"));
                     LOGGER.info("Field is deleted on Module Table");
@@ -225,5 +222,14 @@ public class SchemaPage extends WebAppPage {
         }
 
         return isFieldDeleted;
+    }
+
+    public void deleteSchema() throws MalformedURLException
+    {
+        if(isElementPresent(By.xpath(deleteSchemaButton)))
+        {
+            clickOnElement(By.xpath(deleteSchemaButton));
+        }
+        waitForElementToDisappear(By.xpath(deleteSchemaButton));
     }
 }
