@@ -80,7 +80,7 @@ export default class SchemaEditDialog extends React.Component {
   }
 
   deleteSchema() {
-    let url = schemaUrl.replace(":schemaId", this.state.schemaId);
+    const url = schemaUrl.replace(":schemaId", this.state.schemaId);
     request
     .delete(url)
     .withCredentials()

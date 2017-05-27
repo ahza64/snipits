@@ -115,5 +115,10 @@ CreateSchema.propTypes = {
   schemas: React.PropTypes.array.isRequired,
   updateSchemas: React.PropTypes.func.isRequired,
   setSchemaId: React.PropTypes.func.isRequired,
-  handleSchemaChange: React.PropTypes.func.isRequired
+  handleSchemaChange: React.PropTypes.func.isRequired,
+  currentProject: React.PropTypes.number
+};
+
+CreateSchema.defaultProps = {
+  currentProject: null
 };

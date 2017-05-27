@@ -76,7 +76,7 @@ export default class CreateFieldDialog extends React.Component {
       <FlatButton
         label="Cancel"
         default
-        onClick={ (event) => { this.props.onClose(false); } }
+        onClick={ () => this.props.onClose(false) }
       />,
     ];
     const dataTypes = [
