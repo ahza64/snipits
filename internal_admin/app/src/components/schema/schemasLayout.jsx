@@ -92,16 +92,19 @@ export default class SchemasLayout extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        try {
-          this.setState({
-            projects: res.body,
-            currentProject: res.body[0].id
+        const currentProject = res.body.length ? res.body[0].id : null;
+        this.setState({
+          projects: res.body,
+          currentProject: currentProject
+        }, () => {
+          if (!res.body.length) {
+            this.setState({
+              schemaList: []
+            });
+          } else {
+            this.updateSchemas(true);
           }
-        );
-          this.updateSchemas(true);
-        } catch (e) {
-          console.error("error", e);
-        }
+        });
       }
     });
   }
@@ -168,7 +171,6 @@ export default class SchemasLayout extends React.Component {
       this.handleSchemaChange(null, value);
     });
   }
-
 
   updateSchema(cb) {
     this.getSchema((res) => {
