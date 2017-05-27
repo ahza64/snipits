@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'underscore';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
@@ -6,7 +7,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import request from '../../../services/request'
 import { schemaListUrl } from '../../../config';
-import _ from 'underscore'
 
 export default class CreateSchema extends React.Component {
   constructor() {
@@ -20,7 +20,6 @@ export default class CreateSchema extends React.Component {
 
     this.handleNameInput = this.handleNameInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.addSchema = this.addSchema.bind(this);
     this.validName = this.validName.bind(this);
   }
 
@@ -37,7 +36,7 @@ export default class CreateSchema extends React.Component {
 
   handleSubmit() {
     let error = false;
-    let schemaNames = _.pluck(this.props.schemas, 'name');
+    const schemaNames = _.pluck(this.props.schemas, 'name');
 
     if (_.contains(schemaNames, this.state.token)) {
       error = true;
@@ -53,7 +52,7 @@ export default class CreateSchema extends React.Component {
 
   addSchema(name) {
     const newSchema = {
-      name,
+      name: name,
     };
     const url = schemaListUrl.replace(':projectId', this.props.currentProject);
     request
@@ -64,7 +63,13 @@ export default class CreateSchema extends React.Component {
       if (err) {
         console.error('this err', err);
       } else {
-        this.props.updateSchemas();
+        console.log("result of adding a schema", res);
+        const self = this;
+        this.props.updateSchemas(true, () => {
+          self.props.setSchemaId(res.body.id, (val) => {
+            self.props.handleSchemaChange(val);
+          });
+        });
       }
     });
   }
@@ -80,7 +85,7 @@ export default class CreateSchema extends React.Component {
       <FlatButton
         label="Cancel"
         secondary
-        onClick={ ()=> this.props.onClose(false) }
+        onClick={ () => { this.props.onClose(false); } }
       />,
     ];
 

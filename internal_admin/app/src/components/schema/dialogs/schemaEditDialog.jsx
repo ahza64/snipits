@@ -30,17 +30,17 @@ export default class SchemaEditDialog extends React.Component {
   componentWillMount() {
     this.setState({
       schema: this.props.schema,
-      schemaId: this.props.schemaId
+      schemaId: this.props.schemaId,
     });
   }
 
   handleDeleteField(field) {
-    var news = _.filter(this.state.schema, (thing) => {
+    var remainingFields = _.filter(this.state.schema, (thing) => {
       return field.id !== thing.id;
     });
-    console.log("remaining Fields", news);
+    console.log("remaining Fields", remainingFields);
     this.setState({
-      schema: news
+      schema: remainingFields
     });
   }
 
@@ -77,7 +77,6 @@ export default class SchemaEditDialog extends React.Component {
     });
   }
 
-
   deleteSchema() {
     let url = schemaUrl.replace(":schemaId", this.state.schemaId);
     request
@@ -96,7 +95,7 @@ export default class SchemaEditDialog extends React.Component {
   renderCreateFieldDialog() {
     return (
       <CreateFieldDialog
-        onClose={ (field) => this.closeAddFieldDialog(field) }
+        onClose={ (field) => { this.closeAddFieldDialog(field); } }
         open={ this.state.createFieldDialogOpen }
       />
     );
@@ -120,12 +119,12 @@ export default class SchemaEditDialog extends React.Component {
         label="Add Field"
         icon={ <AddCircleIcon /> }
         default
-        onTouchTap={ (event) => this.openAddFieldDialog(event) }
+        onTouchTap={ (event) => { this.openAddFieldDialog(event); } }
       />,
       <FlatButton
         label="Delete Schema"
         icon={ <DeleteForeverIcon /> }
-        onTouchTap={ (event) => this.deleteSchema() }
+        onTouchTap={ (event) => { this.deleteSchema(); } }
       />,
     ];
 
@@ -136,7 +135,7 @@ export default class SchemaEditDialog extends React.Component {
         modal
         actions={ actions }
         title="Schema Editor"
-        >
+      >
         <Table selectable={ false }>
           <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
             <TableRow>
@@ -148,7 +147,7 @@ export default class SchemaEditDialog extends React.Component {
               <TableHeaderColumn>Delete </TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody displayRowCheckbox={ false } selectable={ true }>
+          <TableBody>
             {
               this.state.schema
               .sort((a, b) => { return a.id - b.id; })
@@ -162,7 +161,7 @@ export default class SchemaEditDialog extends React.Component {
                     <TableRowColumn> { field.createdAt } </TableRowColumn>
                     <TableRowColumn>
                       <RaisedButton
-                        onTouchTap={ (event) => { this.handleDeleteField(field) } }
+                        onTouchTap={ (event) => { this.handleDeleteField(field); } }
                         label="delete"
                         labelPosition="after"
                         icon={ <DeleteIcon /> }

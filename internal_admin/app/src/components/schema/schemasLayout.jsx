@@ -46,9 +46,9 @@ export default class SchemasLayout extends React.Component {
     this.setSchemaList = this.setSchemaList.bind(this);
     this.updateSchemas = this.updateSchemas.bind(this);
     this.handleShowInactiveSchemas = this.handleShowInactiveSchemas.bind(this);
-    this.toggleSchemaStatus = this.toggleSchemaStatus.bind(this);
+    this.setSchemaId = this.setSchemaId.bind(this);
     this.getSchemas = this.getSchemas.bind(this);
-
+    this.handleSchemaChange = this.handleSchemaChange.bind(this);
     this.updateSchema = this.updateSchema.bind(this);
     this.renderSchemaEditDialog = this.renderSchemaEditDialog.bind(this);
     this.handleEditViewSchema = this.handleEditViewSchema.bind(this);
@@ -117,11 +117,14 @@ export default class SchemasLayout extends React.Component {
     .end((err, res) => {
       if (err) {
         console.error(err);
-      } else if (callback) {
-        callback(res);
+      } else {
+        console.log("getSchemas res:", res);
         this.getSchema((resx) => {
           this.setSchemaFields(resx);
         });
+        if (callback) {
+          callback(res);
+        }
       }
     });
   }
@@ -141,35 +144,7 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
-  removeSchema() {
-    let url = schemaUrl.replace(':schemaId', this.state.schema);
-    request
-    .delete(url)
-    .withCredentials()
-    .end((err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("removed");
-      }
-    });
-  }
-
-  toggleSchemaStatus(event, schemaId) {
-    let url = schemaUrl.replace(':schemaId', schemaId);
-    request
-    .delete(url)
-    .withCredentials()
-    .end((err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        this.updateSchemas();
-      }
-    });
-  }
-
-  setSchemaList(list, resetSchema) {
+  setSchemaList(list, resetSchema, callback) {
     this.setState({
       schemaList: list,
     }, () => {
@@ -177,6 +152,9 @@ export default class SchemasLayout extends React.Component {
         this.setState({
           schemaId: this.state.schemaList[0].id
         });
+      }
+      if (callback) {
+        callback(this.state);
       }
     });
   }
@@ -187,16 +165,16 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
-
   setSchemaFields(fields) {
     this.setState({
       schema: fields
     });
   }
 
-  updateSchemas(resetSchema) {
+  updateSchemas(resetSchema, callback) {
+    console.log('updateSchemas');
     this.getSchemas((res) => {
-      this.setSchemaList(res.body, resetSchema);
+      this.setSchemaList(res.body, resetSchema, callback);
     });
   }
 
@@ -210,10 +188,10 @@ export default class SchemasLayout extends React.Component {
   }
 
   handleCompanySelectChanged(event, companyId) {
-    let companies = this.state.companies.filter((c) => {
+    const companies = this.state.companies.filter((c) => {
       return c.id === companyId;
     });
-    let companyName = (companies.length > 0) ? companies[0].name : null;
+    const companyName = (companies.length > 0) ? companies[0].name : null;
     this.setState({
       companyId: companyId,
       companyName: companyName,
@@ -223,6 +201,7 @@ export default class SchemasLayout extends React.Component {
   }
 
   handleSchemaChange(event, value) {
+    console.log("changing to : ", value);
     this.setState({
       schemaId: value
     }, () => this.updateSchema());
@@ -267,7 +246,6 @@ export default class SchemasLayout extends React.Component {
       showInactiveSchemas: isChecked
     });
   }
-
 
   renderSchemaSelectField() {
     return (
@@ -331,7 +309,7 @@ export default class SchemasLayout extends React.Component {
   }
 
   renderSchema() {
-    return(
+    return (
       <Table selectable={ false }>
         <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
           <TableRow>
@@ -374,13 +352,21 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
+  setSchemaId(value) {
+    console.log("setSchemaId", value);
+    this.setState({
+      schemaId: value
+    }, () => {
+      this.handleSchemaChange(null, value)
+    });
+  }
+
   closeSchemaEdit(saved, res) {
     if (saved) {
       this.setState({
         schemaId: res.id,
       }, () => {
-        this.updateSchemas(false);
-        this.updateSchema();
+        this.updateSchemas(false, () => this.updateSchema());
       });
     }
 
@@ -389,10 +375,9 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
-
   renderSchemaEditDialog() {
     if (this.state.schemaEditOpen) {
-      return(
+      return (
         <SchemaEditDialog
           schema={ this.state.schema }
           schemaId={ this.state.schemaId }
@@ -415,7 +400,7 @@ export default class SchemasLayout extends React.Component {
             { this.renderCompanySelectField() }
             { this.renderProjectSelectField() }
             { this.renderSchemaSelectField()  }
-            { this.renderSchemaEditDialog() }
+            { this.renderSchemaEditDialog()   }
 
 
           Total Project Schemas Found
@@ -450,6 +435,8 @@ export default class SchemasLayout extends React.Component {
               schemas={ this.state.schemaList }
               currentProject={ this.state.currentProject }
               updateSchemas={ this.updateSchemas }
+              setSchemaId={ this.setSchemaId }
+              handleSchemaChange={ this.handleSchemaChange }
             />
 
           </Col>

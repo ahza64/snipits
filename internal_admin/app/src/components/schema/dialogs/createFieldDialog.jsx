@@ -60,7 +60,15 @@ export default class CreateFieldDialog extends React.Component {
       status: true,
       createdAt: Date.now()
     };
+
     this.props.onClose(newField);
+    this.setState({
+      name: '',
+      type: '',
+      required: false,
+      schemaId: null,
+      schemaFields: []
+    });
   }
 
   handleTypeChanged(event, index, type) {
