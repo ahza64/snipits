@@ -63,7 +63,6 @@ export default class CreateSchema extends React.Component {
       if (err) {
         console.error('this err', err);
       } else {
-        console.log("result of adding a schema", res);
         const self = this;
         this.props.updateSchemas(true, () => {
           self.props.setSchemaId(res.body.id, (val) => {

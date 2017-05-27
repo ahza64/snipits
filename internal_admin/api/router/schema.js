@@ -14,18 +14,17 @@ const QowFields = require('dsp_shared/database/model/ingestion/tables').schema_f
 router.get(
   '/schemas/:projectId',
   function *() {
-    var companyId = this.req.user.companyId;
-    var projectId = this.params.projectId;
-    var self = this;
+    const companyId = this.req.user.companyId;
+    const projectId = this.params.projectId;
+    const self = this;
     if (permissions.has(this.req.user, companyId) && projectId) {
-      var userSchemas = yield QowSchemas.findAll({
+      this.body = yield QowSchemas.findAll({
         where: {
           workProjectId: projectId,
           newest: true
         },
         raw: true
-      })
-      this.body = userSchemas;
+      });
     }
   }
 );
@@ -33,18 +32,17 @@ router.get(
 router.get(
   '/schemas/all',
   function *() {
-    var companyId = this.req.user.companyId;
-    var projectId = this.params.projectId;
-    var self = this;
+    const companyId = this.req.user.companyId;
+    const projectId = this.params.projectId;
+    const self = this;
     if (permissions.has(this.req.user, companyId) && projectId) {
-      var userSchemas = yield QowSchemas.findAll({
+      this.body = yield QowSchemas.findAll({
         where: {
           workProjectId: projectId,
           newest: true
         },
         raw: true
       });
-      this.body = userSchemas;
     }
   }
 );
@@ -53,22 +51,22 @@ router.get(
 router.post(
   '/schemas/:projectId',
   function *() {
-    var companyId = this.req.user.companyId;
-    var projectId = this.params.projectId;
-    var body = this.request.body;
-    var name = body.name;
-    var schemaId = body.id || null;
+    const companyId = this.req.user.companyId;
+    const projectId = this.params.projectId;
+    const body = this.request.body;
+    const name = body.name;
+    const schemaId = body.id || null;
     var result;
 
     if (permissions.has(this.req.user, companyId) && projectId) {
-      var targetSchema = yield QowSchemas.findOne({
+      const targetSchema = yield QowSchemas.findOne({
         where: {
           workProjectId: projectId,
           id: schemaId
         },
         raw: true
       });
-      var version = targetSchema ? targetSchema.version : 0;
+      const version = targetSchema ? targetSchema.version : 0;
 
       try {
         result = yield QowSchemas.create({
@@ -90,17 +88,17 @@ router.post(
 
 router.put('/schema', function *() {
   if (permissions.has(this.req.user, this.req.user.companyId)) {
-    var body = this.request.body;
-    var fields = body.fields;
-    var oldId = body.id;
+    const body = this.request.body;
+    const fields = body.fields;
+    const oldId = body.id;
 
     var olderSchema = yield QowSchemas.findOne({ where: { id: oldId } });
     yield QowSchemas.update({ newest: false }, { where: { id: oldId } });
     olderSchema = olderSchema.dataValues;
 
-    var workProjectId = olderSchema.workProjectId;
-    var name = olderSchema.name;
-    var version = olderSchema.version;
+    const workProjectId = olderSchema.workProjectId;
+    const name = olderSchema.name;
+    const version = olderSchema.version;
 
     var newSchema = {
       name: name,
@@ -130,33 +128,32 @@ router.put('/schema', function *() {
 
 // Get a user schema
 router.get('/schema/:schemaId', function *() {
-  var schemaId = this.params.schemaId;
+  const schemaId = this.params.schemaId;
   if (permissions.has(this.req.user, this.req.user.companyId) && schemaId) {
-    var schema = yield QowSchemas.findOne({ where: { id: schemaId } });
+    const schema = yield QowSchemas.findOne({ where: { id: schemaId } });
     this.body = schema.dataValues;
   }
 });
 
 // set !status of a schema
 router.delete('/schema/:schemaId', function *() {
-  var companyId = this.req.user.companyId;
-  var schemaId = this.params.schemaId;
+  const companyId = this.req.user.companyId;
+  const schemaId = this.params.schemaId;
   if (permissions.has(this.req.user, companyId) && schemaId) {
-    var update = yield QowSchemas.update({
+    this.body = yield QowSchemas.update({
       newest: false
     }, {
       where: { id: schemaId }
     });
-    this.body = update;
   }
 });
 
 // get a specific field
 router.get('/schemaField/:schemaId', function *() {
-  var companyId = this.req.user.companyId;
-  var schemaId = this.params.schemaId;
+  const companyId = this.req.user.companyId;
+  const schemaId = this.params.schemaId;
   if (permissions.has(this.req.user, companyId) && schemaId) {
-    var targetFields = yield QowFields.findAll({
+    const targetFields = yield QowFields.findAll({
       where: {
         schemaId: schemaId,
         status: true

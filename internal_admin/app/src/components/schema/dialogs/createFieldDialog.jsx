@@ -111,7 +111,7 @@ export default class CreateFieldDialog extends React.Component {
           hintText="Enter a Field Name"
           value={ this.state.name }
           floatingLabelText="Field Name"
-          onChange={ (event) => { this.handleNameChanged(event); } }
+          onChange={ event => this.handleNameChanged(event) }
         />
         <SelectField
           floatingLabelText="Data Type"
@@ -133,7 +133,9 @@ export default class CreateFieldDialog extends React.Component {
         <Checkbox
           label="Required Field?"
           defaultChecked={ false }
-          onCheck={ (event, isChecked) => { this.setState({ required: isChecked }); } }
+          onCheck={ (event, isChecked) => {
+            this.setState({ required: isChecked });
+          } }
         />
         <Snackbar
           open={ false }

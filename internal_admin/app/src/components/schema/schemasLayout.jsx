@@ -11,7 +11,7 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import EditIcon from 'material-ui/svg-icons/image/edit';
 import AddBoxIcon from 'material-ui/svg-icons/content/add-box';
 
-import { companyUrl, projectsUrl, schemaListUrl, schemaUrl, schemaFieldUrl } from '../../config';
+import { companyUrl, projectsUrl, schemaListUrl, schemaFieldUrl } from '../../config';
 import request from '../../services/request';
 import DefaultNavbar from '../navbar/defaultNavbar';
 import CreateSchemaDialog from './dialogs/createSchemaDialog';
@@ -42,16 +42,13 @@ export default class SchemasLayout extends React.Component {
     this.handleCompanySelectChanged = this.handleCompanySelectChanged.bind(this);
     this.getProjects = this.getProjects.bind(this);
     this.handleProjectSelectChanged = this.handleProjectSelectChanged.bind(this);
-    this.setCurrentProject = this.setCurrentProject.bind(this);
     this.setSchemaList = this.setSchemaList.bind(this);
     this.updateSchemas = this.updateSchemas.bind(this);
-    this.handleShowInactiveSchemas = this.handleShowInactiveSchemas.bind(this);
     this.setSchemaId = this.setSchemaId.bind(this);
     this.getSchemas = this.getSchemas.bind(this);
     this.handleSchemaChange = this.handleSchemaChange.bind(this);
     this.updateSchema = this.updateSchema.bind(this);
     this.renderSchemaEditDialog = this.renderSchemaEditDialog.bind(this);
-    this.handleEditViewSchema = this.handleEditViewSchema.bind(this);
     this.handleAddSchemaDialogOpen = this.handleAddSchemaDialogOpen.bind(this);
     this.handleAddSchemaDialogClose = this.handleAddSchemaDialogClose.bind(this);
 
@@ -110,7 +107,7 @@ export default class SchemasLayout extends React.Component {
   }
 
   getSchemas(callback) {
-    let url = schemaListUrl.replace(':projectId', this.state.currentProject);
+    const url = schemaListUrl.replace(':projectId', this.state.currentProject);
     request
     .get(url)
     .withCredentials()
@@ -118,7 +115,6 @@ export default class SchemasLayout extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        console.log("getSchemas res:", res);
         this.getSchema((resx) => {
           this.setSchemaFields(resx);
         });
@@ -159,24 +155,20 @@ export default class SchemasLayout extends React.Component {
     });
   }
 
-  setCurrentProject(projectId) {
-    this.setState({
-      currentProject: projectId,
-    });
-  }
-
   setSchemaFields(fields) {
     this.setState({
       schema: fields
     });
   }
 
-  updateSchemas(resetSchema, callback) {
-    console.log('updateSchemas');
-    this.getSchemas((res) => {
-      this.setSchemaList(res.body, resetSchema, callback);
+  setSchemaId(value) {
+    this.setState({
+      schemaId: value
+    }, () => {
+      this.handleSchemaChange(null, value);
     });
   }
+
 
   updateSchema(cb) {
     this.getSchema((res) => {
@@ -201,7 +193,6 @@ export default class SchemasLayout extends React.Component {
   }
 
   handleSchemaChange(event, value) {
-    console.log("changing to : ", value);
     this.setState({
       schemaId: value
     }, () => this.updateSchema());
@@ -215,35 +206,42 @@ export default class SchemasLayout extends React.Component {
     }, () => this.updateSchemas(true));
   }
 
-  handleCloseActionMenu(event) {
-    this.setState({
-      actionMenuOpen: false,
-      actionMenuTarget: null,
-    });
-  }
-
-  handleEditViewSchema(event, scheme) {
-    event.preventDefault();
-    this.setState({
-      schema: scheme
-    });
-  }
-
   handleAddSchemaDialogClose() {
     this.setState({
       createSchemaDialogOpen: false
     }, () => this.updateSchemas());
   }
 
-  handleAddSchemaDialogOpen(event) {
+  handleAddSchemaDialogOpen() {
     this.setState({
       createSchemaDialogOpen: true
     });
   }
 
-  handleShowInactiveSchemas(event, isChecked) {
+  openSchemaEdit() {
+    this.updateSchema((res) => {
+      this.setState({
+        schemaEditOpen: true
+      });
+    });
+  }
+
+  updateSchemas(resetSchema, callback) {
+    this.getSchemas((res) => {
+      this.setSchemaList(res.body, resetSchema, callback);
+    });
+  }
+
+  closeSchemaEdit(saved, res) {
+    if (saved) {
+      this.setState({
+        schemaId: res.id,
+      }, () => {
+        this.updateSchemas(false, () => this.updateSchema());
+      });
+    }
     this.setState({
-      showInactiveSchemas: isChecked
+      schemaEditOpen: false
     });
   }
 
@@ -344,37 +342,6 @@ export default class SchemasLayout extends React.Component {
     );
   }
 
-  openSchemaEdit(event) {
-    this.updateSchema((res) => {
-      this.setState({
-        schemaEditOpen: true
-      });
-    });
-  }
-
-  setSchemaId(value) {
-    console.log("setSchemaId", value);
-    this.setState({
-      schemaId: value
-    }, () => {
-      this.handleSchemaChange(null, value)
-    });
-  }
-
-  closeSchemaEdit(saved, res) {
-    if (saved) {
-      this.setState({
-        schemaId: res.id,
-      }, () => {
-        this.updateSchemas(false, () => this.updateSchema());
-      });
-    }
-
-    this.setState({
-      schemaEditOpen: false
-    });
-  }
-
   renderSchemaEditDialog() {
     if (this.state.schemaEditOpen) {
       return (
@@ -414,13 +381,13 @@ export default class SchemasLayout extends React.Component {
               label="Add Schema"
               labelPosition="after"
               disabled={ !this.state.currentProject }
-              onTouchTap={ (event) => { this.handleAddSchemaDialogOpen(event); } }
+              onTouchTap={ () => { this.handleAddSchemaDialogOpen(); } }
               icon={ <AddBoxIcon /> }
             />
             <br />
             <br />
             <RaisedButton
-              onClick={ (event) => this.openSchemaEdit(event) }
+              onClick={ () => this.openSchemaEdit() }
               name="SchemaEditor"
               label="Edit Schema"
               labelPosition="after"
