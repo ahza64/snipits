@@ -18,11 +18,13 @@ import CreateFieldDialog from './createFieldDialog';
 export default class SchemaEditDialog extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       schema: [],
       schemaId: null,
       createFieldDialogOpen: false
     };
+
     this.openAddFieldDialog = this.openAddFieldDialog.bind(this);
     this.closeAddFieldDialog = this.closeAddFieldDialog.bind(this);
   }
@@ -150,7 +152,7 @@ export default class SchemaEditDialog extends React.Component {
           <TableBody displayRowCheckbox={ false }>
             {
               this.state.schema
-              .sort((a, b) => { return a.id - b.id; })
+              .sort((a, b) => { return a.name > b.name; })
               .map((field, idx) => {
                 return (
                   <TableRow key={ idx }>

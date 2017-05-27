@@ -6,35 +6,26 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
-import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
 
 export default class CreateFieldDialog extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       name: '',
-      schemaId: null,
-      schemaFields: [],
-      snackBarOpen: 0,
-      createDisabled: true,
       required: false,
       type: '',
     };
+
     this.handleTypeChanged = this.handleTypeChanged.bind(this);
     this.validName = this.validName.bind(this);
     this.validate = this.validate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNameChanged = this.handleNameChanged.bind(this);
   }
-  componentWillMount() {
-    this.setState({
-      schemaId: this.props.schemaId,
-      schemaFields: this.props.schemaFields,
-    });
-  }
+
   validate() {
     if (this.validName() && this.state.type) {
       return true;
@@ -66,15 +57,11 @@ export default class CreateFieldDialog extends React.Component {
       name: '',
       type: '',
       required: false,
-      schemaId: null,
-      schemaFields: []
     });
   }
 
   handleTypeChanged(event, index, type) {
-    this.setState({
-      type: type
-    });
+    this.setState({ type: type });
   }
 
   render() {
@@ -85,6 +72,7 @@ export default class CreateFieldDialog extends React.Component {
         disabled={ !this.validate() }
         onClick={ this.handleSubmit }
       />,
+
       <FlatButton
         label="Cancel"
         default
@@ -101,6 +89,7 @@ export default class CreateFieldDialog extends React.Component {
       'GeoCoordinates',
       'JPEG',
     ];
+
     return (
       <Dialog
         title="Add New Schema Field"
@@ -137,12 +126,20 @@ export default class CreateFieldDialog extends React.Component {
             this.setState({ required: isChecked });
           } }
         />
-        <Snackbar
-          open={ false }
-          message="Error! Field name already exists."
-          autoHideDuration={ 5000 }
-        />
       </Dialog>
     );
   }
 }
+
+CreateFieldDialog.propTypes = {
+  name: React.PropTypes.string,
+  required: React.PropTypes.bool,
+  type: React.PropTypes.string,
+  onClose: React.PropTypes.func.isRequired,
+};
+
+CreateFieldDialog.defaultProps = {
+  name: '',
+  required: false,
+  type: '',
+};

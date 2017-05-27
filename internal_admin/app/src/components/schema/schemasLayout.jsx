@@ -18,8 +18,8 @@ import CreateSchemaDialog from './dialogs/createSchemaDialog';
 import SchemaEditDialog from './dialogs/schemaEditDialog';
 
 export default class SchemasLayout extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       companies: [],
@@ -92,18 +92,20 @@ export default class SchemasLayout extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        const currentProject = res.body.length ? res.body[0].id : null;
-        this.setState({
-          projects: res.body,
-          currentProject: currentProject
-        }, () => {
-          if (!res.body.length) {
-            this.setState({
-              schemaList: []
-            });
-          } else {
+        if (res.body.length) {
+          this.setState({
+            currentProject: res.body[0].id
+          }, () => {
             this.updateSchemas(true);
-          }
+          });
+        } else {
+          this.setState({
+            currentProject: null,
+            schemas: []
+          });
+        }
+        this.setState({
+          projects: res.body
         });
       }
     });
@@ -256,7 +258,9 @@ export default class SchemasLayout extends React.Component {
         onChange={ (event, index, value) => this.handleSchemaChange(event, value) }
       >
         {
-          this.state.schemaList.map((s, idx) => {
+          this.state.schemaList
+          .sort((a, b) => { return a.name > b.name; })
+          .map((s, idx) => {
             return (
               <MenuItem key={ idx } value={ s.id } primaryText={ s.name } />
             );
@@ -275,7 +279,9 @@ export default class SchemasLayout extends React.Component {
         onChange={ (event, index, value) => this.handleCompanySelectChanged(event, value) }
       >
         {
-          this.state.companies.map((company, idx) => {
+          this.state.companies
+          .sort((a, b) => { return a.name > b.name; })
+          .map((company, idx) => {
             return (
               <MenuItem key={ idx } value={ company.id } primaryText={ company.name } />
             );
@@ -295,15 +301,19 @@ export default class SchemasLayout extends React.Component {
         onChange={ (event, index, value) =>
           this.handleProjectSelectChanged(event, index, value) }
       >
-        { this.state.projects.map((project, idx) => {
-          return (
-            <MenuItem
-              key={ idx }
-              value={ project.id }
-              primaryText={ project.name }
-            />
-          );
-        })}
+        {
+          this.state.projects
+          .sort((a, b) => { return a.name > b.name; })
+          .map((project, idx) => {
+            return (
+              <MenuItem
+                key={ idx }
+                value={ project.id }
+                primaryText={ project.name }
+              />
+            );
+          })
+        }
       </SelectField>
     );
   }
@@ -420,3 +430,37 @@ export default class SchemasLayout extends React.Component {
     );
   }
 }
+
+SchemasLayout.propTypes = {
+  companies: React.PropTypes.array,
+  companyName: React.PropTypes.string,
+  companyId: React.PropTypes.number,
+
+  schemaList: React.PropTypes.array,
+  schema: React.PropTypes.array,
+  schemaId: React.PropTypes.number,
+  schemaEditOpen: React.PropTypes.bool,
+
+  projects: React.PropTypes.array,
+  currentProject: React.PropTypes.bool,
+
+  createSchemaDialogOpen: React.PropTypes.bool,
+  showInactiveSchemas: React.PropTypes.bool,
+};
+
+SchemasLayout.defaultProps = {
+  companies: [],
+  companyName: null,
+  companyId: null,
+
+  schemaList: [],
+  schema: [],
+  schemaId: null,
+  schemaEditOpen: false,
+
+  projects: [],
+  currentProject: null,
+
+  createSchemaDialogOpen: false,
+  showInactiveSchemas: true,
+};
