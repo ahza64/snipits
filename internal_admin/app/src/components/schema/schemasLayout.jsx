@@ -101,7 +101,7 @@ export default class SchemasLayout extends React.Component {
         } else {
           this.setState({
             currentProject: null,
-            schemas: []
+            schemaList: []
           });
         }
         this.setState({
@@ -150,9 +150,13 @@ export default class SchemasLayout extends React.Component {
       schemaList: list,
     }, () => {
       if (resetSchema) {
-        this.setState({
-          schemaId: this.state.schemaList[0].id
-        });
+        try {
+          this.setState({
+            schemaId: this.state.schemaList[0].id
+          });
+        } catch (e) {
+          console.error(e);
+        }
       }
       if (callback) {
         callback(this.state);
@@ -430,37 +434,3 @@ export default class SchemasLayout extends React.Component {
     );
   }
 }
-
-SchemasLayout.propTypes = {
-  companies: React.PropTypes.array,
-  companyName: React.PropTypes.string,
-  companyId: React.PropTypes.number,
-
-  schemaList: React.PropTypes.array,
-  schema: React.PropTypes.array,
-  schemaId: React.PropTypes.number,
-  schemaEditOpen: React.PropTypes.bool,
-
-  projects: React.PropTypes.array,
-  currentProject: React.PropTypes.bool,
-
-  createSchemaDialogOpen: React.PropTypes.bool,
-  showInactiveSchemas: React.PropTypes.bool,
-};
-
-SchemasLayout.defaultProps = {
-  companies: [],
-  companyName: null,
-  companyId: null,
-
-  schemaList: [],
-  schema: [],
-  schemaId: null,
-  schemaEditOpen: false,
-
-  projects: [],
-  currentProject: null,
-
-  createSchemaDialogOpen: false,
-  showInactiveSchemas: true,
-};

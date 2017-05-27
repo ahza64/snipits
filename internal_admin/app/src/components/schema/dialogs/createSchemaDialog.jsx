@@ -5,17 +5,15 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
-import request from '../../../services/request'
+import request from '../../../services/request';
 import { schemaListUrl } from '../../../config';
 
 export default class CreateSchema extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       token: '',
       snackbarOpen: false,
-      createDisable: true,
-      dialogOpen: false,
     };
 
     this.handleNameInput = this.handleNameInput.bind(this);
@@ -110,3 +108,12 @@ export default class CreateSchema extends React.Component {
     );
   }
 }
+
+CreateSchema.propTypes = {
+  open: React.PropTypes.bool.isRequired,
+  onClose: React.PropTypes.func.isRequired,
+  schemas: React.PropTypes.array.isRequired,
+  updateSchemas: React.PropTypes.func.isRequired,
+  setSchemaId: React.PropTypes.func.isRequired,
+  handleSchemaChange: React.PropTypes.func.isRequired
+};

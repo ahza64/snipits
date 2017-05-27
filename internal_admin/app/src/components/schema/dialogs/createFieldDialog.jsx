@@ -132,14 +132,6 @@ export default class CreateFieldDialog extends React.Component {
 }
 
 CreateFieldDialog.propTypes = {
-  name: React.PropTypes.string,
-  required: React.PropTypes.bool,
-  type: React.PropTypes.string,
+  open: React.PropTypes.bool.isRequired,
   onClose: React.PropTypes.func.isRequired,
-};
-
-CreateFieldDialog.defaultProps = {
-  name: '',
-  required: false,
-  type: '',
 };

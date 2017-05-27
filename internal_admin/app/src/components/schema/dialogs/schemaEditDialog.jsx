@@ -180,3 +180,10 @@ export default class SchemaEditDialog extends React.Component {
     );
   }
 }
+
+SchemaEditDialog.propTypes = {
+  onClose: React.PropTypes.func.isRequired,
+  open: React.PropTypes.bool.isRequired,
+  schema: React.PropTypes.array.isRequired,
+  schemaId: React.PropTypes.number.isRequired,
+};
