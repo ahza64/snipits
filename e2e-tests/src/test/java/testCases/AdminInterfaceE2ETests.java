@@ -74,7 +74,6 @@ public class AdminInterfaceE2ETests {
         boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
         Assert.assertTrue(verifyCount);
     }
-
     @Test(priority = 4, description = "Adding a new Ingestion Config")
     public void verifyAddNewIngestionConfig() throws MalformedURLException
     {
@@ -114,13 +113,11 @@ public class AdminInterfaceE2ETests {
         schemaPage.selectCompany(namePostFix);
         schemaPage.selectProject(namePostFix);
         int countOnBadgeBeforeAdding = schemaPage.getBadgeCount();
-        int countOnTableBeforeAdding = schemaPage.getEntriesInTable();
         schemaPage.addNewSchema(namePostFix);
         schemaPage.holdOnForACoupleOfSec();
-        schemaPage.verifyNewSchemaIsAdded(namePostFix);
+        schemaPage.verifySchema(namePostFix);
         int countOnBadgeAfterAdding = schemaPage.getBadgeCount();
-        int countOnTableAfterAdding = schemaPage.getEntriesInTable();
-        boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
+        boolean verifyCount = (countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1);
         Assert.assertTrue(verifyCount);
     }
 
@@ -225,7 +222,7 @@ public class AdminInterfaceE2ETests {
     }
 
     @Test(priority = 13, description = "Edit a taxonomy field name")
-    public void verifyEditTaxonomyFieldValue() throws MalformedURLException
+    public void verifyEditTaxonomy() throws MalformedURLException
     {
         dropDownMenu = taxonomyValuesPage.clickDropDownMenu();
         taxonomyPage = dropDownMenu.openTaxonomyPagePage();
@@ -241,7 +238,7 @@ public class AdminInterfaceE2ETests {
     }
 
     @Test(priority = 14, description = "Delete a taxonomy field name")
-    public void verifyDeleteTaxonomyFieldValue() throws MalformedURLException
+    public void verifyDeleteTaxonomy() throws MalformedURLException
     {
         int countOnBadgeBeforeDeleting = taxonomyPage.getBadgeCount();
         int countOnTableBeforeDeleting = taxonomyPage.getEntriesInTable();
@@ -254,6 +251,28 @@ public class AdminInterfaceE2ETests {
         boolean isDeleted = ((countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) &&
                 (countOnTableBeforeDeleting == countOnTableAfterDeleting + 1) && !verifyDeletion);
         Assert.assertTrue(isDeleted);
+    }
+
+    @Test(priority = 15, description = "Edit a Schema")
+    public void verifyEditSchema() throws MalformedURLException
+    {
+        dropDownMenu = taxonomyPage.clickDropDownMenu();
+        schemaPage = dropDownMenu.openSchemaPage();
+        schemaPage.selectCompany(namePostFix);
+        schemaPage.selectProject(namePostFix);
+        schemaPage.selectSchema(namePostFix);
+        schemaPage.openEditSchemaPopUp();
+        String dataTypeSelect = schemaPage.editSchema(namePostFix);
+        boolean verifyModuleTable = schemaPage.verifyFieldModuleTable(namePostFix, dataTypeSelect);
+        schemaPage.clickSaveButton();
+        boolean verifySchemaTable = schemaPage.verifyFieldSchemaTable(namePostFix, dataTypeSelect);
+        schemaPage.openEditSchemaPopUp();
+        schemaPage.deleteSchemaField(namePostFix, dataTypeSelect);
+        boolean verifyModuleTableAfterDelete = schemaPage.verifyFieldModuleTable(namePostFix, dataTypeSelect);
+        schemaPage.clickSaveButton();
+        boolean verifySchemaTableAfterDelete = schemaPage.verifyFieldSchemaTable(namePostFix, dataTypeSelect);
+        boolean isEdited = verifyModuleTable && verifySchemaTable && !verifyModuleTableAfterDelete && !verifySchemaTableAfterDelete;
+        Assert.assertTrue(isEdited);
     }
 
 }

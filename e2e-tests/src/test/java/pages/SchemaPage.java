@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.By;
 
 import java.net.MalformedURLException;
+import java.util.Random;
 
 import setup.WebAppPage;
 
@@ -14,8 +15,10 @@ public class SchemaPage extends WebAppPage {
 
     private String selectCompanyButton = ".//label[text()='Company']/parent::div/div/descendant::button";
     private String selectProjectButton = "//label[text()='Project']/parent::div/div/descendant::button";
+    private String selectSchemaButton = "//label[text()='Select a Schema']/parent::div/div/descendant::button";
     private String selectCompanyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String selectProjectDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
+    private String selectSchemaDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String addSchemaButton = ".//span[text()='Add Schema']";
     private String addSchemaFormCancelButton = ".//span[text()='Cancel']";
     private String addSchemaFormConfirmButton = ".//span[text()='Create Schema']";
@@ -23,6 +26,17 @@ public class SchemaPage extends WebAppPage {
     private String schemaTable = ".//*[@class='row']";
     private String badgeCount = ".//*[text()='Total Project Schemas Found']/div/span";
     private String dropDownButton = ".//*[@class='dropdown']/a";
+    private String editSchemaButton = ".//span[text()='Edit Schema']";
+    private String deleteSchemaButton = ".//span[text()='Delete Schema']";
+    private String saveSchemaButton = ".//span[text()='Save']";
+    private String cancelSchemaButton = ".//span[text()='Cancel']";
+    private String editAddFieldSchemaButton = ".//span[text()='Add Field']";
+    private String editDeleteFieldSchemaButton = ".//span[text()='delete']";
+    private String editAddFieldNameSchemaField = ".//div[text()='Enter a Field Name']/following-sibling::input";
+    private String editAddDataTypeSchemaButton = ".//label[text()='Data Type']/parent::div/descendant::button";
+    private String editAddDataTypeSchemaDropDown = ".//div[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 768px;']";
+    private String editCreateSchemaButton = ".//span[text()='Create']";
+    private String moduleTable = ".//h3[text()='Schema Editor']/parent::div/descendant::div[@style='height: inherit; overflow-x: hidden; overflow-y: auto;']/table";
 
     SchemaPage() throws MalformedURLException
     {
@@ -51,6 +65,11 @@ public class SchemaPage extends WebAppPage {
         selectEntity("Project", namePostFix, selectProjectButton, selectProjectDropDown);
     }
 
+    public void selectSchema(int namePostFix) throws MalformedURLException
+    {
+        selectEntity("Schema", namePostFix, selectSchemaButton, selectSchemaDropDown);
+    }
+
     public void addNewSchema(int namePostFix) throws MalformedURLException
     {
         clickOnElement(By.xpath(addSchemaButton));
@@ -61,40 +80,27 @@ public class SchemaPage extends WebAppPage {
         waitForElementToDisappear(By.xpath(addSchemaFormCancelButton));
     }
 
-    public boolean verifyNewSchemaIsAdded(int namePostFix)
+    public boolean verifySchema(int namePostFix) throws MalformedURLException
     {
-        boolean isNewSchemaAdded = false;
+        boolean isSchemaVerified = false;
 
-        if(isElementPresentAndDisplayedByLocator(By.xpath(schemaTable)))
+        if(isElementPresentAndDisplayedByLocator(By.xpath(selectSchemaButton)))
         {
-            int totalRowsInSchemaTable = driver.findElements(By.xpath(schemaTable + "/descendant::tr")).size();
-            LOGGER.info(String.valueOf(totalRowsInSchemaTable));
-            if(totalRowsInSchemaTable > 1)
+            clickOnElement(By.xpath(selectSchemaButton));
+            holdOnForASec();
+            if(isElementPresentAndDisplayedByLocator(By.xpath(selectSchemaDropDown)))
             {
-                String schemaNameDisplayed;
-                for (int i = 2; i < totalRowsInSchemaTable + 2; i++) {
-                    schemaNameDisplayed = driver.findElement(By.xpath(schemaTable + "/descendant::tr[" + i + "]/td[4]")).getText();
-                    if (schemaNameDisplayed.contentEquals("Config" + namePostFix)) {
-                        String companyName, projectName;
-                        companyName = driver.findElement(By.xpath(schemaTable + "/descendant::tr[" + i + "]/td[2]")).getText();
-                        projectName = driver.findElement(By.xpath(schemaTable + "/descendant::tr[" + i + "]/td[3]")).getText();
-                        LOGGER.info(companyName + " " + projectName);
-                        if (companyName.contentEquals("Company" + namePostFix) && projectName.contentEquals("Project" + namePostFix)) {
-                            LOGGER.info("Schema Added is Found");
-                            isNewSchemaAdded = true;
-                            break;
-                        }
-                    }
+                if(isElementPresent(By.xpath(selectSchemaDropDown + "/descendant::div[text()='Schema" + namePostFix + "']")))
+                {
+                    clickOnElement(By.xpath(selectSchemaDropDown + "/descendant::div[text()='Schema" + namePostFix + "']"));
+                    isSchemaVerified = true;
+                    LOGGER.info("Schema is Verified");
+                    holdOnForACoupleOfSec();
                 }
-            }
-            else
-            {
-                isNewSchemaAdded = false;
-                LOGGER.info("No Schema on Table is Found");
             }
         }
 
-        return isNewSchemaAdded;
+        return isSchemaVerified;
     }
 
     public int getBadgeCount()
@@ -106,5 +112,118 @@ public class SchemaPage extends WebAppPage {
     {
         clickOnElement(By.xpath(dropDownButton));
         return new DropDownMenu();
+    }
+
+    public void openEditSchemaPopUp() throws MalformedURLException
+    {
+        clickOnElement(By.xpath(editSchemaButton));
+        waitForVisible(By.xpath(saveSchemaButton));
+    }
+
+    public String editSchema(int namePostFix) throws MalformedURLException
+    {
+        clickOnElement(By.xpath(editAddFieldSchemaButton));
+        waitForVisible(By.xpath(cancelSchemaButton));
+        driver.findElement(By.xpath(editAddFieldNameSchemaField)).clear();
+        driver.findElement(By.xpath(editAddFieldNameSchemaField)).sendKeys("FieldNameSchema" + namePostFix);
+        clickOnElement(By.xpath(editAddDataTypeSchemaButton));
+        waitForVisible(By.xpath(editAddDataTypeSchemaDropDown));
+        Random rand = new Random();
+        int dataTypeToSelect = rand.nextInt(8) + 1;
+        String dataTypeSelect = driver.findElement(By.xpath(editAddDataTypeSchemaDropDown + "/div[" + dataTypeToSelect + "]")).getText();
+        clickOnElement(By.xpath(editAddDataTypeSchemaDropDown + "/div[" + dataTypeToSelect + "]"));
+        holdOnForASec();
+        clickOnElement(By.xpath(editCreateSchemaButton));
+        waitForElementToDisappear(By.xpath(editCreateSchemaButton));
+        return dataTypeSelect;
+    }
+
+    public boolean verifyFieldModuleTable(int namePostFix, String dataTypeSelect) throws MalformedURLException
+    {
+        boolean isSchemaVerified = false;
+
+        holdOnForACoupleOfSec();
+        if(isElementPresent(By.xpath(moduleTable)))
+        {
+            int totalFields = driver.findElements(By.xpath(moduleTable + "/descendant::tr")).size();
+             for(int i = 1; i <= totalFields; i++)
+            {
+                String fieldNameDisplayed, dataTypeDisplayed;
+                fieldNameDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[2]")).getText();
+                dataTypeDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[3]")).getText();
+                if(fieldNameDisplayed.contentEquals("FieldNameSchema" + namePostFix) &&
+                        dataTypeDisplayed.contentEquals(dataTypeSelect))
+                {
+                    isSchemaVerified = true;
+                    LOGGER.info("Field is found on Module Table");
+                    break;
+                }
+            }
+        }
+
+        return isSchemaVerified;
+    }
+
+    public void clickSaveButton()
+    {
+        clickOnElement(By.xpath(saveSchemaButton));
+    }
+
+    public boolean verifyFieldSchemaTable(int namePostFix, String dataTypeSelect) throws MalformedURLException
+    {
+        boolean isSchemaVerified = false;
+
+        holdOnForACoupleOfSec();
+        if(isElementPresent(By.xpath(schemaTable)))
+        {
+            int totalFields = driver.findElements(By.xpath(schemaTable + "/descendant::tr")).size();
+
+            if(totalFields > 1)
+            {
+                for (int i = 2; i < totalFields + 2; i++) {
+                    String fieldNameDisplayed, dataTypeDisplayed;
+                    fieldNameDisplayed = driver.findElement(By.xpath(schemaTable + "/descendant::tr[" + i + "]/td[2]")).getText();
+                    dataTypeDisplayed = driver.findElement(By.xpath(schemaTable + "/descendant::tr[" + i + "]/td[3]")).getText();
+                    if (fieldNameDisplayed.contentEquals("FieldNameSchema" + namePostFix) &&
+                            dataTypeDisplayed.contentEquals(dataTypeSelect)) {
+                        isSchemaVerified = true;
+                        LOGGER.info("Field is found on Schema Table");
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                LOGGER.info("No Schemas on Table is Found");
+            }
+        }
+
+        return isSchemaVerified;
+    }
+
+    public boolean deleteSchemaField(int namePostFix, String dataTypeSelect) throws MalformedURLException
+    {
+        boolean isFieldDeleted = false;
+        if(isElementPresent(By.xpath(moduleTable)))
+        {
+            int totalFields = driver.findElements(By.xpath(moduleTable + "/descendant::tr")).size();
+
+            for(int i=1; i<=totalFields; i++)
+            {
+                String fieldNameDisplayed, dataTypeDisplayed;
+                fieldNameDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[2]")).getText();
+                dataTypeDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[3]")).getText();
+                if(fieldNameDisplayed.contentEquals("FieldNameSchema" + namePostFix) &&
+                        dataTypeDisplayed.contentEquals(dataTypeSelect))
+                {
+                    isFieldDeleted = true;
+                    clickOnElement(By.xpath(moduleTable + "/descendant::tr[1]/descendant::button"));
+                    LOGGER.info("Field is deleted on Module Table");
+                    break;
+                }
+            }
+        }
+
+        return isFieldDeleted;
     }
 }
