@@ -51,7 +51,7 @@ public class AdminInterfaceE2ETests {
     public void verifyAddNewCompany() throws MalformedURLException
     {
         Random rand = new Random();
-        namePostFix = rand.nextInt(1000);
+        namePostFix = rand.nextInt(10000);
         companyPage.addNewCompany(namePostFix);
         companyPage.holdOnForACoupleOfSec();
         boolean isNewCompanyAddedFound = companyPage.verifyNewCompanyIsAdded(namePostFix);
@@ -187,7 +187,7 @@ public class AdminInterfaceE2ETests {
     public void verifyEditTaxonomyValue() throws MalformedURLException
     {
         Random rand = new Random();
-        editNamePostFix = rand.nextInt(1000);
+        editNamePostFix = rand.nextInt(10000);
         taxonomyValuesPage.editTaxonomyValue(editNamePostFix);
         boolean isTaxonomyValueEdited = taxonomyValuesPage.verifyTaxonomyValueInTable(namePostFix, editNamePostFix);
         Assert.assertTrue(isTaxonomyValueEdited);
@@ -239,4 +239,21 @@ public class AdminInterfaceE2ETests {
         boolean isTaxonomySaved = taxonomyPage.verifyTaxonomy(false, editNamePostFix);
         Assert.assertTrue(isTaxonomySaved);
     }
+
+    @Test(priority = 14, description = "Delete a taxonomy field name")
+    public void verifyDeleteTaxonomyFieldValue() throws MalformedURLException
+    {
+        int countOnBadgeBeforeDeleting = taxonomyPage.getBadgeCount();
+        int countOnTableBeforeDeleting = taxonomyPage.getEntriesInTable();
+        String deletedTaxonomyValue = taxonomyPage.deleteTaxonomyFieldName();
+        LOGGER.info(deletedTaxonomyValue);
+        taxonomyPage.holdOnForACoupleOfSec();
+        boolean verifyDeletion = taxonomyPage.verifyTaxonomy(true, editNamePostFix);
+        int countOnBadgeAfterDeleting = taxonomyPage.getBadgeCount();
+        int countOnTableAfterDeleting = taxonomyPage.getEntriesInTable();
+        boolean isDeleted = ((countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) &&
+                (countOnTableBeforeDeleting == countOnTableAfterDeleting + 1) && !verifyDeletion);
+        Assert.assertTrue(isDeleted);
+    }
+
 }
