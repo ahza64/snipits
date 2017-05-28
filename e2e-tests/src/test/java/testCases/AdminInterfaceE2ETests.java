@@ -275,4 +275,19 @@ public class AdminInterfaceE2ETests {
         Assert.assertTrue(isEdited);
     }
 
+
+    @Test(priority = 16, description = "Delete Schema")
+    public void verifyDeleteSchema() throws MalformedURLException
+    {
+        schemaPage.selectCompany(namePostFix);
+        schemaPage.selectProject(namePostFix);
+        int countOnBadgeBeforeDeleting = schemaPage.getBadgeCount();
+        schemaPage.openEditSchemaPopUp();
+        schemaPage.deleteSchema();
+        boolean verifyDeletion = schemaPage.verifySchema(namePostFix);
+        int countOnBadgeAfterDeleting = schemaPage.getBadgeCount();
+        boolean isDeleted = ((countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) && !verifyDeletion);
+        Assert.assertTrue(isDeleted);
+    }
+
 }
