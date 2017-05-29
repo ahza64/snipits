@@ -83,19 +83,23 @@ public class SchemaPage extends WebAppPage {
     public boolean verifySchema(int namePostFix) throws MalformedURLException
     {
         boolean isSchemaVerified = false;
+        String schemaSelected = driver.findElement(By.xpath("//label[text()='Select a Schema']/parent::div/div/descendant::button/parent::div/div[2]")).getText();
 
-        if(isElementPresentAndDisplayedByLocator(By.xpath(selectSchemaButton)))
+        if(!schemaSelected.isEmpty())
         {
-            clickOnElement(By.xpath(selectSchemaButton));
-            holdOnForASec();
-            if(isElementPresentAndDisplayedByLocator(By.xpath(selectSchemaDropDown)))
+            if(isElementPresentAndDisplayedByLocator(By.xpath(selectSchemaButton)))
             {
-                if(isElementPresent(By.xpath(selectSchemaDropDown + "/descendant::div[text()='Schema" + namePostFix + "']")))
+                clickOnElement(By.xpath(selectSchemaButton));
+                holdOnForASec();
+                if(isElementPresentAndDisplayedByLocator(By.xpath(selectSchemaDropDown)))
                 {
-                    clickOnElement(By.xpath(selectSchemaDropDown + "/descendant::div[text()='Schema" + namePostFix + "']"));
-                    isSchemaVerified = true;
-                    LOGGER.info("Schema is Verified");
-                    holdOnForACoupleOfSec();
+                    if(isElementPresent(By.xpath(selectSchemaDropDown + "/descendant::div[text()='Schema" + namePostFix + "']")))
+                    {
+                        clickOnElement(By.xpath(selectSchemaDropDown + "/descendant::div[text()='Schema" + namePostFix + "']"));
+                        isSchemaVerified = true;
+                        LOGGER.info("Schema is Verified");
+                        holdOnForACoupleOfSec();
+                    }
                 }
             }
         }

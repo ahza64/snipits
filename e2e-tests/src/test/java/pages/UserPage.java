@@ -62,43 +62,37 @@ public class UserPage extends WebAppPage {
         waitForElementToDisappear(By.xpath(addUserFormCancelButton));
     }
 
-    public boolean verifyNewUserIsAdded(int namePostFix)
+    public int verifyUser(int namePostFix)
     {
-        boolean isNewUserAdded = false;
-
+        int userIndex = 2;
         if(isElementPresentAndDisplayedByLocator(By.xpath(userTable)))
         {
             int totalRowsInUserTable = driver.findElements(By.xpath(userTable + "/descendant::tr")).size();
             LOGGER.info(String.valueOf(totalRowsInUserTable));
-            if(totalRowsInUserTable > 1)
+            if (totalRowsInUserTable > 1)
             {
                 String UserNameDisplayed;
 
-                for(int i=2; i<totalRowsInUserTable+2; i++)
+                for (; userIndex < totalRowsInUserTable + 2; userIndex++)
                 {
-                    UserNameDisplayed = driver.findElement(By.xpath(userTable + "/descendant::tr[" + i + "]/td[2]")).getText();
-                    if(UserNameDisplayed.contentEquals("FN" + namePostFix + " " + "LN" + namePostFix))
-                    {
+                    UserNameDisplayed = driver.findElement(By.xpath(userTable + "/descendant::tr[" + userIndex + "]/td[2]")).getText();
+                    if (UserNameDisplayed.contentEquals("FN" + namePostFix + " " + "LN" + namePostFix)) {
                         String companyName;
-                        companyName = driver.findElement(By.xpath(userTable + "/descendant::tr[" + i + "]/td[4]")).getText();
+                        companyName = driver.findElement(By.xpath(userTable + "/descendant::tr[" + userIndex + "]/td[4]")).getText();
                         LOGGER.info(companyName);
-                        if(companyName.contentEquals("Company" + namePostFix))
+                        if (companyName.contentEquals("Company" + namePostFix))
                         {
-                            LOGGER.info("User Added is Found");
-                            isNewUserAdded = true;
+                            LOGGER.info("User is Found");
                             break;
                         }
                     }
                 }
-            }
-            else
+            } else
             {
-                isNewUserAdded = false;
                 LOGGER.info("No User on Table is Found");
             }
         }
-
-        return isNewUserAdded;
+        return userIndex;
     }
 
     public int getBadgeCount()
@@ -110,5 +104,21 @@ public class UserPage extends WebAppPage {
     {
         clickOnElement(By.xpath(dropDownButton));
         return new DropDownMenu();
+    }
+
+    public void editUser(int namePostFix, int userToEdit) throws MalformedURLException
+    {
+        clickOnElement(By.xpath(".//tbody/tr[" + userToEdit + "] /td/descendant::span[text()='EDIT']"));
+        waitForAddUserFormToDisplay();
+        driver.findElement(By.xpath(addUserFormFirstNameField)).clear();
+        driver.findElement(By.xpath(addUserFormFirstNameField)).sendKeys("FN" + namePostFix);
+        driver.findElement(By.xpath(addUserFormSecondNameField)).clear();
+        driver.findElement(By.xpath(addUserFormSecondNameField)).sendKeys("LN" + namePostFix);
+        driver.findElement(By.xpath(addUserFormEmailField)).clear();
+        driver.findElement(By.xpath(addUserFormEmailField)).sendKeys("user" + namePostFix + "@dispatchr.co");
+        holdOnForASec();
+        clickOnElement(By.xpath(addUserFormConfirmButton));
+        LOGGER.info("User is Edited");
+        waitForElementToDisappear(By.xpath(addUserFormCancelButton));
     }
 }
