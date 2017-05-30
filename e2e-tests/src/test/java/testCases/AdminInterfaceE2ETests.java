@@ -335,4 +335,23 @@ public class AdminInterfaceE2ETests {
         boolean isDeleteUser = ((badgeNumberAfterDeletingUser == badgeNumberBeforeDeletingUser-1) && (isUserPresent == -1));
         Assert.assertTrue(isDeleteUser);
     }
+
+    @Test(priority = 19, description = "Delete a user")
+    public void verifyDeleteUser() throws MalformedURLException
+    {
+        int isUserPresent = 0;
+        int badgeNumberBeforeDeletingUser = userPage.getBadgeCount();
+        int userToEdit = userPage.verifyUser(editNamePostFix);
+        LOGGER.info(String.valueOf(userToEdit));
+        if(userToEdit != -1)
+        {
+            userPage.deleteUser(userToEdit);
+            userPage.holdOnForACoupleOfSec();
+            isUserPresent = userPage.verifyUser(editNamePostFix);
+            LOGGER.info(String.valueOf(isUserPresent));
+        }
+        int badgeNumberAfterDeletingUser = userPage.getBadgeCount();
+        boolean isDeleteUser = ((badgeNumberAfterDeletingUser == badgeNumberBeforeDeletingUser-1) && (isUserPresent == -1));
+        Assert.assertTrue(isDeleteUser);
+    }
 }

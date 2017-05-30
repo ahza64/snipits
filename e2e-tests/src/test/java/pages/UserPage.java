@@ -156,4 +156,12 @@ public class UserPage extends WebAppPage {
         clickOnElement(By.xpath(addUserFormConfirmButton));
         waitForElementToDisappear(By.xpath(addUserFormConfirmButton));
     }
+
+    public void deleteUser(int userToVerify) throws MalformedURLException
+    {
+        clickOnElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[9]"));
+        waitForAddUserFormToDisplay();
+        clickOnElement(By.xpath(addUserFormConfirmButton));
+        waitForElementToDisappear(By.xpath(addUserFormConfirmButton));
+    }
 }
