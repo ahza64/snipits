@@ -6,35 +6,26 @@ import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
-import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
 
 export default class CreateFieldDialog extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       name: '',
-      schemaId: null,
-      schemaFields: [],
-      snackBarOpen: 0,
-      createDisabled: true,
       required: false,
       type: '',
     };
+
     this.handleTypeChanged = this.handleTypeChanged.bind(this);
     this.validName = this.validName.bind(this);
     this.validate = this.validate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNameChanged = this.handleNameChanged.bind(this);
   }
-  componentWillMount() {
-    this.setState({
-      schemaId: this.props.schemaId,
-      schemaFields: this.props.schemaFields,
-    });
-  }
+
   validate() {
     if (this.validName() && this.state.type) {
       return true;
@@ -60,13 +51,17 @@ export default class CreateFieldDialog extends React.Component {
       status: true,
       createdAt: Date.now()
     };
+
     this.props.onClose(newField);
+    this.setState({
+      name: '',
+      type: '',
+      required: false,
+    });
   }
 
   handleTypeChanged(event, index, type) {
-    this.setState({
-      type: type
-    });
+    this.setState({ type: type });
   }
 
   render() {
@@ -77,10 +72,11 @@ export default class CreateFieldDialog extends React.Component {
         disabled={ !this.validate() }
         onClick={ this.handleSubmit }
       />,
+
       <FlatButton
         label="Cancel"
         default
-        onClick={ (event) => { this.props.onClose(false); } }
+        onClick={ () => this.props.onClose(false) }
       />,
     ];
     const dataTypes = [
@@ -93,6 +89,7 @@ export default class CreateFieldDialog extends React.Component {
       'GeoCoordinates',
       'JPEG',
     ];
+
     return (
       <Dialog
         title="Add New Schema Field"
@@ -103,7 +100,7 @@ export default class CreateFieldDialog extends React.Component {
           hintText="Enter a Field Name"
           value={ this.state.name }
           floatingLabelText="Field Name"
-          onChange={ (event) => { this.handleNameChanged(event); } }
+          onChange={ event => this.handleNameChanged(event) }
         />
         <SelectField
           floatingLabelText="Data Type"
@@ -125,14 +122,16 @@ export default class CreateFieldDialog extends React.Component {
         <Checkbox
           label="Required Field?"
           defaultChecked={ false }
-          onCheck={ (event, isChecked) => { this.setState({ required: isChecked }); } }
-        />
-        <Snackbar
-          open={ false }
-          message="Error! Field name already exists."
-          autoHideDuration={ 5000 }
+          onCheck={ (event, isChecked) => {
+            this.setState({ required: isChecked });
+          } }
         />
       </Dialog>
     );
   }
 }
+
+CreateFieldDialog.propTypes = {
+  open: React.PropTypes.bool.isRequired,
+  onClose: React.PropTypes.func.isRequired,
+};

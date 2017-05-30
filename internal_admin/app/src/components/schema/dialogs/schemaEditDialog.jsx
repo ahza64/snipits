@@ -18,11 +18,13 @@ import CreateFieldDialog from './createFieldDialog';
 export default class SchemaEditDialog extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       schema: [],
       schemaId: null,
       createFieldDialogOpen: false
     };
+
     this.openAddFieldDialog = this.openAddFieldDialog.bind(this);
     this.closeAddFieldDialog = this.closeAddFieldDialog.bind(this);
   }
@@ -30,17 +32,17 @@ export default class SchemaEditDialog extends React.Component {
   componentWillMount() {
     this.setState({
       schema: this.props.schema,
-      schemaId: this.props.schemaId
+      schemaId: this.props.schemaId,
     });
   }
 
   handleDeleteField(field) {
-    var news = _.filter(this.state.schema, (thing) => {
+    const remainingFields = _.filter(this.state.schema, (thing) => {
       return field.id !== thing.id;
     });
-    console.log("remaining Fields", news);
+    console.log("remaining Fields", remainingFields);
     this.setState({
-      schema: news
+      schema: remainingFields
     });
   }
 
@@ -77,9 +79,8 @@ export default class SchemaEditDialog extends React.Component {
     });
   }
 
-
   deleteSchema() {
-    let url = schemaUrl.replace(":schemaId", this.state.schemaId);
+    const url = schemaUrl.replace(":schemaId", this.state.schemaId);
     request
     .delete(url)
     .withCredentials()
@@ -96,7 +97,7 @@ export default class SchemaEditDialog extends React.Component {
   renderCreateFieldDialog() {
     return (
       <CreateFieldDialog
-        onClose={ (field) => this.closeAddFieldDialog(field) }
+        onClose={ (field) => { this.closeAddFieldDialog(field); } }
         open={ this.state.createFieldDialogOpen }
       />
     );
@@ -108,24 +109,24 @@ export default class SchemaEditDialog extends React.Component {
         label="Save"
         icon={ <SaveIcon /> }
         primary
-        onTouchTap={ (event) => { this.handleSave(); } }
+        onTouchTap={ () => this.handleSave() }
       />,
       <FlatButton
         label="Cancel"
         icon={ <CancelIcon /> }
         secondary
-        onTouchTap={ (event) => { this.props.onClose(false); } }
+        onTouchTap={ () => this.props.onClose(false) }
       />,
       <FlatButton
         label="Add Field"
         icon={ <AddCircleIcon /> }
         default
-        onTouchTap={ (event) => this.openAddFieldDialog(event) }
+        onTouchTap={ event => this.openAddFieldDialog(event) }
       />,
       <FlatButton
         label="Delete Schema"
         icon={ <DeleteForeverIcon /> }
-        onTouchTap={ (event) => this.deleteSchema() }
+        onTouchTap={ event => this.deleteSchema() }
       />,
     ];
 
@@ -136,7 +137,7 @@ export default class SchemaEditDialog extends React.Component {
         modal
         actions={ actions }
         title="Schema Editor"
-        >
+      >
         <Table selectable={ false }>
           <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
             <TableRow>
@@ -148,10 +149,10 @@ export default class SchemaEditDialog extends React.Component {
               <TableHeaderColumn>Delete </TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody displayRowCheckbox={ false } selectable={ true }>
+          <TableBody displayRowCheckbox={ false }>
             {
               this.state.schema
-              .sort((a, b) => { return a.id - b.id; })
+              .sort((a, b) => { return a.name > b.name; })
               .map((field, idx) => {
                 return (
                   <TableRow key={ idx }>
@@ -162,7 +163,7 @@ export default class SchemaEditDialog extends React.Component {
                     <TableRowColumn> { field.createdAt } </TableRowColumn>
                     <TableRowColumn>
                       <RaisedButton
-                        onTouchTap={ (event) => { this.handleDeleteField(field) } }
+                        onTouchTap={ event => this.handleDeleteField(field) }
                         label="delete"
                         labelPosition="after"
                         icon={ <DeleteIcon /> }
@@ -178,4 +179,11 @@ export default class SchemaEditDialog extends React.Component {
       </Dialog>
     );
   }
-  }
+}
+
+SchemaEditDialog.propTypes = {
+  onClose: React.PropTypes.func.isRequired,
+  open: React.PropTypes.bool.isRequired,
+  schema: React.PropTypes.array.isRequired,
+  schemaId: React.PropTypes.number.isRequired,
+};
