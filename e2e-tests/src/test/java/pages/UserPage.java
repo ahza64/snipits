@@ -65,26 +65,27 @@ public class UserPage extends WebAppPage {
     public int verifyUser(int namePostFix)
     {
         int userIndex = 2;
+        int userFoundIndex = -1;
+
         if(isElementPresentAndDisplayedByLocator(By.xpath(userTable)))
         {
             int totalRowsInUserTable = driver.findElements(By.xpath(userTable + "/descendant::tr")).size();
             LOGGER.info(String.valueOf(totalRowsInUserTable));
             if (totalRowsInUserTable > 1)
             {
-                String UserNameDisplayed;
+                String userNameDisplayed;
 
-                for (; userIndex < totalRowsInUserTable + 2; userIndex++)
+                for (; userIndex < totalRowsInUserTable + 1; userIndex++)
                 {
-                    UserNameDisplayed = driver.findElement(By.xpath(userTable + "/descendant::tr[" + userIndex + "]/td[2]")).getText();
-                    if (UserNameDisplayed.contentEquals("FN" + namePostFix + " " + "LN" + namePostFix)) {
+                    userNameDisplayed = driver.findElement(By.xpath(userTable + "/descendant::tr[" + userIndex + "]/td[2]")).getText();
+                    if (userNameDisplayed.contentEquals("FN" + namePostFix + " " + "LN" + namePostFix))
+                    {
                         String companyName;
                         companyName = driver.findElement(By.xpath(userTable + "/descendant::tr[" + userIndex + "]/td[4]")).getText();
                         LOGGER.info(companyName);
-                        if (companyName.contentEquals("Company" + namePostFix))
-                        {
-                            LOGGER.info("User is Found");
-                            break;
-                        }
+                        LOGGER.info("User is Found");
+                        userFoundIndex = userIndex - 1;
+                        break;
                     }
                 }
             } else
@@ -92,7 +93,7 @@ public class UserPage extends WebAppPage {
                 LOGGER.info("No User on Table is Found");
             }
         }
-        return userIndex;
+        return userFoundIndex;
     }
 
     public int getBadgeCount()
@@ -108,7 +109,7 @@ public class UserPage extends WebAppPage {
 
     public void editUser(int namePostFix, int userToEdit) throws MalformedURLException
     {
-        clickOnElement(By.xpath(".//tbody/tr[" + userToEdit + "] /td/descendant::span[text()='EDIT']"));
+        clickOnElement(By.xpath(".//tbody/tr[" + userToEdit + "]/td/descendant::span[text()='EDIT']"));
         waitForAddUserFormToDisplay();
         driver.findElement(By.xpath(addUserFormFirstNameField)).clear();
         driver.findElement(By.xpath(addUserFormFirstNameField)).sendKeys("FN" + namePostFix);
@@ -120,5 +121,29 @@ public class UserPage extends WebAppPage {
         clickOnElement(By.xpath(addUserFormConfirmButton));
         LOGGER.info("User is Edited");
         waitForElementToDisappear(By.xpath(addUserFormCancelButton));
+    }
+
+    public boolean getUserStatusFromTable(int userToVerify)
+    {
+        boolean isUserActive = false;
+        String userStatus = driver.findElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[6]")).getText();
+        if(userStatus.contentEquals("active"))
+            isUserActive = true;
+        return isUserActive;
+    }
+
+    public boolean getUserStatusFromCheckbox(int userToVerify)
+    {
+        boolean isUserActive = false;
+        String userStatus = driver.findElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[7]/div/input")).getAttribute("checked");
+        if(userStatus != null)
+            isUserActive = true;
+        return isUserActive;
+    }
+
+    public void toggleStatusButton(int userToVerify)
+    {
+        clickOnElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[7]/div/input"));
+        holdOnForASec();
     }
 }

@@ -57,7 +57,6 @@ public class AdminInterfaceE2ETests {
         boolean isNewCompanyAddedFound = companyPage.verifyNewCompanyIsAdded(namePostFix);
         Assert.assertTrue(isNewCompanyAddedFound);
     }
-
     @Test(priority = 3, description = "Adding a new project")
     public void verifyAddNewProject() throws MalformedURLException
     {
@@ -297,6 +296,24 @@ public class AdminInterfaceE2ETests {
         userPage = dropDownMenu.openUserPage();
         int userToEdit = userPage.verifyUser(namePostFix);
         userPage.editUser(editNamePostFix, userToEdit);
-        userPage.verifyUser(namePostFix);
+        userPage.holdOnForACoupleOfSec();
+        userPage.verifyUser(editNamePostFix);
+    }
+
+    @Test(priority = 18, description = "Activate/Deactivate a user")
+    public void verifyActivateDeactivateUser() throws MalformedURLException
+    {
+        int userToEdit = userPage.verifyUser(editNamePostFix);
+        userPage.toggleStatusButton(userToEdit);
+        boolean statusAfterDeactivatingFromTable = userPage.getUserStatusFromTable(userToEdit);
+        boolean statusAfterDeactivatingFromCheckbox = userPage.getUserStatusFromCheckbox(userToEdit);
+        
+        userPage.toggleStatusButton(userToEdit);
+        boolean statusAfterActivatingFromTable = userPage.getUserStatusFromTable(userToEdit);
+        boolean statusAfterActivatingFromCheckbox = userPage.getUserStatusFromCheckbox(userToEdit);
+
+        boolean isUserValid = statusAfterActivatingFromCheckbox == statusAfterActivatingFromTable &&
+                statusAfterDeactivatingFromCheckbox == statusAfterDeactivatingFromTable;
+        Assert.assertTrue(isUserValid);
     }
 }
