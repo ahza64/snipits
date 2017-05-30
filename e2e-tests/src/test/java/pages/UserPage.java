@@ -65,6 +65,8 @@ public class UserPage extends WebAppPage {
     public int verifyUser(int namePostFix)
     {
         int userIndex = 2;
+        int userFoundIndex = -1;
+
         if(isElementPresentAndDisplayedByLocator(By.xpath(userTable)))
         {
             int totalRowsInUserTable = driver.findElements(By.xpath(userTable + "/descendant::tr")).size();
@@ -76,16 +78,14 @@ public class UserPage extends WebAppPage {
                 for (; userIndex < totalRowsInUserTable + 1; userIndex++)
                 {
                     userNameDisplayed = driver.findElement(By.xpath(userTable + "/descendant::tr[" + userIndex + "]/td[2]")).getText();
-                    LOGGER.info(userIndex + " " + userNameDisplayed);
-                    if (userNameDisplayed.contentEquals("FN" + namePostFix + " " + "LN" + namePostFix)) {
+                    if (userNameDisplayed.contentEquals("FN" + namePostFix + " " + "LN" + namePostFix))
+                    {
                         String companyName;
                         companyName = driver.findElement(By.xpath(userTable + "/descendant::tr[" + userIndex + "]/td[4]")).getText();
                         LOGGER.info(companyName);
-                        if (companyName.contentEquals("Company" + namePostFix))
-                        {
-                            LOGGER.info("User is Found");
-                            break;
-                        }
+                        LOGGER.info("User is Found");
+                        userFoundIndex = userIndex - 1;
+                        break;
                     }
                 }
             } else
@@ -93,7 +93,7 @@ public class UserPage extends WebAppPage {
                 LOGGER.info("No User on Table is Found");
             }
         }
-        return userIndex - 1;
+        return userFoundIndex;
     }
 
     public int getBadgeCount()

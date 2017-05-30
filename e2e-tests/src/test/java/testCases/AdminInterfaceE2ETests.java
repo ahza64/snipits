@@ -295,7 +295,7 @@ public class AdminInterfaceE2ETests {
     {
         dropDownMenu = companyPage.clickDropDownMenu();
         userPage = dropDownMenu.openUserPage();
-        int userToEdit = userPage.verifyUser(809);
+        int userToEdit = userPage.verifyUser(namePostFix);
         userPage.editUser(editNamePostFix, userToEdit);
         userPage.holdOnForACoupleOfSec();
         userPage.verifyUser(editNamePostFix);
