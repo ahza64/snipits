@@ -293,7 +293,7 @@ public class AdminInterfaceE2ETests {
     @Test(priority = 17, description = "Edit User")
     public void verifyEditUser() throws MalformedURLException
     {
-        dropDownMenu = companyPage.clickDropDownMenu();
+        dropDownMenu = schemaPage.clickDropDownMenu();
         userPage = dropDownMenu.openUserPage();
         int userToEdit = userPage.verifyUser(namePostFix);
         userPage.editUser(editNamePostFix, userToEdit);
