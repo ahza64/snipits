@@ -534,6 +534,11 @@ public class WebAppPage
     {
         clickOnElement(By.xpath(buttonLocator));
         waitForVisible(By.xpath(dropDownLocator));
+        if(entityType.contentEquals("Company"))
+        {
+            holdOnForASec();
+            scrollToElement(driver.findElement(By.xpath(dropDownLocator + "/descendant::div[text()='" + entityType + namePostFix + "']")));
+        }
         holdOnForASec();
         clickOnElement(By.xpath(dropDownLocator + "/descendant::div[text()='" + entityType + namePostFix + "']"));
         LOGGER.info(entityType + " is Selected");

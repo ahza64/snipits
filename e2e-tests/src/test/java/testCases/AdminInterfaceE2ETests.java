@@ -100,7 +100,7 @@ public class AdminInterfaceE2ETests {
         int badgeNumberBeforeAddingUser = userPage.getBadgeCount();
         userPage.addNewUser(namePostFix);
         userPage.holdOnForACoupleOfSec();
-        userPage.verifyNewUserIsAdded(namePostFix);
+        userPage.verifyUser(namePostFix);
         int badgeNumberAfterAddingUser = userPage.getBadgeCount();
         Assert.assertEquals(badgeNumberAfterAddingUser, badgeNumberBeforeAddingUser+1);
     }
@@ -275,7 +275,6 @@ public class AdminInterfaceE2ETests {
         Assert.assertTrue(isEdited);
     }
 
-
     @Test(priority = 16, description = "Delete Schema")
     public void verifyDeleteSchema() throws MalformedURLException
     {
@@ -285,9 +284,19 @@ public class AdminInterfaceE2ETests {
         schemaPage.openEditSchemaPopUp();
         schemaPage.deleteSchema();
         boolean verifyDeletion = schemaPage.verifySchema(namePostFix);
+        schemaPage.holdOnForASec();
         int countOnBadgeAfterDeleting = schemaPage.getBadgeCount();
         boolean isDeleted = ((countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) && !verifyDeletion);
         Assert.assertTrue(isDeleted);
     }
 
+    @Test(priority = 17, description = "Edit User")
+    public void verifyEditUser() throws MalformedURLException
+    {
+        dropDownMenu = schemaPage.clickDropDownMenu();
+        userPage = dropDownMenu.openUserPage();
+        int userToEdit = userPage.verifyUser(namePostFix);
+        userPage.editUser(editNamePostFix, userToEdit);
+        userPage.verifyUser(namePostFix);
+    }
 }
