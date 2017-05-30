@@ -57,7 +57,6 @@ public class AdminInterfaceE2ETests {
         boolean isNewCompanyAddedFound = companyPage.verifyNewCompanyIsAdded(namePostFix);
         Assert.assertTrue(isNewCompanyAddedFound);
     }
-
     @Test(priority = 3, description = "Adding a new project")
     public void verifyAddNewProject() throws MalformedURLException
     {
@@ -95,7 +94,7 @@ public class AdminInterfaceE2ETests {
     @Test(priority = 5, description = "Adding a new User")
     public void verifyAddNewUser() throws MalformedURLException
     {
-        dropDownMenu = companyPage.clickDropDownMenu();
+        dropDownMenu = ingestionConfigPage.clickDropDownMenu();
         userPage = dropDownMenu.openUserPage();
         int badgeNumberBeforeAddingUser = userPage.getBadgeCount();
         userPage.addNewUser(namePostFix);
@@ -305,8 +304,16 @@ public class AdminInterfaceE2ETests {
     public void verifyActivateDeactivateUser() throws MalformedURLException
     {
         int userToEdit = userPage.verifyUser(editNamePostFix);
-        LOGGER.info(String.valueOf(userToEdit));
-        LOGGER.info(String.valueOf(userPage.getUserStatus(userToEdit)));
         userPage.toggleStatusButton(userToEdit);
+        boolean statusAfterDeactivatingFromTable = userPage.getUserStatusFromTable(userToEdit);
+        boolean statusAfterDeactivatingFromCheckbox = userPage.getUserStatusFromCheckbox(userToEdit);
+        
+        userPage.toggleStatusButton(userToEdit);
+        boolean statusAfterActivatingFromTable = userPage.getUserStatusFromTable(userToEdit);
+        boolean statusAfterActivatingFromCheckbox = userPage.getUserStatusFromCheckbox(userToEdit);
+
+        boolean isUserValid = statusAfterActivatingFromCheckbox == statusAfterActivatingFromTable &&
+                statusAfterDeactivatingFromCheckbox == statusAfterDeactivatingFromTable;
+        Assert.assertTrue(isUserValid);
     }
 }

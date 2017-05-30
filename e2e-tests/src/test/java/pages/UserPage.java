@@ -123,7 +123,7 @@ public class UserPage extends WebAppPage {
         waitForElementToDisappear(By.xpath(addUserFormCancelButton));
     }
 
-    public boolean getUserStatus(int userToVerify)
+    public boolean getUserStatusFromTable(int userToVerify)
     {
         boolean isUserActive = false;
         String userStatus = driver.findElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[6]")).getText();
@@ -132,14 +132,18 @@ public class UserPage extends WebAppPage {
         return isUserActive;
     }
 
+    public boolean getUserStatusFromCheckbox(int userToVerify)
+    {
+        boolean isUserActive = false;
+        String userStatus = driver.findElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[7]/div/input")).getAttribute("checked");
+        if(userStatus != null)
+            isUserActive = true;
+        return isUserActive;
+    }
+
     public void toggleStatusButton(int userToVerify)
     {
-        /*
-        TODO user status checkbox functionality
-         */
-        //checkStatus = driver.findElement(By.xpath(towerLayerCheckbox)).getAttribute("value");
-        LOGGER.info(String.valueOf(driver.findElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[7]/div/input")).getAttribute("value")));
         clickOnElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[7]/div/input"));
-        LOGGER.info(String.valueOf(driver.findElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[7]/div/input")).getAttribute("value")));
+        holdOnForASec();
     }
 }
