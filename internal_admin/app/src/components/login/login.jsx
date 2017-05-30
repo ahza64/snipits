@@ -41,7 +41,7 @@ export default class Login extends React.Component {
 
   handleLoginEmail(event) {
     this.setState({
-      email: event.target.value,
+      email: event.target.value.toLowerCase(),
       showMessage: false
     });
   }
