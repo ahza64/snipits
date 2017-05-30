@@ -95,7 +95,7 @@ public class AdminInterfaceE2ETests {
     @Test(priority = 5, description = "Adding a new User")
     public void verifyAddNewUser() throws MalformedURLException
     {
-        dropDownMenu = ingestionConfigPage.clickDropDownMenu();
+        dropDownMenu = companyPage.clickDropDownMenu();
         userPage = dropDownMenu.openUserPage();
         int badgeNumberBeforeAddingUser = userPage.getBadgeCount();
         userPage.addNewUser(namePostFix);
@@ -293,10 +293,20 @@ public class AdminInterfaceE2ETests {
     @Test(priority = 17, description = "Edit User")
     public void verifyEditUser() throws MalformedURLException
     {
-        dropDownMenu = schemaPage.clickDropDownMenu();
+        dropDownMenu = companyPage.clickDropDownMenu();
         userPage = dropDownMenu.openUserPage();
-        int userToEdit = userPage.verifyUser(namePostFix);
+        int userToEdit = userPage.verifyUser(809);
         userPage.editUser(editNamePostFix, userToEdit);
-        userPage.verifyUser(namePostFix);
+        userPage.holdOnForACoupleOfSec();
+        userPage.verifyUser(editNamePostFix);
+    }
+
+    @Test(priority = 18, description = "Activate/Deactivate a user")
+    public void verifyActivateDeactivateUser() throws MalformedURLException
+    {
+        int userToEdit = userPage.verifyUser(editNamePostFix);
+        LOGGER.info(String.valueOf(userToEdit));
+        LOGGER.info(String.valueOf(userPage.getUserStatus(userToEdit)));
+        userPage.toggleStatusButton(userToEdit);
     }
 }
