@@ -36,9 +36,9 @@ public class UserPage extends WebAppPage {
     {
         try {
             waitForVisible(By.xpath(addUserFormCancelButton));
-            LOGGER.info("Add User Form is displayed");
+            LOGGER.info("User Form is displayed");
         } catch (MalformedURLException e) {
-            LOGGER.info("Add User Form is not displayed");
+            LOGGER.info("User Form is not displayed");
         }
     }
 
@@ -62,6 +62,8 @@ public class UserPage extends WebAppPage {
         waitForElementToDisappear(By.xpath(addUserFormCancelButton));
     }
 
+    //if user found then return the index
+    //if user is not found, then return -1
     public int verifyUser(int namePostFix)
     {
         int userIndex = 2;
@@ -145,5 +147,13 @@ public class UserPage extends WebAppPage {
     {
         clickOnElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[7]/div/input"));
         holdOnForASec();
+    }
+
+    public void deleteUser(int userToVerify) throws MalformedURLException
+    {
+        clickOnElement(By.xpath(".//tbody/tr[" + userToVerify + "]/td[9]"));
+        waitForAddUserFormToDisplay();
+        clickOnElement(By.xpath(addUserFormConfirmButton));
+        waitForElementToDisappear(By.xpath(addUserFormConfirmButton));
     }
 }
