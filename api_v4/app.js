@@ -1,11 +1,14 @@
 const koa = require('koa');
 const logger = require('koa-logger');
 const mount = require('koa-mount');
+const requestId = require('koa-request-id');
 const cors = require('kcors');
 const co = require('co');
 const config = require('dsp_shared/config/config').get();
 const Schema = require('dsp_shared/database/model/schema');
 const router = require('./resource_router');
+const middleware = require('./middleware');
+const schemaRouter = require('./schema_router');
 const http = require('http');
 
 co(function *build_app() {
@@ -15,8 +18,10 @@ co(function *build_app() {
     allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true
   }));
-  app.use(mount('/api/v4', require('./schema_router')));
-  const schemas = yield Schema.find({ _api: "v4" });  
+  app.use(requestId());
+  app.use(middleware.envelope);
+  app.use(mount('/api/v4', schemaRouter));
+  const schemas = yield Schema.find({ _api: "v4" });
   for (let i = 0; i < schemas.length; i++) {
     console.log("SCHEMAS", schemas[i]);
     const resource = yield schemas[i].getResource();

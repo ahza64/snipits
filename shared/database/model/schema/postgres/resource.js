@@ -3,8 +3,8 @@
  */
 
 const co = require('co');
-const _ = require('underscore');
 const jsonpatch = require('fast-json-patch');
+const sequelize = require('sequelize');
 
 class PostgresResource {
 
@@ -31,10 +31,8 @@ class PostgresResource {
       if (Array.isArray(data)) {
         prepared = data.map(item => this.prepareData(item));
       } else {
-        prepared = _.omit(data, ['createdAt', 'updatedAt']);
+        prepared = Object.assign({}, data);
         prepared.id = prepared._id;
-        prepared.created = data.createdAt;
-        prepared.updated = data.updatedAt;
       }
     }
     return prepared;
@@ -187,7 +185,8 @@ class PostgresResource {
     const offset = options.offset || 0;
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
-    let order = options.order || "createdAt";
+    let order = options.order || "created";
+    const aggregate = options.aggregate;
 
     return co(function *list_gen() {
       const orderParams = [];
@@ -200,21 +199,45 @@ class PostgresResource {
         order = PostgresResource.getRealFieldName(order);
         orderParams.push([order, orderDirection]);
       }
-      const list = yield self.model.findAll({
-        offset: offset,
-        limit: limit,
-        where: PostgresResource.prepareFilters(filters, self.config, options.user),
-        order: orderParams,
-        raw: true
-      });
+      let list = [];
+      if (aggregate && (Array.isArray(aggregate) || (typeof aggregate === 'string'))) {
+        list = yield self.aggregatedList(filters, self.config, options.user, aggregate);
+      } else {
+        list = yield self.model.findAll({
+          offset: offset,
+          limit: limit,
+          where: PostgresResource.prepareFilters(filters, self.config, options.user),
+          order: orderParams,
+          raw: true
+        });
+      }
       return self.prepareData(list);
+    });
+  }
+
+  aggregatedList(filters, config, user, aggregate) {
+    const self = this;
+    return co(function *get_count() {
+      let list = null;
+      if (aggregate) {
+        const fields = Array.isArray(aggregate) ? aggregate : [aggregate];
+        list = yield self.model.findAll({
+          group: fields,
+          attributes: [].concat(fields, [[sequelize.fn('COUNT', sequelize.col('_id')), 'count']]),
+          where: PostgresResource.prepareFilters(filters, config, user),
+          raw: true
+        });
+        list = list.map((item) => {
+          return Object.assign({}, item, { count: parseInt(item.count, 10) });
+        });
+      }
+      return list;
     });
   }
 
   static getRealFieldName(field) {
     const fields = {
-      created: 'createdAt',
-      updated: 'updatedAt'
+      id: '_id'
     };
     let realField = field;
     if (field in fields) {
@@ -228,23 +251,43 @@ class PostgresResource {
     if (filters) {
       Object.keys(filters).forEach((filterField) => {
         const field = PostgresResource.getRealFieldName(filterField);
-        let value = filters[field];
-        let notEquals = false;
-        if (typeof value === 'string') {
-          if (value.startsWith('!')) {
-            notEquals = true;
-            value = value.substring(1);
-          }
-          if (field === '_deleted') {
-            value = filters[field].toLowerCase() === 'true';
-          }
-        }
-        if (notEquals) {
+        let value = filters[filterField];
+        if (Array.isArray(value)) {
           prepared[field] = {
-            $ne: value
+            $in: value
           };
+        } else if (typeof value === 'object') {
+          if (value.not) {
+            if (Array.isArray(value.not)) {
+              prepared[field] = {
+                $notIn: value.not
+              };
+            } else {
+              prepared[field] = {
+                $ne: value.not
+              };
+            }
+          } else if (value.regex) {
+            throw new Error('Regex filter is not acceptable for PostgreSQL resource');
+          }
         } else {
-          prepared[field] = value;
+          let notEquals = false;
+          if (typeof value === 'string') {
+            if (value.startsWith('!')) {
+              notEquals = true;
+              value = value.substring(1);
+            }
+            if (field === '_deleted') {
+              value = value.toLowerCase() === 'true';
+            }
+          }
+          if (notEquals) {
+            prepared[field] = {
+              $ne: value
+            };
+          } else {
+            prepared[field] = value;
+          }
         }
       });
     }
@@ -264,7 +307,8 @@ class PostgresResource {
   count(filters, user) {
     const self = this;
     return co(function *get_count() {
-      return yield self.model.count({ where: PostgresResource.prepareFilters(filters, self.config, user) });
+      const where = PostgresResource.prepareFilters(filters, self.config, user);
+      return yield self.model.count({ where: where });
     });
   }
 }

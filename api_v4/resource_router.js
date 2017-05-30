@@ -33,7 +33,6 @@ function createRouter(resource, _options) {
   const options = _options || {};
   const resource_name = options.name || resource.getName();
   const route = router();
-  const accepted_filters = options.accepted_filters || [];
 
   // remove underscores from url
   const res_url = `/${resource_name.replace(/_/g, '')}`;
@@ -48,63 +47,24 @@ function createRouter(resource, _options) {
 
 
   function processFilters(query) {
-    // check api query keys against accepted values
-    const valid_queries = ["offset", "length", "select", "order"].concat(accepted_filters);
-    const keys = Object.keys(query);
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      if (!_.contains(valid_queries, key)) {
-        throw new Error(`Bad Query Parameter: ${key}`);
+    const filter = Object.assign({}, query);
+    // remove the reserved query params from the filter
+    ['offset', 'length', 'limit', 'select', 'order', 'aggregate'].forEach((field) => {
+      if (filter[field]) {
+        delete filter[field];
       }
-    }
-
-    // filters
-    const filter = {};
-    for (let i = 0; i < accepted_filters.length; i++) {
-      const key = accepted_filters[i];
-      let value = query[key];
-      if (value !== undefined) {
-        if (typeof value === 'string') {
-          value = filter[key].split('|');
-        }
-        filter[key] = value;
-      }
-    }
-
+    });
     return filter;
   }
 
-
-  /**
-  *this function handles CRUD erors
-  * @param {Error} error_msg
-  * @param {App} application in use
-  * @param {Object} result
-  * @throws {Error} e
-  */
-  function handleCRUDError(e, context, result) {
-    if (e.name === 'ValidationError') {
-      const error_msgs = Object.keys(e.errors).map((key) => {
-        return e.errors[key].message;
-      });
-      context.throw(error_msgs.join('; '), 400);
-    } else if (e.name === 'MongoError' && e.code === 16755) {
-      console.error("Bad Geospaial Data", result);
-      context.throw("Bad Geospaial Data", 400);
-    } else if (e.name === 'MongoError' && e.code === 11000) {
-      context.throw(`ERROR: Duplicate key: ${e.toString()}`, 409);
-    } else if (e.message === "Can not update host") {
-      context.throw(e.message, 400);
-    } if (e.name === "CastError" && e.path === '_id') {
-      context.throw("Bad Resource ID", 400);
-    } else if (e.message.startsWith("Bad Query Parameter")) {
-      context.throw(e.message, 400);
-    } else if (e.message === "Resource Not Found") {
-      context.throw("Resource Not Found", 404);
-    } else {
-      console.warn('Unhandled Error', e.message);
-      context.throw(e);
+  function *exec_query(params, context) {
+    const list = yield resource.list(params);
+    if (context.dsp_env && (!params.aggregate)) {
+      context.dsp_env.total = yield resource.count(params.filter);
+      context.dsp_env.offset = params.offset;
+      context.dsp_env.length = list.length;
     }
+    return list;
   }
 
   /*
@@ -117,116 +77,116 @@ function createRouter(resource, _options) {
   */
   function *get_req(id, context) {
     let data;
-    try {
-      if (id === undefined || id === null) {
-        const query = context.request.query;
-        console.log("get", query);
-        let offset = query.offset || 0;
-        let len = query.length || query.limit;  // Need to manage this on the client we can't always get all of them
-        const select = query.select || excluded;
-        const order = query.order;
-
-        if (len) {
-          len = parseInt(len, 10);
-        }
-        if (offset) {
-          offset = parseInt(offset, 10);
-        }
-        
-        // const filter = processFilters(context.query);
-        filter = Object.assign({}, context.query);
-        // remove the reserved query params from the filter
-        ['offset', 'length', 'limit', 'select', 'order'].forEach((field) => {
-          if (filter[field]) {
-            delete filter[field];
-          }
-        });
-
-        data = yield resource.list({
-          offset: offset,
-          length: len,
-          filter: filter,
-          select: select,
-          order: order,
-          lean: true,
-          user: fakeUser
-        });
-        if (context.dsp_env) {
-          offset = offset || 0;
-          context.dsp_env.total = yield resource.count(filter);
-          context.dsp_env.offset = Math.min(offset, context.dsp_env.total);
-          context.dsp_env.length = data.length;
-        }
-      } else {
-        data = yield resource.read(id, context.query, fakeUser);
+    if (id === undefined || id === null) {
+      const query = context.request.query;
+      let offset = query.offset || 0;
+      let len = query.length || query.limit;  // Need to manage this on the client we can't always get all of them
+      const select = query.select || excluded;
+      const order = query.order;
+      let aggregate = query.aggregate;
+      if (aggregate && (aggregate.indexOf(',') >= 0)) {
+        aggregate = aggregate.split(',');
       }
-      if (data) {
-        context.body = data;
-      } else {
-        throw new Error("Resource Not Found");
+
+      if (len) {
+        len = parseInt(len, 10);
       }
-    } catch (e) {
-      handleCRUDError(e, context);
+      if (offset) {
+        offset = parseInt(offset, 10);
+      }
+      const filter = processFilters(context.query);
+      data = yield exec_query({
+        offset: offset,
+        length: len,
+        filter: filter,
+        select: select,
+        order: order,
+        aggregate: aggregate,
+        lean: true,
+        user: fakeUser
+      }, context);
+    } else {
+      data = yield resource.read(id, context.query, fakeUser);
+    }
+    if (data) {
+      context.body = data;
+    } else {
+      throw new Error("Resource Not Found");
     }
   }
-
 
   // HEAD request obtains headers for single resoruce
   route.head(`${res_url}/:id`, function *head_route() {
     yield get_req(this.params.id, this);
   });
 
-
-  // GET single resource
-  route.get(`${res_url}/:id`, function *() {
-    yield get_req(this.params.id, this);
+  // GET resources by id
+  route.get(`${res_url}/:id`, function *get_by_id() {
+    const id = this.params.id;
+    if ((typeof id === 'string') && (id.indexOf(',') !== -1)) {
+      const ids = id.split(',').map((val) => {
+        const num = parseInt(val, 10);
+        return isNaN(num) ? val : num;
+      });
+      this.body = yield resource.list({
+        filter: {
+          id: ids
+        }
+      });
+    } else {
+      yield get_req(this.params.id, this);
+    }
   });
 
   // HEAD list
-  route.head(res_url, function *() {
-    yield get_req(undefined, this);
-  });
-  // GET request for list resource
-  route.get(res_url, function *() {
+  route.head(res_url, function *head_route() {
     yield get_req(undefined, this);
   });
 
+  // GET request for list resource
+  route.get(res_url, function *get_list() {
+    yield get_req(undefined, this);
+  });
+
+  // POST request for list resource
+  route.post(`${res_url}/query`, function *post_route() {
+    const params = {};
+    const body = this.request.body;
+    if (body) {
+      params.filter = body.filters;
+      params.offset = body.offset || 0;
+      params.length = body.length || body.limit;
+      params.order = body.order;
+      params.aggregate = body.aggregate;
+    }
+    this.body = yield exec_query(params, this);
+  });
+
+  // GET request to get documents count
+  route.get(`${res_url}/count`, function *get_route() {
+    const filter = processFilters(this.query);
+    this.body = yield resource.count(filter);
+  });
 
   if (!read_only) {
     // PUT update request for specific resoruce
     route.put(`${res_url}/:id`, function *put_route() {
-      try {
-        this.body = yield resource.update(this.params.id, this.request.body, { set: true, user: fakeUser });
-      } catch (e) {
-        handleCRUDError(e, this, this.body);
-      }
+      this.body = yield resource.update(this.params.id, this.request.body, { set: true, user: fakeUser });
     });
 
     // PATCH request updates fields in a particular Object
     route.patch(`${res_url}/:id`, function *patch_route() {
-      try {
-        this.body = yield resource.patch(this.params.id, this.request.body, fakeUser);
-      } catch (e) {
-        handleCRUDError(e, this, this.body);
-      }
+      this.body = yield resource.patch(this.params.id, this.request.body, fakeUser);
     });
 
     // POST request to create resoruce
     route.post(`${res_url}`, function *post_route() {
-      try {
-        this.body = yield resource.create(this.request.body, fakeUser);
-      } catch (e) {
-        handleCRUDError(e, this, this.body);
-      }
+      this.body = yield resource.create(this.request.body, fakeUser);
     });
 
     // DELETE request to delete resoruce
     route.delete(`${res_url}/:id`, function *delete_route() {
-      try {
-        this.body = yield resource.delete(this.params.id, fakeUser);
-      } catch (e) {
-        handleCRUDError(e, this, this.body);
-      }
+      this.body = yield resource.delete(this.params.id, fakeUser);
     });
   }
 

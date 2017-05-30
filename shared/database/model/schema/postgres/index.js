@@ -9,7 +9,7 @@ const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const PostgresResource = require('./resource');
 
 function prepareSchema(schema) {
-  let prepared = _.omit(schema, ['createdAt', 'updatedAt', 'fields']);
+  let prepared = _.omit(schema, ['created', 'updated', 'fields']);
   prepared = Object.assign(prepared, { id: schema._id, _id: `${schema._id}` }, schema.fields);
   return prepared;
 }
@@ -53,6 +53,9 @@ class PostgresSchema {
         _config: { type: DataTypes.JSON },
         __v: { type: DataTypes.INTEGER },
         fields: { type: DataTypes.JSON }
+      }, {
+        createdAt: 'created',
+        updatedAt: 'updated'
       });
     });
 
@@ -147,7 +150,10 @@ class PostgresSchema {
             log.error(`Init table ${name} error: field ${field} type ${fieldType} is not allowed.`);
           }
         });
-        return sequelize.define(name, tableSchema);
+        return sequelize.define(name, tableSchema, {
+          createdAt: 'created',
+          updatedAt: 'updated'
+        });
       });
     } else {
       log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);

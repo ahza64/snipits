@@ -8,6 +8,7 @@ const log = require('dsp_config/config').get().getLogger(`[${__filename}]`);
 const PostgresSchema = require('./postgres');
 const EsSchema = require('./elasticsearch');
 const MongoSchema = require('./mongo');
+const CrudResource = require('./crud/resource');
 
 const SchmeaModels = {
   postgres: PostgresSchema,
@@ -60,7 +61,13 @@ function getSchema(config) {
             const fields = getFields(schema);
             result.getResource = () => {
               return co(function *get_resource() {
-                return yield schemas[storageName].getResource(schemaName, fields, storageName, schemaConfig);
+                let resource = null;
+                if (schemas[storageName]) {
+                  resource = yield schemas[storageName].getResource(schemaName, fields, storageName, schemaConfig);
+                } else if (storageName === 'crud') {
+                  resource = new CrudResource(schemaName, fields, schemaConfig);
+                }
+                return resource;
               });
             };
             return result;

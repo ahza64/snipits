@@ -5,6 +5,75 @@
 const co = require('co');
 const rp = require('request-promise');
 const jsonpatch = require('fast-json-patch');
+const _ = require('underscore');
+
+function prepareClusters(clusters) {
+  return clusters.map((cluster) => {
+    const item = {
+      _id: cluster.key,
+      type: 'cluster',
+      location: {
+        type: 'Point'
+      },
+      count: cluster.doc_count
+    };
+    if (cluster.lon && cluster.lon.value && cluster.lat && cluster.lat.value) {
+      item.location.coordinates = [cluster.lon.value, cluster.lat.value];
+    }
+    return item;
+  });
+}
+
+function prepareAggregations(bucket, field) {
+  let prepared = null;
+  if (bucket && field) {
+    if (bucket[field]) {
+      const buckets = bucket[field].buckets;
+      if (Array.isArray(buckets)) {
+        prepared = [];
+        if (field === 'clusters') {
+          prepared = prepareClusters(buckets);
+        } else {
+          buckets.forEach((subbucket) => {
+            const subfields = Object.keys(_.omit(subbucket, ['key', 'doc_count']));
+            if (subfields.length > 0) {
+              const subfield = subfields[0];
+              const subitems = prepareAggregations(subbucket, subfield);
+              subitems.forEach((subitem) => {
+                const item = {};
+                item[field] = subbucket.key;
+                prepared.push(Object.assign(item, subitem));
+              });
+            } else {
+              const item = {};
+              item[field] = subbucket.key;
+              item.count = subbucket.doc_count;
+              prepared.push(item);
+            }
+          });
+        }
+      }
+    }
+  } else if (bucket && (Object.keys(bucket).length > 0)) {
+    prepared = prepareAggregations(bucket, Object.keys(bucket)[0]);
+  }
+  return prepared;
+}
+
+function prepareExtentFilter(field, extent) {
+  const extentFilter = {
+    geo_bounding_box: {
+      type: 'indexed'
+    }
+  };
+  if (extent) {
+    extentFilter.geo_bounding_box[field] = {
+      top_left: [extent.xmin, extent.ymax],
+      bottom_right: [extent.xmax, extent.ymin]
+    };
+  }
+  return extentFilter;
+}
 
 class EsResource {
 
@@ -35,6 +104,7 @@ class EsResource {
         this.fieldsWithPrefix[`${name}_${field}`] = field;
       });
     }
+    this.fieldsWithoutPrefix.id = '_id';
     this.resourceConfig = resourceConfig;
   }
 
@@ -64,13 +134,17 @@ class EsResource {
 
   prepareData(data) {
     let prepared = null;
-    if (data && data.hits && data.hits.hits) {
-      const list = data.hits.hits;
-      if (Array.isArray(list)) {
-        prepared = list.map(item => this.prepareItem(item));
+    if (data) {
+      if (data.aggregations) {
+        prepared = prepareAggregations(data.aggregations);
+      } else if (data && data.hits && data.hits.hits) {
+        const list = data.hits.hits;
+        if (Array.isArray(list)) {
+          prepared = list.map(item => this.prepareItem(item));
+        }
+      } else if (data && data._source) {
+        prepared = this.prepareItem(data);
       }
-    } else if (data && data._source) {
-      prepared = this.prepareItem(data);
     }
     return this.excludePrefixes(prepared);
   }
@@ -118,10 +192,7 @@ class EsResource {
       }, self.includePrefixes(data));
       if (self.resourceConfig && self.resourceConfig.filters) {
         Object.keys(self.resourceConfig.filters).forEach((field) => {
-          let itemField = field;
-          if (field in self.fieldsWithoutPrefix) {
-            itemField = self.fieldsWithoutPrefix[field];
-          }
+          const itemField = this.getFieldNameWithPrefix(field);
           const value = user ? user[self.resourceConfig.filters[field]] : null;
           body[itemField] = value;
         });
@@ -137,11 +208,8 @@ class EsResource {
   includePrefixes(data) {
     const result = {};
     Object.keys(data).forEach((field) => {
-      if (field in this.fieldsWithoutPrefix) {
-        result[this.fieldsWithoutPrefix[field]] = data[field];
-      } else {
-        result[field] = data[field];
-      }
+      const fieldWithPrefix = this.getFieldNameWithPrefix(field);
+      result[fieldWithPrefix] = data[field];
     });
     return result;
   }
@@ -167,10 +235,7 @@ class EsResource {
     let valid = true;
     if (item && item._source && this.resourceConfig && this.resourceConfig.filters) {
       Object.keys(this.resourceConfig.filters).forEach((field) => {
-        let itemField = field;
-        if (field in this.fieldsWithoutPrefix) {
-          itemField = this.fieldsWithoutPrefix[field];
-        }
+        const itemField = this.getFieldNameWithPrefix(field);
         const value = user ? user[this.resourceConfig.filters[field]] : null;
         if (item._source[itemField] !== value) {
           valid = false;
@@ -322,6 +387,31 @@ class EsResource {
     });
   }
 
+  isAggregationRequired(filters, aggregate, user) {
+    const self = this;
+    return co(function *get_count() {
+      let required = false;
+      if (aggregate) {
+        if ((!Array.isArray(aggregate)) && (typeof aggregate === 'object')) {
+          const type = aggregate.type;
+          if ((typeof type === 'string') && (type.toLowerCase() === 'geohash')) {
+            if (aggregate.min) {
+              const total = yield self.count(filters, user);
+              if (total >= aggregate.min) {
+                required = true;
+              }
+            } else {
+              required = true;
+            }
+          }
+        } else {
+          required = true;
+        }
+      }
+      return required;
+    });
+  }
+
   /**
     * @param {Object} options
     * @param {Number} options.offset skip the first (offset) matches
@@ -329,6 +419,11 @@ class EsResource {
     * @param {Object} options.filters of requirements the object must meet
     * @param {String} options.select return only (select)ed fields
     * @param {String} options.order field to sort by, ascending. If prepended with '-' then descending
+    * @param {String|Array|Object} options.aggregate fields to group data
+    * @param {String} options.aggregate.type aggregation type ('geohash')
+    * @param {String} options.aggregate.field field name (may looks like 'location.coordinates')
+    * @param {Number} options.aggregate.precision precision of geohash
+    * @param {Number} options.aggregate.min do aggregation if object count more or equal than min value
     * @param {Boolean} options.lean retun a plain Javascript document rather than a MongooseDocument
     * @param {Object} options.user user's data
     * @return {Array} result the objects that agree with arguments list lists the results of a query
@@ -340,22 +435,30 @@ class EsResource {
     const limit = options.length || options.limit || 1000;
     const filters = options.filter;
     const sort = options.order || "created";
-
-    const params = [];
-    if (offset) {
-      params.push(`from=${offset}`);
-    }
-    if (limit) {
-      params.push(`size=${limit}`);
-    }
-
-    let queryParams = '';
-    if (params.length > 0) {
-      queryParams = `?${params.join('&')}`;
-    }
+    let aggregate = options.aggregate;
 
     return co(function *list_gen() {
-      const query = self.prepareQuery(filters, sort, options.user);
+      const params = [];
+      if (offset) {
+        params.push(`from=${offset}`);
+      }
+
+      if (!(yield self.isAggregationRequired(filters, aggregate, options.user))) {
+        aggregate = null;
+      }
+
+      if (aggregate) {
+        params.push(`size=0`);
+      } else if (limit) {
+        params.push(`size=${limit}`);
+      }
+
+      let queryParams = '';
+      if (params.length > 0) {
+        queryParams = `?${params.join('&')}`;
+      }
+
+      const query = self.prepareQuery(filters, sort, aggregate, options.user);
       let list = [];
       const response = yield self.doRequest('POST', `_search${queryParams}`, query);
       if (response) {
@@ -376,7 +479,75 @@ class EsResource {
     return filters;
   }
 
-  prepareQuery(filters, sort, user) {
+  prepareGeohashAggs(field, precision) {
+    const fieldName = this.getFieldNameWithPrefix(field);
+    return {
+      clusters: {
+        geohash_grid: {
+          field: fieldName,
+          precision: precision
+        },
+        aggs: {
+          lat: {
+            avg: {
+              script: `doc['${fieldName}'].lat`
+            }
+          },
+          lon: {
+            avg: {
+              script: `doc['${fieldName}'].lon`
+            }
+          }
+        }
+      }
+    };
+  }
+
+  prepareAggsQuery(aggregate, query) {
+    if (aggregate && query) {
+      if (Array.isArray(aggregate)) {
+        const fields = aggregate;
+        let subquery = query;
+        fields.forEach((field) => {
+          const fieldName = this.getFieldNameWithPrefix(field);
+          subquery.aggs = {};
+          subquery.aggs[field] = {
+            terms: {
+              field: fieldName
+            }
+          };
+          subquery = subquery.aggs[field];
+        });
+      } else if (typeof aggregate === 'object') {
+        const type = typeof aggregate.type === 'string' ? aggregate.type.toLowerCase() : null;
+        if ((type === 'geohash') && (aggregate.field)) {
+          const precision = aggregate.precision || 4;
+          query.aggs = this.prepareGeohashAggs(aggregate.field, precision);
+        }
+      }
+    }
+  }
+
+  getFieldNameWithPrefix(field) {
+    let fieldWithPrefix = field;
+    if (typeof field === 'string') {
+      if (field.indexOf('.') >= 0) {
+        // composite field name
+        const fields = field.split('.');
+        if (fields.length > 0) {
+          if (fields[0] in this.fieldsWithoutPrefix) {
+            fields[0] = this.fieldsWithoutPrefix[fields[0]];
+            fieldWithPrefix = fields.join('.');
+          }
+        }
+      } else if (field in this.fieldsWithoutPrefix) {
+        fieldWithPrefix = this.fieldsWithoutPrefix[field];
+      }
+    }
+    return fieldWithPrefix;
+  }
+
+  prepareQuery(filters, sort, aggregate, user) {
     const query = {
       query: {
         bool: {
@@ -385,6 +556,10 @@ class EsResource {
         }
       }
     };
+    if (aggregate) {
+      const fields = typeof aggregate === 'string' ? [aggregate] : aggregate;
+      this.prepareAggsQuery(fields, query);
+    }
     const allFilters = Object.assign({}, filters, this.getFiltersByUserData(user));
     Object.keys(allFilters).forEach((field) => {
       let notEqual = false;
@@ -399,12 +574,34 @@ class EsResource {
         }
       }
       const match = {};
-      if (field in this.fieldsWithoutPrefix) {
-        match[this.fieldsWithoutPrefix[field]] = value;
-      } else {
-        match[field] = value;
-      }
-      if (notEqual) {
+      const fieldName = this.getFieldNameWithPrefix(field);
+      match[fieldName] = value;
+      if (Array.isArray(value)) {
+        query.query.bool.must.push({
+          terms: match
+        });
+      } else if (typeof value === 'object') {
+        if (value.regex) {
+          const regexp = {};
+          regexp[fieldName] = value.regex;
+          query.query.bool.must.push({
+            regexp: regexp
+          });
+        } else if (value.extent) {
+          query.query.bool.must.push(prepareExtentFilter(fieldName, value.extent));
+        } else if (value.not) {
+          match[fieldName] = value.not;
+          if (Array.isArray(value.not)) {
+            query.query.bool.must_not.push({
+              terms: match
+            });
+          } else {
+            query.query.bool.must_not.push({
+              match: match
+            });
+          }
+        }
+      } else if (notEqual) {
         query.query.bool.must_not.push({
           match: match
         });
@@ -421,9 +618,7 @@ class EsResource {
         field = sort.substring(1);
         order = 'desc';
       }
-      if (field in this.fieldsWithoutPrefix) {
-        field = this.fieldsWithoutPrefix[field];
-      }
+      field = this.getFieldNameWithPrefix(field);
       query.sort = {};
       query.sort[field] = {
         order: order
@@ -438,7 +633,7 @@ class EsResource {
    */
   count(filters, user) {
     const self = this;
-    const query = self.prepareQuery({ _deleted: false }, null, user);
+    const query = self.prepareQuery(filters, null, null, user);
     return co(function *get_count() {
       let result = null;
       const response = yield self.doRequest('POST', '_search?size=0', query);
