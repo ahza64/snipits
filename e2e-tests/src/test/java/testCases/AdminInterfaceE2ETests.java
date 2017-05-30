@@ -91,7 +91,7 @@ public class AdminInterfaceE2ETests {
         Assert.assertTrue(verifyCount);
     }
 
-    @Test(priority = 5, description = "Adding a new User")
+/*    @Test(priority = 5, description = "Adding a new User")
     public void verifyAddNewUser() throws MalformedURLException
     {
         dropDownMenu = ingestionConfigPage.clickDropDownMenu();
@@ -353,5 +353,16 @@ public class AdminInterfaceE2ETests {
         int badgeNumberAfterDeletingUser = userPage.getBadgeCount();
         boolean isDeleteUser = ((badgeNumberAfterDeletingUser == badgeNumberBeforeDeletingUser-1) && (isUserPresent == -1));
         Assert.assertTrue(isDeleteUser);
+    }*/
+
+    @Test(priority = 20, description = "Edit Ingestion Configuration")
+    public void verifyEditIngestionConfig() throws MalformedURLException
+    {
+        Random rand = new Random();
+        editNamePostFix = rand.nextInt(10000);
+/*        dropDownMenu = userPage.clickDropDownMenu();
+        ingestionConfigPage = dropDownMenu.openIngestionConfigPage();*/
+        ingestionConfigPage.openEditConfigPopUp();
+        ingestionConfigPage.editConfig(editNamePostFix);
     }
 }
