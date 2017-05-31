@@ -307,7 +307,7 @@ public class AdminInterfaceE2ETests {
         userPage.toggleStatusButton(userToEdit);
         boolean statusAfterDeactivatingFromTable = userPage.getUserStatusFromTable(userToEdit);
         boolean statusAfterDeactivatingFromCheckbox = userPage.getUserStatusFromCheckbox(userToEdit);
-        
+
         userPage.toggleStatusButton(userToEdit);
         boolean statusAfterActivatingFromTable = userPage.getUserStatusFromTable(userToEdit);
         boolean statusAfterActivatingFromCheckbox = userPage.getUserStatusFromCheckbox(userToEdit);
@@ -334,5 +334,19 @@ public class AdminInterfaceE2ETests {
         int badgeNumberAfterDeletingUser = userPage.getBadgeCount();
         boolean isDeleteUser = ((badgeNumberAfterDeletingUser == badgeNumberBeforeDeletingUser-1) && (isUserPresent == -1));
         Assert.assertTrue(isDeleteUser);
+    }
+
+    @Test(priority = 20, description = "Edit Ingestion Configuration")
+    public void verifyEditIngestionConfig() throws MalformedURLException
+    {
+        dropDownMenu = userPage.clickDropDownMenu();
+        ingestionConfigPage = dropDownMenu.openIngestionConfigPage();
+        ingestionConfigPage.selectCompany(namePostFix);
+        ingestionConfigPage.selectProject(namePostFix);
+        ingestionConfigPage.openEditConfigPopUp();
+        ingestionConfigPage.editConfig(editNamePostFix);
+        ingestionConfigPage.openEditConfigPopUp();
+        boolean isConfigEdited = ingestionConfigPage.verifyEditConfig(editNamePostFix);
+        LOGGER.info(String.valueOf(isConfigEdited));
     }
 }
