@@ -341,7 +341,12 @@ public class AdminInterfaceE2ETests {
     {
         dropDownMenu = userPage.clickDropDownMenu();
         ingestionConfigPage = dropDownMenu.openIngestionConfigPage();
+        ingestionConfigPage.selectCompany(namePostFix);
+        ingestionConfigPage.selectProject(namePostFix);
         ingestionConfigPage.openEditConfigPopUp();
         ingestionConfigPage.editConfig(editNamePostFix);
+        ingestionConfigPage.openEditConfigPopUp();
+        boolean isConfigEdited = ingestionConfigPage.verifyEditConfig(editNamePostFix);
+        LOGGER.info(String.valueOf(isConfigEdited));
     }
 }

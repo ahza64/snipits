@@ -127,11 +127,38 @@ public class IngestionConfigPage extends WebAppPage {
         waitForVisible(By.xpath(configFormConfirmButton));
         driver.findElement(By.xpath(editConfigDescriptionField)).sendKeys("Description" + namePostFix);
         clickOnElement(By.xpath(editConfigStatusButton));
-        driver.findElement(By.xpath(editConfigWatcherEmailField)).sendKeys("watcher" + namePostFix + "@dispatchr.co");
-        holdOnForASec();
-        clickOnElement(By.xpath(editConfigWatcherEmailAddButton));
-        holdOnForASec();
-        clickOnElement(By.xpath(".//div[text()='watcher" + namePostFix + "@dispatchr.co']/parent::div/button"));
+        for(int i = 1; i < 3; i++)
+        {
+            driver.findElement(By.xpath(editConfigWatcherEmailField)).sendKeys("watcher" + i + "-" + namePostFix + "@dispatchr.co");
+            holdOnForASec();
+            clickOnElement(By.xpath(editConfigWatcherEmailAddButton));
+            holdOnForASec();
+        }
+        clickOnElement(By.xpath(".//div[text()='watcher2-" + namePostFix + "@dispatchr.co']/parent::div/button"));
         clickOnElement(By.xpath(configFormConfirmButton ));
+        waitForElementToDisappear(By.xpath(configFormConfirmButton));
+    }
+
+    private boolean getStatusFromCheckbox()
+    {
+        boolean isUserActive = false;
+        String userStatus = driver.findElement(By.xpath(editConfigStatusButton)).getAttribute("checked");
+        if(userStatus != null)
+            isUserActive = true;
+        return isUserActive;
+    }
+
+    public boolean verifyEditConfig(int namePostFix) throws MalformedURLException
+    {
+        clickOnElement(By.xpath(editConfigButton));
+        waitForVisible(By.xpath(configFormConfirmButton));
+        String descriptionDisplayed = driver.findElement(By.xpath(editConfigDescriptionField)).getAttribute("value");
+        LOGGER.info(descriptionDisplayed);
+        boolean isWatcherPresent = isElementPresent(By.xpath(".//div[text()='watcher1-" + namePostFix + "@dispatchr.co']"));
+        boolean isStatusDeactivated = getStatusFromCheckbox();
+        clickOnElement(By.xpath(configFormConfirmButton));
+        return descriptionDisplayed.contentEquals("Description" + namePostFix) &&
+                isWatcherPresent && !isStatusDeactivated;
+
     }
 }
