@@ -23,13 +23,13 @@ public class IngestionConfigPage extends WebAppPage {
     private String configTable = ".//*[@class='row']";
     private String badgeCount = ".//*[text()='Total Configuration Found']/div/span";
     private String dropDownButton = ".//*[@class='dropdown']/a";
-    private String editDeleteButton = ".//span[text()='Action Menu'][1]";
+    private String editDeleteButton = "span[text()='Action Menu']";
     private String editConfigButton = ".//div[text()='Settings']";
     private String editConfigWatcherEmailField = ".//div[text()='Enter Email']/parent::div/descendant::input";
     private String editConfigWatcherEmailAddButton = ".//span[text()='Add']/parent::div/parent::button";
     private String editConfigStatusButton = ".//td[text()='Active/Diactive']/parent::tr/descendant::input";
     private String editConfigDescriptionField = ".//div[text()='Enter Configuration Description']/parent::div/descendant::textarea[2]";
-    private String deleteTaxonomyButton = ".//div[text()='Delete']";
+    private String deleteConfigButton = ".//div[text()='Delete']";
 
     IngestionConfigPage() throws MalformedURLException
     {
@@ -68,7 +68,7 @@ public class IngestionConfigPage extends WebAppPage {
         waitForElementToDisappear(By.xpath(configFormCancelButton));
     }
 
-    public boolean verifyNewConfigIsAdded(int namePostFix)
+    public boolean verifyConfig(int namePostFix)
     {
         boolean isNewConfigAdded = false;
 
@@ -87,7 +87,7 @@ public class IngestionConfigPage extends WebAppPage {
                         projectName = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[3]")).getText();
                         LOGGER.info(companyName + " " + projectName);
                         if (companyName.contentEquals("Company" + namePostFix) && projectName.contentEquals("Project" + namePostFix)) {
-                            LOGGER.info("Ingestion Configuration Added is Found");
+                            LOGGER.info("Ingestion Configuration is Found");
                             isNewConfigAdded = true;
                             break;
                         }
@@ -115,9 +115,10 @@ public class IngestionConfigPage extends WebAppPage {
         return new DropDownMenu();
     }
 
-    public void openEditConfigPopUp() throws MalformedURLException
+    public void openEditConfigPopUp(int namePostFix) throws MalformedURLException
     {
-        clickOnElement(By.xpath(editDeleteButton));
+        holdOnForASec();
+        clickOnElement(By.xpath(".//td[text()='Company" + namePostFix + "']/parent::tr/descendant::" + editDeleteButton));
         waitForVisible(By.xpath(editConfigButton));
     }
 
@@ -126,6 +127,7 @@ public class IngestionConfigPage extends WebAppPage {
         clickOnElement(By.xpath(editConfigButton));
         waitForVisible(By.xpath(configFormConfirmButton));
         driver.findElement(By.xpath(editConfigDescriptionField)).sendKeys("Description" + namePostFix);
+        holdOnForASec();
         clickOnElement(By.xpath(editConfigStatusButton));
         for(int i = 1; i < 3; i++)
         {
@@ -141,11 +143,11 @@ public class IngestionConfigPage extends WebAppPage {
 
     private boolean getStatusFromCheckbox()
     {
-        boolean isUserActive = false;
+        boolean isConfigActive = false;
         String userStatus = driver.findElement(By.xpath(editConfigStatusButton)).getAttribute("checked");
         if(userStatus != null)
-            isUserActive = true;
-        return isUserActive;
+            isConfigActive = true;
+        return isConfigActive;
     }
 
     public boolean verifyEditConfig(int namePostFix) throws MalformedURLException
@@ -156,9 +158,19 @@ public class IngestionConfigPage extends WebAppPage {
         LOGGER.info(descriptionDisplayed);
         boolean isWatcherPresent = isElementPresent(By.xpath(".//div[text()='watcher1-" + namePostFix + "@dispatchr.co']"));
         boolean isStatusDeactivated = getStatusFromCheckbox();
+        holdOnForASec();
         clickOnElement(By.xpath(configFormConfirmButton));
         return descriptionDisplayed.contentEquals("Description" + namePostFix) &&
                 isWatcherPresent && !isStatusDeactivated;
 
+    }
+
+    public void deleteConfig() throws MalformedURLException
+    {
+        clickOnElement(By.xpath(deleteConfigButton));
+        waitForVisible(By.xpath(configFormConfirmButton));
+        holdOnForASec();
+        clickOnElement(By.xpath(configFormConfirmButton));
+        waitForElementToDisappear(By.xpath(configFormConfirmButton));
     }
 }

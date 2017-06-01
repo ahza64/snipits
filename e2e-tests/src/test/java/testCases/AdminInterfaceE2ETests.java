@@ -84,7 +84,7 @@ public class AdminInterfaceE2ETests {
         int countOnTableBeforeAdding = ingestionConfigPage.getEntriesInTable();
         ingestionConfigPage.addNewConfig(namePostFix);
         ingestionConfigPage.holdOnForACoupleOfSec();
-        ingestionConfigPage.verifyNewConfigIsAdded(namePostFix);
+        ingestionConfigPage.verifyConfig(namePostFix);
         int countOnBadgeAfterAdding = ingestionConfigPage.getBadgeCount();
         int countOnTableAfterAdding = projectPage.getEntriesInTable();
         boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
@@ -343,10 +343,25 @@ public class AdminInterfaceE2ETests {
         ingestionConfigPage = dropDownMenu.openIngestionConfigPage();
         ingestionConfigPage.selectCompany(namePostFix);
         ingestionConfigPage.selectProject(namePostFix);
-        ingestionConfigPage.openEditConfigPopUp();
-        ingestionConfigPage.editConfig(editNamePostFix);
-        ingestionConfigPage.openEditConfigPopUp();
-        boolean isConfigEdited = ingestionConfigPage.verifyEditConfig(editNamePostFix);
-        LOGGER.info(String.valueOf(isConfigEdited));
+        ingestionConfigPage.openEditConfigPopUp(namePostFix);
+        ingestionConfigPage.editConfig(namePostFix);
+        ingestionConfigPage.openEditConfigPopUp(namePostFix);
+        boolean isConfigEdited = ingestionConfigPage.verifyEditConfig(namePostFix);
+        Assert.assertTrue(isConfigEdited);
+    }
+
+    @Test(priority = 21, description = "Delete Ingestion Configuration")
+    public void verifyDeleteIngestionConfig() throws MalformedURLException
+    {
+        int countOnBadgeBeforeDeleting = ingestionConfigPage.getBadgeCount();
+        int countOnTableBeforeDeleting = ingestionConfigPage.getEntriesInTable();
+        ingestionConfigPage.openEditConfigPopUp(namePostFix);
+        ingestionConfigPage.deleteConfig();
+        boolean isConfigDeleted = ingestionConfigPage.verifyConfig(namePostFix);
+        int countOnBadgeAfterDeleting = ingestionConfigPage.getBadgeCount();
+        int countOnTableAfterDeleting = projectPage.getEntriesInTable();
+        boolean verifyConfig = !isConfigDeleted && (countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) &&
+                (countOnTableBeforeDeleting == countOnTableAfterDeleting + 1);
+        Assert.assertTrue(verifyConfig);
     }
 }
