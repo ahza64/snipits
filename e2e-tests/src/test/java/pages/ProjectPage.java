@@ -98,4 +98,31 @@ public class ProjectPage extends WebAppPage {
         clickOnElement(By.xpath(dropDownButton));
         return new DropDownMenu();
     }
+
+    public boolean getProjectStatusFromCheckbox(int namePostFix)
+    {
+        boolean isProjectActive = false;
+        String userStatus = driver.findElement(By.xpath(".//td[text()='Project" + namePostFix + "']/parent::tr/descendant::input")).getAttribute("checked");
+        if(userStatus != null)
+            isProjectActive = true;
+        return isProjectActive;
+    }
+
+    public boolean getStatusCheckBoxColor(int namePostFix)
+    {
+        boolean isProjectActive = false;
+        String projectStatus = driver.findElement(By.xpath(".//td[text()='Project" + namePostFix + "']/parent::tr/descendant::input/parent::div/div/div/div")).getAttribute("style");
+        projectStatus = projectStatus.substring(projectStatus.indexOf("rgb"), projectStatus.indexOf(");") + 1);
+        LOGGER.info(projectStatus);
+        if(projectStatus.contentEquals("rgba(0, 188, 212, 0.5)"))
+            isProjectActive = true;
+
+        return isProjectActive;
+    }
+
+    public void toggleStatusButton(int namePostFix)
+    {
+        clickOnElement(By.xpath(".//td[text()='Project" + namePostFix + "']/parent::tr/descendant::input"));
+        holdOnForACoupleOfSec();
+    }
 }

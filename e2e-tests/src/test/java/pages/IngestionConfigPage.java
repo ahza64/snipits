@@ -144,8 +144,8 @@ public class IngestionConfigPage extends WebAppPage {
     private boolean getStatusFromCheckbox()
     {
         boolean isConfigActive = false;
-        String userStatus = driver.findElement(By.xpath(editConfigStatusButton)).getAttribute("checked");
-        if(userStatus != null)
+        String configStatus = driver.findElement(By.xpath(editConfigStatusButton)).getAttribute("checked");
+        if(configStatus != null)
             isConfigActive = true;
         return isConfigActive;
     }
