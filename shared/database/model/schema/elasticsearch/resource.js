@@ -284,7 +284,10 @@ class EsResource {
       let item = yield self.doRequest('GET', id);
       if (self.checkItem(item, options.user)) {
         item = null;
-        const body = { doc: self.includePrefixes(data) };
+        const body = {
+          doc: self.includePrefixes(data),
+          doc_as_upsert: true
+        };
         body.doc.updated = Date.now();
         const response = yield self.doRequest('POST', `${id}/_update?refresh=true`, body);
         if (response) {

@@ -13,7 +13,20 @@ function createSchemaMapping(name, fields, prefixes) {
     string: { type: 'string' },
     number: { type: 'double' },
     date: { type: 'date' },
-    geojson: { type: 'object' }
+    geojson: {
+      properties: {
+        coordinates: {
+          type: 'geo_point',
+          lat_lon: true,
+          geohash: true,
+          geohash_prefix: true,
+          geohash_precision: 8
+        },
+        type: {
+          type: 'string'
+        }
+      }
+    }
   };
   Object.keys(fields).forEach((field) => {
     let fieldType = fields[field];
@@ -30,9 +43,7 @@ function createSchemaMapping(name, fields, prefixes) {
       console.error(`Init create resource ${name} error: field type ${fieldType} is not allowed.`);
     }
   });
-  const mapping = {};
-  mapping[name] = { properties: properties };
-  return mapping;
+  return { properties: properties };
 }
 
 function prepareSchemas(schemas) {
@@ -140,6 +151,24 @@ class EsSchema {
     };
   }
 
+  initResourceMapping(name, fields) {
+    const url = `http://${this.config.host}:${this.config.port}/${this.config.index}`;
+    const mapping = createSchemaMapping(name, fields, this.config.prefixes);
+    return co(function *find_schemas() {
+      try {
+        yield rp({
+          method: 'PUT',
+          uri: `${url}/${name}/_mapping?refresh=true`,
+          body: mapping,
+          json: true
+        });
+      } catch (e) {
+        console.error(e.message, e.stack);
+      }
+      return null;
+    });
+  }
+
   /**
    * @description Create new schema
    * @param {String} name schema's name
@@ -180,13 +209,7 @@ class EsSchema {
       if (response) {
         created = Object.assign({}, body, { _id: response._id });
         if ((!storage) || (storage === self.name)) {
-          const mapping = createSchemaMapping(name, fields);
-          yield rp({
-            method: 'PUT',
-            uri: `${url}/${name}/_mapping?refresh=true`,
-            body: mapping,
-            json: true
-          });
+          yield self.initResourceMapping(name, fields);
         }
       }
       return created;
@@ -203,13 +226,16 @@ class EsSchema {
    */
   getResource(name, fields, storage, config) {
     const self = this;
-    let resource = null;
-    if ((!storage) || (storage === self.name)) {
-      resource = new EsResource(self.config, name, fields, config);
-    } else {
-      log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
-    }
-    return Promise.resolve(resource);
+    return co(function *find_schemas() {
+      let resource = null;
+      if ((!storage) || (storage === self.name)) {
+        yield self.initResourceMapping(name, fields);
+        resource = new EsResource(self.config, name, fields, config);
+      } else {
+        log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);
+      }
+      return resource;
+    });
   }
 
   /**
