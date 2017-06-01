@@ -547,71 +547,85 @@ class EsResource {
     return fieldWithPrefix;
   }
 
-  prepareQuery(filters, sort, aggregate, user) {
-    const query = {
-      query: {
-        bool: {
-          must: [],
-          must_not: []
+  prepareTerms(bool, field, fieldValue) {
+    let notEqual = false;
+    let value = fieldValue;
+    if (typeof value === 'string') {
+      if (value.startsWith('!')) {
+        value = value.substring(1);
+        notEqual = true;
+      }
+      if (field === '_deleted') {
+        value = value.toLowerCase() === 'true';
+      }
+    }
+    const match = {};
+    const fieldName = this.getFieldNameWithPrefix(field);
+    match[fieldName] = value;
+    if (Array.isArray(value)) {
+      bool.must.push({
+        terms: match
+      });
+    } else if (typeof value === 'object') {
+      if (value.regex) {
+        const regexp = {};
+        regexp[fieldName] = value.regex;
+        bool.must.push({
+          regexp: regexp
+        });
+      } else if (value.extent) {
+        bool.must.push(prepareExtentFilter(fieldName, value.extent));
+      } else if (value.not) {
+        match[fieldName] = value.not;
+        if (Array.isArray(value.not)) {
+          bool.must_not.push({
+            terms: match
+          });
+        } else {
+          bool.must_not.push({
+            match: match
+          });
         }
+      }
+    } else if (notEqual) {
+      bool.must_not.push({
+        match: match
+      });
+    } else {
+      bool.must.push({
+        match: match
+      });
+    }
+  }
+
+  prepareOrBlock(bool, filterList) {
+    if (bool && Array.isArray(filterList) && (filterList.length > 0)) {
+      bool.should = filterList.map(filters => this.prepareBool(filters));
+      bool.minimum_should_match = 1;
+    }
+  }
+
+  prepareBool(filters, user) {
+    const query = {
+      bool: {
+        must: [],
+        must_not: []
       }
     };
-    if (aggregate) {
-      const fields = typeof aggregate === 'string' ? [aggregate] : aggregate;
-      this.prepareAggsQuery(fields, query);
-    }
     const allFilters = Object.assign({}, filters, this.getFiltersByUserData(user));
     Object.keys(allFilters).forEach((field) => {
-      let notEqual = false;
-      let value = allFilters[field];
-      if (typeof value === 'string') {
-        if (value.startsWith('!')) {
-          value = value.substring(1);
-          notEqual = true;
-        }
-        if (field === '_deleted') {
-          value = value.toLowerCase() === 'true';
-        }
-      }
-      const match = {};
-      const fieldName = this.getFieldNameWithPrefix(field);
-      match[fieldName] = value;
-      if (Array.isArray(value)) {
-        query.query.bool.must.push({
-          terms: match
-        });
-      } else if (typeof value === 'object') {
-        if (value.regex) {
-          const regexp = {};
-          regexp[fieldName] = value.regex;
-          query.query.bool.must.push({
-            regexp: regexp
-          });
-        } else if (value.extent) {
-          query.query.bool.must.push(prepareExtentFilter(fieldName, value.extent));
-        } else if (value.not) {
-          match[fieldName] = value.not;
-          if (Array.isArray(value.not)) {
-            query.query.bool.must_not.push({
-              terms: match
-            });
-          } else {
-            query.query.bool.must_not.push({
-              match: match
-            });
-          }
-        }
-      } else if (notEqual) {
-        query.query.bool.must_not.push({
-          match: match
-        });
+      if (field === '$or') {
+        this.prepareOrBlock(query.bool, allFilters[field]);
       } else {
-        query.query.bool.must.push({
-          match: match
-        });
+        this.prepareTerms(query.bool, field, allFilters[field]);
       }
     });
-    if (sort) {
+    return query;
+  }
+
+  prepareSort(sort) {
+    let sortBlock = null;
+    if (typeof sort === 'string') {
       let order = 'asc';
       let field = sort;
       if (sort.startsWith('-')) {
@@ -619,10 +633,25 @@ class EsResource {
         order = 'desc';
       }
       field = this.getFieldNameWithPrefix(field);
-      query.sort = {};
-      query.sort[field] = {
+      sortBlock = {};
+      sortBlock[field] = {
         order: order
       };
+    }
+    return sortBlock;
+  }
+
+  prepareQuery(filters, sort, aggregate, user) {
+    const query = {
+      query: this.prepareBool(filters, user)
+    };
+    const sortBlock = this.prepareSort(sort);
+    if (sortBlock) {
+      query.sort = sortBlock;
+    }
+    if (aggregate) {
+      const fields = typeof aggregate === 'string' ? [aggregate] : aggregate;
+      this.prepareAggsQuery(fields, query);
     }
     return query;
   }
