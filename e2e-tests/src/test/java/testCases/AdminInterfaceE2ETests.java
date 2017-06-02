@@ -67,7 +67,7 @@ public class AdminInterfaceE2ETests {
         int countOnTableBeforeAdding = projectPage.getEntriesInTable();
         projectPage.addNewProject(namePostFix);
         projectPage.holdOnForACoupleOfSec();
-        projectPage.verifyNewProjectIsAdded(namePostFix);
+        projectPage.verifyProject(namePostFix);
         int countOnBadgeAfterAdding = projectPage.getBadgeCount();
         int countOnTableAfterAdding = projectPage.getEntriesInTable();
         boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
@@ -368,7 +368,7 @@ public class AdminInterfaceE2ETests {
         Assert.assertTrue(verifyConfig);
     }
 
-    @Test(priority = 22, description = "Activate/Deactivate a Project")
+    @Test(priority = 22, description = "Activate/Deactivate a Work Project")
     public void verifyActivateDeactivateProject() throws MalformedURLException
     {
         dropDownMenu = ingestionConfigPage.clickDropDownMenu();
@@ -383,5 +383,21 @@ public class AdminInterfaceE2ETests {
                 !statusAfterDeactivatingFromCheckbox && !statusAfterDeactivatingFromCheckColor;
         Assert.assertTrue(verifyProject);
 
+    }
+
+    @Test(priority = 23, description = "Delete a Work Project")
+    public void verifyDeleteProject() throws MalformedURLException
+    {
+        int countOnBadgeBeforeDeleting = projectPage.getBadgeCount();
+        int countOnTableBeforeDeleting = projectPage.getEntriesInTable();
+        projectPage.openEditConfigPopUp(namePostFix);
+        projectPage.deleteProject();
+        projectPage.holdOnForACoupleOfSec();
+        boolean isProjectDeleted = projectPage.verifyProject(namePostFix);
+        int countOnBadgeAfterDeleting = projectPage.getBadgeCount();
+        int countOnTableAfterDeleting = projectPage.getEntriesInTable();
+        boolean verifyCount = (!isProjectDeleted && (countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) &&
+                (countOnTableBeforeDeleting == countOnTableAfterDeleting + 1));
+        Assert.assertTrue(verifyCount);
     }
 }
