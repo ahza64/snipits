@@ -118,7 +118,8 @@ function prepareQuery(filters, sort) {
     }
     query.sort = {};
     query.sort[field] = {
-      order: order
+      order: order,
+      unmapped_type: 'long'
     };
   }
   return query;

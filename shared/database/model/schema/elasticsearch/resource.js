@@ -638,7 +638,8 @@ class EsResource {
       field = this.getFieldNameWithPrefix(field);
       sortBlock = {};
       sortBlock[field] = {
-        order: order
+        order: order,
+        unmapped_type: 'long'
       };
     }
     return sortBlock;

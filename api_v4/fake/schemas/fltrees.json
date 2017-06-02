@@ -80,19 +80,13 @@
     "status" : {
         "required" : false,
         "editable" : false,
-        "visible" : false,
+        "visible" : true,
         "type" : "String"
     },
     "priority" : {
         "required" : false,
         "editable" : false,
-        "visible" : false,
-        "type" : "String"
-    },
-    "status" : {
-        "required" : false,
-        "editable" : false,
-        "visible" : false,
+        "visible" : true,
         "type" : "String"
     },
     "environment" : {
