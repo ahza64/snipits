@@ -1,0 +1,164 @@
+{
+    "inc_id" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "Number"
+    },
+    "pge_pmd_num" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "height" : {
+        "required" : false,
+        "editable" : true,
+        "visible" : true,
+        "type" : "Number"
+    },
+    "county" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "species" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "city" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "zipcode" : {
+        "required" : false,
+        "editable" : true,
+        "visible" : true,
+        "type" : "String"
+    },
+    "pge_detection_type" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "state" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "location" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "GeoJSON"
+    },
+    "pi_complete_time" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Date"
+    },
+    "type" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "status_code" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "status" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "priority" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "environment" : {
+        "required" : false,
+        "editable" : true,
+        "visible" : true,
+        "type" : "String"
+    },
+    "span_name" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "pi_start_time" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Date"
+    },
+    "qsi_id" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "tc_complete_time" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Date"
+    },
+    "streetName" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "gps_acq_date" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Date"
+    },
+    "pi_user_id" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "region" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "project" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "streetNumber" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "String"
+    },
+    "exported" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Date"
+    }
+}

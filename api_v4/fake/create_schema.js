@@ -7,6 +7,7 @@ require('dsp_shared/config/config').get({ log4js: false });
 
 const util = require('dsp_shared/lib/cmd_utils');
 const treesSchema = require('./schemas/trees.json');
+const fltreesSchema = require('./schemas/fltrees.json');
 const cufsSchema = require('./schemas/cufs.json');
 const projectsSchema = require('./schemas/projects.json');
 
@@ -15,6 +16,7 @@ const Schema = require('dsp_shared/database/model/schema');
 
 const schemas = {
   trees: treesSchema,
+  fltrees: fltreesSchema,
   cufs: cufsSchema,
   projects: projectsSchema,
 };

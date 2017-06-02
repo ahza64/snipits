@@ -103,3 +103,11 @@ $ node fake/create_records.js create_records {fake_schema_name} {number_of_recor
 ```
 
 > <b>NOTE</b>: Make sure that the application is restarted after a fake schema is created.
+
+### Copy data from one resource into another
+```
+$ cd services/api_v4
+$ node fake/copy_records.js copy_records {source_schema_name} {target_schema_name}
+```
+
+> <b>NOTE</b>: Data will be copied with original IDs. The script will not work for some cases (if target resource has autoincremented ID).
