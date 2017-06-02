@@ -15,12 +15,14 @@ public class ProjectPage extends WebAppPage {
     private String selectCompanyButton = ".//label[text()='Company']/parent::div/div/descendant::button";
     private String selectCompanyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String addProjectButton = ".//span[text()='Add Work Project']";
-    private String addProjectFormCancelButton = ".//span[text()='Cancel']";
-    private String addProjectFormConfirmButton = ".//span[text()='Confirm']";
-    private String addProjectNameField = ".//label[text()='Work Project Name']/following-sibling::input";
+    private String projectFormCancelButton = ".//span[text()='Cancel']";
+    private String projectFormConfirmButton = ".//span[text()='Confirm']";
+    private String projectNameField = ".//label[text()='Work Project Name']/following-sibling::input";
     private String projectTable = ".//*[@class='row']";
     private String badgeCount = ".//*[text()='Total Work Projects Found']/div/span";
     private String dropDownButton = ".//*[@class='dropdown']/a";
+    private String editDeleteButton = "span[text()='Action Menu']";
+    private String editDeleteProjectButton = ".//div[text()='Delete Work Project']";
 
     ProjectPage() throws MalformedURLException
     {
@@ -32,7 +34,7 @@ public class ProjectPage extends WebAppPage {
     private void waitForAddProjectFormToDisplay()
     {
         try {
-            waitForVisible(By.xpath(addProjectFormCancelButton));
+            waitForVisible(By.xpath(projectFormCancelButton));
             LOGGER.info("Add Project Form is displayed");
         } catch (MalformedURLException e) {
             LOGGER.info("Add Project Form is not displayed");
@@ -48,13 +50,13 @@ public class ProjectPage extends WebAppPage {
     {
         clickOnElement(By.xpath(addProjectButton));
         waitForAddProjectFormToDisplay();
-        driver.findElement(By.xpath(addProjectNameField)).sendKeys("Project" + namePostFix);
-        clickOnElement(By.xpath(addProjectFormConfirmButton));
+        driver.findElement(By.xpath(projectNameField)).sendKeys("Project" + namePostFix);
+        clickOnElement(By.xpath(projectFormConfirmButton));
         LOGGER.info("Project is Added");
-        waitForElementToDisappear(By.xpath(addProjectFormCancelButton));
+        waitForElementToDisappear(By.xpath(projectFormCancelButton));
     }
 
-    public boolean verifyNewProjectIsAdded(int namePostFix)
+    public boolean verifyProject(int namePostFix)
     {
         boolean isNewProjectAdded = false;
 
@@ -71,7 +73,7 @@ public class ProjectPage extends WebAppPage {
                     projectNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
                     if(projectNameDisplayed.contentEquals("Project" + namePostFix))
                     {
-                        LOGGER.info("Project Added is Found");
+                        LOGGER.info("Project is Found");
                         isNewProjectAdded = true;
                         break;
                     }
@@ -124,5 +126,21 @@ public class ProjectPage extends WebAppPage {
     {
         clickOnElement(By.xpath(".//td[text()='Project" + namePostFix + "']/parent::tr/descendant::input"));
         holdOnForACoupleOfSec();
+    }
+
+    public void openEditConfigPopUp(int namePostFix) throws MalformedURLException
+    {
+        holdOnForASec();
+        clickOnElement(By.xpath(".//td[text()='Project" + namePostFix + "']/parent::tr/descendant::" + editDeleteButton));
+        waitForVisible(By.xpath(editDeleteProjectButton));
+    }
+
+    public void deleteProject() throws MalformedURLException
+    {
+        clickOnElement(By.xpath(editDeleteProjectButton));
+        waitForVisible(By.xpath(projectFormConfirmButton));
+        holdOnForASec();
+        clickOnElement(By.xpath(projectFormConfirmButton));
+        waitForElementToDisappear(By.xpath(projectFormConfirmButton));
     }
 }
