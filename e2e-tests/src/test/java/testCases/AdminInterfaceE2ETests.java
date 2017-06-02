@@ -73,6 +73,7 @@ public class AdminInterfaceE2ETests {
         boolean verifyCount = ((countOnBadgeAfterAdding == countOnBadgeBeforeAdding + 1) && (countOnTableAfterAdding == countOnTableBeforeAdding + 1));
         Assert.assertTrue(verifyCount);
     }
+
     @Test(priority = 4, description = "Adding a new Ingestion Config")
     public void verifyAddNewIngestionConfig() throws MalformedURLException
     {
@@ -244,6 +245,8 @@ public class AdminInterfaceE2ETests {
         String deletedTaxonomyValue = taxonomyPage.deleteTaxonomyFieldName();
         LOGGER.info(deletedTaxonomyValue);
         taxonomyPage.holdOnForACoupleOfSec();
+        taxonomyPage.clickSaveChanges();
+        taxonomyPage.holdOnForACoupleOfSec();
         boolean verifyDeletion = taxonomyPage.verifyTaxonomy(true, editNamePostFix);
         int countOnBadgeAfterDeleting = taxonomyPage.getBadgeCount();
         int countOnTableAfterDeleting = taxonomyPage.getEntriesInTable();
@@ -363,5 +366,22 @@ public class AdminInterfaceE2ETests {
         boolean verifyConfig = !isConfigDeleted && (countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) &&
                 (countOnTableBeforeDeleting == countOnTableAfterDeleting + 1);
         Assert.assertTrue(verifyConfig);
+    }
+
+    @Test(priority = 22, description = "Activate/Deactivate a Project")
+    public void verifyActivateDeactivateProject() throws MalformedURLException
+    {
+        dropDownMenu = ingestionConfigPage.clickDropDownMenu();
+        projectPage = dropDownMenu.openProjectPage();
+        projectPage.selectCompany(namePostFix);
+        boolean statusBeforeDeactivatingFromCheckbox = projectPage.getProjectStatusFromCheckbox(namePostFix);
+        boolean statusBeforeDeactivatingFromCheckColor = projectPage.getStatusCheckBoxColor(namePostFix);
+        projectPage.toggleStatusButton(namePostFix);
+        boolean statusAfterDeactivatingFromCheckbox = projectPage.getProjectStatusFromCheckbox(namePostFix);
+        boolean statusAfterDeactivatingFromCheckColor = projectPage.getStatusCheckBoxColor(namePostFix);
+        boolean verifyProject = statusBeforeDeactivatingFromCheckbox && statusBeforeDeactivatingFromCheckColor &&
+                !statusAfterDeactivatingFromCheckbox && !statusAfterDeactivatingFromCheckColor;
+        Assert.assertTrue(verifyProject);
+
     }
 }
