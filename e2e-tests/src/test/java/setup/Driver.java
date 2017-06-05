@@ -75,9 +75,24 @@ public class Driver
         return prop.getProperty("adminPassword");
     }
 
-    public static String getWebAppURL()
+    public static String getIngestionInterfaceUsername()
     {
-        return prop.getProperty("webAppURL");
+        return prop.getProperty("ingestionInterfaceUsername");
+    }
+
+    public static String getingestionInterfacePassword()
+    {
+        return prop.getProperty("ingestionInterfacePassword");
+    }
+
+    public static String getInternalAdminAppURLAppURL()
+    {
+        return prop.getProperty("internalAdminAppURL");
+    }
+
+    public static String getIngestionInterfaceAppURL()
+    {
+        return prop.getProperty("ingestionInterfaceAppURL");
     }
 
     public static String getIPAddress() {

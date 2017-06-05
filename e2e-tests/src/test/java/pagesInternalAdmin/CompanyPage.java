@@ -1,8 +1,6 @@
-package pages;
+package pagesInternalAdmin;
 
-import org.apache.commons.logging.Log;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.net.MalformedURLException;
 

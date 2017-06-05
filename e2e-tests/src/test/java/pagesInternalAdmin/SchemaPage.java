@@ -1,4 +1,4 @@
-package pages;
+package pagesInternalAdmin;
 
 import org.openqa.selenium.By;
 
