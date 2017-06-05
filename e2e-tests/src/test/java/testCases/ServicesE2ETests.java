@@ -1,6 +1,5 @@
 package testCases;
 
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -8,21 +7,22 @@ import org.testng.annotations.Test;
 import java.net.MalformedURLException;
 import java.util.Random;
 
-import pages.CompanyPage;
-import pages.DropDownMenu;
-import pages.IngestionConfigPage;
-import pages.LoginPage;
-import pages.ProjectPage;
-import pages.SchemaPage;
-import pages.TaxonomyPage;
-import pages.TaxonomyValuesPage;
-import pages.UserPage;
+import pagesIngestionInterface.LoginPageII;
+import pagesIngestionInterface.UploadPage;
+import pagesInternalAdmin.CompanyPage;
+import pagesInternalAdmin.DropDownMenu;
+import pagesInternalAdmin.IngestionConfigPage;
+import pagesInternalAdmin.LoginPage;
+import pagesInternalAdmin.ProjectPage;
+import pagesInternalAdmin.SchemaPage;
+import pagesInternalAdmin.TaxonomyPage;
+import pagesInternalAdmin.TaxonomyValuesPage;
+import pagesInternalAdmin.UserPage;
 import setup.Driver;
-import setup.WebAppPage;
 
 import static setup.WebAppPage.LOGGER;
 
-public class AdminInterfaceE2ETests {
+public class ServicesE2ETests {
 
     private LoginPage loginPage;
     private CompanyPage companyPage;
@@ -33,17 +33,20 @@ public class AdminInterfaceE2ETests {
     private SchemaPage schemaPage;
     private TaxonomyPage taxonomyPage;
     private TaxonomyValuesPage taxonomyValuesPage;
+    private LoginPageII loginPageII;
+    private UploadPage uploadPage;
     private int namePostFix;
     private int editNamePostFix;
 
-
     @BeforeClass(description = "Launching Chrome Broswer")
-    public void LaunchingAdminInterfaceWebApp() {
+    public void LaunchingAdminInterfaceWebApp()
+    {
         loginPage = new LoginPage(true);
     }
 
     @Test(priority = 1, description = "Performing login on AdminInterface WebApp")
-    public void performLoginAdminInterfaceWebApp() throws MalformedURLException {
+    public void verifyLoginAdminInterfaceWebApp() throws MalformedURLException
+    {
         companyPage = loginPage.login(Driver.getAdminUserName(), Driver.getAdminPassword());
     }
 
@@ -399,5 +402,18 @@ public class AdminInterfaceE2ETests {
         boolean verifyCount = (!isProjectDeleted && (countOnBadgeBeforeDeleting == countOnBadgeAfterDeleting + 1) &&
                 (countOnTableBeforeDeleting == countOnTableAfterDeleting + 1));
         Assert.assertTrue(verifyCount);
+    }
+
+    @Test(priority = 24, description = "Logout from Internal Admin App")
+    public void verifyLogoutAdminInterfaceWebApp() throws MalformedURLException
+    {
+        projectPage.clickDropDownMenu();
+        loginPage = dropDownMenu.performLogout();
+    }
+
+    @Test(priority = 25, description = "Verify Ingestion Interface Login Page")
+    public void LaunchingIngestionInterfaceWebApp() throws MalformedURLException
+    {
+        loginPageII = new LoginPageII(true);
     }
 }

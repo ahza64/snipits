@@ -1,10 +1,8 @@
-package pages;
+package pagesInternalAdmin;
 
 import org.openqa.selenium.By;
 
 import java.net.MalformedURLException;
-
-import javax.xml.validation.Schema;
 
 import setup.WebAppPage;
 
@@ -64,5 +62,11 @@ public class DropDownMenu extends WebAppPage {
     {
         clickOnElement(By.xpath(taxonomyValuesDropDownButton));
         return new TaxonomyValuesPage();
+    }
+
+    public LoginPage performLogout() throws MalformedURLException
+    {
+        clickOnElement(By.xpath(logoutDropDownButton));
+        return new LoginPage(false);
     }
 }
