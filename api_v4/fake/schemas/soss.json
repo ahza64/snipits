@@ -1,0 +1,32 @@
+{
+    "name" : {
+        "required" : false,
+        "editable" : true,
+        "visible" : true,
+        "type" : "String"
+    },
+    "app_id" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : true,
+        "type" : "String"
+    },
+    "root" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Boolean"
+    },
+    "props" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Object"
+    },
+    "components" : {
+        "required" : false,
+        "editable" : false,
+        "visible" : false,
+        "type" : "Array"
+    }
+}

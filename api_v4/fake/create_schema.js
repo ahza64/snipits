@@ -10,6 +10,7 @@ const treesSchema = require('./schemas/trees.json');
 const fltreesSchema = require('./schemas/fltrees.json');
 const cufsSchema = require('./schemas/cufs.json');
 const projectsSchema = require('./schemas/projects.json');
+const sossSchema = require('./schemas/soss.json');
 
 util.connect([]);
 const Schema = require('dsp_shared/database/model/schema');
@@ -19,6 +20,7 @@ const schemas = {
   fltrees: fltreesSchema,
   cufs: cufsSchema,
   projects: projectsSchema,
+  soss: sossSchema
 };
 
 const default_schema_model = {
@@ -67,6 +69,9 @@ const schemaConfig = {
     filters: {
       companyId: 'companyId'
     }
+  },
+  non_strict: {
+    strict: false
   }
 };
 
