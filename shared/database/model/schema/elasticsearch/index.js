@@ -12,6 +12,7 @@ function createSchemaMapping(name, fields, prefixes) {
   const fieldTypes = {
     string: { type: 'string' },
     number: { type: 'double' },
+    boolean: { type: 'boolean' },
     date: { type: 'date' },
     geojson: {
       properties: {
@@ -26,7 +27,9 @@ function createSchemaMapping(name, fields, prefixes) {
           type: 'string'
         }
       }
-    }
+    },
+    object: { type: 'object', enabled: false },
+    array: { type: 'object', enabled: false }
   };
   Object.keys(fields).forEach((field) => {
     let fieldType = fields[field];

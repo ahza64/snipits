@@ -139,10 +139,13 @@ class PostgresSchema {
             fieldType = fieldType.toLowerCase();
           }
           const allowedTypes = {
+            boolean: DataTypes.BOOLEAN,
             string: DataTypes.STRING,
             number: DataTypes.DOUBLE,
             date: DataTypes.DATE,
-            geojson: DataTypes.JSON
+            geojson: DataTypes.JSON,
+            object: DataTypes.JSON,
+            array: DataTypes.JSON
           };
           if (fieldType in allowedTypes) {
             tableSchema[field] = { type: allowedTypes[fieldType] };

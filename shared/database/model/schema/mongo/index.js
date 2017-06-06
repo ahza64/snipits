@@ -31,6 +31,8 @@ const types = {
   Date: Date,
   Boolean: Boolean,
   GeoJSON: Object,
+  Array: [],
+  Object: Object,
   ForeignKey: mongoose.Schema.Types.ObjectId
 };
 
@@ -126,7 +128,7 @@ class MongoSchema {
     return mongoSchema;
   }
 
-  getModel(name, fields) {
+  getModel(name, fields, strict) {
     let model = null;
     try {
       model = this.connection.model(name);
@@ -139,7 +141,7 @@ class MongoSchema {
         }
       };
       const mongoSchema = this.getMongoSchema.bind(schemaConf)(fieldsNames);
-      const builtSchema = new mongoose.Schema(mongoSchema);
+      const builtSchema = new mongoose.Schema(mongoSchema, { strict: strict });
       builtSchema.plugin(autoIncrement.plugin, { model: name, field: 'id', startAt: 1 });
       model = this.connection.model(name, builtSchema);
     }
@@ -171,7 +173,8 @@ class MongoSchema {
     const self = this;
     let resource = null;
     if ((!storage) || (storage === self.name)) {
-      const model = self.getModel(name, fields);
+      const strict = config && config.strict;
+      const model = self.getModel(name, fields, strict);
       resource = new Resource(model, name, config);
     } else {
       log.error(`Unable to get resource ${name}. Incorrect storage name: ${storage}.`);

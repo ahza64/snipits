@@ -177,8 +177,10 @@ class Resource extends Emitter {
     const self = this;
     return co(function *create_gen() {
       let result = yield self.Model.create(record);
-      result = yield self.read(result._id, null, user); // apply
-      self.emit('created', result);
+      if (result) {
+        result = yield self.read(result._id, null, user);
+        self.emit('created', result);
+      }
       return result;
     });
   }
