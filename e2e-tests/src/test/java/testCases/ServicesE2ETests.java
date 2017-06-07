@@ -416,4 +416,12 @@ public class ServicesE2ETests {
     {
         loginPageII = new LoginPageII(true);
     }
+
+    @Test(priority = 26, description = "Performing login on Ingestion Interface WebApp")
+    public void verifyLoginIngestionInterfaceWebApp() throws MalformedURLException
+    {
+        uploadPage = loginPageII.login("user" + namePostFix + "@dispatchr.co", Driver.getingestionInterfacePassword());
+        uploadPage.selectProject(namePostFix);
+        uploadPage.selectConfig(namePostFix);
+    }
 }
