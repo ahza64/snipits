@@ -21,7 +21,7 @@ $ npm run install
 ```
 
 ## Configure Storages
-Storages configuration is located in the `schema` block of configuration file:
+Storages configuration is located in the `schema` block of configuration file in `conf.d/config.json`:
 * `storages` - named list of storages
 * `defaultStorage` - name of the storage that contains the schemas list
 
@@ -82,8 +82,8 @@ CRUD endpoint of resource
 $ cd services/api_v4
 $ node fake/create_schema.js create_schema {fake_schema_name} {storage_name} {config_name}
 ```
-* `storage_name` is not a necessary parameter, but it can be used for creating a resource in the selected storage
-* `config_name` is not a necessary parameter, but it can be used for filtering data based on user data. For example, if set 'test' the resource data will be filtered by companyId. Authontification is not implemented yet, but you can edit `fakeUser` in `resource_router.js` to check how filtering works.
+* `storage_name` is not a necessary parameter, but it can be used for creating a resource in the selected storage. If not specified, the `defaultStorage` option is used.
+* `config_name` is not a necessary parameter, but it can be used for filtering data based on user data. For example, if set 'test' the resource data will be filtered by companyId. Authentication is not implemented yet, but you can edit `fakeUser` in `resource_router.js` to check how filtering works.
 
 ### Create CRUD schema redirect
 
