@@ -69,10 +69,10 @@ $ node app.js
 ```
 ## General Endpoints
 
-### /api/v3/schemas
+### /api/v4/schemas
 List of all schemas
 
-### /api/v3/{resource_name}
+### /api/v4/{resource_name}
 CRUD endpoint of resource
 
 ## Fake Data Generation
@@ -111,3 +111,428 @@ $ node fake/copy_records.js copy_records {source_schema_name} {target_schema_nam
 ```
 
 > <b>NOTE</b>: Data will be copied with original IDs. The script will not work for some cases (if target resource has autoincremented ID).
+
+## Querying
+
+### Single Resource
+
+#### Create
+```
+POST /api/v4/trees
+```
+Request Body Example:
+```json
+{
+	"name": "...",
+	"type": "...",
+	"...": "..."
+}
+```
+Response Example:
+```json
+{
+	"envelope": {
+		"request_id": "0ed6f82d-21fd-4d8e-a375-5aeefdf7adf0",
+		"request_url": "/api/v4/trees",
+		"host": "localhost:3004",
+		"status": 200
+	},
+	"data": {
+		"_id": "5936367c69c6dc3d661018a0",
+		"name": "...",
+		"type": "...",
+		"...": "..."
+	}
+}
+```
+#### Read
+```
+GET /api/v4/trees/<id>
+```
+Response Example:
+```json
+{
+	"envelope": "...",
+	"data": {
+		"_id": "5936367c69c6dc3d661018a0",
+		"name": "...",
+		"type": "...",
+		"...": "..."
+	}
+}
+```
+
+#### Update
+```
+PATCH /api/v4/trees/<id>
+```
+Request Body Example:
+```json
+{
+	"name": "new_name"
+}
+```
+Response Example:
+```json
+{
+	"envelope": "...",
+	"data": {
+		"_id": "5936367c69c6dc3d661018a0",
+		"name": "new_name",
+		"type": "...",
+		"...": "..."
+	}
+}
+```
+
+#### Delete
+```
+DELETE /api/v4/trees/<id>
+```
+Response Example:
+```json
+{
+	"envelope": "...",
+	"data": {
+		"_id": "5936367c69c6dc3d661018a0",
+		"name": "new_name",
+		"type": "...",
+		"...": "...",
+		"_deleted": true
+	}
+}
+```
+> <b>NOTE</b>: This operation is not deleting documents. It just set `true` as `_deleted` field value.
+
+### Multiple Resources
+
+#### List
+
+```
+GET /api/v4/trees
+```
+Response Example:
+```json
+{
+	"envelope": {
+		"request_id": "80640f53-f928-4455-8ae1-749f43a8d4d9",
+		"request_url": "/api/v4/trees",
+		"host": "localhost:3004",
+		"status": 200,
+		"total": 62,
+		"offset": 0,
+		"length": 62
+	},
+	"data": [ "<array of objects>" ]
+}
+```
+
+#### List by IDs
+```
+GET /api/v4/trees/<id1>,<id2>,...
+```
+
+#### Filtered List
+```
+GET /api/v4/trees?name=John&city=London
+```
+If you want to get all records with city not equal 'London', request should look like:
+```
+GET /api/v4/trees?city=!London
+```
+
+#### Sorted List
+In ascending order:
+```
+GET /api/v4/trees?sort=London
+```
+In descending order:
+```
+GET /api/v4/trees?sort=!London
+```
+
+#### Limited list
+```
+GET /api/v4/trees?offset=20&limit=10
+```
+Response Example:
+```json
+{
+	"envelope": {
+		"request_id": "80640f53-f928-4455-8ae1-749f43a8d4d9",
+		"request_url": "/api/v4/trees",
+		"host": "localhost:3004",
+		"status": 200,
+		"total": 62,
+		"offset": 20,
+		"length": 10
+	},
+	"data": [ "<array of objects>" ]
+}
+```
+
+#### Aggregated List
+```
+GET /api/v4/trees?aggregate=type
+```
+Response Example:
+```json
+{
+	"envelope": "...",
+	"data": [
+		{
+			"type": "zone",
+			"count": 2822
+		}, {
+			"type": "orchard",
+			"count": 1071
+		}, {
+			"type": "tree",
+			"count": 267883
+		}
+	]
+}
+```
+
+#### Count
+```
+GET /api/v4/trees/count?status=left
+```
+Response Example:
+```json
+{
+	"envelope": "...",
+	"data": 400
+}
+```
+
+### Queries
+
+Also, it is possible to get filtered, sorted, limited or aggregated list using by `query` endpoint:
+```
+POST /api/v4/trees/query
+```
+
+#### Filters
+Request Body Example:
+```json
+{
+	"filters": {
+		"name": "John",
+		"city": "London"
+	}
+}
+```
+##### Filter by values set
+Request Body Example:
+```json
+{
+	"filters": {
+		"name": "John",
+		"city": ["London", "Amsterdam"]
+	}
+}
+```
+
+##### Filter by regex
+Request Body Example:
+```json
+{
+  "filters": {
+    "status": {
+      "regex": "[2-4].*"
+    }
+  }
+}
+```
+> <b>NOTE</b>: `regex` filter was implemented for Elasticsearch and MongoDB storages only.
+
+##### Filter by extent
+Request Body Example:
+```json
+{
+	"filters": {
+		"location.coordinates": {
+			"extent": {
+				"xmin": -123,
+				"ymin": 38,
+				"xmax": -122,
+				"ymax": 39
+			}
+		}
+	}
+}
+```
+> <b>NOTE</b>: `extent` filter was implemented for Elasticsearch storage only.
+
+#### Sort
+Request Body Example (ascending order):
+```json
+{
+	"filters": {},
+	"sort": "status"
+}
+```
+Request Body Example (descending order):
+```json
+{
+	"filters": {},
+	"sort": "!status"
+}
+```
+
+#### Offset / Limit
+Request Body Example:
+```json
+{
+	"filters": {},
+	"sort": "status",
+	"offset": 20,
+	"limit": 10
+}
+```
+
+#### Operators
+
+##### not
+Request Body Example:
+```json
+{
+	"filters": {
+		"name": { "not": "John" },
+		"city": { "not": ["London", "Amsterdam"] }
+	}
+}
+```
+
+##### $or
+Request Body Example:
+```json
+{
+	"filters": {
+		"type": "tree",
+		"$or": [{
+				"$or": [{
+						"division": "Sacramento"
+					}, {
+						"division": "Sierra"
+					}
+				]
+			}, {
+				"division": "Stockton"
+			}
+		]
+	}
+}
+```
+> <b>NOTE</b>: `$or` operator was implemented for Elasticsearch storage only.
+
+#### Aggregations
+
+##### Aggregate data by one field
+Request Body Example:
+```json
+{
+	"filters": {},
+	"aggregate": "type"
+}
+```
+Response Example:
+```json
+{
+	"envelope": "...",
+	"data": [
+		{
+			"type": "zone",
+			"count": 2822
+		}, {
+			"type": "orchard",
+			"count": 1071
+		}, {
+			"type": "tree",
+			"count": 267883
+		}
+	]
+}
+```
+
+##### Aggregate data by many fields
+Request Body Example:
+```json
+{
+	"filters": {},
+	"aggregate": ["type", "status"]
+}
+```
+Response Example:
+```json
+{
+	"envelope": "...",
+	"data": [
+		{
+			"type": "tree",
+			"status": "no_trim",
+			"count": 5852
+		}, {
+			"type": "tree",
+			"status": "ignore",
+			"count": 5562
+		}, {
+			"type": "orchard",
+			"status": "left",
+			"count": 349
+		}, "..."
+	]
+}
+```
+
+##### Aggregate data by geohash
+Request Body Example:
+```json
+{
+	"filters": {},
+	"aggregate": {
+		"type": "geohash",
+		"field": "location.coordinates",
+		"precision": 4,
+		"min": 2000
+	}
+}
+```
+* `precision` is geohash length of aggregated data
+* if resource count below `min` query will return full list
+
+Response Example:
+```json
+{
+	"envelope": "...",
+	"data": [
+		{
+			"_id": "9qcy",
+			"type": "cluster",
+			"location": {
+				"type": "Point",
+				"coordinates": [-121.01676094761918, 39.131577906985086]
+			},
+			"count": 12984
+		}, {
+			"_id": "9ppz",
+			"type": "cluster",
+			"location": {
+				"type": "Point",
+				"coordinates": [-123.95964898247634, 40.75205422886693]
+			},
+			"count": 11210
+		}, {
+			"_id": "9qfp",
+			"type": "cluster",
+			"location": {
+				"type": "Point",
+				"coordinates": [-120.7745157885716, 39.255149674732884]
+			},
+			"count": 10313
+		}, "..."
+	]
+}
+```
+> <b>NOTE</b>: `geohash` aggregation was implemented for Elasticsearch storage only.
