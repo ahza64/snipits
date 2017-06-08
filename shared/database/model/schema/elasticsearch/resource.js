@@ -35,7 +35,7 @@ function prepareAggregations(bucket, field) {
           prepared = prepareClusters(buckets);
         } else {
           buckets.forEach((subbucket) => {
-            const subfields = Object.keys(_.omit(subbucket, ['key', 'doc_count']));
+            const subfields = Object.keys(_.omit(subbucket, ['key', 'doc_count', 'key_as_string']));
             if (subfields.length > 0) {
               const subfield = subfields[0];
               const subitems = prepareAggregations(subbucket, subfield);
@@ -406,6 +406,8 @@ class EsResource {
             } else {
               required = true;
             }
+          } else {
+            required = true;
           }
         } else {
           required = true;
@@ -506,6 +508,32 @@ class EsResource {
     };
   }
 
+  prepareTimeAggs(config) {
+    let aggs = null;
+    if (config && config.field && config.interval) {
+      const minCount = config.min_count || 0;
+      const allowedIntervals = ['year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second'];
+      if (typeof config.interval === 'string') {
+        const interval = config.interval.toLowerCase();
+        if (allowedIntervals.includes(interval)) {
+          const field = config.field;
+          aggs = {};
+          aggs[field] = {
+            date_histogram: {
+              field: this.getFieldNameWithPrefix(field),
+              interval: interval,
+              min_doc_count: minCount
+            }
+          };
+        } else {
+          console.error(`Aggregation Error: Incorrect interval parameter "${interval}".` +
+            `Allowed intervals: ${JSON.stringify(allowedIntervals)}`);
+        }
+      }
+    }
+    return aggs;
+  }
+
   prepareAggsQuery(aggregate, query) {
     if (aggregate && query) {
       if (Array.isArray(aggregate)) {
@@ -526,6 +554,11 @@ class EsResource {
         if ((type === 'geohash') && (aggregate.field)) {
           const precision = aggregate.precision || 4;
           query.aggs = this.prepareGeohashAggs(aggregate.field, precision);
+        } else if (type === 'time') {
+          const timeAggs = this.prepareTimeAggs(aggregate);
+          if (timeAggs) {
+            query.aggs = timeAggs;
+          }
         }
       }
     }
