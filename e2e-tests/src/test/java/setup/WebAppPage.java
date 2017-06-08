@@ -25,6 +25,7 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -559,9 +560,30 @@ public class WebAppPage
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("myFile" + namePostFix + ".txt"), StandardCharsets.UTF_8))) {
             writer.write("TextToWrite");
         }
-        catch (IOException ex)
+        catch (IOException e)
         {
-            // Handle me
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteFile(int namePostFix)
+    {
+        try{
+
+            File file = new File("myFile" + namePostFix + ".txt");
+
+            if(file.delete())
+            {
+                System.out.println(file.getName() + " is deleted!");
+            }
+            else
+            {
+                System.out.println("Delete operation is failed.");
+            }
+
+        }catch(Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -581,7 +603,6 @@ public class WebAppPage
             robot.delay(50);
         }
     }
-
 
     protected void uploadFilesFromSystem(WebDriver driver, WebElement uploadFileButton, int namePostFix, String fileName) throws AWTException
     {
