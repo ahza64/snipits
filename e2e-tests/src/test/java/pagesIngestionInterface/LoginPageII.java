@@ -6,7 +6,6 @@ import org.openqa.selenium.support.How;
 
 import java.net.MalformedURLException;
 
-import pagesInternalAdmin.CompanyPage;
 import setup.Driver;
 import setup.WebAppPage;
 
