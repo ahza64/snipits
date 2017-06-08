@@ -136,6 +136,7 @@ public class ServicesE2ETests {
     {
         uploadPage.createFile(namePostFix);
         uploadPage.uploadFile(namePostFix);
+        uploadPage.deleteFile(namePostFix);
         uploadPage.waitForUploadFileToComplete();
         //TODO Add method to verify upload in the table
     }
