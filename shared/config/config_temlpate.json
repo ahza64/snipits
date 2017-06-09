@@ -124,5 +124,16 @@
         "env": "dev"
     },
     "run_as_root": false,
-    "project": "transmission_2015"
+    "project": "transmission_2015",
+    "esri": {
+      "token": {
+        "address": "https://esri.dispatchr.co:6443/arcgis/tokens/generateToken",
+        "params": {
+          "username": // request from tejas,
+          "password": // request from tejas,
+          "client": "referer",
+          "expiration": 2400
+        }
+      }
+    }
 }
