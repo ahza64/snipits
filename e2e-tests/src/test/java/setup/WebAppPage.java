@@ -574,11 +574,11 @@ public class WebAppPage
 
             if(file.delete())
             {
-                System.out.println(file.getName() + " is deleted!");
+                LOGGER.info(file.getName() + " is deleted!");
             }
             else
             {
-                System.out.println("Delete operation is failed.");
+               LOGGER.info("Delete operation is failed.");
             }
 
         }catch(Exception e)
