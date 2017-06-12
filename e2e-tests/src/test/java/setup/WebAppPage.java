@@ -631,4 +631,9 @@ public class WebAppPage
         robot.keyPress(KeyEvent.VK_ENTER);
         robot.keyRelease(KeyEvent.VK_ENTER);
     }
+
+    public void closeBrowser()
+    {
+        getDriver().quit();
+    }
 }

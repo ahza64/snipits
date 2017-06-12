@@ -8,6 +8,7 @@ import java.awt.AWTException;
 import java.net.MalformedURLException;
 import java.util.Random;
 
+import pagesIngestionInterface.DropDownMenuII;
 import pagesIngestionInterface.LoginPageII;
 import pagesIngestionInterface.UploadPage;
 import pagesInternalAdmin.CompanyPage;
@@ -36,6 +37,7 @@ public class ServicesE2ETests {
     private TaxonomyValuesPage taxonomyValuesPage;
     private LoginPageII loginPageII;
     private UploadPage uploadPage;
+    private DropDownMenuII dropDownMenuII;
     private int namePostFix;
     private int editNamePostFix;
 
@@ -116,7 +118,7 @@ public class ServicesE2ETests {
     {
         projectPage.clickDropDownMenu();
         loginPage = dropDownMenu.performLogout();
-        loginPage.getDriver().quit();
+        loginPage.closeBrowser();
     }
 
     @Test(priority = 7, description = "Verify Ingestion Interface Login Page")
@@ -155,7 +157,15 @@ public class ServicesE2ETests {
         Assert.assertTrue(isReuploadErrorDisplayed);
     }
 
-    @Test(priority = 11, description = "Adding a new Schema")
+    @Test(priority = 10, description = "Logout from Internal Admin App")
+    public void verifyLogoutIngestionInterfaceWebApp() throws MalformedURLException
+    {
+        uploadPage.clickDropDownMenu();
+        loginPageII = dropDownMenuII.performLogout();
+        loginPageII.closeBrowser();
+    }
+
+    @Test(priority = 10, description = "Adding a new Schema")
     public void verifyAddNewSchema() throws MalformedURLException
     {
         dropDownMenu = userPage.clickDropDownMenu();
