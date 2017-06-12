@@ -134,11 +134,13 @@ public class ServicesE2ETests {
     @Test(priority = 9, description = "Upload a file for ingestion")
     public void verifyUploadFile() throws MalformedURLException, AWTException
     {
+        int countOnTableBeforeAdding = uploadPage.getEntriesInTable();
         uploadPage.createFile(namePostFix);
         uploadPage.uploadFile(namePostFix);
-        uploadPage.deleteFile(namePostFix);
         uploadPage.waitForUploadFileToComplete();
-        //TODO Add method to verify upload in the table
+        int countOnTableAfterAdding = uploadPage.getEntriesInTable();
+        //TODO Add a check for heatmap
+        Assert.assertEquals(countOnTableAfterAdding, countOnTableBeforeAdding+1);
     }
 
     @Test(priority = 10, description = "Adding a new Schema")
@@ -436,5 +438,4 @@ public class ServicesE2ETests {
                 (countOnTableBeforeDeleting == countOnTableAfterDeleting + 1));
         Assert.assertTrue(verifyCount);
     }
-
 }
