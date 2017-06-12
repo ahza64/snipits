@@ -9,6 +9,7 @@ const Schema = require('dsp_shared/database/model/schema');
 const router = require('./resource_router');
 const middleware = require('./middleware');
 const schemaRouter = require('./schema_router');
+const esriRouter = require('./esri_router');
 const http = require('http');
 
 co(function *build_app() {
@@ -21,6 +22,7 @@ co(function *build_app() {
   app.use(requestId());
   app.use(middleware.envelope);
   app.use(mount('/api/v4', schemaRouter));
+  app.use(mount('/api/v4', esriRouter));
   const schemas = yield Schema.find({ _api: "v4" });
   for (let i = 0; i < schemas.length; i++) {
     console.log("SCHEMAS", schemas[i]);
