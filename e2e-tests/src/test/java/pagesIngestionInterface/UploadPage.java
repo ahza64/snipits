@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import java.awt.AWTException;
 import java.net.MalformedURLException;
 
+import pagesInternalAdmin.DropDownMenu;
 import setup.WebAppPage;
 
 /**
@@ -23,6 +24,7 @@ public class UploadPage extends WebAppPage
     private String uploadFilePopupSubmitButton = ".//span[text()='Submit']/parent::div/parent::button";
     private String uploadFilePopupCancelButton = ".//span[text()='Cancel']/parent::div/parent::button";
     private String fileUploadingWait = ".//span[text()='File Uploading']/parent::div";
+    private String dropDownButton = ".//*[@class='dropdown']/a";
 
     UploadPage() throws MalformedURLException
     {
@@ -58,5 +60,11 @@ public class UploadPage extends WebAppPage
     {
         waitForVisible(By.xpath(fileUploadingWait));
         waitForElementToDisappear(By.xpath(fileUploadingWait));
+    }
+
+    public DropDownMenu clickDropDownMenu()
+    {
+        clickOnElement(By.xpath(dropDownButton));
+        return new DropDownMenu();
     }
 }
