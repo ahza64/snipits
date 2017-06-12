@@ -41,7 +41,7 @@ public class ServicesE2ETests {
     private int namePostFix;
     private int editNamePostFix;
 
-/*    @BeforeClass(description = "Launching Chrome Broswer")
+    @BeforeClass(description = "Launching Chrome Broswer")
     public void LaunchingAdminInterfaceWebApp()
     {
         loginPage = new LoginPage(true);
@@ -64,7 +64,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isNewCompanyAddedFound);
     }
     @Test(priority = 3, description = "Adding a new project")
-    public void verifyAddNewProject() throfile9724.txws MalformedURLException
+    public void verifyAddNewProject() throws MalformedURLException
     {
         dropDownMenu = companyPage.clickDropDownMenu();
         projectPage = dropDownMenu.openProjectPage();
@@ -119,7 +119,7 @@ public class ServicesE2ETests {
         projectPage.clickDropDownMenu();
         loginPage = dropDownMenu.performLogout();
         loginPage.closeBrowser();
-    }*/
+    }
 
     @Test(priority = 7, description = "Verify Ingestion Interface Login Page")
     public void LaunchingIngestionInterfaceWebApp() throws MalformedURLException
@@ -130,15 +130,15 @@ public class ServicesE2ETests {
     @Test(priority = 8, description = "Performing login on Ingestion Interface WebApp")
     public void verifyLoginIngestionInterfaceWebApp() throws MalformedURLException
     {
-        uploadPage = loginPageII.login("user" + "9724" + "@dispatchr.co", Driver.getingestionInterfacePassword());
+        uploadPage = loginPageII.login("user" + namePostFix + "@dispatchr.co", Driver.getingestionInterfacePassword());
     }
 
-/*    @Test(priority = 9, description = "Upload a file for ingestion")
+    @Test(priority = 9, description = "Upload a file for ingestion")
     public void verifyUploadFile() throws MalformedURLException, AWTException
     {
         int countOnTableBeforeAdding = uploadPage.getEntriesInTable();
-        uploadPage.createFile(9724);
-        uploadPage.uploadFile(9724);
+        uploadPage.createFile(namePostFix);
+        uploadPage.uploadFile(namePostFix);
         uploadPage.waitForUploadFileToComplete();
         int countOnTableAfterAdding = uploadPage.getEntriesInTable();
         //TODO Add a check for heatmap
@@ -148,12 +148,12 @@ public class ServicesE2ETests {
     @Test(priority = 10, description = "Re-Upload a file for ingestion")
     public void verifyReUploadFile() throws MalformedURLException, AWTException
     {
-        uploadPage.uploadFile(9724);
+        uploadPage.uploadFile(namePostFix);
         uploadPage.waitForUploadFileToComplete();
         boolean isReuploadErrorDisplayed = uploadPage.isErrorForReuploadDisplayed();
-        uploadPage.deleteFile(9724);
+        uploadPage.deleteFile(namePostFix);
         Assert.assertTrue(isReuploadErrorDisplayed);
-    }*/
+    }
 
     @Test(priority = 11, description = "Logout from Internal Admin App")
     public void verifyLogoutIngestionInterfaceWebApp() throws MalformedURLException
