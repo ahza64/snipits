@@ -536,3 +536,38 @@ Response Example:
 }
 ```
 > <b>NOTE</b>: `geohash` aggregation was implemented for Elasticsearch storage only.
+
+##### Aggregate data by time
+Request Body Example:
+```json
+{
+	"filters": {},
+	"aggregate": {
+		"type": "time",
+		"field": "tc_complete_time",
+		"interval": "day",
+		"min_count": 0
+	}
+}
+```
+* Allowed `interval` values are: year, quarter, month, week, day, hour, minute, second.
+* `min_count` is used to exclude intervals where `count` is less then selected one.
+
+Response Example:
+```json
+{
+	"envelope": "...",
+	"data": [{
+			"tc_complete_time": 1457395200000,
+			"count": 4
+		}, {
+			"tc_complete_time": 1457481600000,
+			"count": 3
+		}, {
+			"tc_complete_time": 1457568000000,
+			"count": 1
+		}, "..."
+	]
+}
+```
+> <b>NOTE</b>: `time` aggregation was implemented for Elasticsearch storage only.
