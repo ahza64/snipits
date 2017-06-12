@@ -143,7 +143,17 @@ public class ServicesE2ETests {
         Assert.assertEquals(countOnTableAfterAdding, countOnTableBeforeAdding+1);
     }
 
-    @Test(priority = 10, description = "Adding a new Schema")
+    @Test(priority = 10, description = "Re-Upload a file for ingestion")
+    public void verifyReUploadFile() throws MalformedURLException, AWTException
+    {
+        uploadPage.uploadFile(1);
+        uploadPage.waitForUploadFileToComplete();
+        boolean isReuploadErrorDisplayed = uploadPage.isErrorForReuploadDisplayed();
+        uploadPage.deleteFile(1);
+        Assert.assertTrue(isReuploadErrorDisplayed);
+    }
+
+    @Test(priority = 11, description = "Adding a new Schema")
     public void verifyAddNewSchema() throws MalformedURLException
     {
         dropDownMenu = userPage.clickDropDownMenu();
@@ -159,7 +169,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(verifyCount);
     }
 
-    @Test(priority = 11, description = "Adding a new Taxonomy")
+    @Test(priority = 12, description = "Adding a new Taxonomy")
     public void verifyAddNewTaxonomy() throws MalformedURLException
     {
         dropDownMenu = schemaPage.clickDropDownMenu();

@@ -24,6 +24,7 @@ public class UploadPage extends WebAppPage
     private String uploadFilePopupCancelButton = ".//span[text()='Cancel']/parent::div/parent::button";
     private String fileUploadingWait = ".//span[text()='File Uploading']/parent::div";
     private String filesTable = ".//*[@class='row']";
+    private String fileUploadErrorPopUpCloseButton = ".//span[text()='Close']/parent::div/parent::button";
 
     UploadPage() throws MalformedURLException
     {
@@ -61,5 +62,21 @@ public class UploadPage extends WebAppPage
         waitForAjaxCompletion();
         waitForVisible(By.xpath(fileUploadingWait));
         waitForElementToDisappear(By.xpath(fileUploadingWait));
+    }
+
+    public boolean isErrorForReuploadDisplayed()
+    {
+        boolean isVisible = false;
+        try
+        {
+            waitForVisible(By.xpath(fileUploadErrorPopUpCloseButton));
+            clickOnElement(By.xpath(fileUploadErrorPopUpCloseButton));
+            waitForElementToDisappear(By.xpath(fileUploadErrorPopUpCloseButton));
+            isVisible = true;
+        } catch (MalformedURLException e)
+        {
+            e.printStackTrace();
+        }
+        return isVisible;
     }
 }
