@@ -134,7 +134,13 @@ public class ServicesE2ETests {
         //uploadPage = loginPageII.login("user" + "1" + "@dispatchr.co", Driver.getingestionInterfacePassword());
     }
 
-    @Test(priority = 9, description = "Upload a file for ingestion")
+    @Test(priority = 9, description = "Re-Upload a file for ingestion")
+    public void verifySeeAllProjects() throws MalformedURLException
+    {
+        uploadPage.selectProject(namePostFix);
+    }
+
+    @Test(priority = 10, description = "Upload a file for ingestion")
     public void verifyUploadFile() throws MalformedURLException, AWTException
     {
         int countOnTableBeforeAdding = uploadPage.getEntriesInTable();
@@ -147,7 +153,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(verifyProject);
     }
 
-    @Test(priority = 10, description = "Re-Upload a file for ingestion")
+    @Test(priority = 11, description = "Re-Upload a file for ingestion")
     public void verifyReUploadFile() throws MalformedURLException, AWTException
     {
         uploadPage.uploadFile(namePostFix);
@@ -155,12 +161,6 @@ public class ServicesE2ETests {
         boolean isReuploadErrorDisplayed = uploadPage.isErrorForReuploadDisplayed();
         uploadPage.deleteFile(namePostFix);
         Assert.assertTrue(isReuploadErrorDisplayed);
-    }
-
-    @Test(priority = 11, description = "Re-Upload a file for ingestion")
-    public void verifySeeAllProjects() throws MalformedURLException
-    {
-        uploadPage.selectProject(namePostFix);
     }
 
     @Test(priority = 12, description = "Logout from Internal Admin App")
