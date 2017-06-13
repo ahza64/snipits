@@ -148,10 +148,10 @@ public class ServicesE2ETests {
     @Test(priority = 10, description = "Re-Upload a file for ingestion")
     public void verifyReUploadFile() throws MalformedURLException, AWTException
     {
-        uploadPage.uploadFile(1);
+        uploadPage.uploadFile(namePostFix);
         uploadPage.waitForUploadFileToComplete();
         boolean isReuploadErrorDisplayed = uploadPage.isErrorForReuploadDisplayed();
-        uploadPage.deleteFile(1);
+        uploadPage.deleteFile(namePostFix);
         Assert.assertTrue(isReuploadErrorDisplayed);
     }
 
