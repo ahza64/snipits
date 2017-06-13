@@ -265,6 +265,23 @@ public class WebAppPage
         }
     }
 
+    public boolean hoverOverElement(By locator)
+    {
+        try
+        {
+            Actions builder = new Actions(driver);
+            Actions hoverOver = builder.moveToElement(driver.findElement(locator));
+            hoverOver.perform();
+            holdOn(500);
+            return true;
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     public void hoverOverElementUsingJS(WebElement element)
     {
         String js = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');evObj.initEvent('mouseover',true, false); arguments[0].dispatchEvent(evObj);} else if(document.createEventObject) { arguments[0].fireEvent('onmouseover');}";

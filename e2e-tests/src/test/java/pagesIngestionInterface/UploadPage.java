@@ -62,4 +62,26 @@ public class UploadPage extends WebAppPage
         waitForVisible(By.xpath(fileUploadingWait));
         waitForElementToDisappear(By.xpath(fileUploadingWait));
     }
+
+    public boolean verifyFileOnHeatMap(int namePostFix) throws MalformedURLException
+    {
+        boolean isFileDisplayedOnHeatMap = false;
+
+        scrollToElement(driver.findElement(By.xpath(heatMapContainer)));
+        holdOnForASec();
+
+        if (isElementPresent(By.xpath(".//*[name()='rect' and @fill='rgb(45,212,139)']")))
+        {
+            hoverOverElement(By.xpath(".//*[name()='rect' and @fill='rgb(45,212,139)']"));
+            holdOnForASec();
+            String fileNameFromHeatMap = driver.findElement(By.xpath(".//*[name()='g' and @class='highcharts-label highcharts-tooltip highcharts-color-0']")).getText();
+            LOGGER.info(fileNameFromHeatMap);
+            if (fileNameFromHeatMap.contains("myFile" + namePostFix + ".txt"))
+            {
+                isFileDisplayedOnHeatMap = true;
+            }
+        }
+
+        return isFileDisplayedOnHeatMap;
+    }
 }

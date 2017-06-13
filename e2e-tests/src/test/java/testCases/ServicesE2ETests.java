@@ -129,6 +129,7 @@ public class ServicesE2ETests {
     public void verifyLoginIngestionInterfaceWebApp() throws MalformedURLException
     {
         uploadPage = loginPageII.login("user" + namePostFix + "@dispatchr.co", Driver.getingestionInterfacePassword());
+        //uploadPage = loginPageII.login("user" + "1" + "@dispatchr.co", Driver.getingestionInterfacePassword());
     }
 
     @Test(priority = 9, description = "Upload a file for ingestion")
@@ -139,8 +140,9 @@ public class ServicesE2ETests {
         uploadPage.uploadFile(namePostFix);
         uploadPage.waitForUploadFileToComplete();
         int countOnTableAfterAdding = uploadPage.getEntriesInTable();
-        //TODO Add a check for heatmap
-        Assert.assertEquals(countOnTableAfterAdding, countOnTableBeforeAdding+1);
+        boolean isFileShownOnHeatMap = uploadPage.verifyFileOnHeatMap(namePostFix);
+        boolean verifyProject = isFileShownOnHeatMap && countOnTableAfterAdding == countOnTableBeforeAdding + 1;
+        Assert.assertTrue(verifyProject);
     }
 
     @Test(priority = 10, description = "Adding a new Schema")
