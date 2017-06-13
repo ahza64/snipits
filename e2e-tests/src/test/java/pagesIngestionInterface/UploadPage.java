@@ -70,18 +70,24 @@ public class UploadPage extends WebAppPage
     {
         boolean isFileDisplayedOnHeatMap = false;
 
+        holdOnForACoupleOfSec();
         scrollToElement(driver.findElement(By.xpath(heatMapContainer)));
-        holdOnForASec();
+        holdOnForACoupleOfSec();
+        int totalrectsOnHeatMap = driver.findElements(By.xpath(".//*[name()='rect']")).size();
 
-        if (isElementPresent(By.xpath(".//*[name()='rect' and @fill='rgb(45,212,139)']")))
+        for(int i=0; i<totalrectsOnHeatMap; i++)
         {
-            hoverOverElement(By.xpath(".//*[name()='rect' and @fill='rgb(45,212,139)']"));
-            holdOnForASec();
-            String fileNameFromHeatMap = driver.findElement(By.xpath(".//*[name()='g' and @class='highcharts-label highcharts-tooltip highcharts-color-0']")).getText();
-            LOGGER.info(fileNameFromHeatMap);
-            if (fileNameFromHeatMap.contains("myFile" + namePostFix + ".txt"))
+            if (isElementPresent(By.xpath(".//*[name()='rect'][" + i + "]")))
             {
-                isFileDisplayedOnHeatMap = true;
+                hoverOverElement(driver.findElement(By.xpath(".//*[name()='rect'][" + i + "]")));
+                holdOn(50);
+                String fileNameFromHeatMap = driver.findElement(By.xpath(".//*[name()='g' and @class='highcharts-label highcharts-tooltip highcharts-color-0']")).getText();
+                LOGGER.info(fileNameFromHeatMap);
+                if (fileNameFromHeatMap.contains("myFile" + namePostFix + ".txt"))
+                {
+                    isFileDisplayedOnHeatMap = true;
+                    break;
+                }
             }
         }
 
