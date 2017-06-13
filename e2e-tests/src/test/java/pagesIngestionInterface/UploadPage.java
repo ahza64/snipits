@@ -109,4 +109,8 @@ public class UploadPage extends WebAppPage
         clickOnElement(By.xpath(dropDownButton));
         return new DropDownMenuII();
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 02e3c5b51066e43737fba0f76650a46f6d294081
 }
