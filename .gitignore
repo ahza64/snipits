@@ -3,7 +3,7 @@ logs
 *.log
 npm-debug.log*
 rest_api/test/logs/log.txt
-
+*.DS_Store
 # ESRI_login credentials
 esri_login/api/credentials.json
 

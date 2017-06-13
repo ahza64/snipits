@@ -8,6 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 import Checkbox from 'material-ui/Checkbox';
+import _ from 'underscore';
 
 export default class CreateFieldDialog extends React.Component {
   constructor(props) {
@@ -17,6 +18,8 @@ export default class CreateFieldDialog extends React.Component {
       name: '',
       required: false,
       type: '',
+      editable: false,
+      visible: false
     };
 
     this.handleTypeChanged = this.handleTypeChanged.bind(this);
@@ -26,8 +29,13 @@ export default class CreateFieldDialog extends React.Component {
     this.handleNameChanged = this.handleNameChanged.bind(this);
   }
 
+  uniqueName() {
+    const existingFields = _.pluck(this.props.schema, 'name');
+    return !_.contains(existingFields, this.state.name);
+  }
+
   validate() {
-    if (this.validName() && this.state.type) {
+    if (this.validName() && this.state.type && this.uniqueName()) {
       return true;
     }
     return false;
@@ -49,7 +57,9 @@ export default class CreateFieldDialog extends React.Component {
       required: this.state.required,
       type: this.state.type,
       status: true,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      editable: this.state.editable,
+      visible: this.state.visible
     };
 
     this.props.onClose(newField);
@@ -86,6 +96,7 @@ export default class CreateFieldDialog extends React.Component {
       'String',
       'Date',
       'JSON',
+      'Array',
       'GeoCoordinates',
       'JPEG',
     ];
@@ -126,6 +137,20 @@ export default class CreateFieldDialog extends React.Component {
             this.setState({ required: isChecked });
           } }
         />
+        <Checkbox
+          label="Visible Field?"
+          defaultChecked={ false }
+          onCheck={ (event, isChecked) => {
+            this.setState({ visible: isChecked });
+          } }
+        />
+        <Checkbox
+          label="Editable Field?"
+          defaultChecked={ false }
+          onCheck={ (event, isChecked) => {
+            this.setState({ editable: isChecked });
+          } }
+        />
       </Dialog>
     );
   }
@@ -133,5 +158,6 @@ export default class CreateFieldDialog extends React.Component {
 
 CreateFieldDialog.propTypes = {
   open: React.PropTypes.bool.isRequired,
+  schema: React.PropTypes.array.isRequired,
   onClose: React.PropTypes.func.isRequired,
 };

@@ -73,7 +73,7 @@ export default class SchemasLayout extends React.Component {
       if (err) {
         console.error(err);
       } else {
-        var firstCompany = (res.body.length > 0) ? res.body[0] : null;
+        const firstCompany = (res.body.length > 0) ? res.body[0] : null;
         this.setState({
           companies: res.body,
           companyId: firstCompany ? firstCompany.id : null,
@@ -84,7 +84,7 @@ export default class SchemasLayout extends React.Component {
   }
 
   getProjects(companyId) {
-    let url = projectsUrl.replace(':companyId', companyId);
+    const url = projectsUrl.replace(':companyId', companyId);
     return request
     .get(url)
     .withCredentials()
@@ -132,7 +132,7 @@ export default class SchemasLayout extends React.Component {
 
   getSchema(callback) {
     if (!this.state.schemaId) { return; }
-    let url = schemaFieldUrl.replace(':schemaFieldId', this.state.schemaId);
+    const url = schemaFieldUrl.replace(':schemaFieldId', this.state.schemaId);
     request
     .get(url)
     .withCredentials()
@@ -153,10 +153,8 @@ export default class SchemasLayout extends React.Component {
         try {
           this.setState({
             schemaId: this.state.schemaList[0].id
-          });
-        } catch (e) {
-          console.error(e);
-        }
+          }, () => this.updateSchema());
+        } catch (e) {}
       }
       if (callback) {
         callback(this.state);
@@ -331,6 +329,8 @@ export default class SchemasLayout extends React.Component {
             <TableHeaderColumn>Name</TableHeaderColumn>
             <TableHeaderColumn>Type</TableHeaderColumn>
             <TableHeaderColumn>Required</TableHeaderColumn>
+            <TableHeaderColumn>Visible</TableHeaderColumn>
+            <TableHeaderColumn>Editable</TableHeaderColumn>
             <TableHeaderColumn className="header-pos">Version</TableHeaderColumn>
             <TableHeaderColumn>Created On</TableHeaderColumn>
           </TableRow>
@@ -346,6 +346,8 @@ export default class SchemasLayout extends React.Component {
                   <TableRowColumn>{ field.name }</TableRowColumn>
                   <TableRowColumn>{ field.type }</TableRowColumn>
                   <TableRowColumn>{ field.required ? "TRUE" : "FALSE" }</TableRowColumn>
+                  <TableRowColumn>{ field.visible ? "TRUE" : "FALSE"}</TableRowColumn>
+                  <TableRowColumn>{ field.editable ? "TRUE" : "FALSE"}</TableRowColumn>
                   <TableRowColumn>{ field.version }</TableRowColumn>
                   <TableRowColumn>{ field.createdAt }</TableRowColumn>
                 </TableRow>

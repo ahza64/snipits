@@ -98,6 +98,7 @@ export default class SchemaEditDialog extends React.Component {
     return (
       <CreateFieldDialog
         onClose={ (field) => { this.closeAddFieldDialog(field); } }
+        schema={ this.state.schema }
         open={ this.state.createFieldDialogOpen }
       />
     );
@@ -145,6 +146,8 @@ export default class SchemaEditDialog extends React.Component {
               <TableHeaderColumn>Name</TableHeaderColumn>
               <TableHeaderColumn>Type</TableHeaderColumn>
               <TableHeaderColumn>Required</TableHeaderColumn>
+              <TableHeaderColumn>Visible</TableHeaderColumn>
+              <TableHeaderColumn>Editable</TableHeaderColumn>
               <TableHeaderColumn>Created On</TableHeaderColumn>
               <TableHeaderColumn>Delete </TableHeaderColumn>
             </TableRow>
@@ -160,6 +163,8 @@ export default class SchemaEditDialog extends React.Component {
                     <TableRowColumn> { field.name }</TableRowColumn>
                     <TableRowColumn> { field.type }</TableRowColumn>
                     <TableRowColumn> { field.required ? "TRUE" : "FALSE" }</TableRowColumn>
+                    <TableRowColumn> { field.visible ? "TRUE" : "FALSE" }</TableRowColumn>
+                    <TableRowColumn> { field.editable ? "TRUE" : "FALSE" }</TableRowColumn>
                     <TableRowColumn> { field.createdAt } </TableRowColumn>
                     <TableRowColumn>
                       <RaisedButton

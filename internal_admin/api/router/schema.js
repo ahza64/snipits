@@ -15,7 +15,6 @@ router.get(
   function *() {
     const companyId = this.req.user.companyId;
     const projectId = this.params.projectId;
-    const self = this;
     if (permissions.has(this.req.user, companyId) && projectId) {
       this.body = yield QowSchemas.findAll({
         where: {
@@ -34,7 +33,6 @@ router.get(
   function *() {
     const companyId = this.req.user.companyId;
     const projectId = this.params.projectId;
-    const self = this;
     if (permissions.has(this.req.user, companyId) && projectId) {
       this.body = yield QowSchemas.findAll({
         where: {
@@ -75,7 +73,6 @@ router.post(
           version: version + 1,
           createdAt: Date.now(),
           updatedAt: Date.now(),
-          status: true,
           newest: true
         });
       } catch (e) {
@@ -103,7 +100,6 @@ router.put('/schema', function *() {
     var newSchema = {
       name: name,
       version: version + 1,
-      status: true,
       newest: true,
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -155,8 +151,7 @@ router.get('/schemaField/:schemaId', function *() {
   if (permissions.has(this.req.user, companyId) && schemaId) {
     const targetFields = yield QowFields.findAll({
       where: {
-        schemaId: schemaId,
-        status: true
+        schemaId: schemaId
       }
     });
     var vals = _.pluck(targetFields, 'dataValues');
