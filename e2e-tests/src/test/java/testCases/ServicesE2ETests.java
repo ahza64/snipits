@@ -157,7 +157,13 @@ public class ServicesE2ETests {
         Assert.assertTrue(isReuploadErrorDisplayed);
     }
 
-    @Test(priority = 11, description = "Logout from Internal Admin App")
+    @Test(priority = 11, description = "Re-Upload a file for ingestion")
+    public void verifySeeAllProjects() throws MalformedURLException
+    {
+        uploadPage.selectProject(namePostFix);
+    }
+
+    @Test(priority = 12, description = "Logout from Internal Admin App")
     public void verifyLogoutIngestionInterfaceWebApp() throws MalformedURLException
     {
         dropDownMenuII = uploadPage.clickDropDownMenu();
@@ -165,7 +171,7 @@ public class ServicesE2ETests {
         loginPageII.closeBrowser();
     }
 
-    @Test(priority = 12, description = "Adding a new Schema")
+    @Test(priority = 13, description = "Adding a new Schema")
     public void verifyAddNewSchema() throws MalformedURLException
     {
         loginPage = new LoginPage(true);
@@ -183,7 +189,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(verifyCount);
     }
 
-    @Test(priority = 13, description = "Adding a new Taxonomy")
+    @Test(priority = 14, description = "Adding a new Taxonomy")
     public void verifyAddNewTaxonomy() throws MalformedURLException
     {
         dropDownMenu = schemaPage.clickDropDownMenu();
@@ -207,7 +213,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isTaxonomySaved);
     }
 
-    @Test(priority = 14, description = "Adding a new Taxonomy Field Value")
+    @Test(priority = 15, description = "Adding a new Taxonomy Field Value")
     public void verifyAddNewTaxonomyValue() throws MalformedURLException
     {
         dropDownMenu = taxonomyPage.clickDropDownMenu();
@@ -227,7 +233,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(verifyCount);
     }
 
-    @Test(priority = 15, description = "Switch the table view for taxonomy field values")
+    @Test(priority = 16, description = "Switch the table view for taxonomy field values")
     public void verifySwitchNewTaxonomyValue() throws MalformedURLException
     {
         taxonomyValuesPage.viewValuesByScheme();
@@ -242,7 +248,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(verifyViewSchema && verifyViewTaxonomy);
     }
 
-    @Test(priority = 16, description = "Edit a taxonomy field value")
+    @Test(priority = 17, description = "Edit a taxonomy field value")
     public void verifyEditTaxonomyValue() throws MalformedURLException
     {
         Random rand = new Random();
@@ -252,7 +258,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isTaxonomyValueEdited);
     }
 
-    @Test(priority = 17, description = "Verify delete all taxonomy field values by schema")
+    @Test(priority = 18, description = "Verify delete all taxonomy field values by schema")
     public void verifyDeleteTaxonomyValueBySchema() throws MalformedURLException
     {
         taxonomyValuesPage.viewValuesByScheme();
@@ -266,7 +272,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isDeleted);
     }
 
-    @Test(priority = 18, description = "Verify delete all taxonomy field value")
+    @Test(priority = 19, description = "Verify delete all taxonomy field value")
     public void verifyDeleteTaxonomyValue() throws MalformedURLException
     {
         taxonomyValuesPage.addNewTaxonomyValues(namePostFix);
@@ -283,7 +289,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isDeleted);
     }
 
-    @Test(priority = 19, description = "Edit a taxonomy field name")
+    @Test(priority = 20, description = "Edit a taxonomy field name")
     public void verifyEditTaxonomy() throws MalformedURLException
     {
         dropDownMenu = taxonomyValuesPage.clickDropDownMenu();
@@ -299,7 +305,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isTaxonomySaved);
     }
 
-    @Test(priority = 20, description = "Delete a taxonomy field name")
+    @Test(priority = 21, description = "Delete a taxonomy field name")
     public void verifyDeleteTaxonomy() throws MalformedURLException
     {
         int countOnBadgeBeforeDeleting = taxonomyPage.getBadgeCount();
@@ -317,7 +323,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isDeleted);
     }
 
-    @Test(priority = 21, description = "Edit a Schema")
+    @Test(priority = 22, description = "Edit a Schema")
     public void verifyEditSchema() throws MalformedURLException
     {
         dropDownMenu = taxonomyPage.clickDropDownMenu();
@@ -339,7 +345,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isEdited);
     }
 
-    @Test(priority = 22, description = "Delete Schema")
+    @Test(priority = 23, description = "Delete Schema")
     public void verifyDeleteSchema() throws MalformedURLException
     {
         schemaPage.selectCompany(namePostFix);
@@ -354,7 +360,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isDeleted);
     }
 
-    @Test(priority = 23, description = "Edit User")
+    @Test(priority = 24, description = "Edit User")
     public void verifyEditUser() throws MalformedURLException
     {
         dropDownMenu = schemaPage.clickDropDownMenu();
@@ -365,7 +371,7 @@ public class ServicesE2ETests {
         userPage.verifyUser(editNamePostFix);
     }
 
-    @Test(priority = 24, description = "Activate/Deactivate a user")
+    @Test(priority = 25, description = "Activate/Deactivate a user")
     public void verifyActivateDeactivateUser() throws MalformedURLException
     {
         int userToEdit = userPage.verifyUser(editNamePostFix);
@@ -382,7 +388,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isUserValid);
     }
 
-    @Test(priority = 25, description = "Delete a user")
+    @Test(priority = 26, description = "Delete a user")
     public void verifyDeleteUser() throws MalformedURLException
     {
         int isUserPresent = 0;
@@ -401,7 +407,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isDeleteUser);
     }
 
-    @Test(priority = 26, description = "Edit Ingestion Configuration")
+    @Test(priority = 27, description = "Edit Ingestion Configuration")
     public void verifyEditIngestionConfig() throws MalformedURLException
     {
         dropDownMenu = userPage.clickDropDownMenu();
@@ -415,7 +421,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(isConfigEdited);
     }
 
-    @Test(priority = 27, description = "Delete Ingestion Configuration")
+    @Test(priority = 28, description = "Delete Ingestion Configuration")
     public void verifyDeleteIngestionConfig() throws MalformedURLException
     {
         int countOnBadgeBeforeDeleting = ingestionConfigPage.getBadgeCount();
@@ -430,7 +436,7 @@ public class ServicesE2ETests {
         Assert.assertTrue(verifyConfig);
     }
 
-    @Test(priority = 28, description = "Activate/Deactivate a Work Project")
+    @Test(priority = 29, description = "Activate/Deactivate a Work Project")
     public void verifyActivateDeactivateProject() throws MalformedURLException
     {
         dropDownMenu = ingestionConfigPage.clickDropDownMenu();
@@ -447,7 +453,7 @@ public class ServicesE2ETests {
 
     }
 
-    @Test(priority = 29, description = "Delete a Work Project")
+    @Test(priority = 30, description = "Delete a Work Project")
     public void verifyDeleteProject() throws MalformedURLException
     {
         int countOnBadgeBeforeDeleting = projectPage.getBadgeCount();
