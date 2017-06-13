@@ -1,7 +1,9 @@
 package pagesIngestionInterface;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
+import java.awt.AWTException;
 import java.net.MalformedURLException;
 
 import setup.WebAppPage;
@@ -18,6 +20,10 @@ public class UploadPage extends WebAppPage
     private String selectConfigButton = ".//div[text()='Choose Config']";
     private String selectProjectDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 192px;']";
     private String selectConfigDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 192px;']";
+    private String uploadFilePopupSubmitButton = ".//span[text()='Submit']/parent::div/parent::button";
+    private String uploadFilePopupCancelButton = ".//span[text()='Cancel']/parent::div/parent::button";
+    private String fileUploadingWait = ".//span[text()='File Uploading']/parent::div";
+    private String filesTable = ".//*[@class='row']";
 
     UploadPage() throws MalformedURLException
     {
@@ -37,5 +43,45 @@ public class UploadPage extends WebAppPage
     public void selectConfig(int namePostFix) throws MalformedURLException
     {
         selectEntity("Config", namePostFix, selectConfigButton, selectConfigDropDown);
+    }
+
+    public void uploadFile(int namePostFix) throws AWTException, MalformedURLException
+    {
+        WebElement uploadFileButton = driver.findElement(By.xpath(dropZone));
+        String fileName = "myFile" + namePostFix + ".txt";
+        uploadFilesFromSystem(getDriver(), uploadFileButton, namePostFix, fileName);
+        waitForVisible(By.xpath(uploadFilePopupSubmitButton));
+        clickOnElement(By.xpath(uploadFilePopupSubmitButton));
+        waitForElementToDisappear(By.xpath(uploadFilePopupSubmitButton));
+    }
+
+    public void waitForUploadFileToComplete() throws MalformedURLException
+    {
+        holdOnForACoupleOfSec();
+        waitForAjaxCompletion();
+        waitForVisible(By.xpath(fileUploadingWait));
+        waitForElementToDisappear(By.xpath(fileUploadingWait));
+    }
+
+    public boolean verifyFileOnHeatMap(int namePostFix) throws MalformedURLException
+    {
+        boolean isFileDisplayedOnHeatMap = false;
+
+        scrollToElement(driver.findElement(By.xpath(heatMapContainer)));
+        holdOnForASec();
+
+        if (isElementPresent(By.xpath(".//*[name()='rect' and @fill='rgb(45,212,139)']")))
+        {
+            hoverOverElement(By.xpath(".//*[name()='rect' and @fill='rgb(45,212,139)']"));
+            holdOnForASec();
+            String fileNameFromHeatMap = driver.findElement(By.xpath(".//*[name()='g' and @class='highcharts-label highcharts-tooltip highcharts-color-0']")).getText();
+            LOGGER.info(fileNameFromHeatMap);
+            if (fileNameFromHeatMap.contains("myFile" + namePostFix + ".txt"))
+            {
+                isFileDisplayedOnHeatMap = true;
+            }
+        }
+
+        return isFileDisplayedOnHeatMap;
     }
 }

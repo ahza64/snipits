@@ -1,6 +1,5 @@
 package setup;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.Alert;
@@ -12,6 +11,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -21,8 +21,18 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -244,6 +254,23 @@ public class WebAppPage
         {
             Actions builder = new Actions(driver);
             Actions hoverOver = builder.moveToElement(element);
+            hoverOver.perform();
+            holdOn(500);
+            return true;
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean hoverOverElement(By locator)
+    {
+        try
+        {
+            Actions builder = new Actions(driver);
+            Actions hoverOver = builder.moveToElement(driver.findElement(locator));
             hoverOver.perform();
             holdOn(500);
             return true;
@@ -543,5 +570,65 @@ public class WebAppPage
         clickOnElement(By.xpath(dropDownLocator + "/descendant::div[text()='" + entityType + namePostFix + "']"));
         LOGGER.info(entityType + " is Selected");
         holdOnForASec();
+    }
+
+    public void createFile(int namePostFix)
+    {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("myFile" + namePostFix + ".txt"), StandardCharsets.UTF_8))) {
+            writer.write("TextToWrite");
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteFile(int namePostFix)
+    {
+        try{
+
+            File file = new File("myFile" + namePostFix + ".txt");
+
+            if(file.delete())
+            {
+                LOGGER.info(file.getName() + " is deleted!");
+            }
+            else
+            {
+               LOGGER.info("Delete operation is failed.");
+            }
+
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendKeysDialogBox(Robot robot, String fileName) throws AWTException
+    {
+        for (char c : fileName.toCharArray())
+        {
+            int keyCode = KeyEvent.getExtendedKeyCodeForChar(c);
+            if (KeyEvent.CHAR_UNDEFINED == keyCode)
+            {
+                throw new RuntimeException(
+                        "Key code not found for character '" + c + "'");
+            }
+            robot.keyPress(keyCode);
+            robot.delay(50);
+            robot.keyRelease(keyCode);
+            robot.delay(50);
+        }
+    }
+
+    protected void uploadFilesFromSystem(WebDriver driver, WebElement uploadFileButton, int namePostFix, String fileName) throws AWTException
+    {
+        Actions builder = new Actions(driver);
+        Action myAction = builder.click(uploadFileButton).release().build();
+        myAction.perform();
+        Robot robot = new Robot();
+        sendKeysDialogBox(robot, fileName);
+        robot.keyPress(KeyEvent.VK_ENTER);
+        robot.keyRelease(KeyEvent.VK_ENTER);
     }
 }
