@@ -38,6 +38,8 @@ import java.util.logging.Logger;
 
 import constants.Constants;
 
+import static constants.Constants.FILE_NAME;
+
 /**
  * Created by az on 4/6/17.
  */
@@ -540,24 +542,23 @@ public class WebAppPage
         return totalEnteriesInTable;
     }
 
-    protected void selectEntity(String entityType, int namePostFix, String buttonLocator, String dropDownLocator) throws MalformedURLException
+    protected void selectEntity(String entityType, int namePostFix, String buttonLocator) throws MalformedURLException
     {
         clickOnElement(By.xpath(buttonLocator));
-        waitForVisible(By.xpath(dropDownLocator));
         if(entityType.contentEquals("Company"))
         {
             holdOn(200);
-            scrollToElement(driver.findElement(By.xpath(dropDownLocator + "/descendant::div[text()='" + entityType + namePostFix + "']")));
+            scrollToElement(driver.findElement(By.xpath(".//div[text()='" + entityType + namePostFix + "']/parent::div/parent::div/parent::span")));
         }
-        holdOnForASec();
-        clickOnElement(By.xpath(dropDownLocator + "/descendant::div[text()='" + entityType + namePostFix + "']"));
+        waitForVisible(By.xpath(".//div[text()='" + entityType + namePostFix + "']/parent::div/parent::div/parent::span"));
+        clickOnElement(By.xpath(".//div[text()='" + entityType + namePostFix + "']/parent::div/parent::div/parent::span"));
         LOGGER.info(entityType + " is Selected");
         holdOnForACoupleOfSec();
     }
 
     public void createFile(int namePostFix)
     {
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("myFile" + namePostFix + ".txt"), StandardCharsets.UTF_8))) {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FILE_NAME + namePostFix + ".txt"), StandardCharsets.UTF_8))) {
             writer.write("TextToWrite");
         }
         catch (IOException e)
@@ -570,7 +571,7 @@ public class WebAppPage
     {
         try{
 
-            File file = new File("myFile" + namePostFix + ".txt");
+            File file = new File(FILE_NAME + namePostFix + ".txt");
 
             if(file.delete())
             {
