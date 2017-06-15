@@ -2,7 +2,6 @@ module.exports = function(sequelize, DataTypes){
   var qow_schemas = sequelize.define('schemas',{
     name: { type: DataTypes.STRING },
     version: { type : DataTypes.INTEGER },
-    status: {type: DataTypes.BOOLEAN },
     newest: {type: DataTypes.BOOLEAN}
   }, {
     classMethods: {
