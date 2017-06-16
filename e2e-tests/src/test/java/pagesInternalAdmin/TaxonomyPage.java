@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 
 import setup.WebAppPage;
 
+import static constants.Constants.*;
+
 /**
  * Created by az on 5/18/17.
  */
@@ -52,17 +54,17 @@ public class TaxonomyPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Company", namePostFix, selectCompanyButton);
+        selectEntity(COMPANY_NAME, namePostFix, selectCompanyButton);
     }
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Project", namePostFix, selectProjectButton);
+        selectEntity(PROJECT_NAME, namePostFix, selectProjectButton);
     }
 
     public void selectSchema(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Schema", namePostFix, selectSchemaButton);
+        selectEntity(SCHEMA_NAME, namePostFix, selectSchemaButton);
     }
 
     private boolean verifyValuesOnForm(int namePostFix)
@@ -72,9 +74,9 @@ public class TaxonomyPage extends WebAppPage {
         String projectFieldText = driver.findElement(By.xpath(addTaxonomyProjectField)).getAttribute("value");
         String schemaFieldText = driver.findElement(By.xpath(addTaxonomySchemaField)).getAttribute("value");
 
-        if(companyFieldText.contentEquals("Company" + namePostFix) &&
-                projectFieldText.contentEquals("Project" + namePostFix) &&
-                schemaFieldText.contentEquals("Schema" + namePostFix))
+        if(companyFieldText.contentEquals(COMPANY_NAME + namePostFix) &&
+                projectFieldText.contentEquals(PROJECT_NAME + namePostFix) &&
+                schemaFieldText.contentEquals(SCHEMA_NAME + namePostFix))
         {
             isValueValid = true;
         }
@@ -88,9 +90,9 @@ public class TaxonomyPage extends WebAppPage {
         waitForAddTaxonomyFormToDisplay();
 
         if(verifyValuesOnForm(namePostFix)) {
-            driver.findElement(By.xpath(addTaxonomyFieldNameField)).sendKeys("Taxonomy" + namePostFix);
-            driver.findElement(By.xpath(addTaxonomyNodeField)).sendKeys("Node" + namePostFix);
-            driver.findElement(By.xpath(addTaxonomyKeysField)).sendKeys("Keys" + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyFieldNameField)).sendKeys(TAXONOMY_NAME + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyNodeField)).sendKeys(TAXONOMY_NODE + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyKeysField)).sendKeys(TAXONOMY_KEYS + namePostFix);
             clickOnElement(By.xpath(addTaxonomyFormConfirmButton));
             LOGGER.info("Taxonomy is Added");
         }
@@ -120,9 +122,9 @@ public class TaxonomyPage extends WebAppPage {
                     nodeTypeDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[6]")).getText();
                     keysDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[7]")).getText();
 
-                    if (fieldNameDisplayed.contentEquals("Taxonomy" + namePostFix) &&
-                            nodeTypeDisplayed.contentEquals("Node" + namePostFix) &&
-                            keysDisplayed.contentEquals("Keys" + namePostFix))
+                    if (fieldNameDisplayed.contentEquals(TAXONOMY_NAME + namePostFix) &&
+                            nodeTypeDisplayed.contentEquals(TAXONOMY_NODE + namePostFix) &&
+                            keysDisplayed.contentEquals(TAXONOMY_KEYS + namePostFix))
                     {
                         String savedToDataBaseDisplayed;
                         savedToDataBaseDisplayed = driver.findElement(By.xpath(taxonomyTable + "/descendant::tr[" + i + "]/td[2]")).getText();
@@ -178,11 +180,11 @@ public class TaxonomyPage extends WebAppPage {
             clickOnElement(By.xpath(editTaxonomyButton));
             waitForAddTaxonomyFormToDisplay();
             driver.findElement(By.xpath(addTaxonomyFieldNameField)).clear();
-            driver.findElement(By.xpath(addTaxonomyFieldNameField)).sendKeys("Taxonomy" + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyFieldNameField)).sendKeys(TAXONOMY_NAME + namePostFix);
             driver.findElement(By.xpath(addTaxonomyNodeField)).clear();
-            driver.findElement(By.xpath(addTaxonomyNodeField)).sendKeys("Node" + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyNodeField)).sendKeys(TAXONOMY_NODE + namePostFix);
             driver.findElement(By.xpath(addTaxonomyKeysField)).clear();
-            driver.findElement(By.xpath(addTaxonomyKeysField)).sendKeys("Keys" + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyKeysField)).sendKeys(TAXONOMY_KEYS + namePostFix);
             holdOnForASec();
             clickOnElement(By.xpath(addTaxonomyFormConfirmButton));
             waitForElementToDisappear(By.xpath(addTaxonomyFormCancelButton));

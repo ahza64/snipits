@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 
 import constants.Constants;
 
+import static constants.Constants.COMPANY_NAME;
 import static constants.Constants.FILE_NAME;
 
 /**
@@ -545,7 +546,7 @@ public class WebAppPage
     protected void selectEntity(String entityType, int namePostFix, String buttonLocator) throws MalformedURLException
     {
         clickOnElement(By.xpath(buttonLocator));
-        if(entityType.contentEquals("Company"))
+        if(entityType.contentEquals(COMPANY_NAME))
         {
             holdOn(200);
             scrollToElement(driver.findElement(By.xpath(".//div[text()='" + entityType + namePostFix + "']/parent::div/parent::div/parent::span")));

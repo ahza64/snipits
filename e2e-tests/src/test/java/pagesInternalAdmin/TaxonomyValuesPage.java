@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 
 import setup.WebAppPage;
 
+import static constants.Constants.*;
+
 /**
  * Created by az on 5/18/17.
  */
@@ -51,22 +53,22 @@ public class TaxonomyValuesPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Company", namePostFix, selectCompanyButton);
+        selectEntity(COMPANY_NAME, namePostFix, selectCompanyButton);
     }
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Project", namePostFix, selectProjectButton);
+        selectEntity(PROJECT_NAME, namePostFix, selectProjectButton);
     }
 
     public void selectSchema(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Schema", namePostFix, selectSchemaButton);
+        selectEntity(SCHEMA_NAME, namePostFix, selectSchemaButton);
     }
 
     public void selectTaxonomy(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Taxonomy", namePostFix, selectTaxonomyButton);
+        selectEntity(TAXONOMY_NAME, namePostFix, selectTaxonomyButton);
     }
 
     private boolean verifyValuesOnForm(int namePostFix)
@@ -74,7 +76,7 @@ public class TaxonomyValuesPage extends WebAppPage {
         boolean isValueValid = false;
         String companyFieldText = driver.findElement(By.xpath(addTaxonomyFieldName)).getAttribute("value");
 
-        if(companyFieldText.contentEquals("Taxonomy" + namePostFix) )
+        if(companyFieldText.contentEquals(TAXONOMY_NAME + namePostFix) )
         {
             isValueValid = true;
         }
@@ -88,7 +90,7 @@ public class TaxonomyValuesPage extends WebAppPage {
         waitForAddTaxonomyValuesFormToDisplay();
 
         if(verifyValuesOnForm(namePostFix)) {
-            driver.findElement(By.xpath(addTaxonomyFieldValue)).sendKeys("FieldValue" + namePostFix);
+            driver.findElement(By.xpath(addTaxonomyFieldValue)).sendKeys(TAXONOY_FIELD_VALUE + namePostFix);
             clickOnElement(By.xpath(taxonomyValueFormConfirmButton));
             LOGGER.info("Taxonomy Values is Added");
         }
@@ -115,8 +117,8 @@ public class TaxonomyValuesPage extends WebAppPage {
                     fieldValueDisplayed = driver.findElement(By.xpath(taxonomyValueTable + "/descendant::tr[" + i + "]/td[2]")).getText();
                     fieldNameDisplayed = driver.findElement(By.xpath(taxonomyValueTable + "/descendant::tr[" + i + "]/td[3]")).getText();
 
-                    if (fieldNameDisplayed.contentEquals("Taxonomy" + fieldNamePostFix) &&
-                            fieldValueDisplayed.contentEquals("FieldValue" + fieldValuePostFix))
+                    if (fieldNameDisplayed.contentEquals(TAXONOMY_NAME + fieldNamePostFix) &&
+                            fieldValueDisplayed.contentEquals(TAXONOY_FIELD_VALUE + fieldValuePostFix))
                     {
                         isNewTaxonomyValueAdded = true;
                         break;
@@ -143,7 +145,7 @@ public class TaxonomyValuesPage extends WebAppPage {
         return new DropDownMenu();
     }
 
-    public void viewValuesByScheme() throws MalformedURLException
+    public void viewValuesBySchema() throws MalformedURLException
     {
         if(isElementPresent(By.xpath(viewByValueSchemaValueButton)))
         {
@@ -170,7 +172,7 @@ public class TaxonomyValuesPage extends WebAppPage {
             clickOnElement(By.xpath(editTaxonomyButton));
             waitForAddTaxonomyValuesFormToDisplay();
             driver.findElement(By.xpath(addTaxonomyFieldValue)).clear();
-            driver.findElement(By.xpath(addTaxonomyFieldValue)).sendKeys("FieldValue" + editNamePostFix);
+            driver.findElement(By.xpath(addTaxonomyFieldValue)).sendKeys(TAXONOY_FIELD_VALUE + editNamePostFix);
             holdOnForASec();
             clickOnElement(By.xpath(taxonomyValueFormConfirmButton));
             waitForElementToDisappear(By.xpath(taxonomyValueFormCancelButton));

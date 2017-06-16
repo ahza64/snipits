@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 
 import setup.WebAppPage;
 
+import static constants.Constants.COMPANY_NAME;
+
 /**
  * Created by az on 5/15/17.
  */
@@ -40,7 +42,7 @@ public class CompanyPage extends WebAppPage {
     {
         clickOnElement(By.xpath(addCompanyButton));
         waitForAddCompanyFormToDisplay();
-        driver.findElement(By.xpath(addCompanyNameField)).sendKeys("Company" + namePostFix);
+        driver.findElement(By.xpath(addCompanyNameField)).sendKeys(COMPANY_NAME + namePostFix);
         clickOnElement(By.xpath(addCompanyFormConfirmButton));
         waitForElementToDisappear(By.xpath(addCompanyFormCancelButton));
     }
@@ -59,7 +61,7 @@ public class CompanyPage extends WebAppPage {
 
                 for (int i = 2; i < totalRowsInCompanyTable + 2; i++) {
                     companyNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
-                    if (companyNameDisplayed.contentEquals("Company" + namePostFix)) {
+                    if (companyNameDisplayed.contentEquals(COMPANY_NAME + namePostFix)) {
                         LOGGER.info("Company Added is Found");
                         isNewCompanyAdded = true;
                         break;

@@ -22,7 +22,7 @@ import pagesInternalAdmin.TaxonomyValuesPage;
 import pagesInternalAdmin.UserPage;
 import setup.Driver;
 
-import static constants.Constants.FILE_NAME;
+import static constants.Constants.*;
 import static setup.WebAppPage.LOGGER;
 
 public class ServicesE2ETests {
@@ -112,7 +112,7 @@ public class ServicesE2ETests {
         Assert.assertEquals(badgeNumberAfterAddingUser, badgeNumberBeforeAddingUser+1);
     }
 
-    //Switching Apps: 	navigate to the ingestion_interface
+/*    //Switching Apps: 	navigate to the ingestion_interface
 
     @Test(priority = 6, description = "Logout from Internal Admin App")
     public void verifyLogoutAdminInterfaceWebApp() throws MalformedURLException
@@ -131,7 +131,7 @@ public class ServicesE2ETests {
     @Test(priority = 8, description = "Performing login on Ingestion Interface WebApp")
     public void verifyLoginIngestionInterfaceWebApp() throws MalformedURLException
     {
-        uploadPage = loginPageII.login("user" + namePostFix + "@dispatchr.co", Driver.getingestionInterfacePassword());
+        uploadPage = loginPageII.login(USER_EMAIL + namePostFix + "@dispatchr.co", Driver.getingestionInterfacePassword());
         //uploadPage = loginPageII.login("user" + "1" + "@dispatchr.co", Driver.getingestionInterfacePassword());
     }
 
@@ -197,16 +197,17 @@ public class ServicesE2ETests {
         dropDownMenuII = uploadPage.clickDropDownMenu();
         loginPageII = dropDownMenuII.performLogout();
         loginPageII.closeBrowser();
-    }
+    }*/
 
     //Switching Apps: 	navigate to the internal_admin
 
     @Test(priority = 15, description = "Adding a new Schema")
     public void verifyAddNewSchema() throws MalformedURLException
     {
-        loginPage = new LoginPage(true);
+/*        loginPage = new LoginPage(true);
         companyPage = loginPage.login(Driver.getAdminUserName(), Driver.getAdminPassword());
-        dropDownMenu = companyPage.clickDropDownMenu();
+        dropDownMenu = companyPage.clickDropDownMenu();*/
+        dropDownMenu = userPage.clickDropDownMenu();
         schemaPage = dropDownMenu.openSchemaPage();
         schemaPage.selectCompany(namePostFix);
         schemaPage.selectProject(namePostFix);
@@ -266,7 +267,7 @@ public class ServicesE2ETests {
     @Test(priority = 18, description = "Switch the table view for taxonomy field values")
     public void verifySwitchNewTaxonomyValue() throws MalformedURLException
     {
-        taxonomyValuesPage.viewValuesByScheme();
+        taxonomyValuesPage.viewValuesBySchema();
         boolean verifyViewSchema = taxonomyValuesPage.verifyTaxonomyValueInTable(namePostFix, namePostFix);
         if (!verifyViewSchema)
             LOGGER.severe("Values associated with selected Schema are not displayed");
@@ -291,7 +292,7 @@ public class ServicesE2ETests {
     @Test(priority = 20, description = "Verify delete all taxonomy field values by schema")
     public void verifyDeleteTaxonomyValueBySchema() throws MalformedURLException
     {
-        taxonomyValuesPage.viewValuesByScheme();
+        taxonomyValuesPage.viewValuesBySchema();
         int countOnBadgeBeforeDeleting = taxonomyValuesPage.getBadgeCount();
         int countOnTableBeforeDeleting = taxonomyValuesPage.getEntriesInTable();
         taxonomyValuesPage.removeAllValuesBySchema();

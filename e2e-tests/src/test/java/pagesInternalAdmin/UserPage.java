@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 
 import setup.WebAppPage;
 
+import static constants.Constants.*;
+
 /**
  * Created by az on 5/16/17.
  */
@@ -46,16 +48,16 @@ public class UserPage extends WebAppPage {
     {
         clickOnElement(By.xpath(addUserButton));
         waitForAddUserFormToDisplay();
-        driver.findElement(By.xpath(addUserFormFirstNameField)).sendKeys("FN" + namePostFix);
-        driver.findElement(By.xpath(addUserFormSecondNameField)).sendKeys("LN" + namePostFix);
-        driver.findElement(By.xpath(addUserFormEmailField)).sendKeys("user" + namePostFix + "@dispatchr.co");
+        driver.findElement(By.xpath(addUserFormFirstNameField)).sendKeys(USER_FNAME + namePostFix);
+        driver.findElement(By.xpath(addUserFormSecondNameField)).sendKeys(USER_LNAME + namePostFix);
+        driver.findElement(By.xpath(addUserFormEmailField)).sendKeys(USER_EMAIL + namePostFix + "@dispatchr.co");
         clickOnElement(By.xpath(addUserFormCompanyField));
-        scrollToElement(driver.findElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='Company" + namePostFix + "']")));
-        clickOnElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='Company" + namePostFix + "']"));
+        scrollToElement(driver.findElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='" + COMPANY_NAME + namePostFix + "']")));
+        clickOnElement(By.xpath(selectCompanyDropDown + "/descendant::div[text()='" + COMPANY_NAME + namePostFix + "']"));
         holdOnForASec();
-        driver.findElement(By.xpath(addUserFormPasswordField)).sendKeys("123456");
+        driver.findElement(By.xpath(addUserFormPasswordField)).sendKeys(USER_PASSWORD);
         holdOnForASec();
-        driver.findElement(By.xpath(addUserFormPasswordConfirmField)).sendKeys("123456");
+        driver.findElement(By.xpath(addUserFormPasswordConfirmField)).sendKeys(USER_PASSWORD);
         holdOnForASec();
         clickOnElement(By.xpath(addUserFormConfirmButton));
         LOGGER.info("User is Added");
@@ -80,7 +82,7 @@ public class UserPage extends WebAppPage {
                 for (; userIndex < totalRowsInUserTable + 1; userIndex++)
                 {
                     userNameDisplayed = driver.findElement(By.xpath(userTable + "/descendant::tr[" + userIndex + "]/td[2]")).getText();
-                    if (userNameDisplayed.contentEquals("FN" + namePostFix + " " + "LN" + namePostFix))
+                    if (userNameDisplayed.contentEquals(USER_FNAME + namePostFix + " " + USER_LNAME + namePostFix))
                     {
                         String companyName;
                         companyName = driver.findElement(By.xpath(userTable + "/descendant::tr[" + userIndex + "]/td[4]")).getText();
@@ -114,11 +116,11 @@ public class UserPage extends WebAppPage {
         clickOnElement(By.xpath(".//tbody/tr[" + userToEdit + "]/td/descendant::span[text()='EDIT']"));
         waitForAddUserFormToDisplay();
         driver.findElement(By.xpath(addUserFormFirstNameField)).clear();
-        driver.findElement(By.xpath(addUserFormFirstNameField)).sendKeys("FN" + namePostFix);
+        driver.findElement(By.xpath(addUserFormFirstNameField)).sendKeys(USER_FNAME + namePostFix);
         driver.findElement(By.xpath(addUserFormSecondNameField)).clear();
-        driver.findElement(By.xpath(addUserFormSecondNameField)).sendKeys("LN" + namePostFix);
+        driver.findElement(By.xpath(addUserFormSecondNameField)).sendKeys(USER_LNAME + namePostFix);
         driver.findElement(By.xpath(addUserFormEmailField)).clear();
-        driver.findElement(By.xpath(addUserFormEmailField)).sendKeys("user" + namePostFix + "@dispatchr.co");
+        driver.findElement(By.xpath(addUserFormEmailField)).sendKeys(USER_EMAIL + namePostFix + "@dispatchr.co");
         holdOnForASec();
         clickOnElement(By.xpath(addUserFormConfirmButton));
         LOGGER.info("User is Edited");

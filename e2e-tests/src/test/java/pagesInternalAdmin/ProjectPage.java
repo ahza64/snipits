@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 
 import setup.WebAppPage;
 
+import static constants.Constants.*;
+
 /**
  * Created by az on 5/16/17.
  */
@@ -42,14 +44,14 @@ public class ProjectPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Company", namePostFix, selectCompanyButton);
+        selectEntity(COMPANY_NAME, namePostFix, selectCompanyButton);
     }
 
     public void addNewProject(int namePostFix) throws MalformedURLException
     {
         clickOnElement(By.xpath(addProjectButton));
         waitForAddProjectFormToDisplay();
-        driver.findElement(By.xpath(projectNameField)).sendKeys("Project" + namePostFix);
+        driver.findElement(By.xpath(projectNameField)).sendKeys(PROJECT_NAME + namePostFix);
         clickOnElement(By.xpath(projectFormConfirmButton));
         LOGGER.info("Project is Added");
         waitForElementToDisappear(By.xpath(projectFormCancelButton));
@@ -70,7 +72,7 @@ public class ProjectPage extends WebAppPage {
                 for(int i=2; i<totalRowsInProjectTable+2; i++)
                 {
                     projectNameDisplayed = driver.findElement(By.xpath(".//*[@class='row']/descendant::tr[" + i + "]/td[2]")).getText();
-                    if(projectNameDisplayed.contentEquals("Project" + namePostFix))
+                    if(projectNameDisplayed.contentEquals(PROJECT_NAME + namePostFix))
                     {
                         LOGGER.info("Project is Found");
                         isNewProjectAdded = true;
@@ -103,7 +105,7 @@ public class ProjectPage extends WebAppPage {
     public boolean getProjectStatusFromCheckbox(int namePostFix)
     {
         boolean isProjectActive = false;
-        String userStatus = driver.findElement(By.xpath(".//td[text()='Project" + namePostFix + "']/parent::tr/descendant::input")).getAttribute("checked");
+        String userStatus = driver.findElement(By.xpath(".//td[text()='" + PROJECT_NAME + namePostFix + "']/parent::tr/descendant::input")).getAttribute("checked");
         if(userStatus != null)
             isProjectActive = true;
         return isProjectActive;
@@ -112,7 +114,7 @@ public class ProjectPage extends WebAppPage {
     public boolean getStatusCheckBoxColor(int namePostFix)
     {
         boolean isProjectActive = false;
-        String projectStatus = driver.findElement(By.xpath(".//td[text()='Project" + namePostFix + "']/parent::tr/descendant::input/parent::div/div/div/div")).getAttribute("style");
+        String projectStatus = driver.findElement(By.xpath(".//td[text()='" + PROJECT_NAME + namePostFix + "']/parent::tr/descendant::input/parent::div/div/div/div")).getAttribute("style");
         projectStatus = projectStatus.substring(projectStatus.indexOf("rgb"), projectStatus.indexOf(");") + 1);
         LOGGER.info(projectStatus);
         if(projectStatus.contentEquals("rgba(0, 188, 212, 0.5)"))
@@ -123,14 +125,14 @@ public class ProjectPage extends WebAppPage {
 
     public void toggleStatusButton(int namePostFix)
     {
-        clickOnElement(By.xpath(".//td[text()='Project" + namePostFix + "']/parent::tr/descendant::input"));
+        clickOnElement(By.xpath(".//td[text()='" + PROJECT_NAME + namePostFix + "']/parent::tr/descendant::input"));
         holdOnForACoupleOfSec();
     }
 
     public void openEditConfigPopUp(int namePostFix) throws MalformedURLException
     {
         holdOnForASec();
-        clickOnElement(By.xpath(".//td[text()='Project" + namePostFix + "']/parent::tr/descendant::" + editDeleteButton));
+        clickOnElement(By.xpath(".//td[text()='" + PROJECT_NAME + namePostFix + "']/parent::tr/descendant::" + editDeleteButton));
         waitForVisible(By.xpath(editDeleteProjectButton));
     }
 
