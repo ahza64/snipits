@@ -112,7 +112,7 @@ public class ServicesE2ETests {
         Assert.assertEquals(badgeNumberAfterAddingUser, badgeNumberBeforeAddingUser+1);
     }
 
-/*    //Switching Apps: 	navigate to the ingestion_interface
+    //Switching Apps: 	navigate to the ingestion_interface
 
     @Test(priority = 6, description = "Logout from Internal Admin App")
     public void verifyLogoutAdminInterfaceWebApp() throws MalformedURLException
@@ -197,17 +197,16 @@ public class ServicesE2ETests {
         dropDownMenuII = uploadPage.clickDropDownMenu();
         loginPageII = dropDownMenuII.performLogout();
         loginPageII.closeBrowser();
-    }*/
+    }
 
     //Switching Apps: 	navigate to the internal_admin
 
     @Test(priority = 15, description = "Adding a new Schema")
     public void verifyAddNewSchema() throws MalformedURLException
     {
-/*        loginPage = new LoginPage(true);
+        loginPage = new LoginPage(true);
         companyPage = loginPage.login(Driver.getAdminUserName(), Driver.getAdminPassword());
-        dropDownMenu = companyPage.clickDropDownMenu();*/
-        dropDownMenu = userPage.clickDropDownMenu();
+        dropDownMenu = companyPage.clickDropDownMenu();
         schemaPage = dropDownMenu.openSchemaPage();
         schemaPage.selectCompany(namePostFix);
         schemaPage.selectProject(namePostFix);
