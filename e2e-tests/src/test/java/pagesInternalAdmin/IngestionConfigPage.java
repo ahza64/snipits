@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 
 import setup.WebAppPage;
 
+import static constants.Constants.*;
+
 /**
  * Created by az on 5/16/17.
  */
@@ -48,19 +50,19 @@ public class IngestionConfigPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Company", namePostFix, selectCompanyButton);
+        selectEntity(COMPANY_NAME, namePostFix, selectCompanyButton);
     }
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Project", namePostFix, selectProjectButton);
+        selectEntity(PROJECT_NAME, namePostFix, selectProjectButton);
     }
 
     public void addNewConfig(int namePostFix) throws MalformedURLException
     {
         clickOnElement(By.xpath(configButton));
         waitForAddConfigFormToDisplay();
-        driver.findElement(By.xpath(configNameField)).sendKeys("Config" + namePostFix);
+        driver.findElement(By.xpath(configNameField)).sendKeys(CONFIG_NAME + namePostFix);
         clickOnElement(By.xpath(configFormConfirmButton));
         LOGGER.info("Ingestion Config is Added");
         waitForElementToDisappear(By.xpath(configFormCancelButton));
@@ -79,12 +81,12 @@ public class IngestionConfigPage extends WebAppPage {
 
                 for (int i = 2; i < totalRowsInConfigTable + 2; i++) {
                     configNameDisplayed = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[4]")).getText();
-                    if (configNameDisplayed.contentEquals("Config" + namePostFix)) {
+                    if (configNameDisplayed.contentEquals(CONFIG_NAME + namePostFix)) {
                         String companyName, projectName;
                         companyName = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[2]")).getText();
                         projectName = driver.findElement(By.xpath(configTable + "/descendant::tr[" + i + "]/td[3]")).getText();
                         LOGGER.info(companyName + " " + projectName);
-                        if (companyName.contentEquals("Company" + namePostFix) && projectName.contentEquals("Project" + namePostFix)) {
+                        if (companyName.contentEquals(COMPANY_NAME + namePostFix) && projectName.contentEquals("Project" + namePostFix)) {
                             LOGGER.info("Ingestion Configuration is Found");
                             isNewConfigAdded = true;
                             break;
@@ -116,7 +118,7 @@ public class IngestionConfigPage extends WebAppPage {
     public void openEditConfigPopUp(int namePostFix) throws MalformedURLException
     {
         holdOnForASec();
-        clickOnElement(By.xpath(".//td[text()='Company" + namePostFix + "']/parent::tr/descendant::" + editDeleteButton));
+        clickOnElement(By.xpath(".//td[text()='" + COMPANY_NAME + namePostFix + "']/parent::tr/descendant::" + editDeleteButton));
         waitForVisible(By.xpath(editConfigButton));
     }
 

@@ -83,7 +83,7 @@ public class UploadPage extends WebAppPage
             if (isElementPresent(By.xpath(".//*[name()='rect'][" + i + "]")))
             {
                 hoverOverElement(driver.findElement(By.xpath(".//*[name()='rect'][" + i + "]")));
-                holdOn(50);
+                waitForVisible(By.xpath(".//*[name()='g' and @class='highcharts-label highcharts-tooltip highcharts-color-0']"));
                 String fileNameFromHeatMap = driver.findElement(By.xpath(".//*[name()='g' and @class='highcharts-label highcharts-tooltip highcharts-color-0']")).getText();
                 LOGGER.info(fileNameFromHeatMap);
                 if (fileNameFromHeatMap.contains(FILE_NAME + namePostFix + ".txt"))

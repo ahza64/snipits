@@ -7,6 +7,8 @@ import java.util.Random;
 
 import setup.WebAppPage;
 
+import static constants.Constants.*;
+
 /**
  * Created by az on 5/17/17.
  */
@@ -54,24 +56,24 @@ public class SchemaPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Company", namePostFix, selectCompanyButton);
+        selectEntity(COMPANY_NAME, namePostFix, selectCompanyButton);
     }
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Project", namePostFix, selectProjectButton);
+        selectEntity(PROJECT_NAME, namePostFix, selectProjectButton);
     }
 
     public void selectSchema(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Schema", namePostFix, selectSchemaButton);
+        selectEntity(SCHEMA_NAME, namePostFix, selectSchemaButton);
     }
 
     public void addNewSchema(int namePostFix) throws MalformedURLException
     {
         clickOnElement(By.xpath(addSchemaButton));
         waitForAddSchemaFormToDisplay();
-        driver.findElement(By.xpath(addSchemaNameField)).sendKeys("Schema" + namePostFix);
+        driver.findElement(By.xpath(addSchemaNameField)).sendKeys(SCHEMA_NAME + namePostFix);
         clickOnElement(By.xpath(addSchemaFormConfirmButton));
         LOGGER.info("Schema is Added");
         waitForElementToDisappear(By.xpath(addSchemaFormCancelButton));
@@ -88,11 +90,11 @@ public class SchemaPage extends WebAppPage {
             {
                 clickOnElement(By.xpath(selectSchemaButton));
                 holdOnForASec();
-                if(isElementPresentAndDisplayedByLocator(By.xpath(".//div[text()='Schema" + namePostFix + "']/parent::div/parent::div/parent::span")))
+                if(isElementPresentAndDisplayedByLocator(By.xpath(".//div[text()='" + SCHEMA_NAME + namePostFix + "']/parent::div/parent::div/parent::span")))
                 {
-                    if(isElementPresent(By.xpath(".//div[text()='Schema" + namePostFix + "']/parent::div/parent::div/parent::span")))
+                    if(isElementPresent(By.xpath(".//div[text()='" + SCHEMA_NAME + namePostFix + "']/parent::div/parent::div/parent::span")))
                     {
-                        clickOnElement(By.xpath(".//div[text()='Schema" + namePostFix + "']/parent::div/parent::div/parent::span"));
+                        clickOnElement(By.xpath(".//div[text()='" + SCHEMA_NAME + namePostFix + "']/parent::div/parent::div/parent::span"));
                         isSchemaVerified = true;
                         LOGGER.info("Schema is Verified");
                         holdOnForACoupleOfSec();
@@ -126,7 +128,7 @@ public class SchemaPage extends WebAppPage {
         clickOnElement(By.xpath(editAddFieldSchemaButton));
         waitForVisible(By.xpath(cancelSchemaButton));
         driver.findElement(By.xpath(editAddFieldNameSchemaField)).clear();
-        driver.findElement(By.xpath(editAddFieldNameSchemaField)).sendKeys("FieldNameSchema" + namePostFix);
+        driver.findElement(By.xpath(editAddFieldNameSchemaField)).sendKeys(SCHEMA_FIELD_NAME + namePostFix);
         clickOnElement(By.xpath(editAddDataTypeSchemaButton));
         waitForVisible(By.xpath(editAddDataTypeSchemaDropDown));
         Random rand = new Random();
@@ -152,7 +154,7 @@ public class SchemaPage extends WebAppPage {
                 String fieldNameDisplayed, dataTypeDisplayed;
                 fieldNameDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[2]")).getText();
                 dataTypeDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[3]")).getText();
-                if(fieldNameDisplayed.contentEquals("FieldNameSchema" + namePostFix) &&
+                if(fieldNameDisplayed.contentEquals(SCHEMA_FIELD_NAME + namePostFix) &&
                         dataTypeDisplayed.contentEquals(dataTypeSelect))
                 {
                     isSchemaVerified = true;
@@ -185,7 +187,7 @@ public class SchemaPage extends WebAppPage {
                     String fieldNameDisplayed, dataTypeDisplayed;
                     fieldNameDisplayed = driver.findElement(By.xpath(schemaTable + "/descendant::tr[" + i + "]/td[2]")).getText();
                     dataTypeDisplayed = driver.findElement(By.xpath(schemaTable + "/descendant::tr[" + i + "]/td[3]")).getText();
-                    if (fieldNameDisplayed.contentEquals("FieldNameSchema" + namePostFix) &&
+                    if (fieldNameDisplayed.contentEquals(SCHEMA_FIELD_NAME + namePostFix) &&
                             dataTypeDisplayed.contentEquals(dataTypeSelect)) {
                         isSchemaVerified = true;
                         LOGGER.info("Field is found on Schema Table");
@@ -212,7 +214,7 @@ public class SchemaPage extends WebAppPage {
                 String fieldNameDisplayed, dataTypeDisplayed;
                 fieldNameDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[2]")).getText();
                 dataTypeDisplayed = driver.findElement(By.xpath(moduleTable + "/descendant::tr[" + i + "]/td[3]")).getText();
-                if (fieldNameDisplayed.contentEquals("FieldNameSchema" + namePostFix) &&
+                if (fieldNameDisplayed.contentEquals(SCHEMA_FIELD_NAME + namePostFix) &&
                         dataTypeDisplayed.contentEquals(dataTypeSelect)) {
                     isFieldDeleted = true;
                     clickOnElement(By.xpath(moduleTable + "/descendant::tr[1]/descendant::button"));
