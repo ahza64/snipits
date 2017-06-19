@@ -16,10 +16,6 @@ public class TaxonomyValuesPage extends WebAppPage {
     private String selectProjectButton = "//label[text()='Work Project']/parent::div/div/descendant::button";
     private String selectSchemaButton = "//label[text()='Project Schemas']/parent::div/div/descendant::button";
     private String selectTaxonomyButton = "//label[text()='Taxonomy Field Name']/parent::div/div/descendant::button";
-    private String selectCompanyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String selectProjectDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String selectSchemaDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String selectTaxonomyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String addTaxonomyValueRootButton = ".//span[text()='Add Root Value']";
     private String addTaxonomyValueChildButton = ".//span[text()='Add Child Value]";
     private String viewByValueTaxonomyValueButton = ".//span[text()='View values by Taxonomy']";
@@ -55,22 +51,22 @@ public class TaxonomyValuesPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Company", namePostFix, selectCompanyButton, selectCompanyDropDown);
+        selectEntity("Company", namePostFix, selectCompanyButton);
     }
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Project", namePostFix, selectProjectButton, selectProjectDropDown);
+        selectEntity("Project", namePostFix, selectProjectButton);
     }
 
     public void selectSchema(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Schema", namePostFix, selectSchemaButton, selectSchemaDropDown);
+        selectEntity("Schema", namePostFix, selectSchemaButton);
     }
 
     public void selectTaxonomy(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Taxonomy", namePostFix, selectTaxonomyButton, selectTaxonomyDropDown);
+        selectEntity("Taxonomy", namePostFix, selectTaxonomyButton);
     }
 
     private boolean verifyValuesOnForm(int namePostFix)

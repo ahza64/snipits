@@ -1,6 +1,7 @@
 package pagesIngestionInterface;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import java.awt.AWTException;
@@ -8,6 +9,8 @@ import java.net.MalformedURLException;
 
 import pagesInternalAdmin.DropDownMenu;
 import setup.WebAppPage;
+
+import static constants.Constants.FILE_NAME;
 
 /**
  * Created by az on 6/5/17.
@@ -19,14 +22,14 @@ public class UploadPage extends WebAppPage
     private String heatMapContainer = ".//div[@class='highcharts-container ']";
     private String selectProjectButton = ".//div[text()='Choose Project']";
     private String selectConfigButton = ".//div[text()='Choose Config']";
-    private String selectProjectDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 192px;']";
-    private String selectConfigDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 192px;']";
     private String uploadFilePopupSubmitButton = ".//span[text()='Submit']/parent::div/parent::button";
     private String uploadFilePopupCancelButton = ".//span[text()='Cancel']/parent::div/parent::button";
     private String fileUploadingWait = ".//span[text()='File Uploading']/parent::div";
     private String filesTable = ".//*[@class='row']";
     private String fileUploadErrorPopUpCloseButton = ".//span[text()='Close']/parent::div/parent::button";
     private String dropDownButton = ".//*[@class='dropdown']/a";
+    private String searchTextField = ".//div[text()='Search for ingestion files ... ']/following-sibling::input";
+    private String totalFilesText = ".//div[@class='row' and text()[contains(., 'total')]]";
 
     UploadPage() throws MalformedURLException
     {
@@ -40,18 +43,18 @@ public class UploadPage extends WebAppPage
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Project", namePostFix, selectProjectButton, selectProjectDropDown);
+        selectEntity("Project", namePostFix, selectProjectButton);
     }
 
     public void selectConfig(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Config", namePostFix, selectConfigButton, selectConfigDropDown);
+        selectEntity("Config", namePostFix, selectConfigButton);
     }
 
     public void uploadFile(int namePostFix) throws AWTException, MalformedURLException
     {
         WebElement uploadFileButton = driver.findElement(By.xpath(dropZone));
-        String fileName = "myFile" + namePostFix + ".txt";
+        String fileName = FILE_NAME + namePostFix + ".txt";
         uploadFilesFromSystem(getDriver(), uploadFileButton, namePostFix, fileName);
         waitForVisible(By.xpath(uploadFilePopupSubmitButton));
         clickOnElement(By.xpath(uploadFilePopupSubmitButton));
@@ -83,7 +86,7 @@ public class UploadPage extends WebAppPage
                 holdOn(50);
                 String fileNameFromHeatMap = driver.findElement(By.xpath(".//*[name()='g' and @class='highcharts-label highcharts-tooltip highcharts-color-0']")).getText();
                 LOGGER.info(fileNameFromHeatMap);
-                if (fileNameFromHeatMap.contains("myFile" + namePostFix + ".txt"))
+                if (fileNameFromHeatMap.contains(FILE_NAME + namePostFix + ".txt"))
                 {
                     isFileDisplayedOnHeatMap = true;
                     break;
@@ -114,5 +117,25 @@ public class UploadPage extends WebAppPage
     {
         clickOnElement(By.xpath(dropDownButton));
         return new DropDownMenuII();
+    }
+
+    public void typeInSearchField(String fileName, int namePostFix)
+    {
+        WebElement searchField = driver.findElement(By.xpath(searchTextField));
+        clearAndType(searchField, fileName + namePostFix);
+        waitForAjaxCompletion();
+    }
+
+    public void clearSearchField()
+    {
+        WebElement searchField = driver.findElement(By.xpath(searchTextField));
+        searchField.sendKeys(Keys.CONTROL + "a");
+        searchField.sendKeys(Keys.DELETE);
+        waitForAjaxCompletion();
+    }
+
+    public String getFilesCountFromPage()
+    {
+        return driver.findElement(By.xpath(totalFilesText)).getText();
     }
 }

@@ -13,7 +13,6 @@ import setup.WebAppPage;
 public class ProjectPage extends WebAppPage {
 
     private String selectCompanyButton = ".//label[text()='Company']/parent::div/div/descendant::button";
-    private String selectCompanyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String addProjectButton = ".//span[text()='Add Work Project']";
     private String projectFormCancelButton = ".//span[text()='Cancel']";
     private String projectFormConfirmButton = ".//span[text()='Confirm']";
@@ -43,7 +42,7 @@ public class ProjectPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Company", namePostFix, selectCompanyButton, selectCompanyDropDown);
+        selectEntity("Company", namePostFix, selectCompanyButton);
     }
 
     public void addNewProject(int namePostFix) throws MalformedURLException

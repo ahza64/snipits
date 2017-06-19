@@ -14,8 +14,6 @@ public class IngestionConfigPage extends WebAppPage {
 
     private String selectCompanyButton = ".//label[text()='Company']/parent::div/div/descendant::button";
     private String selectProjectButton = "//label[text()='Work Project']/parent::div/div/descendant::button";
-    private String selectCompanyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String selectProjectDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String configButton = ".//span[text()='Add Configuration']";
     private String configFormCancelButton = ".//span[text()='Cancel']";
     private String configFormConfirmButton = ".//span[text()='Confirm']";
@@ -50,12 +48,12 @@ public class IngestionConfigPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Company", namePostFix, selectCompanyButton, selectCompanyDropDown);
+        selectEntity("Company", namePostFix, selectCompanyButton);
     }
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Project", namePostFix, selectProjectButton, selectProjectDropDown);
+        selectEntity("Project", namePostFix, selectProjectButton);
     }
 
     public void addNewConfig(int namePostFix) throws MalformedURLException

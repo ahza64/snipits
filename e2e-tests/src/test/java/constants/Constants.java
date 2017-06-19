@@ -10,4 +10,6 @@ public class Constants
     public static int MAX_TIMEOUT_PAGE_LOAD = 180;
     public static int WAIT_ONE_MIN = 60;
     public static int WAIT_TWO_MIN = 120;
+
+    public static String FILE_NAME = "configFile";
 }

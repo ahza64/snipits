@@ -16,9 +16,6 @@ public class SchemaPage extends WebAppPage {
     private String selectCompanyButton = ".//label[text()='Company']/parent::div/div/descendant::button";
     private String selectProjectButton = "//label[text()='Project']/parent::div/div/descendant::button";
     private String selectSchemaButton = "//label[text()='Select a Schema']/parent::div/div/descendant::button";
-    private String selectCompanyDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String selectProjectDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
-    private String selectSchemaDropDown = ".//*[@style='padding: 16px 0px; display: table-cell; user-select: none; width: 256px;']";
     private String addSchemaButton = ".//span[text()='Add Schema']";
     private String addSchemaFormCancelButton = ".//span[text()='Cancel']";
     private String addSchemaFormConfirmButton = ".//span[text()='Create Schema']";
@@ -57,17 +54,17 @@ public class SchemaPage extends WebAppPage {
 
     public void selectCompany(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Company", namePostFix, selectCompanyButton, selectCompanyDropDown);
+        selectEntity("Company", namePostFix, selectCompanyButton);
     }
 
     public void selectProject(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Project", namePostFix, selectProjectButton, selectProjectDropDown);
+        selectEntity("Project", namePostFix, selectProjectButton);
     }
 
     public void selectSchema(int namePostFix) throws MalformedURLException
     {
-        selectEntity("Schema", namePostFix, selectSchemaButton, selectSchemaDropDown);
+        selectEntity("Schema", namePostFix, selectSchemaButton);
     }
 
     public void addNewSchema(int namePostFix) throws MalformedURLException
@@ -91,11 +88,11 @@ public class SchemaPage extends WebAppPage {
             {
                 clickOnElement(By.xpath(selectSchemaButton));
                 holdOnForASec();
-                if(isElementPresentAndDisplayedByLocator(By.xpath(selectSchemaDropDown)))
+                if(isElementPresentAndDisplayedByLocator(By.xpath(".//div[text()='Schema" + namePostFix + "']/parent::div/parent::div/parent::span")))
                 {
-                    if(isElementPresent(By.xpath(selectSchemaDropDown + "/descendant::div[text()='Schema" + namePostFix + "']")))
+                    if(isElementPresent(By.xpath(".//div[text()='Schema" + namePostFix + "']/parent::div/parent::div/parent::span")))
                     {
-                        clickOnElement(By.xpath(selectSchemaDropDown + "/descendant::div[text()='Schema" + namePostFix + "']"));
+                        clickOnElement(By.xpath(".//div[text()='Schema" + namePostFix + "']/parent::div/parent::div/parent::span"));
                         isSchemaVerified = true;
                         LOGGER.info("Schema is Verified");
                         holdOnForACoupleOfSec();
