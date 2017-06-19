@@ -15,7 +15,6 @@ router.get(
   '/company',
   function*() {
     var companies = yield Companies.findAll({ raw: true });
-    console.log('Get all companies: ', companies);
     this.body = companies;
   }
 );
@@ -25,6 +24,7 @@ router.post(
   '/company',
   function*() {
     var company = this.request.body;
+    company.name = company.name.toLowerCase();
     var exists = yield Companies.count({
       where: { name: { ilike: company.name } }
     });
